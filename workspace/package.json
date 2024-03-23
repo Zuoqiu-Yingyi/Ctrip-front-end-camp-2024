@@ -1,4 +1,5 @@
 {
+    "$schema": "https://json.schemastore.org/package.json",
     "name": "travel-diary",
     "description": "The course design of the third phase of Ctrip's front-end training camp",
     "homepage": "https://github.com/Zuoqiu-Yingyi/Ctrip-front-end-camp-2024",
