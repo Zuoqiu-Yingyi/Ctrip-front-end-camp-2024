@@ -1,8 +1,9 @@
-import Image from "next/image";
-import { Card } from "@repo/ui/card";
-import { Code } from "@repo/ui/code";
 import styles from "./page.module.css";
-import { Button } from "@repo/ui/button";
+import Image from "next/image";
+import { Card } from "@repo/ui/components/Card";
+import { Code } from "@repo/ui/components/Code";
+import { Button } from "@repo/ui/components/Button";
+import React from "react";
 
 function Gradient({ conic, className, small }: { small?: boolean; conic?: boolean; className?: string }): JSX.Element {
     return <span className={[styles.gradient, conic ? styles.glowConic : undefined, small ? styles.gradientSmall : styles.gradientLarge, className].filter(Boolean).join(" ")} />;
