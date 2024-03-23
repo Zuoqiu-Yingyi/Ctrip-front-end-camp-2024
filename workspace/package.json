@@ -1,20 +1,55 @@
 {
-  "name": "workspace",
-  "private": true,
-  "scripts": {
-    "build": "turbo build",
-    "dev": "turbo dev",
-    "lint": "turbo lint",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\""
-  },
-  "devDependencies": {
-    "@repo/eslint-config": "workspace:*",
-    "@repo/typescript-config": "workspace:*",
-    "prettier": "^3.2.5",
-    "turbo": "latest"
-  },
-  "packageManager": "pnpm@8.9.0",
-  "engines": {
-    "node": ">=18"
-  }
+    "name": "travel-diary",
+    "description": "The course design of the third phase of Ctrip's front-end training camp",
+    "homepage": "https://github.com/Zuoqiu-Yingyi/Ctrip-front-end-camp-2024",
+    "bugs": {
+        "url": "https://github.com/Zuoqiu-Yingyi/Ctrip-front-end-camp-2024/issues"
+    },
+    "license": "AGPL-3.0-or-later",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/Zuoqiu-Yingyi/Ctrip-front-end-camp-2024.git"
+    },
+    "author": {
+        "name": "Zuoqiu Yingyi",
+        "url": "https://github.com/Zuoqiu-Yingyi"
+    },
+    "contributors": [
+        {
+            "name": "Zuoqiu Yingyi",
+            "url": "https://github.com/Zuoqiu-Yingyi"
+        },
+        {
+            "name": "fenduf",
+            "url": "https://github.com/fenduf"
+        },
+        {
+            "name": "tuoniaodan",
+            "url": "https://github.com/tuoniaodan"
+        }
+    ],
+    "private": true,
+    "packageManager": "pnpm@8.15.4",
+    "engines": {
+        "node": "21"
+    },
+    "scripts": {
+        "build": "turbo build",
+        "dev": "turbo dev",
+        "lint": "turbo lint",
+        "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+        "spell": "cspell ."
+    },
+    "devDependencies": {
+        "@repo/eslint-config": "workspace:*",
+        "@repo/typescript-config": "workspace:*",
+        "@types/eslint": "^8.56.6",
+        "@types/node": "^20.11.30",
+        "cspell": "^8.6.0",
+        "eslint": "^8.57.0",
+        "jest": "^29.7.0",
+        "prettier": "^3.2.5",
+        "turbo": "latest",
+        "typescript": "^5.4.3"
+    }
 }

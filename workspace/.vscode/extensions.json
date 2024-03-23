@@ -1,0 +1,10 @@
+{
+    "recommendations": [
+        "tamasfe.even-better-toml",
+        "aaron-bond.better-comments",
+        "lokalise.i18n-ally",
+        "ymotongpoo.licenser",
+        "esbenp.prettier-vscode",
+        "gruntfuggly.todo-tree"
+    ]
+}
