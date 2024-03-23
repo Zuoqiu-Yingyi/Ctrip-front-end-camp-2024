@@ -54,6 +54,7 @@ tabWidth = 4
 
 # trailingComma: "<es5|none|all>"
 # trailingComma = "es5"
+
 trailingComma = "all"
 
 
@@ -75,7 +76,8 @@ trailingComma = "all"
 
 # arrowParens: "<always|avoid>"
 # arrowParens = "always"
-arrowParens = "avoid"
+
+# arrowParens = "avoid"
 
 
 # 仅格式化文件的一部分
