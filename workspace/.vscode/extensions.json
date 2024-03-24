@@ -5,6 +5,7 @@
         "lokalise.i18n-ally",
         "ymotongpoo.licenser",
         "esbenp.prettier-vscode",
-        "gruntfuggly.todo-tree"
+        "gruntfuggly.todo-tree",
+        "prisma.prisma"
     ]
 }
