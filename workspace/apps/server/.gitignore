@@ -1,3 +1,18 @@
+# data
+data/assets/*
+!data/assets/.keep
+
+# prisma
+prisma/*
+!prisma/ERD.md
+!prisma/schema.prisma
+
+# database
+*.db
+*.db-journal
+
+# modules
 node_modules
+
 # Keep environment variables out of version control
 .env

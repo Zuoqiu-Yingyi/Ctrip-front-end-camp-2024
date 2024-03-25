@@ -1,12 +1,25 @@
 {
     "name": "@repo/server",
     "version": "0.0.0",
+    "type": "module",
     "private": true,
     "scripts": {
-        "prisma:init": "prisma init --datasource-provider sqlite"
+        "lint": "eslint . --max-warnings 0",
+        "prisma:init": "prisma init --datasource-provider sqlite",
+        "prisma:dev": "prisma migrate dev",
+        "prisma:reset": "prisma migrate reset",
+        "prisma:deploy": "prisma migrate deploy",
+        "prisma:status": "prisma migrate status"
     },
     "devDependencies": {
+        "@repo/eslint-config": "workspace:*",
         "prisma": "^5.11.0",
+        "prisma-docs-generator": "^0.8.0",
+        "prisma-markdown": "^1.0.9",
+        "zod-prisma": "^0.5.4"
+    },
+    "dependencies": {
+        "@prisma/client": "5.11.0",
         "uuid": "^9.0.1"
     }
 }

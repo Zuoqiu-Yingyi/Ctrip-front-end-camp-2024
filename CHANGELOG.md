@@ -1,5 +1,9 @@
 # 更改日志 | Change log
 
+## 2024-03-26
+
+- 设计并定义数据库结构 | Design and define database structure
+
 ## 2024-03-24
 
 - 初始化 prisma 配置 | Initialize prisma configuration

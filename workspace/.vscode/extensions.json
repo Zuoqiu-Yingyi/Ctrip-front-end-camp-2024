@@ -6,6 +6,7 @@
         "ymotongpoo.licenser",
         "esbenp.prettier-vscode",
         "gruntfuggly.todo-tree",
-        "prisma.prisma"
+        "prisma.prisma",
+        "mhutchie.git-graph"
     ]
 }
