@@ -1,20 +1,27 @@
 $schema: https://raw.githubusercontent.com/streetsidesoftware/cspell/main/packages/cspell-types/cspell.schema.json
 
 #  Version of the setting file.
-version: "0.0.2"
+version: "0.0.3"
 
 # language - current active spelling language
 language: en
 
 # words - list of words to be always considered correct
 words:
+    - autoincrement
     - callout
+    - codepaths
+    - datasource
     - evenodd
+    - publishs
     - rgba
+    - tsbuildinfo
     - turborepo
     - vercel
     - wordmark
     - xlink
+    - yingyi
+    - zuoqiu
 
 ignoreRegExpList:
 
@@ -22,8 +29,11 @@ ignoreRegExpList:
 flagWords:
 
 ignorePaths:
+    - "*.db"
+    - "*.db-journal"
     - dist
     - node_modules
     - package.json
     - pnpm-lock.yaml
+    - prisma
     - temp

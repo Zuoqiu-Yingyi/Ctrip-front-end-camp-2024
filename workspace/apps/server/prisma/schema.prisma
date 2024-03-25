@@ -1,0 +1,442 @@
+// Copyright (C) 2024 Zuoqiu Yingyi
+// 
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Affero General Public License as
+// published by the Free Software Foundation, either version 3 of the
+// License, or (at your option) any later version.
+// 
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Affero General Public License for more details.
+// 
+// You should have received a copy of the GNU Affero General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+/// {@link https://github.com/Zuoqiu-Yingyi/Ctrip-front-end-camp-2024/issues/7}
+
+datasource db {
+    provider = "sqlite"
+    url      = env("DATABASE_URL")
+}
+
+// REF: https://www.prisma.io/docs/orm/prisma-schema/overview/generators
+generator client {
+    provider = "prisma-client-js"
+    output   = "./client"
+}
+
+// REF: https://github.com/CarterGrimmeisen/zod-prisma
+generator zod {
+    provider = "zod-prisma"
+    output   = "./zod" // (default) the directory where generated zod schemas will be saved
+
+    relationModel = true // (default) Create and export both plain and related models.
+    // relationModel         = "default" // Do not export model without relations.
+    // relationModel         = false // Do not generate related model
+
+    modelCase = "PascalCase" // (default) Output models using pascal case (ex. UserModel, PostModel)
+    // modelCase             = "camelCase" // Output models using camel case (ex. userModel, postModel)
+
+    modelSuffix = "Model" // (default) Suffix to apply to your prisma models when naming Zod schemas
+
+    // useDecimalJs          = false // (default) represent the prisma Decimal type using as a JS number
+    useDecimalJs = true // represent the prisma Decimal type using Decimal.js (as Prisma does)
+
+    // imports = null // (default) will import the referenced file in generated schemas to be used via imports.someExportedVariable
+
+    // https://www.prisma.io/docs/concepts/components/prisma-client/working-with-fields/working-with-json-fields#filtering-by-null-values
+    prismaJsonNullability = true // (default) uses prisma's scheme for JSON field nullability
+    // prismaJsonNullability = false // allows null assignment to optional JSON fields
+}
+
+// REF: https://github.com/pantharshit00/prisma-docs-generator
+generator docs {
+    provider = "node node_modules/prisma-docs-generator"
+    output   = "./docs"
+}
+
+// REF: https://github.com/pantharshit00/prisma-docs-generator
+generator markdown {
+    provider = "prisma-markdown"
+    output   = "./ERD.md"
+    title    = "旅行日记 | Travel Diary"
+}
+
+/// 平台管理人员 | Platform managers
+/// @namespace Server
+model Staff {
+    /// 主键 | Primary Key
+    id Int @id @default(autoincrement())
+
+    /// 账户用户名 | Account Username
+    name     String @unique
+    /// 账户密码 | Account password
+    /// 格式: 十六进制字符串 | Format: Hex string
+    password String
+    /// 账户权限 | Account permission
+    /// - `0`: 管理员 | Administrator
+    /// - `1`: 审核员 | Reviewer
+    role     Int    @default(1)
+
+    reviews Review[] // 审核列表
+
+    /// 是否已逻辑删除 | Whether it has been logically deleted
+    deleted   Boolean  @default(false)
+    /// 记录创建时间 | Record creation time
+    createdAt DateTime @default(now())
+    /// 记录更新时间 | Record update time
+    updatedAt DateTime @updatedAt
+}
+
+/// 平台用户 | Platform users
+/// @namespace Server
+model User {
+    /// 主键 | Primary Key
+    id Int @id @default(autoincrement())
+
+    /// 账户用户名 | Account Username
+    name     String  @unique // 用户名
+    /// 账户密码 | Account password
+    /// 格式: 十六进制字符串 | Format: Hex string
+    password String // Hex 格式的密码
+    /// 用户头像 | User avatar
+    /// - `NULL`: 使用默认头像 | Use the default avatar
+    /// - `String`: 头像文件的 UUID | UUID of the avatar file
+    /// @format uuid
+    avatar   String? // 头像文件的 UUID
+
+    assets      Asset[] // 上传的资源文件列表
+    drafts      Draft[] // 草稿列表
+    reviews     Review[] // 审核列表
+    publishs    Publish[] // 发布列表
+    coordinates Coordinate[] // 位置列表
+
+    /// 是否已逻辑删除 | Whether it has been logically deleted
+    deleted   Boolean  @default(false)
+    /// 记录创建时间 | Record creation time
+    createdAt DateTime @default(now())
+    /// 记录更新时间 | Record update time
+    updatedAt DateTime @updatedAt
+}
+
+/// 旅行日记的草稿 | Draft of travel diary
+/// @namespace Server
+model Draft {
+    /// 主键 | Primary Key
+    id Int @id @default(autoincrement())
+
+    /// 草稿标题 | Draft title
+    title             String
+    /// 草稿内容 | Draft content
+    content           String
+    /// 草稿创建时间 | Draft creation time
+    creation_time     DateTime @default(now())
+    /// 草稿修改时间 | Draft modification time
+    modification_time DateTime @default(now())
+
+    /// 作者 | Author
+    author    User @relation(fields: [author_id], references: [id])
+    /// 作者 ID | Author ID
+    author_id Int // 作者 ID
+
+    /// 位置 | Coordinate
+    coordinate    Coordinate? @relation(fields: [coordinate_id], references: [id])
+    /// 位置 ID | Coordinate ID
+    coordinate_id Int?
+
+    assets  AssetInDraft[] // 文件资源列表
+    publish Publish? // 已发布内容
+
+    /// 是否已逻辑删除 | Whether it has been logically deleted
+    deleted   Boolean  @default(false)
+    /// 记录创建时间 | Record creation time
+    createdAt DateTime @default(now())
+    /// 记录更新时间 | Record update time
+    updatedAt DateTime @updatedAt
+}
+
+/// 旅行日记的审批项 | Approval item of travel diary
+/// @namespace Server
+model Review {
+    /// 主键 | Primary Key
+    id Int @id @default(autoincrement())
+
+    /// 标题 | Title
+    title             String
+    /// 内容 | Content
+    content           String
+    /// 提交时间 | Submission time
+    submission_time   DateTime @default(now())
+    /// 修改时间 | Modification time
+    modification_time DateTime @default(now())
+
+    /// 审批状态 | Approval status
+    /// - `0`: 待审核 (默认) | Pending review (default)
+    /// - `1`: 已通过 | Passed
+    /// - `2`: 未通过 | Failed
+    /// - `3`: 已取消 | Canceled
+    status        Int       @default(0)
+    /// 审议意见 | Review comments
+    comment       String?
+    /// 审议时间 | Review time
+    approval_time DateTime?
+
+    /// 提交者 | Submitter
+    submitter    User @relation(fields: [submitter_id], references: [id])
+    /// 提交者 ID | Submitter ID
+    submitter_id Int
+
+    /// 审议者 | Reviewer
+    reviewer    Staff? @relation(fields: [reviewer_id], references: [id])
+    /// 审议者 ID | Reviewer ID
+    reviewer_id Int?
+
+    /// 位置 | Coordinate
+    coordinate    Coordinate? @relation(fields: [coordinate_id], references: [id])
+    /// 位置 ID | Coordinate ID
+    coordinate_id Int?
+
+    assets  AssetInReview[] // 文件资源列表
+    publish Publish? // 已发布内容
+
+    /// 是否已逻辑删除 | Whether it has been logically deleted
+    deleted   Boolean  @default(false)
+    /// 记录创建时间 | Record creation time
+    createdAt DateTime @default(now())
+    /// 记录更新时间 | Record update time
+    updatedAt DateTime @updatedAt
+}
+
+/// 已发布的旅行日记 | Published travel diary
+/// @namespace Server
+model Publish {
+    /// 主键 | Primary Key
+    id   Int    @id @default(autoincrement())
+    /// 用于路由的 UUID | UUID for routing
+    /// @format uuid
+    uuid String @unique
+
+    /// 标题 | Title
+    title             String
+    /// 内容 | Content
+    content           String
+    /// 发布时间 | Publication time
+    publication_time  DateTime @default(now())
+    /// 修改时间 | Modification time
+    modification_time DateTime @default(now())
+
+    /// 发布者 | Publisher
+    publisher    User @relation(fields: [publisher_id], references: [id])
+    /// 发布者 ID | Publisher ID
+    publisher_id Int
+
+    /// 位置 | Coordinate
+    coordinate    Coordinate? @relation(fields: [coordinate_id], references: [id])
+    /// 位置 ID | Coordinate ID
+    coordinate_id Int?
+
+    /// 草稿 | Draft
+    draft    Draft @relation(fields: [draft_id], references: [id])
+    /// 草稿 ID | Draft ID
+    draft_id Int   @unique
+
+    /// 审议项 | Review item
+    review    Review @relation(fields: [review_id], references: [id])
+    /// 审议项 ID | Review item ID
+    review_id Int    @unique
+
+    assets AssetInPublish[] // 文件资源列表
+
+    /// 是否已逻辑删除 | Whether it has been logically deleted
+    deleted   Boolean  @default(false)
+    /// 记录创建时间 | Record creation time
+    createdAt DateTime @default(now())
+    /// 记录更新时间 | Record update time
+    updatedAt DateTime @updatedAt
+}
+
+/// 用户上传的资源文件 | Resource files uploaded by users
+/// 头像, 照片等 | Avatar, photo etc.
+/// @namespace Server
+model Asset {
+    /// 主键 | Primary Key
+    id   Int    @id @default(autoincrement())
+    /// 用于路由的 UUID | UUID for routing
+    /// @format uuid
+    uuid String @unique
+
+    /// 文件名 | File name
+    filename          String
+    /// 文件保存路径 | File save path
+    path              String
+    /// 文件大小 | File size
+    /// 单位: 字节 (Byte) | Unit: byte
+    size              Int
+    /// 文件 MIME 类型 | File MIME type
+    /// {@link https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Basics_of_HTTP/MIME_types}
+    mime              String
+    /// 文件摘要 | File digest
+    /// 摘要算法: SHA-128 | Digest algorithm: SHA-128
+    /// 格式: 十六进制字符串 | Format: Hex string
+    hash              String
+    /// 访问权限 | Access permission
+    /// - `0b0001`: 上传者可访问 | Accessible to the uploader
+    /// - `0b0010`: 审核者可访问 | Accessible to the reviewer
+    /// - `0b0100`: 管理员可访问 | Accessible to the administrator
+    /// - `0b1000`: 公开访问 | Public access
+    permission        Int
+    /// 上传时间 | Upload time
+    upload_time       DateTime @default(now())
+    /// 更改时间 | Modification time
+    modification_time DateTime @default(now())
+
+    /// 上传者 | Uploader
+    uploader    User @relation(fields: [uploader_id], references: [id])
+    /// 上传者 ID | Uploader ID
+    uploader_id Int
+
+    drafts   AssetInDraft[]
+    reviews  AssetInReview[]
+    publishs AssetInPublish[]
+
+    /// 是否已逻辑删除 | Whether it has been logically deleted
+    deleted   Boolean  @default(false)
+    /// 记录创建时间 | Record creation time
+    createdAt DateTime @default(now())
+    /// 记录更新时间 | Record update time
+    updatedAt DateTime @updatedAt
+}
+
+/// 草稿中的资源 | Assets in draft
+/// @namespace Server
+model AssetInDraft {
+    /// 排序序号 | Sort order number
+    /// 升序排列 | Ascending order
+    index Int
+
+    /// 草稿 | Draft
+    draft    Draft @relation(fields: [draft_id], references: [id])
+    /// 草稿 ID | Draft ID
+    draft_id Int
+
+    /// 资源 | Asset
+    asset    Asset @relation(fields: [asset_id], references: [id])
+    /// 资源 ID | Asset ID
+    asset_id Int
+
+    /// 是否已逻辑删除 | Whether it has been logically deleted
+    deleted   Boolean  @default(false)
+    /// 记录创建时间 | Record creation time
+    createdAt DateTime @default(now())
+    /// 记录更新时间 | Record update time
+    updatedAt DateTime @updatedAt
+
+    @@id([draft_id, asset_id])
+}
+
+/// 审议项中的资源 | Assets in review
+/// @namespace Server
+model AssetInReview {
+    /// 排序序号 | Sort order number
+    /// 升序排列 | Ascending order
+    index Int
+
+    /// 审议项 | Review
+    review    Review @relation(fields: [review_id], references: [id])
+    /// 审议项 ID | Review ID
+    review_id Int
+
+    /// 资源 | Asset
+    asset    Asset @relation(fields: [asset_id], references: [id])
+    /// 资源 ID | Asset ID
+    asset_id Int
+
+    /// 是否已逻辑删除 | Whether it has been logically deleted
+    deleted   Boolean  @default(false)
+    /// 记录创建时间 | Record creation time
+    createdAt DateTime @default(now())
+    /// 记录更新时间 | Record update time
+    updatedAt DateTime @updatedAt
+
+    @@id([review_id, asset_id])
+}
+
+/// 已发布内容中的资源 | Assets in publish
+/// @namespace Server
+model AssetInPublish {
+    index Int
+
+    /// 已发布内容 | Publish
+    publish    Publish @relation(fields: [publish_id], references: [id])
+    /// 已发布内容 ID | Publish ID
+    publish_id Int
+
+    /// 资源 | Asset
+    asset    Asset @relation(fields: [asset_id], references: [id])
+    /// 资源 ID | Asset ID
+    asset_id Int
+
+    /// 是否已逻辑删除 | Whether it has been logically deleted
+    deleted   Boolean  @default(false)
+    /// 记录创建时间 | Record creation time
+    createdAt DateTime @default(now())
+    /// 记录更新时间 | Record update time
+    updatedAt DateTime @updatedAt
+
+    @@id([publish_id, asset_id])
+}
+
+/// 位置信息 | Location information
+/// @namespace Server
+model Coordinate {
+    /// 主键 | Primary Key
+    id Int @id @default(autoincrement())
+
+    /// 纬度 | Latitude
+    /// 单位: 度 (°) | Unit: degree (°)
+    latitude          Float
+    /// 经度 | Longitude
+    /// 单位: 度 (°) | Unit: degree (°)
+    longitude         Float
+    /// 经纬度的精确度 | Accuracy of latitude and longitude
+    /// 单位: 度 (°) | Unit: degree (°)
+    /// 95% 置信区间 | 95% confidence interval
+    accuracy          Float
+    /// 海拔高度 | Altitude
+    /// 单位: 米 (m) | Unit: meter (m)
+    altitude          Float?
+    /// 海拔高度的精确度 | Accuracy of altitude
+    /// 单位: 米 (m) | Unit: meter (m)
+    /// 95% 置信区间 | 95% confidence interval
+    altitude_accuracy Float?
+    /// 方向 | Heading
+    /// 单位: 度 (°) | Unit: degree (°)
+    /// - `0`: 正北方向 | Due north
+    /// - `90`: 正东方向 | Due east
+    /// - `180`: 正南方向 | Due south
+    /// - `270`: 正西方向 | Due west
+    heading           Float?
+    // 运动速度 | Speed
+    // 单位: 米/秒 (m/s) | Unit: meter/second (m/s)
+    speed             Float?
+    /// 上传时间 | Upload time
+    upload_time       DateTime @default(now())
+
+    /// 上传者 | Uploader
+    uploader    User @relation(fields: [uploader_id], references: [id])
+    /// 上传者 ID | Upload ID
+    uploader_id Int
+
+    drafts   Draft[]
+    reviews  Review[]
+    publishs Publish[]
+
+    /// 是否已逻辑删除 | Whether it has been logically deleted
+    deleted   Boolean  @default(false)
+    /// 记录创建时间 | Record creation time
+    createdAt DateTime @default(now())
+    /// 记录更新时间 | Record update time
+    updatedAt DateTime @updatedAt
+}

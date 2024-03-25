@@ -41,16 +41,20 @@
         "format": "prettier --write \"**/*.{ts,tsx,md}\"",
         "spell": "cspell ."
     },
-    "devDependencies": {
+    "dependencies": {
         "@repo/eslint-config": "workspace:*",
-        "@repo/typescript-config": "workspace:*",
+        "@repo/typescript-config": "workspace:*"
+    },
+    "devDependencies": {
         "@types/eslint": "^8.56.6",
         "@types/node": "^20.11.30",
         "cspell": "^8.6.0",
         "eslint": "^8.57.0",
         "jest": "^29.7.0",
         "prettier": "^3.2.5",
+        "ts-node": "^10.9.2",
         "turbo": "latest",
-        "typescript": "^5.4.3"
+        "typescript": "^5.4.3",
+        "zod": "^3.22.4"
     }
 }
