@@ -20,8 +20,8 @@ export const env = {
     PORT: parseInt(process.env._TD_PORT!) || 3000,
     HOST: process.env._TD_HOST || "::",
     TLS: process.env._TD_TLS === "true" || false,
-    TLS_CER_FILE_PATH: process.env._TD_TLS_CER_FILE_PATH || "./keys/prod.pem.cer",
     TLS_KEY_FILE_PATH: process.env._TD_TLS_KEY_FILE_PATH || "./keys/prod.pem.key",
+    TLS_CER_FILE_PATH: process.env._TD_TLS_CER_FILE_PATH || "./keys/prod.pem.cer",
     LOG_LEVEL: (process.env._TD_LOG_LEVEL || "info") as "fatal" | "error" | "warn" | "info" | "debug" | "trace",
     LOG_FILE_PATH: process.env._TD_LOG_FILE_PATH || "./logs/travels.log",
 } as const;

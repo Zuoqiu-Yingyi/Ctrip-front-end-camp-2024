@@ -29,7 +29,7 @@ import { createTestContext } from "./../../contexts/test";
  */
 export const router: FastifyPluginCallback = async function (fastify, opts) {
     // REF: https://trpc.io/docs/server/adapters/fastify
-    fastify.register(fastifyTRPCPlugin, {
+    await fastify.register(fastifyTRPCPlugin, {
         prefix: "/test",
         useWSS: true,
         trpcOptions: {

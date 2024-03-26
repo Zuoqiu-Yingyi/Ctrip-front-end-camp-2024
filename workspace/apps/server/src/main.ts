@@ -15,11 +15,27 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import type { FastifyInstance } from "fastify";
-import { init as initRouters } from "./routers";
+import Fastify, { type FastifyInstance } from "fastify";
 
-export async function main(fastify: FastifyInstance): Promise<FastifyInstance> {
+import { init as initRouters } from "./routers";
+import { logger } from "./utils/logger";
+import { options } from "./utils/server";
+
+export async function init(fastify: FastifyInstance): Promise<FastifyInstance> {
     await initRouters(fastify);
     await fastify.ready();
     return fastify;
+}
+
+if (process.argv.at(-1) === import.meta.filename) {
+    const fastify = Fastify({
+        logger,
+    });
+    try {
+        await init(fastify);
+        const address = await fastify.listen(options);
+        fastify.log.info(`Server is now listening on ${address}`);
+    } catch (error) {
+        fastify.log.error(error);
+    }
 }

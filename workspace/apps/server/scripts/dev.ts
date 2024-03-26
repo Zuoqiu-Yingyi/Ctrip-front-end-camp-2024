@@ -15,50 +15,67 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+import {
+    spawn, //
+    type ChildProcessWithoutNullStreams,
+} from "node:child_process";
 import chokidar from "chokidar";
-import Fastify, { type FastifyInstance } from "fastify";
 
-import { main } from "./../src/main";
-import { logger as fastifyLogger } from "./../src/utils/logger";
-import { options as fastifyOptions } from "./../src/utils/server";
+class DevSubProcess {
+    private _subprocess?: ChildProcessWithoutNullStreams;
 
-class DevServer {
-    private _fastify?: FastifyInstance;
+    constructor() {}
 
-    constructor(
-        private readonly logger: typeof fastifyLogger = fastifyLogger, //
-        private readonly options: typeof fastifyOptions = fastifyOptions, //
-    ) {}
-
-    public get fastify(): FastifyInstance | undefined {
-        return this._fastify;
+    public get subprocess(): ChildProcessWithoutNullStreams | undefined {
+        return this._subprocess;
     }
 
     async start() {
         await this.stop();
-        if (!this._fastify) {
+        if (!this._subprocess) {
             try {
-                this._fastify = Fastify({
-                    logger: this.logger,
-                });
-                await main(this._fastify);
-                const address = await this._fastify.listen(this.options);
-                this._fastify.log.info(`Server is now listening on ${address}`);
+                this._subprocess = spawn(
+                    "node", //
+                    [
+                        "--import=@repo/utils/registers/ts-node.js", //
+                        "./src/main.ts",
+                    ],
+                    {
+                        env: process.env,
+                    },
+                );
+                this._subprocess.stdout?.on("data", (chunk) => console.log(chunk.toString()));
+                this._subprocess.stderr?.on("data", (chunk) => console.warn(chunk.toString()));
+                this._subprocess.on("error", (chunk) => console.error(chunk.toString()));
+
+                console.info(`Subprocess run at PID: ${this._subprocess.pid}`);
             } catch (error) {
-                this._fastify?.log.error(error);
+                console.error(error);
+                this._subprocess = undefined;
             }
         }
     }
 
     async stop() {
-        if (this._fastify) {
+        if (this._subprocess) {
             try {
-                await this._fastify.close();
-                this._fastify.log.info(`Server is now closed`);
+                const killed = new Promise((resolve) => {
+                    if (this._subprocess) {
+                        this._subprocess.on("exit", (code) => {
+                            console.info(`Subprocess exit with code: ${code}`);
+                            resolve(undefined);
+                        });
+                    } else {
+                        resolve(undefined);
+                    }
+                });
+                // this._subprocess.disconnect();
+                this._subprocess.kill();
+                await killed;
             } catch (error) {
-                this._fastify.log.error(error);
+                console.error(error);
             } finally {
-                this._fastify = undefined;
+                this._subprocess = undefined;
             }
         }
     }
@@ -69,9 +86,8 @@ class DevServer {
     }
 }
 
-
 async function dev() {
-    const devServer = new DevServer();
+    const devSubProcess = new DevSubProcess();
 
     /**
      * 监听 src 目录变化
@@ -85,7 +101,7 @@ async function dev() {
     );
     src_watcher.on("ready", async () => {
         // console.log("ready");
-        await devServer.start();
+        await devSubProcess.start();
         src_watcher.on(
             "all", //
             async (
@@ -94,7 +110,8 @@ async function dev() {
                 stats,
             ) => {
                 // console.log(eventName);
-                await devServer.restart();
+                // await devSubProcess.stop();
+                await devSubProcess.restart();
             },
         );
     });

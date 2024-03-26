@@ -32,6 +32,7 @@ export const options: FastifyListenOptions = {
                * @see {@link https://nodejs.org/dist/latest-v14.x/docs/api/https.html#https_https_createserver_options_requestlistener https.createServer}
                */
               https: {
+                  allowHTTP1: true, // fallback support for HTTP1
                   cert: fs.readFileSync(env.TLS_CER_FILE_PATH),
                   key: fs.readFileSync(env.TLS_KEY_FILE_PATH),
               },

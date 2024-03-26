@@ -3,6 +3,7 @@
 ## 2024-03-27
 
 - 初始化 tRPC 服务 | Initialize the tRPC service
+- 优化开发服务器 | Optimize the development server
 
 ## 2024-03-26
 

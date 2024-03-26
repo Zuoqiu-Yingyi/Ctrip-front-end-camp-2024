@@ -21,6 +21,6 @@ import trpcRouter from "./trpc";
 
 export async function init(fastify: FastifyInstance) {
     // REF: https://fastify.dev/docs/latest/Reference/Routes/#route-prefixing
-    fastify.register(trpcRouter, { prefix: "/trpc" });
+    await fastify.register(trpcRouter, { prefix: "/trpc" });
     await fastify.after();
 }
