@@ -69,7 +69,6 @@ class DevSubProcess {
                         resolve(undefined);
                     }
                 });
-                // this._subprocess.disconnect();
                 this._subprocess.kill();
                 await killed;
             } catch (error) {
@@ -110,7 +109,6 @@ async function dev() {
                 stats,
             ) => {
                 // console.log(eventName);
-                // await devSubProcess.stop();
                 await devSubProcess.restart();
             },
         );
