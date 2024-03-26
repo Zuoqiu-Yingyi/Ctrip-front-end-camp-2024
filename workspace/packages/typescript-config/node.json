@@ -1,0 +1,28 @@
+{
+    "$schema": "https://json.schemastore.org/tsconfig",
+    "compilerOptions": {
+        "declaration": true,
+        "declarationMap": true,
+        "esModuleInterop": true,
+        "incremental": false,
+        "isolatedModules": true,
+        "lib": [
+            "ESNext"
+        ],
+        "module": "NodeNext",
+        "moduleResolution": "NodeNext",
+        "resolveJsonModule": true,
+        "skipLibCheck": true,
+        "strict": true,
+        "target": "ESNext"
+    },
+    "display": "Default",
+    "ts-node": {
+        "esm": true,
+        "experimentalSpecifierResolution": "node",
+        // REF: https://www.npmjs.com/package/ts-node#paths-and-baseurl
+        "require": [
+            "tsconfig-paths/register"
+        ]
+    }
+}
