@@ -16,12 +16,28 @@
  */
 
 import fs from "node:fs";
-import type { FastifyListenOptions } from "fastify";
+import type http from "node:http";
+import type https from "node:https";
+import type http2 from "node:http2";
+import type {
+    //
+    FastifyHttp2Options,
+    FastifyHttp2SecureOptions,
+    FastifyHttpOptions,
+    FastifyHttpsOptions,
+    FastifyListenOptions,
+} from "fastify";
 import env from "./env";
+import logger from "./logger";
 
-export const options: FastifyListenOptions = {
-    port: env.PORT,
-    host: env.HOST,
+export type TFastifyOptions =
+    | FastifyHttpOptions<http.Server> //
+    | FastifyHttpsOptions<https.Server>
+    | FastifyHttp2Options<http2.Http2Server>
+    | FastifyHttp2SecureOptions<http2.Http2SecureServer>;
+
+export const fastifyOptions = {
+    logger,
     ...(env.TLS
         ? {
               /**
@@ -38,4 +54,9 @@ export const options: FastifyListenOptions = {
               },
           }
         : {}),
+} as const satisfies TFastifyOptions;
+
+export const fastifyListenOptions: FastifyListenOptions = {
+    port: env.PORT,
+    host: env.HOST,
 } as const;

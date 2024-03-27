@@ -15,14 +15,45 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-export const env = {
-    ENV: (process.env._TD_ENV || "production") as "development" | "production",
-    PORT: parseInt(process.env._TD_PORT!) || 3000,
-    HOST: process.env._TD_HOST || "::",
-    TLS: process.env._TD_TLS === "true" || false,
-    TLS_KEY_FILE_PATH: process.env._TD_TLS_KEY_FILE_PATH || "./keys/prod.pem.key",
-    TLS_CER_FILE_PATH: process.env._TD_TLS_CER_FILE_PATH || "./keys/prod.pem.cer",
-    LOG_LEVEL: (process.env._TD_LOG_LEVEL || "info") as "fatal" | "error" | "warn" | "info" | "debug" | "trace",
-    LOG_FILE_PATH: process.env._TD_LOG_FILE_PATH || "./logs/travels.log",
+export interface IEnv {
+    ENV: "development" | "production";
+    PORT: number;
+    HOST: string;
+    TLS: boolean;
+    TLS_KEY_FILE_PATH: string;
+    TLS_CER_FILE_PATH: string;
+    LOG_LEVEL: "fatal" | "error" | "warn" | "info" | "debug" | "trace";
+    LOG_FILE_PATH: string;
+}
+
+export const ENV_DEFAULT: IEnv = {
+    ENV: "production",
+    PORT: 3000,
+    HOST: "::",
+    TLS: false,
+    TLS_KEY_FILE_PATH: "./keys/prod.pem.key",
+    TLS_CER_FILE_PATH: "./keys/prod.pem.cer",
+    LOG_LEVEL: "info",
+    LOG_FILE_PATH: "./logs/travels.log",
 } as const;
+
+export const env: IEnv = {
+    ENV: (process.env._TD_ENV || ENV_DEFAULT.ENV) as IEnv["ENV"],
+    PORT: parseInt(process.env._TD_PORT!) || ENV_DEFAULT.PORT,
+    HOST: process.env._TD_HOST || ENV_DEFAULT.HOST,
+    TLS: process.env._TD_TLS === "true" || ENV_DEFAULT.TLS,
+    TLS_KEY_FILE_PATH: process.env._TD_TLS_KEY_FILE_PATH || ENV_DEFAULT.TLS_KEY_FILE_PATH,
+    TLS_CER_FILE_PATH: process.env._TD_TLS_CER_FILE_PATH || ENV_DEFAULT.TLS_CER_FILE_PATH,
+    LOG_LEVEL: (process.env._TD_LOG_LEVEL || ENV_DEFAULT.LOG_LEVEL) as IEnv["LOG_LEVEL"],
+    LOG_FILE_PATH: process.env._TD_LOG_FILE_PATH || ENV_DEFAULT.LOG_FILE_PATH,
+} as const;
+
+switch (env.ENV) {
+    case "development":
+        console.log(env);
+        break;
+
+    default:
+        break;
+}
 export default env;

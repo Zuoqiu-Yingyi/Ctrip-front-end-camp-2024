@@ -4,6 +4,7 @@
 
 - 初始化 tRPC 服务 | Initialize the tRPC service
 - 优化开发服务器 | Optimize the development server
+- Web 服务支持 TLS | Web service supports TLS
 
 ## 2024-03-26
 
