@@ -1,5 +1,9 @@
 # 更改日志 | Change log
 
+## 2024-03-28
+
+- 实现用户认证算法 | Implement user authentication algorithm
+
 ## 2024-03-27
 
 - 初始化 tRPC 服务 | Initialize the tRPC service

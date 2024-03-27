@@ -164,6 +164,6 @@ async function dev() {
     });
 }
 
-if (process.argv.at(-1) === import.meta.filename) {
+if (process.argv.includes(import.meta.filename)) {
     dev();
 }

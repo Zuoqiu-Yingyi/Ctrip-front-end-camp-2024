@@ -15,40 +15,128 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+import { randomString } from "@repo/utils/node/crypto";
+
 export interface IEnv {
+    /* 运行环境 */
     ENV: "development" | "production";
+
+    /* Web 服务 */
     PORT: number;
     HOST: string;
     TLS: boolean;
     TLS_KEY_FILE_PATH: string;
     TLS_CER_FILE_PATH: string;
+
+    /* 日志 */
     LOG_LEVEL: "fatal" | "error" | "warn" | "info" | "debug" | "trace";
     LOG_FILE_PATH: string;
+
+    /* 数据库 */
     DATASOURCE_URL?: string;
+    DATABASE_RESET_STAFF: boolean;
+    ADMINISTRATOR_ACCOUNT: string;
+    REVIEWER_ACCOUNT: string;
+
+    /* 安全 */
+    USER_KEY_SALT: string;
+    JWT_SECRET: string;
+    JWT_EXPRES_IN: string;
+    CHALLENGE_RESPONSE_JWT_SECRET: string;
+    CHALLENGE_RESPONSE_JWT_EXPRES_IN: string;
 }
 
 export const ENV_DEFAULT: IEnv = {
+    /* 运行环境 */
     ENV: "production",
+
+    /* Web 服务 */
     PORT: 3000,
     HOST: "::",
     TLS: false,
     TLS_KEY_FILE_PATH: "./keys/prod.pem.key",
     TLS_CER_FILE_PATH: "./keys/prod.pem.cer",
+
+    /* 日志 */
     LOG_LEVEL: "info",
     LOG_FILE_PATH: "./logs/travels.log",
+
+    /* 数据库 */
     DATASOURCE_URL: undefined,
+    DATABASE_RESET_STAFF: true,
+    ADMINISTRATOR_ACCOUNT: "admin:admin",
+    REVIEWER_ACCOUNT: "reviewer:reviewer",
+
+    /* 安全 */
+    USER_KEY_SALT: "mbn8MtY7K8tRvsi8Qz3aXyM3vi1AW2FZ5GPtsfTnR9xWUME1",
+    JWT_SECRET: randomString(32),
+    JWT_EXPRES_IN: "7d",
+    CHALLENGE_RESPONSE_JWT_SECRET: randomString(32),
+    CHALLENGE_RESPONSE_JWT_EXPRES_IN: "5m",
 } as const;
 
 export const env: IEnv = {
-    ENV: (process.env._TD_ENV || ENV_DEFAULT.ENV) as IEnv["ENV"],
-    PORT: parseInt(process.env._TD_PORT!) || ENV_DEFAULT.PORT,
-    HOST: process.env._TD_HOST || ENV_DEFAULT.HOST,
-    TLS: process.env._TD_TLS === "true" || ENV_DEFAULT.TLS,
-    TLS_KEY_FILE_PATH: process.env._TD_TLS_KEY_FILE_PATH || ENV_DEFAULT.TLS_KEY_FILE_PATH,
-    TLS_CER_FILE_PATH: process.env._TD_TLS_CER_FILE_PATH || ENV_DEFAULT.TLS_CER_FILE_PATH,
-    LOG_LEVEL: (process.env._TD_LOG_LEVEL || ENV_DEFAULT.LOG_LEVEL) as IEnv["LOG_LEVEL"],
-    LOG_FILE_PATH: process.env._TD_LOG_FILE_PATH || ENV_DEFAULT.LOG_FILE_PATH,
-    DATASOURCE_URL: process.env._TD_DATASOURCE_URL,
+    /* 运行环境 */
+    ENV:
+        (process.env._TD_ENV as IEnv["ENV"]) || //
+        ENV_DEFAULT.ENV,
+
+    /* Web 服务 */
+    PORT:
+        parseInt(process.env._TD_PORT!) || //
+        ENV_DEFAULT.PORT,
+    HOST:
+        process.env._TD_HOST || //
+        ENV_DEFAULT.HOST,
+    TLS:
+        process.env._TD_TLS === "true" || //
+        ENV_DEFAULT.TLS,
+    TLS_KEY_FILE_PATH:
+        process.env._TD_TLS_KEY_FILE_PATH || //
+        ENV_DEFAULT.TLS_KEY_FILE_PATH,
+    TLS_CER_FILE_PATH:
+        process.env._TD_TLS_CER_FILE_PATH || //
+        ENV_DEFAULT.TLS_CER_FILE_PATH,
+
+    /* 日志 */
+    LOG_LEVEL:
+        (process.env._TD_LOG_LEVEL as IEnv["LOG_LEVEL"]) || //
+        ENV_DEFAULT.LOG_LEVEL,
+    LOG_FILE_PATH:
+        process.env._TD_LOG_FILE_PATH || //
+        ENV_DEFAULT.LOG_FILE_PATH,
+
+    /* 数据库 */
+    DATASOURCE_URL:
+        process.env._TD_DATASOURCE_URL || //
+        process.env._TD_PRISMA_DATABASE_URL ||
+        ENV_DEFAULT.DATASOURCE_URL,
+    DATABASE_RESET_STAFF:
+        process.env._TD_DATABASE_RESET_STAFF === "true" || //
+        ENV_DEFAULT.DATABASE_RESET_STAFF,
+    ADMINISTRATOR_ACCOUNT:
+        process.env._TD_ADMINISTRATOR_ACCOUNT || //
+        ENV_DEFAULT.ADMINISTRATOR_ACCOUNT,
+    REVIEWER_ACCOUNT:
+        process.env._TD_REVIEWER_ACCOUNT || //
+        ENV_DEFAULT.REVIEWER_ACCOUNT,
+
+    /* 安全 */
+    USER_KEY_SALT:
+        process.env._TD_USER_KEY_SALT || //
+        ENV_DEFAULT.USER_KEY_SALT,
+    JWT_SECRET:
+        process.env._TD_JWT_SECRET || //
+        ENV_DEFAULT.JWT_SECRET,
+    JWT_EXPRES_IN:
+        process.env._TD_JWT_EXPRES_IN || //
+        ENV_DEFAULT.JWT_EXPRES_IN,
+    CHALLENGE_RESPONSE_JWT_SECRET:
+        process.env._TD_CHALLENGE_RESPONSE_JWT_SECRET || //
+        ENV_DEFAULT.CHALLENGE_RESPONSE_JWT_SECRET,
+    CHALLENGE_RESPONSE_JWT_EXPRES_IN:
+        process.env._TD_CHALLENGE_RESPONSE_JWT_EXPRES_IN || //
+        ENV_DEFAULT.CHALLENGE_RESPONSE_JWT_EXPRES_IN,
 } as const;
 
 switch (env.ENV) {

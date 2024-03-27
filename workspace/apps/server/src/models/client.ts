@@ -46,18 +46,16 @@ export class DatabaseClient {
      */
     private readonly queryLogHandler = (e: Prisma.QueryEvent) => {
         // REF: https://www.prisma.io/docs/orm/prisma-client/observability-and-logging/logging#event-based-logging
-        this.prisma.$on<"query">("query", (e) => {
-            this._fastify?.log.debug(
-                [
-                    //
-                    "[prisma client query]",
-                    `Target:   ${e.target}`,
-                    `Query:    ${e.query}`,
-                    `Params:   ${e.params}`,
-                    `Duration: ${e.duration} ms`,
-                ].join("\n"),
-            );
-        });
+        this._fastify?.log.debug(
+            [
+                //
+                "[prisma client query]",
+                `Target:   ${e.target}`,
+                `Query:    ${e.query}`,
+                `Params:   ${e.params}`,
+                `Duration: ${e.duration} ms`,
+            ].join("\n    "),
+        );
     };
 
     /**
@@ -78,22 +76,31 @@ export class DatabaseClient {
                 `[prisma client ${eventType}]`,
                 `Target:  ${e.target}`,
                 `Message: ${e.message}`,
-            ].join("\n"),
+            ].join("\n    "),
         );
     };
 
+    /**
+     * 初始化数据库客户端
+     */
     public async init(fastify: FastifyInstance): Promise<void> {
         this._fastify = fastify;
         this.prisma.$on<"query">("query", this.queryLogHandler);
-        this.prisma.$on("info", this.messageLogHandler.bind(this, fastify.log.info, "info"));
-        this.prisma.$on("warn", this.messageLogHandler.bind(this, fastify.log.warn, "warn"));
-        this.prisma.$on("error", this.messageLogHandler.bind(this, fastify.log.error, "error"));
+        this.prisma.$on("info", this.messageLogHandler.bind(this, fastify.log.info.bind(fastify.log), "info"));
+        this.prisma.$on("warn", this.messageLogHandler.bind(this, fastify.log.warn.bind(fastify.log), "warn"));
+        this.prisma.$on("error", this.messageLogHandler.bind(this, fastify.log.error.bind(fastify.log), "error"));
     }
 
+    /**
+     * 连接数据库
+     */
     public async connect(): Promise<void> {
         await this.prisma.$connect();
     }
 
+    /**
+     * 断开数据库
+     */
     public async disconnect(): Promise<void> {
         await this.prisma.$disconnect();
     }

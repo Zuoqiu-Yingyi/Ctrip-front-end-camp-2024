@@ -55,9 +55,11 @@ export class Server {
      * 初始化 Fastify 服务
      */
     public async init() {
-        D.init(this.fastify);
-        await initRouters(this.fastify);
-        await this.fastify.ready();
+        await Promise.all([
+            initRouters(this.fastify), // 初始化路由
+            D.init(this.fastify), // 初始化数据库
+        ]);
+        await this.fastify.ready(); // 等待 Fastify 准备就绪
     }
 
     /**
@@ -66,10 +68,12 @@ export class Server {
     public async start() {
         if (!this._runing) {
             this._runing = true;
-            return this.fastify.listen(this._fastifyListenOptions);
+            await D.connect(); // 连接数据库
+            const address = await this.fastify.listen(this._fastifyListenOptions); // 监听端口
+            return address;
         } else {
             this._runing = false;
-            return this._runing;
+            return false;
         }
     }
 
@@ -79,7 +83,8 @@ export class Server {
     public async stop() {
         if (this._runing) {
             this._runing = false;
-            await this.fastify.close();
+            await D.disconnect(); // 断开数据库
+            await this.fastify.close(); // 关闭服务
             return true;
         } else {
             return false;
@@ -87,7 +92,7 @@ export class Server {
     }
 }
 
-if (process.argv.at(-1) === import.meta.filename) {
+if (process.argv.includes(import.meta.filename)) {
     const server = new Server();
     try {
         await server.init();

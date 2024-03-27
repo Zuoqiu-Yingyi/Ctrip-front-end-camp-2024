@@ -35,7 +35,7 @@ export const baseFastifyLoggerOptions: TFastifyLoggerOptions = {
         target: "pino-pretty",
         options: {
             // REF: https://www.npmjs.com/package/dateformat
-            translateTime: "yyyy-mm-dd HH:MM:ss",
+            translateTime: "yyyy-mm-dd HH:MM:ss.l",
             ignore: "pid,hostname",
         },
     },
