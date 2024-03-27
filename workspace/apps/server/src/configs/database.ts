@@ -15,4 +15,22 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-console.log(import.meta.filename);
+import type { Prisma } from "@prisma/client";
+import { prismaLogger } from "./logger";
+import env from "./env";
+
+export const prismaClientOptions = {
+    log: prismaLogger,
+    datasourceUrl: env.DATASOURCE_URL,
+    errorFormat: (() => {
+        switch (env.ENV) {
+            case "development":
+                return "pretty";
+
+            case "production":
+            default:
+                // return "minimal";
+                return "colorless";
+        }
+    })() as Prisma.ErrorFormat,
+} as const satisfies Prisma.PrismaClientOptions;

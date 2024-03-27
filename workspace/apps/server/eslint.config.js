@@ -46,16 +46,14 @@ const config = {
     },
     // REF https://eslint.nodejs.cn/docs/latest/rules/
     rules: {},
-    overrides: [
-        {
-            files: ["tests/**/*"],
-            env: {
-                jest: true,
-            },
-        },
-    ],
 };
 
 export default [
     config, //
+    // {
+    //     files: ["tests/**/*"],
+    //     env: {
+    //         jest: true,
+    //     },
+    // },
 ];

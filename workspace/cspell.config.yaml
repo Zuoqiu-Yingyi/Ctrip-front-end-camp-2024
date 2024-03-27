@@ -1,7 +1,9 @@
+# REF: https://cspell.org/configuration/
+
 $schema: https://raw.githubusercontent.com/streetsidesoftware/cspell/main/packages/cspell-types/cspell.schema.json
 
 #  Version of the setting file.
-version: "0.0.3"
+version: "0.0.4"
 
 # language - current active spelling language
 language: en
@@ -28,12 +30,8 @@ ignoreRegExpList:
 # flagWords - list of words to be always considered incorrect
 flagWords:
 
+useGitignore: true
+
 ignorePaths:
-    - "*.db"
-    - "*.db-journal"
-    - dist
-    - node_modules
     - package.json
     - pnpm-lock.yaml
-    - prisma
-    - temp

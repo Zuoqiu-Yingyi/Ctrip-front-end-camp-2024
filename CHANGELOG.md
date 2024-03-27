@@ -1,9 +1,16 @@
 # 更改日志 | Change log
 
+## 2024-03-28
+
+- 实现用户认证算法 | Implement user authentication algorithm
+- 实现初始化数据库表 `Staff` 的功能 | Implement the function of initializing the database table `Staff`
+
 ## 2024-03-27
 
 - 初始化 tRPC 服务 | Initialize the tRPC service
 - 优化开发服务器 | Optimize the development server
+- Web 服务支持 TLS | Web service supports TLS
+- 实现连接数据库功能 | Implement database connection feature
 
 ## 2024-03-26
 

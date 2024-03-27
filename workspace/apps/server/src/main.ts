@@ -18,24 +18,90 @@
 import Fastify, { type FastifyInstance } from "fastify";
 
 import { init as initRouters } from "./routers";
-import { logger } from "./utils/logger";
-import { options } from "./utils/server";
+import { D } from "./models/client";
+import {
+    //
+    fastifyOptions,
+    fastifyListenOptions,
+} from "./configs/server";
 
-export async function init(fastify: FastifyInstance): Promise<FastifyInstance> {
-    await initRouters(fastify);
-    await fastify.ready();
-    return fastify;
+/**
+ * 服务
+ */
+export class Server {
+    /**
+     * Fastify 实例
+     */
+    public readonly fastify: FastifyInstance;
+
+    private _runing: boolean = false;
+
+    /**
+     * @param _fastifyOptions Fastify 选项
+     * @param _fastifyListenOptions Fastify 监听选项
+     */
+    constructor(
+        private readonly _fastifyOptions: typeof fastifyOptions = fastifyOptions,
+        private readonly _fastifyListenOptions: typeof fastifyListenOptions = fastifyListenOptions,
+    ) {
+        this.fastify = Fastify(this._fastifyOptions);
+    }
+
+    public get runing(): boolean {
+        return this._runing;
+    }
+
+    /**
+     * 初始化 Fastify 服务
+     */
+    public async init() {
+        await Promise.all([
+            initRouters(this.fastify), // 初始化路由
+            D.init(this.fastify), // 初始化数据库
+        ]);
+        await this.fastify.ready(); // 等待 Fastify 准备就绪
+    }
+
+    /**
+     * 启动 Web 服务
+     */
+    public async start() {
+        if (!this._runing) {
+            this._runing = true;
+            await D.connect(); // 连接数据库
+            await D.pretreat(); // 数据库预处理
+
+            const address = await this.fastify.listen(this._fastifyListenOptions); // 监听端口
+            return address;
+        } else {
+            this._runing = false;
+            return false;
+        }
+    }
+
+    /**
+     * 停止 Web 服务
+     */
+    public async stop() {
+        if (this._runing) {
+            this._runing = false;
+            await D.disconnect(); // 断开数据库
+            await this.fastify.close(); // 关闭服务
+            return true;
+        } else {
+            return false;
+        }
+    }
 }
 
-if (process.argv.at(-1) === import.meta.filename) {
-    const fastify = Fastify({
-        logger,
-    });
+if (process.argv.includes(import.meta.filename)) {
+    const server = new Server();
     try {
-        await init(fastify);
-        const address = await fastify.listen(options);
-        fastify.log.info(`Server is now listening on ${address}`);
+        await server.init();
+        await server.start();
     } catch (error) {
-        fastify.log.error(error);
+        server.fastify.log.error(error);
+        await server.stop();
+        process.exit(1);
     }
 }

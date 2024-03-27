@@ -5,19 +5,24 @@
     "private": true,
     "scripts": {
         "dev": "dotenvx run --env-file=./.env --env-file=./.env.development.local -- node --import=@repo/utils/registers/ts-node.js ./scripts/dev.ts",
-        "test": "dotenvx run --env-file=./.env --env-file=./.env.test.local  -- jest",
         "prod": "dotenvx run --env-file=./.env --env-file=./.env.production.local -- node --import=@repo/utils/registers/ts-node.js ./scripts/prod.ts",
+        "test": "dotenvx run --env-file=./.env --env-file=./.env.test.local  -- jest --watch",
+        "test:all": "dotenvx run --env-file=./.env --env-file=./.env.test.local  -- jest",
         "lint": "eslint . --max-warnings 0",
         "prisma:init": "prisma init --datasource-provider sqlite",
-        "prisma:dev": "prisma migrate dev",
-        "prisma:reset": "prisma migrate reset",
-        "prisma:deploy": "prisma migrate deploy",
-        "prisma:status": "prisma migrate status"
+        "prisma:studio": "prisma studio",
+        "prisma:generate": "prisma generate",
+        "prisma:migrate:dev": "prisma migrate dev",
+        "prisma:migrate:init": "prisma migrate dev --name init",
+        "prisma:migrate:reset": "prisma migrate reset",
+        "prisma:migrate:deploy": "prisma migrate deploy",
+        "prisma:migrate:status": "prisma migrate status"
     },
     "dependencies": {
         "@prisma/client": "5.11.0",
         "@trpc/server": "11.0.0-next.320",
         "fastify": "^4.26.2",
+        "jsonwebtoken": "^9.0.2",
         "uuid": "^9.0.1"
     },
     "devDependencies": {

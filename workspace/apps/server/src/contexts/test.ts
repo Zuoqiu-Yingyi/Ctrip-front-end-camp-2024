@@ -21,7 +21,6 @@ import type { CreateFastifyContextOptions } from "@trpc/server/adapters/fastify"
  * @see {@link https://trpc.io/docs/server/adapters/fastify#create-the-context Create the context}
  */
 export function createTestContext(options: CreateFastifyContextOptions) {
-    console.debug("createTestContext", options);
     return options;
 }
 

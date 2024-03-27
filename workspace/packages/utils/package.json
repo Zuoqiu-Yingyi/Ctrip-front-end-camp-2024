@@ -3,5 +3,10 @@
     "version": "0.0.0",
     "private": true,
     "type": "module",
-    "scripts": {}
+    "scripts": {},
+    "devDependencies": {
+        "@types/crypto-js": "^4.2.2",
+        "crypto-js": "^4.2.0",
+        "deepmerge": "^4.3.1"
+    }
 }

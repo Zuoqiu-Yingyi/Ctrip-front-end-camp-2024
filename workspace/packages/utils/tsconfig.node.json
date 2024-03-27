@@ -1,0 +1,10 @@
+{
+    "exclude": [
+        "node_modules"
+    ],
+    "extends": "@repo/typescript-config/node.json",
+    "include": [
+        "./node",
+        "./registers"
+    ]
+}
