@@ -10,11 +10,12 @@
         "test:all": "dotenvx run --env-file=./.env --env-file=./.env.test.local  -- jest",
         "lint": "eslint . --max-warnings 0",
         "prisma:init": "prisma init --datasource-provider sqlite",
-        "prisma:generate": "prisma generate",
-        "prisma:dev": "prisma migrate dev",
-        "prisma:reset": "prisma migrate reset",
-        "prisma:deploy": "prisma migrate deploy",
-        "prisma:status": "prisma migrate status"
+        "prisma:generate:dev": "dotenvx run --env-file=./.env --env-file=./.env.development.local -- prisma generate",
+        "prisma:generate:prod": "dotenvx run --env-file=./.env --env-file=./.env.production.local -- prisma generate",
+        "prisma:migrate:dev": "prisma migrate dev",
+        "prisma:migrate:reset": "prisma migrate reset",
+        "prisma:migrate:deploy": "prisma migrate deploy",
+        "prisma:migrate:status": "prisma migrate status"
     },
     "dependencies": {
         "@prisma/client": "5.11.0",

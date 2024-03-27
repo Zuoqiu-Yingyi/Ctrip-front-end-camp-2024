@@ -24,6 +24,7 @@ export interface IEnv {
     TLS_CER_FILE_PATH: string;
     LOG_LEVEL: "fatal" | "error" | "warn" | "info" | "debug" | "trace";
     LOG_FILE_PATH: string;
+    DATASOURCE_URL?: string;
 }
 
 export const ENV_DEFAULT: IEnv = {
@@ -35,6 +36,7 @@ export const ENV_DEFAULT: IEnv = {
     TLS_CER_FILE_PATH: "./keys/prod.pem.cer",
     LOG_LEVEL: "info",
     LOG_FILE_PATH: "./logs/travels.log",
+    DATASOURCE_URL: undefined,
 } as const;
 
 export const env: IEnv = {
@@ -46,6 +48,7 @@ export const env: IEnv = {
     TLS_CER_FILE_PATH: process.env._TD_TLS_CER_FILE_PATH || ENV_DEFAULT.TLS_CER_FILE_PATH,
     LOG_LEVEL: (process.env._TD_LOG_LEVEL || ENV_DEFAULT.LOG_LEVEL) as IEnv["LOG_LEVEL"],
     LOG_FILE_PATH: process.env._TD_LOG_FILE_PATH || ENV_DEFAULT.LOG_FILE_PATH,
+    DATASOURCE_URL: process.env._TD_DATASOURCE_URL,
 } as const;
 
 switch (env.ENV) {

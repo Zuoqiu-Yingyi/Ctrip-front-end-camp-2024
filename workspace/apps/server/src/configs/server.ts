@@ -28,7 +28,7 @@ import type {
     FastifyListenOptions,
 } from "fastify";
 import env from "./env";
-import logger from "./logger";
+import { fastifyLogger } from "./logger";
 
 export type TFastifyOptions =
     | FastifyHttpOptions<http.Server> //
@@ -37,7 +37,7 @@ export type TFastifyOptions =
     | FastifyHttp2SecureOptions<http2.Http2SecureServer>;
 
 export const fastifyOptions = {
-    logger,
+    logger: fastifyLogger,
     ...(env.TLS
         ? {
               /**

@@ -33,6 +33,11 @@ class DevSubProcess {
     private _subprocess?: ChildProcessWithoutNullStreams;
 
     /**
+     * 是否子进程是否已退出
+     */
+    private _exited: Promise<number | null> = Promise.resolve(null);
+
+    /**
      * 延时重启服务子进程 (消抖)
      */
     public readonly delayedRestart!: typeof this.restart;
@@ -67,6 +72,28 @@ class DevSubProcess {
                         env: process.env,
                     },
                 );
+                this._exited = new Promise<number | null>((resolve) => {
+                    if (this._subprocess) {
+                        this._subprocess.on("exit", (code) => {
+                            console.info(
+                                `\nSubprocess exit with code: ${(() => {
+                                    switch (code) {
+                                        case null:
+                                            return chalk.bgCyan(code);
+                                        case 0:
+                                            return chalk.bgGreen(code);
+                                        default:
+                                            return chalk.bgRed(code);
+                                    }
+                                })()}`,
+                            );
+                            resolve(code);
+                        });
+                    } else {
+                        resolve(null);
+                    }
+                });
+
                 this._subprocess.stdout?.on("data", process.stdout.write.bind(process.stdout));
                 this._subprocess.stderr?.on("data", process.stderr.write.bind(process.stderr));
                 this._subprocess.on("error", process.stderr.write.bind(process.stderr));
@@ -85,18 +112,8 @@ class DevSubProcess {
     public async stop() {
         if (this._subprocess) {
             try {
-                const killed = new Promise((resolve) => {
-                    if (this._subprocess) {
-                        this._subprocess.on("exit", (code) => {
-                            console.info(`\nSubprocess exit with code: ${chalk.bgCyan(code)}`);
-                            resolve(undefined);
-                        });
-                    } else {
-                        resolve(undefined);
-                    }
-                });
                 this._subprocess.kill();
-                await killed;
+                await this._exited;
             } catch (error) {
                 console.error(error);
             } finally {

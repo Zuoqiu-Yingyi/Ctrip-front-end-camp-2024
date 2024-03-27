@@ -18,25 +18,83 @@
 import Fastify, { type FastifyInstance } from "fastify";
 
 import { init as initRouters } from "./routers";
+import { D } from "./models/client";
 import {
     //
     fastifyOptions,
     fastifyListenOptions,
-} from "./utils/server";
+} from "./configs/server";
 
-export async function init(fastify: FastifyInstance): Promise<FastifyInstance> {
-    await initRouters(fastify);
-    await fastify.ready();
-    return fastify;
+/**
+ * 服务
+ */
+export class Server {
+    /**
+     * Fastify 实例
+     */
+    public readonly fastify: FastifyInstance;
+
+    private _runing: boolean = false;
+
+    /**
+     * @param _fastifyOptions Fastify 选项
+     * @param _fastifyListenOptions Fastify 监听选项
+     */
+    constructor(
+        private readonly _fastifyOptions: typeof fastifyOptions = fastifyOptions,
+        private readonly _fastifyListenOptions: typeof fastifyListenOptions = fastifyListenOptions,
+    ) {
+        this.fastify = Fastify(this._fastifyOptions);
+    }
+
+    public get runing(): boolean {
+        return this._runing;
+    }
+
+    /**
+     * 初始化 Fastify 服务
+     */
+    public async init() {
+        D.init(this.fastify);
+        await initRouters(this.fastify);
+        await this.fastify.ready();
+    }
+
+    /**
+     * 启动 Web 服务
+     */
+    public async start() {
+        if (!this._runing) {
+            this._runing = true;
+            return this.fastify.listen(this._fastifyListenOptions);
+        } else {
+            this._runing = false;
+            return this._runing;
+        }
+    }
+
+    /**
+     * 停止 Web 服务
+     */
+    public async stop() {
+        if (this._runing) {
+            this._runing = false;
+            await this.fastify.close();
+            return true;
+        } else {
+            return false;
+        }
+    }
 }
 
 if (process.argv.at(-1) === import.meta.filename) {
-    const fastify = Fastify(fastifyOptions);
+    const server = new Server();
     try {
-        await init(fastify);
-        const address = await fastify.listen(fastifyListenOptions);
+        await server.init();
+        await server.start();
     } catch (error) {
-        fastify.log.error(error);
+        server.fastify.log.error(error);
+        await server.stop();
         process.exit(1);
     }
 }

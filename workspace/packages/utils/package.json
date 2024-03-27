@@ -3,5 +3,8 @@
     "version": "0.0.0",
     "private": true,
     "type": "module",
-    "scripts": {}
+    "scripts": {},
+    "devDependencies": {
+        "deepmerge": "^4.3.1"
+    }
 }
