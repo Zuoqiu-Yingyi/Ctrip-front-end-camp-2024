@@ -22,13 +22,15 @@ import {
 } from "@prisma/client";
 import type { FastifyInstance } from "fastify";
 
+import { reset as resetStaffTable } from "./staff";
+import env from "./../configs/env";
 import { prismaClientOptions } from "./../configs/database";
 
 // REF: https://www.prisma.io/docs/orm/prisma-client/setup-and-configuration/databases-connections
 
 export class DatabaseClient {
-    public readonly prisma: InstanceType<typeof PrismaClient>;
-    private _fastify?: FastifyInstance;
+    public readonly p: InstanceType<typeof PrismaClient>;
+    private _f?: FastifyInstance;
 
     /**
      * @param _prismaClientOptions Prisma 客户端选项
@@ -37,7 +39,7 @@ export class DatabaseClient {
         //
         private readonly _prismaClientOptions: typeof prismaClientOptions = prismaClientOptions,
     ) {
-        this.prisma = new PrismaClient(this._prismaClientOptions);
+        this.p = new PrismaClient(this._prismaClientOptions);
     }
 
     /**
@@ -46,7 +48,7 @@ export class DatabaseClient {
      */
     private readonly queryLogHandler = (e: Prisma.QueryEvent) => {
         // REF: https://www.prisma.io/docs/orm/prisma-client/observability-and-logging/logging#event-based-logging
-        this._fastify?.log.debug(
+        this._f?.log.debug(
             [
                 //
                 "[prisma client query]",
@@ -84,25 +86,34 @@ export class DatabaseClient {
      * 初始化数据库客户端
      */
     public async init(fastify: FastifyInstance): Promise<void> {
-        this._fastify = fastify;
-        this.prisma.$on<"query">("query", this.queryLogHandler);
-        this.prisma.$on("info", this.messageLogHandler.bind(this, fastify.log.info.bind(fastify.log), "info"));
-        this.prisma.$on("warn", this.messageLogHandler.bind(this, fastify.log.warn.bind(fastify.log), "warn"));
-        this.prisma.$on("error", this.messageLogHandler.bind(this, fastify.log.error.bind(fastify.log), "error"));
+        this._f = fastify;
+        this.p.$on<"query">("query", this.queryLogHandler);
+        this.p.$on("info", this.messageLogHandler.bind(this, fastify.log.info.bind(fastify.log), "info"));
+        this.p.$on("warn", this.messageLogHandler.bind(this, fastify.log.warn.bind(fastify.log), "warn"));
+        this.p.$on("error", this.messageLogHandler.bind(this, fastify.log.error.bind(fastify.log), "error"));
     }
 
     /**
      * 连接数据库
      */
     public async connect(): Promise<void> {
-        await this.prisma.$connect();
+        await this.p.$connect();
+    }
+
+    /**
+     * 数据库预处理
+     */
+    public async pretreat() {
+        if (env.DATABASE_RESET_STAFF) {
+            await resetStaffTable.call(this);
+        }
     }
 
     /**
      * 断开数据库
      */
     public async disconnect(): Promise<void> {
-        await this.prisma.$disconnect();
+        await this.p.$disconnect();
     }
 }
 

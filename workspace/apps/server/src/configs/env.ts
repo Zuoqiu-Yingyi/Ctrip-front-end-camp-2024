@@ -35,8 +35,7 @@ export interface IEnv {
     /* 数据库 */
     DATASOURCE_URL?: string;
     DATABASE_RESET_STAFF: boolean;
-    ADMINISTRATOR_ACCOUNT: string;
-    REVIEWER_ACCOUNT: string;
+    STAFF_ACCOUNTS: string;
 
     /* 安全 */
     USER_KEY_SALT: string;
@@ -64,8 +63,7 @@ export const ENV_DEFAULT: IEnv = {
     /* 数据库 */
     DATASOURCE_URL: undefined,
     DATABASE_RESET_STAFF: true,
-    ADMINISTRATOR_ACCOUNT: "admin:admin",
-    REVIEWER_ACCOUNT: "reviewer:reviewer",
+    STAFF_ACCOUNTS: ["0:admin:admin", "1:reviewer:reviewer"].join("\n"),
 
     /* 安全 */
     USER_KEY_SALT: "mbn8MtY7K8tRvsi8Qz3aXyM3vi1AW2FZ5GPtsfTnR9xWUME1",
@@ -114,12 +112,9 @@ export const env: IEnv = {
     DATABASE_RESET_STAFF:
         process.env._TD_DATABASE_RESET_STAFF === "true" || //
         ENV_DEFAULT.DATABASE_RESET_STAFF,
-    ADMINISTRATOR_ACCOUNT:
-        process.env._TD_ADMINISTRATOR_ACCOUNT || //
-        ENV_DEFAULT.ADMINISTRATOR_ACCOUNT,
-    REVIEWER_ACCOUNT:
-        process.env._TD_REVIEWER_ACCOUNT || //
-        ENV_DEFAULT.REVIEWER_ACCOUNT,
+    STAFF_ACCOUNTS:
+        process.env._TD_STAFF_ACCOUNTS || //
+        ENV_DEFAULT.STAFF_ACCOUNTS,
 
     /* 安全 */
     USER_KEY_SALT:

@@ -69,6 +69,8 @@ export class Server {
         if (!this._runing) {
             this._runing = true;
             await D.connect(); // 连接数据库
+            await D.pretreat(); // 数据库预处理
+
             const address = await this.fastify.listen(this._fastifyListenOptions); // 监听端口
             return address;
         } else {
