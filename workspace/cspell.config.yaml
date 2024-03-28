@@ -13,10 +13,16 @@ words:
     - autoincrement
     - callout
     - codepaths
+    - cryptjs
     - datasource
+    - deepmerge
+    - deshake
+    - endregion
     - evenodd
+    - expres
     - publishs
     - rgba
+    - runing
     - tsbuildinfo
     - turborepo
     - vercel
