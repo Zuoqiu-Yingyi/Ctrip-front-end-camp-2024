@@ -16,14 +16,10 @@
  */
 
 import { router } from ".";
-import testRouter from "./test";
-import authRouter from "./auth";
+import { challengeProcedure } from "./../../controllers/challenge";
 
-// REF: https://trpc.io/docs/server/merging-routers#merging-with-child-routers
-const trpcRouter = router({
-    test: testRouter,
-    auth: authRouter,
+export const authRouter = router({
+    challenge: challengeProcedure,
 });
-
-export type TTrpcRouter = typeof trpcRouter;
-export default trpcRouter;
+export type TAuthRouter = typeof authRouter;
+export default authRouter;

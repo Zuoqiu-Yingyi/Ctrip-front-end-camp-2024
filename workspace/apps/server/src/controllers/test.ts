@@ -15,15 +15,26 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { router } from ".";
-import testRouter from "./test";
-import authRouter from "./auth";
+import { z } from "zod";
+import { procedure } from ".";
 
-// REF: https://trpc.io/docs/server/merging-routers#merging-with-child-routers
-const trpcRouter = router({
-    test: testRouter,
-    auth: authRouter,
-});
+export const queryProcedure = procedure //
+    .input(z.string())
+    .query((opts) => {
+        return {
+            input: opts.input,
+        };
+    });
 
-export type TTrpcRouter = typeof trpcRouter;
-export default trpcRouter;
+export const mutationProcedure = procedure
+    .input(
+        z.object({
+            str: z.string().min(4),
+            num: z.number().max(16).optional(),
+        }),
+    )
+    .mutation((opts) => {
+        return {
+            input: opts.input,
+        };
+    });

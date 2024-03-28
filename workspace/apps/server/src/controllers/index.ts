@@ -15,15 +15,4 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { router } from ".";
-import testRouter from "./test";
-import authRouter from "./auth";
-
-// REF: https://trpc.io/docs/server/merging-routers#merging-with-child-routers
-const trpcRouter = router({
-    test: testRouter,
-    auth: authRouter,
-});
-
-export type TTrpcRouter = typeof trpcRouter;
-export default trpcRouter;
+export { procedure } from "./../utils/trpc";

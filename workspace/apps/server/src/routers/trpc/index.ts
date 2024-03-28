@@ -15,11 +15,4 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { initTRPC } from "@trpc/server";
-
-import type { TSessionContext } from "./../../contexts/session";
-
-// REF: https://trpc.io/docs/server/merging-routers
-export const t = initTRPC.context<TSessionContext>().create();
-export const router = t.router;
-export const procedure = t.procedure;
+export { router } from "./../../utils/trpc";

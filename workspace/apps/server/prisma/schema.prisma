@@ -76,9 +76,9 @@ model Staff {
     /// 格式: 十六进制字符串 | Format: Hex string
     password String
     /// 账户权限 | Account permission
-    /// - `0`: 管理员 | Administrator
-    /// - `1`: 审核员 | Reviewer
-    role     Int    @default(1)
+    /// - `1`: 管理员 | Administrator
+    /// - `2`: 审核员 | Reviewer
+    role     Int    @default(2)
 
     reviews Review[] // 审核列表
 

@@ -3,6 +3,7 @@
 ## 2024-03-29
 
 - 实现 tRPC 子路由 | Implement tRPC sub-routes
+- 实现挑战字符串生成功能 | Implement the challenge string generation feature
 
 ## 2024-03-28
 

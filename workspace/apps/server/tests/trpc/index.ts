@@ -15,15 +15,16 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { router } from ".";
-import testRouter from "./test";
-import authRouter from "./auth";
+import { createTRPCClient, httpBatchLink } from "@trpc/client";
+import type { TTrpcRouter } from "@/routers/trpc/router";
 
-// REF: https://trpc.io/docs/server/merging-routers#merging-with-child-routers
-const trpcRouter = router({
-    test: testRouter,
-    auth: authRouter,
+// REF: https://trpc.io/docs/quickstart#using-your-new-backend-on-the-client
+export const client = createTRPCClient<TTrpcRouter>({
+    links: [
+        httpBatchLink({
+            url: `${process.env._TD_SERVER_URL}/trpc`,
+        }),
+    ],
 });
 
-export type TTrpcRouter = typeof trpcRouter;
-export default trpcRouter;
+export default client;

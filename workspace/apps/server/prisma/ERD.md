@@ -152,8 +152,8 @@ erDiagram
     > 格式: 十六进制字符串 | Format: Hex string
   - `role`
     > 账户权限 | Account permission
-    > - `0`: 管理员 | Administrator
-    > - `1`: 审核员 | Reviewer
+    > - `1`: 管理员 | Administrator
+    > - `2`: 审核员 | Reviewer
   - `deleted`: 是否已逻辑删除 | Whether it has been logically deleted
   - `createdAt`: 记录创建时间 | Record creation time
   - `updatedAt`: 记录更新时间 | Record update time

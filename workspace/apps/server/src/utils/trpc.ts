@@ -15,15 +15,11 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { router } from ".";
-import testRouter from "./test";
-import authRouter from "./auth";
+import { initTRPC } from "@trpc/server";
 
-// REF: https://trpc.io/docs/server/merging-routers#merging-with-child-routers
-const trpcRouter = router({
-    test: testRouter,
-    auth: authRouter,
-});
+import type { TSessionContext } from "./../contexts/session";
 
-export type TTrpcRouter = typeof trpcRouter;
-export default trpcRouter;
+// REF: https://trpc.io/docs/server/merging-routers
+export const t = initTRPC.context<TSessionContext>().create();
+export const router = t.router;
+export const procedure = t.procedure;

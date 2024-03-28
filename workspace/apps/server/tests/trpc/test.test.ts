@@ -22,37 +22,25 @@ import {
     expect,
 } from "@jest/globals";
 
-import { createTRPCClient, httpBatchLink } from "@trpc/client";
-import type { TTrpcRouter } from "@/routers/trpc/router";
+import trpc from ".";
 
-describe("tRPC", () => {
-    // REF: https://trpc.io/docs/quickstart#using-your-new-backend-on-the-client
-    const trpc = createTRPCClient<TTrpcRouter>({
-        links: [
-            httpBatchLink({
-                url: `${process.env._TD_SERVER_URL}/trpc`,
-            }),
-        ],
+describe("/trpc/test", () => {
+    test("_query", async () => {
+        const query_input = "test-query";
+        const query_output = await trpc.test._query.query(query_input);
+
+        // console.log(query_output);
+        expect(query_output.input).toEqual(query_input);
     });
 
-    test("/trpc/test", async () => {
-        const query_input = "test-query";
+    test("_mutation", async () => {
         const mutation_input = {
             str: "test-mutation-str",
             num: 8,
         };
-        const [
-            query_output, //
-            mutation_output,
-        ] = await Promise.all([
-            trpc.test._query.query(query_input), //
-            trpc.test._mutation.mutate(mutation_input),
-        ]);
+        const mutation_output = await trpc.test._mutation.mutate(mutation_input);
 
-        // console.log(query_output);
         // console.log(mutation_output);
-
-        expect(query_output.input).toEqual(query_input);
         expect(mutation_output.input).toEqual(mutation_input);
     });
 });

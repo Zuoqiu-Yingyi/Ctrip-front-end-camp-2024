@@ -40,9 +40,11 @@ export interface IEnv {
     /* 安全 */
     USER_KEY_SALT: string;
     JWT_SECRET: string;
-    JWT_EXPRES_IN: string;
+    JWT_ISSUER: string;
+    JWT_EXPIRES_IN: string;
     CHALLENGE_RESPONSE_JWT_SECRET: string;
-    CHALLENGE_RESPONSE_JWT_EXPRES_IN: string;
+    CHALLENGE_RESPONSE_JWT_ISSUER: string;
+    CHALLENGE_RESPONSE_JWT_EXPIRES_IN: string;
 }
 
 export const ENV_DEFAULT: IEnv = {
@@ -63,14 +65,16 @@ export const ENV_DEFAULT: IEnv = {
     /* 数据库 */
     DATASOURCE_URL: undefined,
     DATABASE_RESET_STAFF: true,
-    STAFF_ACCOUNTS: ["0:admin:admin", "1:reviewer:reviewer"].join("\n"),
+    STAFF_ACCOUNTS: ["1:admin:admin", "2:reviewer:reviewer"].join("\n"),
 
     /* 安全 */
     USER_KEY_SALT: "mbn8MtY7K8tRvsi8Qz3aXyM3vi1AW2FZ5GPtsfTnR9xWUME1",
     JWT_SECRET: randomString(32),
-    JWT_EXPRES_IN: "7d",
+    JWT_ISSUER: "travel-diary",
+    JWT_EXPIRES_IN: "7d",
     CHALLENGE_RESPONSE_JWT_SECRET: randomString(32),
-    CHALLENGE_RESPONSE_JWT_EXPRES_IN: "5m",
+    CHALLENGE_RESPONSE_JWT_ISSUER: "travel-diary-challenge-response",
+    CHALLENGE_RESPONSE_JWT_EXPIRES_IN: "5m",
 } as const;
 
 export const env: IEnv = {
@@ -123,15 +127,21 @@ export const env: IEnv = {
     JWT_SECRET:
         process.env._TD_JWT_SECRET || //
         ENV_DEFAULT.JWT_SECRET,
-    JWT_EXPRES_IN:
-        process.env._TD_JWT_EXPRES_IN || //
-        ENV_DEFAULT.JWT_EXPRES_IN,
+    JWT_ISSUER:
+        process.env._TD_JWT_ISSUER || //
+        ENV_DEFAULT.JWT_ISSUER,
+    JWT_EXPIRES_IN:
+        process.env._TD_JWT_EXPIRES_IN || //
+        ENV_DEFAULT.JWT_EXPIRES_IN,
     CHALLENGE_RESPONSE_JWT_SECRET:
         process.env._TD_CHALLENGE_RESPONSE_JWT_SECRET || //
         ENV_DEFAULT.CHALLENGE_RESPONSE_JWT_SECRET,
-    CHALLENGE_RESPONSE_JWT_EXPRES_IN:
-        process.env._TD_CHALLENGE_RESPONSE_JWT_EXPRES_IN || //
-        ENV_DEFAULT.CHALLENGE_RESPONSE_JWT_EXPRES_IN,
+    CHALLENGE_RESPONSE_JWT_ISSUER:
+        process.env._TD_CHALLENGE_RESPONSE_JWT_ISSUER || //
+        ENV_DEFAULT.CHALLENGE_RESPONSE_JWT_ISSUER,
+    CHALLENGE_RESPONSE_JWT_EXPIRES_IN:
+        process.env._TD_CHALLENGE_RESPONSE_JWT_EXPIRES_IN || //
+        ENV_DEFAULT.CHALLENGE_RESPONSE_JWT_EXPIRES_IN,
 } as const;
 
 switch (env.ENV) {

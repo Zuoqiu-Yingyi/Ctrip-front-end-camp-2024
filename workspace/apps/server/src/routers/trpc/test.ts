@@ -15,34 +15,16 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { z } from "zod";
+import { router } from ".";
 import {
     //
-    router,
-    procedure,
-} from ".";
+    queryProcedure,
+    mutationProcedure,
+} from "./../../controllers/test";
 
 export const testRouter = router({
-    _query: procedure //
-        .input(z.string())
-        .query((opts) => {
-            return {
-                input: opts.input,
-            };
-        }),
-
-    _mutation: procedure
-        .input(
-            z.object({
-                str: z.string().min(4),
-                num: z.number().max(16).optional(),
-            }),
-        )
-        .mutation((opts) => {
-            return {
-                input: opts.input,
-            };
-        }),
+    _query: queryProcedure,
+    _mutation: mutationProcedure,
 });
 
 export type TTestRouter = typeof testRouter;
