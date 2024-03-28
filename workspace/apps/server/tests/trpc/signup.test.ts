@@ -27,7 +27,7 @@ import trpc from ".";
 
 type TPayload = Parameters<typeof trpc.account.signup.mutate>[0];
 
-describe("/trpc/account/singup", () => {
+describe("/trpc/account/signup", () => {
     const payload: TPayload = {
         username: cuid.createId(),
         password: crypto.randomBytes(32).toString("hex"),

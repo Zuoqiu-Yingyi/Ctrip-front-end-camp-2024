@@ -17,8 +17,7 @@
 
 console.log(import.meta.filename);
 
-async function prod() {
-}
+async function prod() {}
 
 if (process.argv.includes(import.meta.filename)) {
     prod();

@@ -33,7 +33,7 @@ import {
 import { Role } from "./../src/utils/role";
 
 describe("JWT", () => {
-    test(`create-werify`, async () => {
+    test(`create-verify`, async () => {
         const payload: IChallengeJwtPayload = {
             username: cuid.createId(),
             role: Role.Administrator,

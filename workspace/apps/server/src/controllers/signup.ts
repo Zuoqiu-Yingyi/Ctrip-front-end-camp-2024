@@ -56,7 +56,10 @@ export const signupMutation = procedure // 获取认证用的挑战字符串
                 code: 0,
                 message: "",
                 data: {
-                    user,
+                    user: {
+                        id: user.id,
+                        name: user.name,
+                    },
                 },
             };
         }

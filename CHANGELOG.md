@@ -5,6 +5,7 @@
 - 实现 tRPC 子路由 | Implement tRPC sub-routes
 - 实现挑战字符串生成功能 | Implement the challenge string generation feature
 - 实现用户注册功能 | Implement user registration feature
+- 代码拼写检查与格式化 | Code spelling check and formatting
 
 ## 2024-03-28
 
