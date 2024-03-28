@@ -1,23 +1,23 @@
 {
-    "compilerOptions": {
-        "jsx": "react",
-        "plugins": [
-            {
-                "name": "next"
-            }
-        ],
-        "strict": true,
-        "strictNullChecks": true
-    },
-    "exclude": [
-        "node_modules"
+  "compilerOptions": {
+    "jsx": "preserve",
+    "plugins": [
+      {
+        "name": "next"
+      }
     ],
-    "extends": "@repo/typescript-config/nextjs.json",
-    "include": [
-        "next-env.d.ts",
-        "next.config.js",
-        "**/*.ts",
-        "**/*.tsx",
-        ".next/types/**/*.ts"
-    ]
+    "strict": true,
+    "strictNullChecks": true
+  },
+  "exclude": [
+    "node_modules"
+  ],
+  "extends": "@repo/typescript-config/nextjs.json",
+  "include": [
+    "next-env.d.ts",
+    "next.config.js",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts"
+  ]
 }
