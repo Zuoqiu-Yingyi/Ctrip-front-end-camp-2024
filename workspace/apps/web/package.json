@@ -9,6 +9,8 @@
         "lint": "eslint . --max-warnings 0"
     },
     "dependencies": {
+        "@ant-design/icons": "^4.8.3",
+        "@ant-design/nextjs-registry": "^1.0.0",
         "@repo/ui": "workspace:*",
         "@tanstack/react-query": "^5.28.6",
         "@trpc/client": "11.0.0-next.320",
@@ -29,6 +31,9 @@
         "@repo/eslint-config": "workspace:*",
         "@repo/typescript-config": "workspace:*",
         "@types/react": "^18.2.69",
-        "@types/react-dom": "^18.2.22"
+        "@types/react-dom": "^18.2.22",
+        "autoprefixer": "^10.4.19",
+        "postcss": "^8.4.38",
+        "tailwindcss": "^3.4.1"
     }
 }
