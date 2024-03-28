@@ -4,6 +4,7 @@
 
 - 实现用户认证算法 | Implement user authentication algorithm
 - 实现初始化数据库表 `Staff` 的功能 | Implement the function of initializing the database table `Staff`
+- 调整代码格式化规范 | Adjust code formatting specifications
 
 ## 2024-03-27
 
