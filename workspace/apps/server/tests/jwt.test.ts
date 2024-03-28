@@ -15,14 +15,32 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { router } from ".";
-import { challengeQuery } from "./../../controllers/challenge";
+import {
+    //
+    describe,
+    test,
+    expect,
+} from "@jest/globals";
+import cuid from "@paralleldrive/cuid2";
 
-export const authRouter = router({
-    /**
-     * 获取登录用的挑战字符串
-     */
-    challenge: challengeQuery,
+import {
+    //
+    createChallengeString,
+    verifyChallengeString,
+    verifyChallengePayload,
+    type IChallengeJwtPayload,
+} from "./../src/utils/jwt";
+import { Role } from "./../src/utils/role";
+
+describe("JWT", () => {
+    test(`create-werify`, async () => {
+        const payload: IChallengeJwtPayload = {
+            username: cuid.createId(),
+            role: Role.Administrator,
+        };
+        const token = createChallengeString(payload);
+
+        expect(verifyChallengeString(token)).toBeTruthy();
+        expect(verifyChallengePayload(token, payload)).toBeTruthy();
+    });
 });
-export type TAuthRouter = typeof authRouter;
-export default authRouter;

@@ -16,13 +16,25 @@
  */
 
 import { router } from ".";
-import { challengeQuery } from "./../../controllers/challenge";
+import { signupMutation } from "./../../controllers/signup";
 
-export const authRouter = router({
+export const accountRouter = router({
     /**
-     * 获取登录用的挑战字符串
+     * 注册账户
      */
-    challenge: challengeQuery,
+    signup: signupMutation,
+    /**
+     * TODO: 登录账户
+     */
+    // login,
+    /**
+     * TODO: 注销账户
+     */
+    // logout,
+    /**
+     * TODO: 删除账户
+     */
+    // delete,
 });
-export type TAuthRouter = typeof authRouter;
-export default authRouter;
+export type TAccountRouter = typeof accountRouter;
+export default accountRouter;

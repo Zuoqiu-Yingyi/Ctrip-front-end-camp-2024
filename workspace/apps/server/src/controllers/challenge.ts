@@ -20,33 +20,31 @@ import { procedure } from ".";
 
 import { createChallengeString } from "./../utils/jwt";
 import { str2role } from "./../utils/role";
+import {
+    //
+    USER_NAME,
+    USER_ROLE,
+} from "./../types/user";
 
-export const challengeProcedure = procedure // 获取认证用的挑战字符串
+import type { IResponse } from "@/types/response";
+
+export const challengeQuery = procedure // 获取认证用的挑战字符串
     .input(
         z.object({
-            username: z // 用户账户名
-                .string({ description: "User account name" })
-                .min(2)
-                .max(32)
-                .regex(/^[0-9a-zA-Z\-\_]{2,32}$/),
-            role: z // 账户角色
-                .enum(
-                    [
-                        "administrator", // 管理员
-                        "reviewer", // 审核员
-                        "user", // 用户
-                    ],
-                    { description: "Account role" },
-                ),
+            username: USER_NAME,
+            role: USER_ROLE,
         }),
     )
-    .query((options) => {
+    .query<IResponse>((options) => {
         const challenge = createChallengeString({
             username: options.input.username,
             role: str2role(options.input.role),
         });
         return {
-            input: options.input,
-            challenge,
+            code: 0,
+            message: "",
+            data: {
+                challenge,
+            },
         };
     });

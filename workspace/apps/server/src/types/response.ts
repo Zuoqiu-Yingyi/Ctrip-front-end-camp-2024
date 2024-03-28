@@ -15,14 +15,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { router } from ".";
-import { challengeQuery } from "./../../controllers/challenge";
-
-export const authRouter = router({
-    /**
-     * 获取登录用的挑战字符串
-     */
-    challenge: challengeQuery,
-});
-export type TAuthRouter = typeof authRouter;
-export default authRouter;
+export interface IResponse<T = any> {
+    code: number;
+    message: string;
+    data: T;
+}

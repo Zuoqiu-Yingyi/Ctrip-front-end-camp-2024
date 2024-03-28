@@ -54,7 +54,7 @@ erDiagram
 }
 "Publish" {
   Int id PK
-  String uuid UK
+  String uid UK
   String title
   String content
   DateTime publication_time
@@ -69,7 +69,7 @@ erDiagram
 }
 "Asset" {
   Int id PK
-  String uuid UK
+  String uid UK
   String filename
   String path
   Int size
@@ -170,7 +170,7 @@ erDiagram
   - `avatar`
     > 用户头像 | User avatar
     > - `NULL`: 使用默认头像 | Use the default avatar
-    > - `String`: 头像文件的 UUID | UUID of the avatar file
+    > - `String`: 头像文件的 uid | uid of the avatar file
   - `deleted`: 是否已逻辑删除 | Whether it has been logically deleted
   - `createdAt`: 记录创建时间 | Record creation time
   - `updatedAt`: 记录更新时间 | Record update time
@@ -219,7 +219,7 @@ erDiagram
 
 **Properties**
   - `id`: 主键 | Primary Key
-  - `uuid`: 用于路由的 UUID | UUID for routing
+  - `uid`: 用于路由的 uid | uid for routing
   - `title`: 标题 | Title
   - `content`: 内容 | Content
   - `publication_time`: 发布时间 | Publication time
@@ -238,7 +238,7 @@ erDiagram
 
 **Properties**
   - `id`: 主键 | Primary Key
-  - `uuid`: 用于路由的 UUID | UUID for routing
+  - `uid`: 用于路由的 uid | uid for routing
   - `filename`: 文件名 | File name
   - `path`: 文件保存路径 | File save path
   - `size`

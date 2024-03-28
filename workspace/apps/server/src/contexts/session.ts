@@ -16,13 +16,16 @@
  */
 
 import type { CreateFastifyContextOptions } from "@trpc/server/adapters/fastify";
+import { D } from "./../models/client";
 
 /**
  * @see {@link https://trpc.io/docs/server/adapters/fastify#create-the-context Create the context}
  */
 export function createSessionContext(options: CreateFastifyContextOptions) {
-    // TODO: 从 Cookies 中获取 JWT 并解析
-    return options;
+    return {
+        ...options,
+        DB: D.p,
+    };
 }
 
 export type TSessionContext = Awaited<ReturnType<typeof createSessionContext>>;

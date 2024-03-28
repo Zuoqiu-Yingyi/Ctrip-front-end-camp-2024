@@ -61,7 +61,7 @@ export function passphrase2key(
  * @param key 密钥
  * @returns 应答结果
  */
-export function challenge2answer(
+export function challenge2response(
     //
     challenge: Buffer,
     key: Buffer,

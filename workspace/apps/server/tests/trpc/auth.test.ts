@@ -23,7 +23,7 @@ import {
 } from "@jest/globals";
 
 import trpc from ".";
-import { verifyChallengePayload, verifyChallengeString } from "./../../src/utils/jwt";
+import { verifyChallengePayload } from "./../../src/utils/jwt";
 import { str2role } from "./../../src/utils/role";
 
 type TRole = Parameters<typeof trpc.auth.challenge.query>[0]["role"];
@@ -44,10 +44,9 @@ describe("/trpc/auth", () => {
             } satisfies Parameters<typeof trpc.auth.challenge.query>[0];
             const response = await trpc.auth.challenge.query(payload);
 
-            expect(response.input).toEqual(payload);
-            // expect(verifyChallengeString(response.challenge)).toBeTruthy();
+            expect(response.code).toEqual(0);
             expect(
-                verifyChallengePayload(response.challenge, {
+                verifyChallengePayload(response.data.challenge, {
                     username: payload.username,
                     role: str2role(payload.role),
                 }),

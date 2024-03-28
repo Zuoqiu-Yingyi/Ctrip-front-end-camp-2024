@@ -24,13 +24,13 @@ import {
 import {
     //
     passphrase2key as passphrase2key_node,
-    challenge2answer as challenge2answer_node,
+    challenge2response as challenge2response_node,
     string2Buffer,
 } from "@repo/utils/node/crypto";
 import {
     //
     passphrase2key as passphrase2key_browserify,
-    challenge2answer as challenge2answer_browserify,
+    challenge2response as challenge2response_browserify,
     string2ArrayBuffer,
 } from "@repo/utils/crypto";
 
@@ -51,8 +51,8 @@ describe("crypto", () => {
         const key_node = passphrase2key_node(username, passphrase, salt);
         const key_browserify = await passphrase2key_browserify(username, passphrase, salt);
 
-        const answer_node = challenge2answer_node(string2Buffer(challenge), key_node);
-        const answer_browserify = await challenge2answer_browserify(string2ArrayBuffer(challenge), key_browserify);
+        const answer_node = challenge2response_node(string2Buffer(challenge), key_node);
+        const answer_browserify = await challenge2response_browserify(string2ArrayBuffer(challenge), key_browserify);
 
         expect(answer_node.toString("hex")).toEqual(Buffer.from(answer_browserify).toString("hex"));
     });

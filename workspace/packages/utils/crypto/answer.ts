@@ -24,7 +24,7 @@ import { WordArray2ArrayBuffer } from "./converter";
  * @param key 密钥
  * @returns 应答结果
  */
-export async function challenge2answer(
+export async function challenge2response(
     //
     challenge: ArrayBuffer,
     key: ArrayBuffer,
@@ -44,16 +44,16 @@ export async function challenge2answer(
             false,
             ["sign"],
         );
-        const answer = await globalThis.crypto.subtle.sign("HMAC", crypto_key, challenge);
-        return answer;
+        const response = await globalThis.crypto.subtle.sign("HMAC", crypto_key, challenge);
+        return response;
     } else {
         // 使用 crypto-js
         // REF: https://cryptojs.gitbook.io/docs#hmac
-        const answer = await CryptoJS.HmacSHA256(
+        const response = await CryptoJS.HmacSHA256(
             //
             CryptoJS.lib.WordArray.create(challenge),
             CryptoJS.lib.WordArray.create(key),
         );
-        return WordArray2ArrayBuffer(answer);
+        return WordArray2ArrayBuffer(response);
     }
 }
