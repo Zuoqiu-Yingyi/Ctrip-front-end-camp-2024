@@ -15,13 +15,15 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { initTRPC } from "@trpc/server";
 import { z } from "zod";
+import {
+    //
+    router,
+    procedure,
+} from ".";
 
-export const t = initTRPC.create();
-
-export const router = t.router({
-    _query: t.procedure //
+export const testRouter = router({
+    _query: procedure //
         .input(z.string())
         .query((opts) => {
             return {
@@ -29,7 +31,7 @@ export const router = t.router({
             };
         }),
 
-    _mutation: t.procedure
+    _mutation: procedure
         .input(
             z.object({
                 str: z.string().min(4),
@@ -43,5 +45,5 @@ export const router = t.router({
         }),
 });
 
-export default router;
-export type TRouter = typeof router;
+export type TTestRouter = typeof testRouter;
+export default testRouter;

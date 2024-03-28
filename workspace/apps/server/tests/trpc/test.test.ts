@@ -23,14 +23,14 @@ import {
 } from "@jest/globals";
 
 import { createTRPCClient, httpBatchLink } from "@trpc/client";
-import type { TRouter } from "@/routers/trpc/test";
+import type { TTrpcRouter } from "@/routers/trpc/router";
 
 describe("tRPC", () => {
     // REF: https://trpc.io/docs/quickstart#using-your-new-backend-on-the-client
-    const trpc = createTRPCClient<TRouter>({
+    const trpc = createTRPCClient<TTrpcRouter>({
         links: [
             httpBatchLink({
-                url: `${process.env._TD_SERVER_URL}/trpc/test`,
+                url: `${process.env._TD_SERVER_URL}/trpc`,
             }),
         ],
     });
@@ -45,8 +45,8 @@ describe("tRPC", () => {
             query_output, //
             mutation_output,
         ] = await Promise.all([
-            trpc._query.query(query_input), //
-            trpc._mutation.mutate(mutation_input),
+            trpc.test._query.query(query_input), //
+            trpc.test._mutation.mutate(mutation_input),
         ]);
 
         // console.log(query_output);

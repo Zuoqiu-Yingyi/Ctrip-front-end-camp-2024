@@ -1,5 +1,9 @@
 # 更改日志 | Change log
 
+## 2024-03-29
+
+- 实现 tRPC 子路由 | Implement tRPC sub-routes
+
 ## 2024-03-28
 
 - 实现用户认证算法 | Implement user authentication algorithm
