@@ -41,7 +41,7 @@ describe("/trpc/account/signup", () => {
         expect(response1.data!.user.name).toEqual(payload.username);
 
         /* 用户名重复 */
-        expect(response2.code).toEqual(-1);
+        expect(response2.code).toEqual(1);
         expect(response2.data).toBeNull();
     });
 });

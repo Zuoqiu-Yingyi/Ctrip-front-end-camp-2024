@@ -25,8 +25,8 @@ import cuid from "@paralleldrive/cuid2";
 
 import {
     //
-    createChallengeString,
-    verifyChallengeString,
+    sign,
+    verify,
     verifyChallengePayload,
     type IChallengeJwtPayload,
 } from "./../src/utils/jwt";
@@ -35,12 +35,14 @@ import { Role } from "./../src/utils/role";
 describe("JWT", () => {
     test(`create-verify`, async () => {
         const payload: IChallengeJwtPayload = {
-            username: cuid.createId(),
-            role: Role.Administrator,
+            data: {
+                username: cuid.createId(),
+                role: Role.Administrator,
+            },
         };
-        const token = createChallengeString(payload);
+        const token = sign({ payload });
 
-        expect(verifyChallengeString(token)).toBeTruthy();
+        expect(verify({ token })).toBeTruthy();
         expect(verifyChallengePayload(token, payload)).toBeTruthy();
     });
 });

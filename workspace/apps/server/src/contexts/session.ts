@@ -24,6 +24,7 @@ import { D } from "./../models/client";
 export function createSessionContext(options: CreateFastifyContextOptions) {
     return {
         ...options,
+        S: options.req.server,
         DB: D.p,
     };
 }

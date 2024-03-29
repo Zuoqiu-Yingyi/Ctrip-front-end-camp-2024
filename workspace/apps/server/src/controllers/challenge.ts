@@ -18,15 +18,17 @@
 import { z } from "zod";
 import { procedure } from ".";
 
-import { createChallengeString } from "./../utils/jwt";
+import {
+    //
+    sign,
+    type IChallengeJwtPayload,
+} from "./../utils/jwt";
 import { str2role } from "./../utils/role";
 import {
     //
     USER_NAME,
     USER_ROLE,
 } from "./../types/user";
-
-import type { IResponse } from "@/types/response";
 
 export const challengeQuery = procedure // 获取认证用的挑战字符串
     .input(
@@ -35,10 +37,14 @@ export const challengeQuery = procedure // 获取认证用的挑战字符串
             role: USER_ROLE,
         }),
     )
-    .query<IResponse>((options) => {
-        const challenge = createChallengeString({
-            username: options.input.username,
-            role: str2role(options.input.role),
+    .query((options) => {
+        const challenge = sign<IChallengeJwtPayload>({
+            payload: {
+                data: {
+                    username: options.input.username,
+                    role: str2role(options.input.role),
+                },
+            },
         });
         return {
             code: 0,

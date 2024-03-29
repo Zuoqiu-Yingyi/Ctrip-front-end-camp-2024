@@ -33,7 +33,7 @@ export interface IStaffInfo {
  * @returns 密钥的 Hex 格式字符串
  */
 export function account2info(account: string): IStaffInfo {
-    const [role, username, passphrase] = account.split(":", 2);
+    const [role, username, passphrase] = account.split(":", 3);
     const password = passphrase2key(username, passphrase, env.USER_KEY_SALT).toString("hex");
     return {
         role: parseInt(role),

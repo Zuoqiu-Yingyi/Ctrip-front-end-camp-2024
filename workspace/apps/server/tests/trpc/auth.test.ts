@@ -33,7 +33,10 @@ describe("/trpc/auth", () => {
         //
         "administrator",
         "reviewer",
+        "staff",
         "user",
+        "visitor",
+        undefined,
     ];
 
     roles.forEach((role) => {
@@ -47,8 +50,10 @@ describe("/trpc/auth", () => {
             expect(response.code).toEqual(0);
             expect(
                 verifyChallengePayload(response.data.challenge, {
-                    username: payload.username,
-                    role: str2role(payload.role),
+                    data: {
+                        username: payload.username,
+                        role: str2role(payload.role),
+                    },
                 }),
             ).toBeTruthy();
         });

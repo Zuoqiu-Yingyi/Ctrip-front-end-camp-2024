@@ -1,5 +1,9 @@
 # 更改日志 | Change log
 
+## 2024-03-30
+
+- 实现用户登录功能 | Implement user login feature
+
 ## 2024-03-29
 
 - 实现 tRPC 子路由 | Implement tRPC sub-routes
