@@ -15,10 +15,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-console.log(import.meta.filename);
-
-async function prod() {}
-
-if (process.argv.includes(import.meta.filename)) {
-    prod();
+export interface IResponse<T = any> {
+    code: number;
+    message: string;
+    data: T;
 }

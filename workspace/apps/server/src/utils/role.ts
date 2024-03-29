@@ -15,10 +15,27 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-console.log(import.meta.filename);
+/**
+ * 用户角色
+ */
+export enum Role {
+    Administrator = 1, // 管理员
+    Reviewer = 2, // 审核员
+    User = 10, // 用户
+}
 
-async function prod() {}
-
-if (process.argv.includes(import.meta.filename)) {
-    prod();
+/**
+ * 将角色字符串转换为角色枚举
+ * @param role 角色字符串
+ */
+export function str2role(role: string): Role {
+    switch (role) {
+        case "administrator":
+            return Role.Administrator;
+        case "reviewer":
+            return Role.Reviewer;
+        case "user":
+        default:
+            return Role.User;
+    }
 }

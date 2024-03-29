@@ -15,10 +15,26 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-console.log(import.meta.filename);
+import { router } from ".";
+import { signupMutation } from "./../../controllers/signup";
 
-async function prod() {}
-
-if (process.argv.includes(import.meta.filename)) {
-    prod();
-}
+export const accountRouter = router({
+    /**
+     * 注册账户
+     */
+    signup: signupMutation,
+    /**
+     * TODO: 登录账户
+     */
+    // login,
+    /**
+     * TODO: 注销账户
+     */
+    // logout,
+    /**
+     * TODO: 删除账户
+     */
+    // delete,
+});
+export type TAccountRouter = typeof accountRouter;
+export default accountRouter;

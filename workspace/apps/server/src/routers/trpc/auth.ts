@@ -15,10 +15,14 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-console.log(import.meta.filename);
+import { router } from ".";
+import { challengeQuery } from "./../../controllers/challenge";
 
-async function prod() {}
-
-if (process.argv.includes(import.meta.filename)) {
-    prod();
-}
+export const authRouter = router({
+    /**
+     * 获取登录用的挑战字符串
+     */
+    challenge: challengeQuery,
+});
+export type TAuthRouter = typeof authRouter;
+export default authRouter;

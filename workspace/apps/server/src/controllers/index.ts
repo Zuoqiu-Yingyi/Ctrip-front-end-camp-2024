@@ -15,10 +15,5 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-console.log(import.meta.filename);
-
-async function prod() {}
-
-if (process.argv.includes(import.meta.filename)) {
-    prod();
-}
+export { procedure } from "./../utils/trpc";
+import { procedure } from "./../utils/trpc";

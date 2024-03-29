@@ -15,10 +15,17 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-console.log(import.meta.filename);
+import type { CreateFastifyContextOptions } from "@trpc/server/adapters/fastify";
+import { D } from "./../models/client";
 
-async function prod() {}
-
-if (process.argv.includes(import.meta.filename)) {
-    prod();
+/**
+ * @see {@link https://trpc.io/docs/server/adapters/fastify#create-the-context Create the context}
+ */
+export function createSessionContext(options: CreateFastifyContextOptions) {
+    return {
+        ...options,
+        DB: D.p,
+    };
 }
+
+export type TSessionContext = Awaited<ReturnType<typeof createSessionContext>>;

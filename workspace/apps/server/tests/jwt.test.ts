@@ -15,10 +15,32 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-console.log(import.meta.filename);
+import {
+    //
+    describe,
+    test,
+    expect,
+} from "@jest/globals";
+import cuid from "@paralleldrive/cuid2";
 
-async function prod() {}
+import {
+    //
+    createChallengeString,
+    verifyChallengeString,
+    verifyChallengePayload,
+    type IChallengeJwtPayload,
+} from "./../src/utils/jwt";
+import { Role } from "./../src/utils/role";
 
-if (process.argv.includes(import.meta.filename)) {
-    prod();
-}
+describe("JWT", () => {
+    test(`create-verify`, async () => {
+        const payload: IChallengeJwtPayload = {
+            username: cuid.createId(),
+            role: Role.Administrator,
+        };
+        const token = createChallengeString(payload);
+
+        expect(verifyChallengeString(token)).toBeTruthy();
+        expect(verifyChallengePayload(token, payload)).toBeTruthy();
+    });
+});

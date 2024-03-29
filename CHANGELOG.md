@@ -1,9 +1,17 @@
 # 更改日志 | Change log
 
+## 2024-03-29
+
+- 实现 tRPC 子路由 | Implement tRPC sub-routes
+- 实现挑战字符串生成功能 | Implement the challenge string generation feature
+- 实现用户注册功能 | Implement user registration feature
+- 代码拼写检查与格式化 | Code spelling check and formatting
+
 ## 2024-03-28
 
 - 实现用户认证算法 | Implement user authentication algorithm
 - 实现初始化数据库表 `Staff` 的功能 | Implement the function of initializing the database table `Staff`
+- 调整代码格式化规范 | Adjust code formatting specifications
 
 ## 2024-03-27
 

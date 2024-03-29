@@ -15,10 +15,18 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-console.log(import.meta.filename);
+import { router } from ".";
 
-async function prod() {}
+import testRouter from "./test";
+import authRouter from "./auth";
+import accountRouter from "./account";
 
-if (process.argv.includes(import.meta.filename)) {
-    prod();
-}
+// REF: https://trpc.io/docs/server/merging-routers#merging-with-child-routers
+const trpcRouter = router({
+    test: testRouter,
+    auth: authRouter,
+    account: accountRouter,
+});
+
+export type TTrpcRouter = typeof trpcRouter;
+export default trpcRouter;

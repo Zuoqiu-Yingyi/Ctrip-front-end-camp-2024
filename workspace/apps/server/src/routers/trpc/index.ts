@@ -15,32 +15,4 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import type { FastifyPluginCallback } from "fastify";
-import {
-    fastifyTRPCPlugin, //
-    type FastifyTRPCPluginOptions,
-} from "@trpc/server/adapters/fastify";
-
-import testRouter from "./test";
-import { createTestContext } from "./../../contexts/test";
-
-/**
- * @see {@link https://fastify.dev/docs/latest/Reference/Routes/#route-prefixing Route Prefixing}
- */
-export const router: FastifyPluginCallback = async function (fastify, opts) {
-    // REF: https://trpc.io/docs/server/adapters/fastify
-    await fastify.register(fastifyTRPCPlugin, {
-        prefix: "/test",
-        useWSS: true,
-        trpcOptions: {
-            router: testRouter,
-            createContext: createTestContext,
-            onError({ path, error }) {
-                // report to error monitoring
-                console.error(`Error in tRPC handler on path '${path}':`, error);
-            },
-        } satisfies FastifyTRPCPluginOptions<typeof testRouter>["trpcOptions"],
-    });
-    await fastify.after();
-};
-export default router;
+export { router } from "./../../utils/trpc";

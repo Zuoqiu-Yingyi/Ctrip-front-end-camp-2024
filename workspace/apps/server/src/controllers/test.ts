@@ -15,10 +15,26 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-console.log(import.meta.filename);
+import { z } from "zod";
+import { procedure } from ".";
 
-async function prod() {}
+export const queryProcedure = procedure //
+    .input(z.string())
+    .query((opts) => {
+        return {
+            input: opts.input,
+        };
+    });
 
-if (process.argv.includes(import.meta.filename)) {
-    prod();
-}
+export const mutationProcedure = procedure
+    .input(
+        z.object({
+            str: z.string().min(4),
+            num: z.number().max(16).optional(),
+        }),
+    )
+    .mutation((opts) => {
+        return {
+            input: opts.input,
+        };
+    });

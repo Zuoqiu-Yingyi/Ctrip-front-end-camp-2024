@@ -21,26 +21,27 @@ import {
     test,
     expect,
 } from "@jest/globals";
-
+import cuid from "@paralleldrive/cuid2";
+import crypto from "node:crypto";
 import trpc from ".";
 
-describe("/trpc/test", () => {
-    test("_query", async () => {
-        const query_input = "test-query";
-        const query_output = await trpc.test._query.query(query_input);
+type TPayload = Parameters<typeof trpc.account.signup.mutate>[0];
 
-        // console.log(query_output);
-        expect(query_output.input).toEqual(query_input);
-    });
+describe("/trpc/account/signup", () => {
+    const payload: TPayload = {
+        username: cuid.createId(),
+        password: crypto.randomBytes(32).toString("hex"),
+    };
+    test(`signup: ${payload.username}`, async () => {
+        const response1 = await trpc.account.signup.mutate(payload);
+        const response2 = await trpc.account.signup.mutate(payload);
 
-    test("_mutation", async () => {
-        const mutation_input = {
-            str: "test-mutation-str",
-            num: 8,
-        };
-        const mutation_output = await trpc.test._mutation.mutate(mutation_input);
+        /* 成功注册 */
+        expect(response1.code).toEqual(0);
+        expect(response1.data!.user.name).toEqual(payload.username);
 
-        // console.log(mutation_output);
-        expect(mutation_output.input).toEqual(mutation_input);
+        /* 用户名重复 */
+        expect(response2.code).toEqual(-1);
+        expect(response2.data).toBeNull();
     });
 });

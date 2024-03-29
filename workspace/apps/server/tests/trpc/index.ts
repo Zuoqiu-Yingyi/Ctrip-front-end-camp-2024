@@ -15,10 +15,16 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-console.log(import.meta.filename);
+import { createTRPCClient, httpBatchLink } from "@trpc/client";
+import type { TTrpcRouter } from "@/routers/trpc/router";
 
-async function prod() {}
+// REF: https://trpc.io/docs/quickstart#using-your-new-backend-on-the-client
+export const client = createTRPCClient<TTrpcRouter>({
+    links: [
+        httpBatchLink({
+            url: `${process.env._TD_SERVER_URL}/trpc`,
+        }),
+    ],
+});
 
-if (process.argv.includes(import.meta.filename)) {
-    prod();
-}
+export default client;
