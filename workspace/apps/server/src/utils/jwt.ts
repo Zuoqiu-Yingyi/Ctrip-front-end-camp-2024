@@ -19,54 +19,112 @@ import jwt from "jsonwebtoken";
 import { Role } from "./role";
 import env from "./../configs/env";
 
+const DEFAULT_SECRET: jwt.Secret = env.CHALLENGE_RESPONSE_JWT_SECRET;
+const DEFAULT_SIGN_OPTIONS = {
+    algorithm: "HS256",
+    issuer: env.CHALLENGE_RESPONSE_JWT_ISSUER,
+    expiresIn: env.CHALLENGE_RESPONSE_JWT_EXPIRES_IN,
+} as const satisfies jwt.SignOptions;
+const DEFAULT_VERIFY_OPTIONS = {
+    algorithms: ["HS256"],
+    issuer: env.CHALLENGE_RESPONSE_JWT_ISSUER,
+} as const satisfies jwt.VerifyOptions;
+
+export type TPayload = Parameters<typeof jwt.sign>[0];
+
+export interface ISignOptions<P extends TPayload = TPayload> {
+    payload: P;
+    secret?: jwt.Secret;
+    options?: jwt.SignOptions;
+}
+
+export interface IVerifyOptions {
+    token: string;
+    secret?: jwt.Secret;
+    options?: jwt.VerifyOptions;
+}
+
 export interface IChallengeJwtPayload {
+    data: IChallengeJwtPayloadData;
+}
+
+export interface IChallengeJwtPayloadData {
     username: string;
     role: Role;
 }
 
+export interface IAuthJwtPayload {
+    data: IAuthJwtPayloadData;
+}
+
+export interface IAuthJwtPayloadData {
+    account: IAuthJwtPayloadAccount;
+}
+
+export interface IAuthJwtPayloadAccount {
+    id: number;
+    role: Role;
+    username: string;
+}
+
 /**
- * 创建挑战-应答用的 JWT 字符串
- * @param payload 挑战-应答用的 JWT 载荷
+ * 签发 JWT 字符串
+ * @param payload JWT 载荷
  * @param secret 密钥
  * @param options 选项
  * @returns JWT 字符串
  */
-export function createChallengeString(
+export function sign<P extends TPayload = TPayload>({
     //
-    payload: IChallengeJwtPayload,
-    secret: string = env.CHALLENGE_RESPONSE_JWT_SECRET,
-    options: jwt.SignOptions = {
-        algorithm: "HS256",
-        issuer: env.CHALLENGE_RESPONSE_JWT_ISSUER,
-        expiresIn: env.CHALLENGE_RESPONSE_JWT_EXPIRES_IN,
-    },
-): string {
+    payload,
+    secret = DEFAULT_SECRET,
+    options = DEFAULT_SIGN_OPTIONS,
+}: ISignOptions<P>): string {
     // REF: https://www.npmjs.com/package/jsonwebtoken#jwtsignpayload-secretorprivatekey-options-callback
     return jwt.sign(payload, secret, options);
 }
 
 /**
- * 校验挑战-应答用的 JWT 字符串是否有效
+ * 校验 JWT 字符串是否有效
  * @param token JWT 字符串
  * @param secret 密钥
  * @param options 选项
+ * @param throwError 是否抛出异常
+ * @returns
+ * - 若 `throwError` 为 `false` 则返回校验是否成功
+ * - 若 `throwError` 为 `true` 则在校验成功后返回载荷 (校验不成功抛出异常)
  */
-export function verifyChallengeString(
-    //
-    token: string,
-    secret: string = env.CHALLENGE_RESPONSE_JWT_SECRET,
-    options: jwt.VerifyOptions = {
-        algorithms: ["HS256"],
-        issuer: env.CHALLENGE_RESPONSE_JWT_ISSUER,
-    },
-): boolean {
-    try {
+export function verify<P>(options: IVerifyOptions, throwError: true): P;
+export function verify(options: IVerifyOptions, throwError?: false): boolean;
+export function verify(
+    {
+        //
+        token,
+        secret = DEFAULT_SECRET,
+        options = DEFAULT_VERIFY_OPTIONS,
+    }: IVerifyOptions,
+    throwError: boolean = false,
+) {
+    if (throwError) {
         // REF: https://www.npmjs.com/package/jsonwebtoken#jwtverifytoken-secretorpublickey-options-callback
-        jwt.verify(token, secret, options);
-        return true;
-    } catch (err) {
-        return false;
+        return jwt.verify(token, secret, options);
+    } else {
+        try {
+            jwt.verify(token, secret, options);
+            return true;
+        } catch (err) {
+            return false;
+        }
     }
+}
+
+/**
+ * 解析 JWT 载荷
+ * @param token JWT 字符串
+ * @returns JWT 载荷
+ */
+export function decode(token: string) {
+    return jwt.decode(token);
 }
 
 /**
@@ -79,7 +137,7 @@ export function verifyChallengePayload(
 ): boolean {
     try {
         const decoded = jwt.decode(token) as IChallengeJwtPayload;
-        return decoded.username === payload.username && decoded.role === payload.role;
+        return decoded.data?.username === payload.data.username && decoded.data?.role === payload.data.role;
     } catch (err) {
         return false;
     }

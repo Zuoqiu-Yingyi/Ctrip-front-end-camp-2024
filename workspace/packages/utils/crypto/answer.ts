@@ -49,7 +49,7 @@ export async function challenge2response(
     } else {
         // 使用 crypto-js
         // REF: https://cryptojs.gitbook.io/docs#hmac
-        const response = await CryptoJS.HmacSHA256(
+        const response = CryptoJS.HmacSHA256(
             //
             CryptoJS.lib.WordArray.create(challenge),
             CryptoJS.lib.WordArray.create(key),

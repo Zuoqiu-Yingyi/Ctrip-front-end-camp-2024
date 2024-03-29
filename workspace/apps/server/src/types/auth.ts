@@ -15,33 +15,28 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-/**
- * 用户角色
- */
-export enum Role {
-    Administrator = 1, // 管理员
-    Reviewer = 2, // 审核员
-    Staff = 3, // 员工
-    User = 10, // 用户
-    Visitor = 20, // 游客
-}
+import { z } from "zod";
 
 /**
- * 将角色字符串转换为角色枚举
- * @param role 角色字符串
+ * 挑战字符串
+ * - 格式: JWT
  */
-export function str2role(role?: string): Role {
-    switch (role) {
-        case "administrator":
-            return Role.Administrator;
-        case "reviewer":
-            return Role.Reviewer;
-        case "staff":
-            return Role.Staff;
-        case "user":
-            return Role.User;
-        case "visitor":
-        default:
-            return Role.Visitor;
-    }
-}
+export const AUTH_CHALLENGE = z //
+    .string({ description: "Challenge string" });
+
+/**
+ * 应答字符串
+ * - 格式: hex 十六进制字符串
+ * - 64 个字符 `0~f` (256 位, 32 字节)
+ */
+export const AUTH_RESPONSE = z //
+    .string({ description: "Response string" })
+    .length(64)
+    .toLowerCase()
+    .regex(/^[0-9a-f]{64}$/);
+
+/**
+ * 是否保持登录状态
+ */
+export const AUTH_STAY = z //
+    .boolean({ description: "Stay signed in" });

@@ -15,33 +15,13 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-/**
- * 用户角色
- */
-export enum Role {
-    Administrator = 1, // 管理员
-    Reviewer = 2, // 审核员
-    Staff = 3, // 员工
-    User = 10, // 用户
-    Visitor = 20, // 游客
-}
+import type { FastifyInstance } from "fastify";
+import { register as registerJwtPlugin } from "./jwt";
+import { register as registerCookiePlugin } from "./cookie";
 
-/**
- * 将角色字符串转换为角色枚举
- * @param role 角色字符串
- */
-export function str2role(role?: string): Role {
-    switch (role) {
-        case "administrator":
-            return Role.Administrator;
-        case "reviewer":
-            return Role.Reviewer;
-        case "staff":
-            return Role.Staff;
-        case "user":
-            return Role.User;
-        case "visitor":
-        default:
-            return Role.Visitor;
-    }
+export async function init(fastify: FastifyInstance) {
+    // REF: https://www.npmjs.com/package/@fastify/jwt
+    await registerJwtPlugin(fastify);
+    await registerCookiePlugin(fastify);
+    await fastify.after();
 }

@@ -17,6 +17,7 @@
 
 import { router } from ".";
 import { signupMutation } from "./../../controllers/signup";
+import { loginMutation } from "./../../controllers/login";
 
 export const accountRouter = router({
     /**
@@ -26,7 +27,7 @@ export const accountRouter = router({
     /**
      * TODO: 登录账户
      */
-    // login,
+    login: loginMutation,
     /**
      * TODO: 注销账户
      */

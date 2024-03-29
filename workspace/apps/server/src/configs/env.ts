@@ -42,6 +42,7 @@ export interface IEnv {
     JWT_SECRET: string;
     JWT_ISSUER: string;
     JWT_EXPIRES_IN: string;
+    JWT_COOKIE_NAME: string;
     CHALLENGE_RESPONSE_JWT_SECRET: string;
     CHALLENGE_RESPONSE_JWT_ISSUER: string;
     CHALLENGE_RESPONSE_JWT_EXPIRES_IN: string;
@@ -72,6 +73,7 @@ export const ENV_DEFAULT: IEnv = {
     JWT_SECRET: randomString(32),
     JWT_ISSUER: "travel-diary",
     JWT_EXPIRES_IN: "7d",
+    JWT_COOKIE_NAME: "travel-diary-jwt",
     CHALLENGE_RESPONSE_JWT_SECRET: randomString(32),
     CHALLENGE_RESPONSE_JWT_ISSUER: "travel-diary-challenge-response",
     CHALLENGE_RESPONSE_JWT_EXPIRES_IN: "5m",
@@ -133,6 +135,9 @@ export const env: IEnv = {
     JWT_EXPIRES_IN:
         process.env._TD_JWT_EXPIRES_IN || //
         ENV_DEFAULT.JWT_EXPIRES_IN,
+    JWT_COOKIE_NAME:
+        process.env._TD_JWT_COOKIE_NAME || //
+        ENV_DEFAULT.JWT_COOKIE_NAME,
     CHALLENGE_RESPONSE_JWT_SECRET:
         process.env._TD_CHALLENGE_RESPONSE_JWT_SECRET || //
         ENV_DEFAULT.CHALLENGE_RESPONSE_JWT_SECRET,

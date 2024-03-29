@@ -47,7 +47,10 @@ export const USER_ROLE = z // 账户角色
         [
             "administrator", // 管理员
             "reviewer", // 审核员
+            "staff", // 职员
             "user", // 用户
+            "visitor", // 访问者
         ],
         { description: "User role" },
-    );
+    )
+    .optional();

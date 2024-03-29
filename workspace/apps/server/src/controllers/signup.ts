@@ -23,7 +23,10 @@ import {
     USER_NAME,
 } from "./../types/user";
 
-export const signupMutation = procedure // 获取认证用的挑战字符串
+/**
+ * 获取认证用的挑战字符串
+ */
+export const signupMutation = procedure
     .input(
         z.object({
             username: USER_NAME,
@@ -31,36 +34,45 @@ export const signupMutation = procedure // 获取认证用的挑战字符串
         }),
     )
     .mutation(async (options) => {
-        // 判断用户名是否重复
-        const user = await options.ctx.DB.user.findUnique({
-            where: {
-                name: options.input.username,
-            },
-        });
-        if (user) {
-            // 用户名已存在
-            return {
-                code: -1,
-                message: `Username ${options.input.username} already exists`,
-                data: null,
-            };
-        } else {
-            // 创建用户
-            const user = await options.ctx.DB.user.create({
-                data: {
+        try {
+            // 判断用户名是否重复
+            const user = await options.ctx.DB.user.findUnique({
+                where: {
                     name: options.input.username,
-                    password: options.input.password,
                 },
             });
-            return {
-                code: 0,
-                message: "",
-                data: {
-                    user: {
-                        id: user.id,
-                        name: user.name,
+            if (user) {
+                // 用户名已存在
+                return {
+                    code: 1,
+                    message: `Username ${options.input.username} already exists`,
+                    data: null,
+                };
+            } else {
+                // 创建用户
+                const user = await options.ctx.DB.user.create({
+                    data: {
+                        name: options.input.username,
+                        password: options.input.password,
                     },
-                },
+                });
+                return {
+                    code: 0,
+                    message: "",
+                    data: {
+                        user: {
+                            id: user.id,
+                            name: user.name,
+                        },
+                    },
+                };
+            }
+        } catch (error) {
+            options.ctx.S.log.error(error);
+            return {
+                code: -1,
+                message: error,
+                data: null,
             };
         }
     });

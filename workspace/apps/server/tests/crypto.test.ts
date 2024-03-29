@@ -31,12 +31,13 @@ import {
     //
     passphrase2key as passphrase2key_browserify,
     challenge2response as challenge2response_browserify,
-    string2ArrayBuffer,
+    String2ArrayBuffer,
+    ArrayBuffer2HexString,
 } from "@repo/utils/crypto";
 
 describe("crypto", () => {
-    const username = "username";
-    const passphrase = "passphrase";
+    const username = "admin";
+    const passphrase = "admin";
     const salt = "salt";
     const challenge = "challenge";
 
@@ -44,7 +45,10 @@ describe("crypto", () => {
         const key_node = passphrase2key_node(username, passphrase, salt);
         const key_browserify = await passphrase2key_browserify(username, passphrase, salt);
 
-        expect(key_node.toString("hex")).toEqual(Buffer.from(key_browserify).toString("hex"));
+        const key_node_hex = key_node.toString("hex");
+        const key_browserify_hex = ArrayBuffer2HexString(key_browserify);
+
+        expect(key_node_hex).toEqual(key_browserify_hex);
     });
 
     test("passphrase2key", async () => {
@@ -52,8 +56,11 @@ describe("crypto", () => {
         const key_browserify = await passphrase2key_browserify(username, passphrase, salt);
 
         const answer_node = challenge2response_node(string2Buffer(challenge), key_node);
-        const answer_browserify = await challenge2response_browserify(string2ArrayBuffer(challenge), key_browserify);
+        const answer_browserify = await challenge2response_browserify(String2ArrayBuffer(challenge), key_browserify);
 
-        expect(answer_node.toString("hex")).toEqual(Buffer.from(answer_browserify).toString("hex"));
+        const answer_node_hex = answer_node.toString("hex");
+        const answer_browserify_hex = ArrayBuffer2HexString(answer_browserify);
+
+        expect(answer_node_hex).toEqual(answer_browserify_hex);
     });
 });

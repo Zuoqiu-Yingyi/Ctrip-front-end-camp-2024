@@ -55,7 +55,7 @@ export function WordArray2ArrayBuffer(wordArray: CryptoJS.lib.WordArray): ArrayB
  * @param str 字符串
  * @returns ArrayBuffer
  */
-export function string2ArrayBuffer(str: string): ArrayBuffer {
+export function String2ArrayBuffer(str: string): ArrayBuffer {
     const encoder = new TextEncoder();
     return encoder.encode(str).buffer;
 }

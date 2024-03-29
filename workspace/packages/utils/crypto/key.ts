@@ -19,7 +19,7 @@ import CryptoJS from "crypto-js";
 import {
     //
     WordArray2ArrayBuffer,
-    string2ArrayBuffer,
+    String2ArrayBuffer,
 } from "./converter";
 
 /**
@@ -40,12 +40,12 @@ export async function passphrase2key(
     if (globalThis.isSecureContext) {
         // 使用 Web Crypto API
         // REF: https://developer.mozilla.org/en-US/docs/Web/API/SubtleCrypto/digest
-        const password = await globalThis.crypto.subtle.digest("SHA-256", string2ArrayBuffer(message));
+        const password = await globalThis.crypto.subtle.digest("SHA-256", String2ArrayBuffer(message));
         return password;
     } else {
         // 使用 crypto-js
         // REF: https://cryptojs.gitbook.io/docs#hashing
-        const password = await CryptoJS.SHA256(message);
+        const password = CryptoJS.SHA256(message);
         return WordArray2ArrayBuffer(password);
     }
 }
