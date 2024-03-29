@@ -58,7 +58,7 @@ export class Server {
     public async init() {
         await Promise.all([
             initRouters(this.fastify), // 初始化路由
-            initPlugins(this.fastify), // 初始化路由
+            initPlugins(this.fastify), // 初始化插件
             D.init(this.fastify), // 初始化数据库
         ]);
         await this.fastify.ready(); // 等待 Fastify 准备就绪

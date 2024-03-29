@@ -20,8 +20,7 @@ import { register as registerJwtPlugin } from "./jwt";
 import { register as registerCookiePlugin } from "./cookie";
 
 export async function init(fastify: FastifyInstance) {
-    // REF: https://www.npmjs.com/package/@fastify/jwt
-    await registerJwtPlugin(fastify);
-    await registerCookiePlugin(fastify);
+    await registerJwtPlugin(fastify); // 注册 JWT 插件
+    await registerCookiePlugin(fastify); // 注册 Cookie 插件
     await fastify.after();
 }

@@ -36,8 +36,8 @@ import {
 } from "@repo/utils/crypto";
 
 describe("crypto", () => {
-    const username = "admin";
-    const passphrase = "admin";
+    const username = "username";
+    const passphrase = "passphrase";
     const salt = "salt";
     const challenge = "challenge";
 
