@@ -60,9 +60,18 @@ export default function Login() {
         console.debug(response_login.data);
     }
 
+    async function logout() {
+        try {
+            const response_logout = await trpc.account.logout.query();
+            console.debug(response_logout);
+        } catch (error) {
+            console.warn(error);
+        }
+    }
+
     return (
         <>
-            <h1>Login</h1>
+            <h1>Account</h1>
             <div>
                 Back to <Link href="/test">/test</Link>
             </div>
@@ -96,6 +105,7 @@ export default function Login() {
                 <li>
                     <button onClick={getChallenge}>Challenge</button>
                     <button onClick={login}>Login</button>
+                    <button onClick={logout}>Logout</button>
                 </li>
             </ul>
         </>

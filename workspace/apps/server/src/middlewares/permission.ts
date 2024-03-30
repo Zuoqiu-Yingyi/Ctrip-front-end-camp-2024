@@ -54,7 +54,7 @@ export async function context2role(context: TSessionContext): Promise<AccessorRo
 /**
  * 访问控制中间件构造器
  */
-export function permisionMiddlewareFactory(roles: Iterable<AccessorRole>) {
+export function permissionMiddlewareFactory(roles: Iterable<AccessorRole>) {
     // REF: https://trpc.io/docs/server/middlewares#extending-middlewares
     const roleSet = new Set(roles);
     return t.middleware(async (options) => {
@@ -80,7 +80,7 @@ export function permisionMiddlewareFactory(roles: Iterable<AccessorRole>) {
 /**
  * 管理权限中间件
  */
-export const adminPermissionMiddleware = permisionMiddlewareFactory([
+export const adminPermissionMiddleware = permissionMiddlewareFactory([
     //
     AccessorRole.Administrator,
     // AccessorRole.Reviewer,
@@ -91,7 +91,7 @@ export const adminPermissionMiddleware = permisionMiddlewareFactory([
 /**
  * 审批权限中间件
  */
-export const approvePermissionMiddleware = permisionMiddlewareFactory([
+export const approvePermissionMiddleware = permissionMiddlewareFactory([
     //
     AccessorRole.Administrator,
     AccessorRole.Reviewer,
@@ -102,7 +102,7 @@ export const approvePermissionMiddleware = permisionMiddlewareFactory([
 /**
  * 审阅权限中间件
  */
-export const reviewPermissionMiddleware = permisionMiddlewareFactory([
+export const reviewPermissionMiddleware = permissionMiddlewareFactory([
     //
     AccessorRole.Administrator,
     AccessorRole.Reviewer,
@@ -113,7 +113,7 @@ export const reviewPermissionMiddleware = permisionMiddlewareFactory([
 /**
  * 账户权限中间件
  */
-export const accountPermissionMiddleware = permisionMiddlewareFactory([
+export const accountPermissionMiddleware = permissionMiddlewareFactory([
     //
     AccessorRole.Administrator,
     AccessorRole.Reviewer,
@@ -124,7 +124,7 @@ export const accountPermissionMiddleware = permisionMiddlewareFactory([
 /**
  * 私有权限中间件
  */
-export const privatePermissionMiddleware = permisionMiddlewareFactory([
+export const privatePermissionMiddleware = permissionMiddlewareFactory([
     //
     // AccessorRole.Administrator,
     // AccessorRole.Reviewer,
@@ -135,7 +135,7 @@ export const privatePermissionMiddleware = permisionMiddlewareFactory([
 /**
  * 公开权限中间件
  */
-export const publicPermisionMiddleware = permisionMiddlewareFactory([
+export const publicPermissionMiddleware = permissionMiddlewareFactory([
     //
     AccessorRole.Administrator,
     AccessorRole.Reviewer,
@@ -146,7 +146,7 @@ export const publicPermisionMiddleware = permisionMiddlewareFactory([
 /**
  * 删除权限中间件
  */
-export const deletePermissionMiddleware = permisionMiddlewareFactory([
+export const deletePermissionMiddleware = permissionMiddlewareFactory([
     //
     AccessorRole.Administrator,
     // AccessorRole.Reviewer,
