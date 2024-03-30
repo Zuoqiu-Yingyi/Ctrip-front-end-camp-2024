@@ -26,7 +26,7 @@ export default function Test() {
             </div>
             <ul>
                 <li>
-                    <Link href="/test/login">/test/login</Link>
+                    <Link href="/test/account">/test/account</Link>
                 </li>
             </ul>
         </>

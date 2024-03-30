@@ -46,7 +46,6 @@ export enum AccessorRole {
     Visitor = Role.Visitor, // 游客
 }
 
-
 /**
  * 将角色字符串转换为角色枚举
  * @param role 角色字符串
