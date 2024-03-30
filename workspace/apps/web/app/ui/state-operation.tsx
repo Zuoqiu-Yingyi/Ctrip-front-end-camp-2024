@@ -67,13 +67,15 @@ export default function StateOperation({ stateReceived }: { stateReceived: "succ
             >
                 {icon}
                 {text}
-                <Button
+                {state === "waiting"?                 
+                (<Button
                     icon={<EditFilled style={{ color: "#999999" }} />}
                     size="small"
                     type="text"
                     onClick={showModal}
                     style={{ marginLeft: 5 }}
-                />
+                />):null
+                }
                 <Modal
                     title="操作"
                     open={isModalOpen}
