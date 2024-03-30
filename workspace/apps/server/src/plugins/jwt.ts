@@ -26,6 +26,10 @@ import { tokens } from "../utils/store";
 
 import type { FastifyInstance } from "fastify";
 import type { IAuthJwtPayload } from "@/utils/jwt";
+import { AccessorRole } from "@/utils/role";
+
+const audience = "user";
+const subject = "auth";
 
 export async function register(fastify: FastifyInstance) {
     // REF: https://www.npmjs.com/package/@fastify/jwt
@@ -33,12 +37,19 @@ export async function register(fastify: FastifyInstance) {
         secret: env.JWT_SECRET,
         sign: {
             expiresIn: env.JWT_EXPIRES_IN,
-            iss: env.JWT_ISSUER,
+            iss: env.JWT_ISSUER, // Issuer 令牌发行者
+            aud: audience, // Audience 令牌受众
+            sub: subject, // Subject 令牌主题
         },
         // REF: https://www.npmjs.com/package/@fastify/jwt#cookie
         cookie: {
             cookieName: env.JWT_COOKIE_NAME,
             signed: false,
+        },
+        verify: {
+            allowedIss: env.JWT_ISSUER,
+            allowedAud: audience,
+            allowedSub: subject,
         },
         // REF: https://www.npmjs.com/package/@fastify/jwt#trusted
         trusted: validate,

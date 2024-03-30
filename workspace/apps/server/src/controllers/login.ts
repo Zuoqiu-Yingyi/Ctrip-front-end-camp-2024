@@ -16,7 +16,6 @@
  */
 
 import { z } from "zod";
-import type { Prisma } from "@prisma/client";
 
 import {
     //
@@ -37,13 +36,17 @@ import {
     verify,
     type IAuthJwtPayload,
 } from "./../utils/jwt";
-import { Role } from "./../utils/role";
+import {
+    //
+    AccessorRole,
+    AccountRole,
+} from "./../utils/role";
 import { tokens } from "../utils/store";
 
 export interface IAccount {
     id: number; // 账户 ID
     name: string; // 账户名
-    role: Role; // 账户权限
+    role: AccessorRole; // 用户角色
     password: string; // 账户密钥
     token: {
         id: number;
@@ -86,9 +89,7 @@ export const loginMutation = procedure
                 /* 校验用户名是否有效 */
                 const account: IAccount = await (async () => {
                     switch (payload.data.role) {
-                        case Role.Administrator:
-                        case Role.Reviewer:
-                        case Role.Staff: {
+                        case AccountRole.Staff: {
                             const staff = await options.ctx.DB.staff.findUniqueOrThrow({
                                 where: {
                                     name: payload.data.username,
@@ -135,8 +136,7 @@ export const loginMutation = procedure
                             };
                         }
 
-                        case Role.User:
-                        case Role.Visitor:
+                        case AccountRole.User:
                         default: {
                             const user = await options.ctx.DB.user.findUniqueOrThrow({
                                 where: {
@@ -178,7 +178,7 @@ export const loginMutation = procedure
                             return {
                                 id: user.id,
                                 name: user.name,
-                                role: Role.User,
+                                role: AccessorRole.User,
                                 password: user.password,
                                 token,
                             };
@@ -225,6 +225,7 @@ export const loginMutation = procedure
                                 version: account.token.version,
                             },
                         },
+                        jti: account.token.id,
                     };
                     // REF: https://www.npmjs.com/package/@fastify/jwt?activeTab=readme#example-using-cookie
                     const token = options.ctx.S.jwt.sign(payload);

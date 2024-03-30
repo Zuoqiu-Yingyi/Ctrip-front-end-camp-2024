@@ -23,7 +23,7 @@ import {
     sign,
     type IChallengeJwtPayload,
 } from "./../utils/jwt";
-import { str2role } from "./../utils/role";
+import { str2accountRole } from "./../utils/role";
 import {
     //
     USER_NAME,
@@ -42,7 +42,7 @@ export const challengeQuery = procedure // 获取认证用的挑战字符串
             payload: {
                 data: {
                     username: options.input.username,
-                    role: str2role(options.input.role),
+                    role: str2accountRole(options.input.role),
                 },
             },
         });

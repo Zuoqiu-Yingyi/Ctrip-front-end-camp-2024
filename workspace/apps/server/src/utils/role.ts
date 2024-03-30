@@ -23,12 +23,34 @@ export enum Role {
     Reviewer = 2, // 审核员
     Staff = 3, // 员工
     User = 10, // 用户
-    Visitor = 20, // 游客
+    Visitor = 100, // 游客
 }
+
+/**
+ * 账户角色
+ * 用于登录账户时选择的角色
+ */
+export enum AccountRole {
+    Staff = Role.Staff, // 员工
+    User = Role.User, // 用户
+}
+
+/**
+ * 访问者角色
+ * 用于访问者权限控制
+ */
+export enum AccessorRole {
+    Administrator = Role.Administrator, // 管理员
+    Reviewer = Role.Reviewer, // 审核员
+    User = Role.User, // 用户
+    Visitor = Role.Visitor, // 游客
+}
+
 
 /**
  * 将角色字符串转换为角色枚举
  * @param role 角色字符串
+ * @returns 角色枚举
  */
 export function str2role(role?: string): Role {
     switch (role) {
@@ -43,5 +65,20 @@ export function str2role(role?: string): Role {
         case "visitor":
         default:
             return Role.Visitor;
+    }
+}
+
+/**
+ * 将角色字符串转换为角色枚举
+ * @param role 账户角色字符串
+ * @returns 账户角色枚举
+ */
+export function str2accountRole(role?: string): AccountRole {
+    switch (role) {
+        case "staff":
+            return AccountRole.Staff;
+        case "user":
+        default:
+            return AccountRole.User;
     }
 }

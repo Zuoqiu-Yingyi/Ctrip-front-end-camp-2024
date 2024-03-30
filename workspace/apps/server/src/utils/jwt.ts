@@ -16,7 +16,11 @@
  */
 
 import jwt from "jsonwebtoken";
-import { Role } from "./role";
+import {
+    //
+    AccessorRole,
+    AccountRole,
+} from "./role";
 import env from "./../configs/env";
 
 /* 默认的 JWT 配置 */
@@ -51,11 +55,12 @@ export interface IChallengeJwtPayload {
 
 export interface IChallengeJwtPayloadData {
     username: string;
-    role: Role;
+    role: AccountRole;
 }
 
 export interface IAuthJwtPayload {
     data: IAuthJwtPayloadData;
+    jti: number;
 }
 
 export interface IAuthJwtPayloadData {
@@ -65,7 +70,7 @@ export interface IAuthJwtPayloadData {
 
 export interface IAuthJwtPayloadAccount {
     id: number;
-    role: Role;
+    role: AccessorRole;
     username: string;
 }
 

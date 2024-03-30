@@ -30,14 +30,14 @@ import {
     verifyChallengePayload,
     type IChallengeJwtPayload,
 } from "./../src/utils/jwt";
-import { Role } from "./../src/utils/role";
+import { AccountRole } from "./../src/utils/role";
 
 describe("JWT", () => {
     test(`create-verify`, async () => {
         const payload: IChallengeJwtPayload = {
             data: {
                 username: cuid.createId(),
-                role: Role.Administrator,
+                role: AccountRole.Staff,
             },
         };
         const token = sign({ payload });

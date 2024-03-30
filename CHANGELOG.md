@@ -3,6 +3,7 @@
 ## 2024-03-31
 
 - 添加静态测试页面 | Add static test page
+- 实现用户权限控制功能 | Implement user permission control feature
 
 ## 2024-03-30
 

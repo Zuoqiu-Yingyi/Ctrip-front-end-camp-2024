@@ -28,22 +28,27 @@ import {
     ArrayBuffer2HexString,
 } from "@repo/utils/crypto";
 
-type TRole = "administrator" | "reviewer" | "staff" | "user" | "visitor";
+type TRole = "staff" | "user";
 
 export default function Login() {
     const [username, setUsername] = useState("admin");
     const [passphrase, setPassphrase] = useState("admin");
-    const [role, setRole] = useState<TRole>("administrator");
+    const [role, setRole] = useState<TRole>("staff");
 
-    async function login() {
-        const key = await passphrase2key(username, passphrase, "salt");
-        // console.log(key);
+    async function getChallenge(): Promise<string> {
         const response_challenge = await trpc.auth.challenge.query({
             username,
             role,
         });
-        console.debug(response_challenge);
+        console.debug(response_challenge.data);
+
         const challenge = response_challenge.data.challenge;
+        return challenge;
+    }
+
+    async function login() {
+        const challenge = await getChallenge();
+        const key = await passphrase2key(username, passphrase, "salt");
         const response = await challenge2response(String2ArrayBuffer(challenge), key);
         const response_hex = ArrayBuffer2HexString(response);
 
@@ -52,6 +57,7 @@ export default function Login() {
             response: response_hex,
             stay: true,
         });
+        console.debug(response_login.data);
     }
 
     return (
@@ -83,14 +89,12 @@ export default function Login() {
                         value={role}
                         onChange={(event) => setRole(event.target.value as TRole)}
                     >
-                        <option value="administrator">Administrator</option>
-                        <option value="reviewer">Reviewer</option>
                         <option value="staff">Staff</option>
                         <option value="user">User</option>
-                        <option value="visitor">Visitor</option>
                     </select>
                 </li>
                 <li>
+                    <button onClick={getChallenge}>Challenge</button>
                     <button onClick={login}>Login</button>
                 </li>
             </ul>

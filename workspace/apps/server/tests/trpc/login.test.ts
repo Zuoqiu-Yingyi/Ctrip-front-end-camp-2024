@@ -31,7 +31,7 @@ import {
 } from "@repo/utils/crypto";
 
 import trpc from ".";
-import { Role } from "./../../src/utils/role";
+import { AccessorRole } from "./../../src/utils/role";
 
 type TRole = Parameters<typeof trpc.auth.challenge.query>[0]["role"];
 
@@ -39,7 +39,7 @@ interface IAccount {
     username: string;
     passphrase: string;
     role: TRole;
-    _role: Role;
+    _role: AccessorRole;
 }
 
 describe("/trpc/account/login", () => {
@@ -47,38 +47,26 @@ describe("/trpc/account/login", () => {
         {
             username: "admin",
             passphrase: "admin",
-            role: "administrator",
-            _role: Role.Administrator,
-        },
-        {
-            username: "reviewer",
-            passphrase: "reviewer",
-            role: "reviewer",
-            _role: Role.Reviewer,
+            role: "staff",
+            _role: AccessorRole.Administrator,
         },
         {
             username: "reviewer",
             passphrase: "reviewer",
             role: "staff",
-            _role: Role.Reviewer,
+            _role: AccessorRole.Reviewer,
         },
         {
             username: cuid.createId(),
             passphrase: cuid.createId(),
             role: "user",
-            _role: Role.User,
-        },
-        {
-            username: cuid.createId(),
-            passphrase: cuid.createId(),
-            role: "visitor",
-            _role: Role.User,
+            _role: AccessorRole.User,
         },
         {
             username: cuid.createId(),
             passphrase: cuid.createId(),
             role: undefined,
-            _role: Role.User,
+            _role: AccessorRole.User,
         },
     ];
     accounts.forEach((account) => {
