@@ -24,18 +24,15 @@ import {
 
 import trpc from ".";
 import { verifyChallengePayload } from "./../../src/utils/jwt";
-import { str2role } from "./../../src/utils/role";
+import { str2accountRole } from "./../../src/utils/role";
 
 type TRole = Parameters<typeof trpc.auth.challenge.query>[0]["role"];
 
 describe("/trpc/auth", () => {
     const roles: TRole[] = [
         //
-        "administrator",
-        "reviewer",
         "staff",
         "user",
-        "visitor",
         undefined,
     ];
 
@@ -52,7 +49,7 @@ describe("/trpc/auth", () => {
                 verifyChallengePayload(response.data.challenge, {
                     data: {
                         username: payload.username,
-                        role: str2role(payload.role),
+                        role: str2accountRole(payload.role),
                     },
                 }),
             ).toBeTruthy();

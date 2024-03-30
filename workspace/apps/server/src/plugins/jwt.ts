@@ -20,8 +20,16 @@ import {
     fastifyJwt,
     type FastifyJWTOptions,
 } from "@fastify/jwt";
-import type { FastifyInstance } from "fastify";
 import env from "./../configs/env";
+import { DB } from "./../models/client";
+import { tokens } from "../utils/store";
+
+import type { FastifyInstance } from "fastify";
+import type { IAuthJwtPayload } from "@/utils/jwt";
+import { AccessorRole } from "@/utils/role";
+
+const audience = "user";
+const subject = "auth";
 
 export async function register(fastify: FastifyInstance) {
     // REF: https://www.npmjs.com/package/@fastify/jwt
@@ -29,21 +37,57 @@ export async function register(fastify: FastifyInstance) {
         secret: env.JWT_SECRET,
         sign: {
             expiresIn: env.JWT_EXPIRES_IN,
-            iss: env.JWT_ISSUER,
+            iss: env.JWT_ISSUER, // Issuer 令牌发行者
+            aud: audience, // Audience 令牌受众
+            sub: subject, // Subject 令牌主题
         },
         // REF: https://www.npmjs.com/package/@fastify/jwt#cookie
         cookie: {
             cookieName: env.JWT_COOKIE_NAME,
             signed: false,
         },
+        verify: {
+            allowedIss: env.JWT_ISSUER,
+            allowedAud: audience,
+            allowedSub: subject,
+        },
         // REF: https://www.npmjs.com/package/@fastify/jwt#trusted
-        trusted: validateToken,
+        trusted: validate,
     } satisfies FastifyJWTOptions);
     await fastify.after();
 }
+export default register;
 
-const validateToken: FastifyJWTOptions["trusted"] = async function (request, decodedToken) {
+/**
+ * 校验令牌是否可信
+ */
+const validate: FastifyJWTOptions["trusted"] = async function (request, payload) {
     // REF: https://www.npmjs.com/package/@fastify/jwt#trusted
-    // TODO: 判断令牌是否有效 (未被吊销)
-    return true;
+    const data = (payload as IAuthJwtPayload).data;
+    const version = tokens.get(data.token.id);
+    if (version) {
+        // 从临时存储中获取到该令牌的有效版本号
+        return data.token.version >= version;
+    } else {
+        // 从临时存储中无该令牌, 从数据库中加载
+        const token = await DB.p.token.findUnique({
+            where: {
+                id: data.token.id,
+                deleted: false,
+            },
+            select: {
+                id: true,
+                version: true,
+            },
+        });
+        if (token) {
+            // 数据库中有该令牌的有效信息
+            tokens.set(token.id, token.version);
+            return data.token.version >= token.version;
+        } else {
+            // 数据库中无该令牌的有效信息
+            tokens.set(data.token.id, Infinity);
+            return false;
+        }
+    }
 };

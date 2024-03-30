@@ -15,14 +15,17 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+import path from "node:path";
+import { fastifyStatic } from "@fastify/static";
 import type { FastifyInstance } from "fastify";
-import { register as registerJwtPlugin } from "./jwt";
-import { register as registerCookiePlugin } from "./cookie";
-import { register as registerStaticPlugin } from "./static";
+import env from "./../configs/env";
 
-export async function init(fastify: FastifyInstance) {
-    await registerJwtPlugin(fastify); // 注册 JWT 插件
-    await registerCookiePlugin(fastify); // 注册 Cookie 插件
-    await registerStaticPlugin(fastify); // 注册静态文件插件
+export async function register(fastify: FastifyInstance) {
+    // REF: https://www.npmjs.com/package/@fastify/static
+    await fastify.register(fastifyStatic, {
+        root: path.join(process.cwd(), env.STATIC_ROOT_DIRECTORY_PATH),
+        prefix: "/",
+    });
     await fastify.after();
 }
+export default register;

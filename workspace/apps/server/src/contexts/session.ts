@@ -16,16 +16,26 @@
  */
 
 import type { CreateFastifyContextOptions } from "@trpc/server/adapters/fastify";
-import { D } from "./../models/client";
+import { DB } from "./../models/client";
+import { IAuthJwtPayload } from "@/utils/jwt";
 
 /**
  * @see {@link https://trpc.io/docs/server/adapters/fastify#create-the-context Create the context}
  */
-export function createSessionContext(options: CreateFastifyContextOptions) {
+export async function createSessionContext(options: CreateFastifyContextOptions) {
+    let session: IAuthJwtPayload | null;
+    try {
+        // 失效的令牌也能解码, 且不会抛出异常
+        session = await options.req.jwtDecode<IAuthJwtPayload>();
+    } catch (error) {
+        // No Authorization was found in request.cookies
+        session = null;
+    }
     return {
         ...options,
+        session,
         S: options.req.server,
-        DB: D.p,
+        DB: DB.p,
     };
 }
 

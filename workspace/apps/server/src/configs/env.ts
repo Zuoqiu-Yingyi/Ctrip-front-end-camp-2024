@@ -24,6 +24,9 @@ export interface IEnv {
     /* Web 服务 */
     PORT: number;
     HOST: string;
+    STATIC_ROOT_DIRECTORY_PATH: string;
+
+    /* TLS 配置 */
     TLS: boolean;
     TLS_KEY_FILE_PATH: string;
     TLS_CER_FILE_PATH: string;
@@ -55,6 +58,9 @@ export const ENV_DEFAULT: IEnv = {
     /* Web 服务 */
     PORT: 3000,
     HOST: "::",
+    STATIC_ROOT_DIRECTORY_PATH: "./pages/",
+
+    /* TLS 配置 */
     TLS: false,
     TLS_KEY_FILE_PATH: "./keys/prod.pem.key",
     TLS_CER_FILE_PATH: "./keys/prod.pem.cer",
@@ -92,6 +98,11 @@ export const env: IEnv = {
     HOST:
         process.env._TD_HOST || //
         ENV_DEFAULT.HOST,
+    STATIC_ROOT_DIRECTORY_PATH:
+        process.env._TD_STATIC_ROOT_DIRECTORY_PATH || //
+        ENV_DEFAULT.STATIC_ROOT_DIRECTORY_PATH,
+
+    /* TLS 配置 */
     TLS:
         process.env._TD_TLS === "true" || //
         ENV_DEFAULT.TLS,

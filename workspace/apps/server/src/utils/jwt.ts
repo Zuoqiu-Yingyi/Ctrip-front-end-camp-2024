@@ -16,16 +16,21 @@
  */
 
 import jwt from "jsonwebtoken";
-import { Role } from "./role";
+import {
+    //
+    AccessorRole,
+    AccountRole,
+} from "./role";
 import env from "./../configs/env";
 
-const DEFAULT_SECRET: jwt.Secret = env.CHALLENGE_RESPONSE_JWT_SECRET;
-const DEFAULT_SIGN_OPTIONS = {
+/* 默认的 JWT 配置 */
+export const DEFAULT_SECRET: jwt.Secret = env.CHALLENGE_RESPONSE_JWT_SECRET;
+export const DEFAULT_SIGN_OPTIONS = {
     algorithm: "HS256",
     issuer: env.CHALLENGE_RESPONSE_JWT_ISSUER,
     expiresIn: env.CHALLENGE_RESPONSE_JWT_EXPIRES_IN,
 } as const satisfies jwt.SignOptions;
-const DEFAULT_VERIFY_OPTIONS = {
+export const DEFAULT_VERIFY_OPTIONS = {
     algorithms: ["HS256"],
     issuer: env.CHALLENGE_RESPONSE_JWT_ISSUER,
 } as const satisfies jwt.VerifyOptions;
@@ -50,21 +55,28 @@ export interface IChallengeJwtPayload {
 
 export interface IChallengeJwtPayloadData {
     username: string;
-    role: Role;
+    role: AccountRole;
 }
 
 export interface IAuthJwtPayload {
     data: IAuthJwtPayloadData;
+    jti: number;
 }
 
 export interface IAuthJwtPayloadData {
     account: IAuthJwtPayloadAccount;
+    token: IAuthJwtPayloadToken;
 }
 
 export interface IAuthJwtPayloadAccount {
     id: number;
-    role: Role;
+    role: AccessorRole;
     username: string;
+}
+
+export interface IAuthJwtPayloadToken {
+    id: number;
+    version: number;
 }
 
 /**

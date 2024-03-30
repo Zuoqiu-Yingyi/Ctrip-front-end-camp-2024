@@ -16,4 +16,3 @@
  */
 
 export { procedure } from "./../utils/trpc";
-import { procedure } from "./../utils/trpc";

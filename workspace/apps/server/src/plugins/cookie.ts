@@ -23,3 +23,4 @@ export async function register(fastify: FastifyInstance) {
     await fastify.register(fastifyCookie);
     await fastify.after();
 }
+export default register;

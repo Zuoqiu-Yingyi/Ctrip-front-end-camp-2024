@@ -15,14 +15,10 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import type { FastifyInstance } from "fastify";
-import { register as registerJwtPlugin } from "./jwt";
-import { register as registerCookiePlugin } from "./cookie";
-import { register as registerStaticPlugin } from "./static";
-
-export async function init(fastify: FastifyInstance) {
-    await registerJwtPlugin(fastify); // 注册 JWT 插件
-    await registerCookiePlugin(fastify); // 注册 Cookie 插件
-    await registerStaticPlugin(fastify); // 注册静态文件插件
-    await fastify.after();
-}
+/**
+ * 令牌状态
+ * 令牌 ID -> 令牌版本号
+ * 当令牌的版本号小于该值时，表示令牌已过期
+ * 若对应的令牌不存在则需要从数据库中加载
+ */
+export const tokens = new Map<number, number>();

@@ -1,8 +1,14 @@
 # 更改日志 | Change log
 
+## 2024-03-31
+
+- 添加静态测试页面 | Add static test page
+- 实现用户权限控制功能 | Implement user permission control feature
+
 ## 2024-03-30
 
 - 实现用户登录功能 | Implement user login feature
+- 实现令牌管理功能 | Implement token management feature
 
 ## 2024-03-29
 

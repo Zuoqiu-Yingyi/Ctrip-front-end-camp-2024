@@ -15,14 +15,20 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import type { FastifyInstance } from "fastify";
-import { register as registerJwtPlugin } from "./jwt";
-import { register as registerCookiePlugin } from "./cookie";
-import { register as registerStaticPlugin } from "./static";
+import Link from "next/link";
 
-export async function init(fastify: FastifyInstance) {
-    await registerJwtPlugin(fastify); // 注册 JWT 插件
-    await registerCookiePlugin(fastify); // 注册 Cookie 插件
-    await registerStaticPlugin(fastify); // 注册静态文件插件
-    await fastify.after();
+export default function Test() {
+    return (
+        <>
+            <h1>Test</h1>
+            <div>
+                Back to <Link href="/">/</Link>
+            </div>
+            <ul>
+                <li>
+                    <Link href="/test/login">/test/login</Link>
+                </li>
+            </ul>
+        </>
+    );
 }
