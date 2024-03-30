@@ -16,7 +16,7 @@
  */
 
 import type { CreateFastifyContextOptions } from "@trpc/server/adapters/fastify";
-import { D } from "./../models/client";
+import { DB } from "./../models/client";
 
 /**
  * @see {@link https://trpc.io/docs/server/adapters/fastify#create-the-context Create the context}
@@ -25,7 +25,7 @@ export function createSessionContext(options: CreateFastifyContextOptions) {
     return {
         ...options,
         S: options.req.server,
-        DB: D.p,
+        DB: DB.p,
     };
 }
 

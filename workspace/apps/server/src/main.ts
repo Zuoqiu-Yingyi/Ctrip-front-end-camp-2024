@@ -19,7 +19,7 @@ import Fastify, { type FastifyInstance } from "fastify";
 
 import { init as initRouters } from "./routers";
 import { init as initPlugins } from "./plugins";
-import { D } from "./models/client";
+import { DB } from "./models/client";
 import {
     //
     fastifyOptions,
@@ -59,7 +59,7 @@ export class Server {
         await Promise.all([
             initRouters(this.fastify), // 初始化路由
             initPlugins(this.fastify), // 初始化插件
-            D.init(this.fastify), // 初始化数据库
+            DB.init(this.fastify), // 初始化数据库
         ]);
         await this.fastify.ready(); // 等待 Fastify 准备就绪
     }
@@ -70,8 +70,8 @@ export class Server {
     public async start() {
         if (!this._runing) {
             this._runing = true;
-            await D.connect(); // 连接数据库
-            await D.pretreat(); // 数据库预处理
+            await DB.connect(); // 连接数据库
+            await DB.pretreat(); // 数据库预处理
 
             const address = await this.fastify.listen(this._fastifyListenOptions); // 监听端口
             return address;
@@ -87,7 +87,7 @@ export class Server {
     public async stop() {
         if (this._runing) {
             this._runing = false;
-            await D.disconnect(); // 断开数据库
+            await DB.disconnect(); // 断开数据库
             await this.fastify.close(); // 关闭服务
             return true;
         } else {

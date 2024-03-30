@@ -16,6 +16,7 @@
  */
 
 import { z } from "zod";
+import type { Prisma } from "@prisma/client";
 
 import {
     //
@@ -37,11 +38,17 @@ import {
     type IAuthJwtPayload,
 } from "./../utils/jwt";
 import { Role } from "./../utils/role";
+import { tokens } from "../utils/store";
+
 export interface IAccount {
     id: number; // 账户 ID
     name: string; // 账户名
     role: Role; // 账户权限
     password: string; // 账户密钥
+    token: {
+        id: number;
+        version: number;
+    }; // 令牌信息
 }
 
 /**
@@ -87,12 +94,44 @@ export const loginMutation = procedure
                                     name: payload.data.username,
                                     deleted: false,
                                 },
+                                select: {
+                                    id: true,
+                                    name: true,
+                                    role: true,
+                                    password: true,
+                                    token_id: true,
+                                },
                             });
+                            const token = await (async () => {
+                                if (staff.token_id === null) {
+                                    /* 新建一个令牌字段并绑定至员工 */
+                                    const token = await options.ctx.DB.token.create({ data: {} });
+                                    await options.ctx.DB.staff.update({
+                                        where: {
+                                            id: staff.id,
+                                            deleted: false,
+                                        },
+                                        data: {
+                                            token_id: token.id,
+                                        },
+                                    });
+                                    return token;
+                                } else {
+                                    const token = await options.ctx.DB.token.findUniqueOrThrow({
+                                        where: {
+                                            id: staff.token_id,
+                                            deleted: false,
+                                        },
+                                    });
+                                    return token;
+                                }
+                            })();
                             return {
                                 id: staff.id,
                                 name: staff.name,
                                 role: staff.role,
                                 password: staff.password,
+                                token,
                             };
                         }
 
@@ -104,12 +143,44 @@ export const loginMutation = procedure
                                     name: payload.data.username,
                                     deleted: false,
                                 },
+                                select: {
+                                    id: true,
+                                    name: true,
+                                    password: true,
+                                    token_id: true,
+                                },
                             });
+                            const token = await (async () => {
+                                if (user.token_id === null) {
+                                    /* 新建一个令牌字段并绑定至用户 */
+                                    const token = await options.ctx.DB.token.create({ data: {} });
+                                    await options.ctx.DB.user.update({
+                                        where: {
+                                            id: user.id,
+                                            deleted: false,
+                                        },
+                                        data: {
+                                            token_id: token.id,
+                                        },
+                                    });
+                                    return token;
+                                } else {
+                                    /* 获取对应的令牌 */
+                                    const token = await options.ctx.DB.token.findUniqueOrThrow({
+                                        where: {
+                                            id: user.token_id,
+                                            deleted: false,
+                                        },
+                                    });
+                                    return token;
+                                }
+                            })();
                             return {
                                 id: user.id,
                                 name: user.name,
                                 role: Role.User,
                                 password: user.password,
+                                token,
                             };
                         }
                     }
@@ -126,12 +197,32 @@ export const loginMutation = procedure
                     Buffer.from(account.password, "hex"),
                 );
                 if (response.toString("hex") === options.input.response) {
+                    // 用户名与密码正确
+
+                    /* 更新令牌版本 */
+                    account.token.version++;
+                    tokens.set(account.token.id, account.token.version);
+                    await options.ctx.DB.token.update({
+                        where: {
+                            id: account.token.id,
+                            deleted: false,
+                        },
+                        data: {
+                            version: account.token.version,
+                        },
+                    });
+
+                    /* 签发新令牌 */
                     const payload: IAuthJwtPayload = {
                         data: {
                             account: {
                                 id: account.id,
                                 role: account.role,
                                 username: account.name,
+                            },
+                            token: {
+                                id: account.token.id,
+                                version: account.token.version,
                             },
                         },
                     };

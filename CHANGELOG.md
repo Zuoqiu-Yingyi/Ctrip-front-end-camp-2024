@@ -3,6 +3,7 @@
 ## 2024-03-30
 
 - 实现用户登录功能 | Implement user login feature
+- 实现令牌管理功能 | Implement token management feature
 
 ## 2024-03-29
 

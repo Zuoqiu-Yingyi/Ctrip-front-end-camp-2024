@@ -26,7 +26,7 @@ import type {
 } from "fastify";
 
 import trpcRouter from "./router";
-import { createSessionContext } from "./../../contexts/session";
+import { createSessionContext } from "./../../contexts";
 
 export interface ITrpcFastifyPluginOptions extends FastifyPluginOptions {}
 

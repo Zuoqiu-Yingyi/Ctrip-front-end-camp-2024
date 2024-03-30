@@ -31,15 +31,11 @@ import {
 } from "@repo/utils/crypto";
 
 import trpc from ".";
-import {
-    //
-    Role,
-    str2role,
-} from "./../../src/utils/role";
+import { Role } from "./../../src/utils/role";
 
 type TRole = Parameters<typeof trpc.auth.challenge.query>[0]["role"];
 
-interface IUserAccount {
+interface IAccount {
     username: string;
     passphrase: string;
     role: TRole;
@@ -47,7 +43,7 @@ interface IUserAccount {
 }
 
 describe("/trpc/account/login", () => {
-    const accounts: IUserAccount[] = [
+    const accounts: IAccount[] = [
         {
             username: "admin",
             passphrase: "admin",

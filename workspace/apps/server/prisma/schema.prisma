@@ -24,31 +24,7 @@ datasource db {
 // REF: https://www.prisma.io/docs/orm/prisma-schema/overview/generators
 generator client {
     provider = "prisma-client-js"
-    output   = "./client"
-}
-
-// REF: https://github.com/CarterGrimmeisen/zod-prisma
-generator zod {
-    provider = "zod-prisma"
-    output   = "./zod" // (default) the directory where generated zod schemas will be saved
-
-    relationModel = true // (default) Create and export both plain and related models.
-    // relationModel         = "default" // Do not export model without relations.
-    // relationModel         = false // Do not generate related model
-
-    modelCase = "PascalCase" // (default) Output models using pascal case (ex. UserModel, PostModel)
-    // modelCase             = "camelCase" // Output models using camel case (ex. userModel, postModel)
-
-    modelSuffix = "Model" // (default) Suffix to apply to your prisma models when naming Zod schemas
-
-    // useDecimalJs          = false // (default) represent the prisma Decimal type using as a JS number
-    useDecimalJs = true // represent the prisma Decimal type using Decimal.js (as Prisma does)
-
-    // imports = null // (default) will import the referenced file in generated schemas to be used via imports.someExportedVariable
-
-    // https://www.prisma.io/docs/concepts/components/prisma-client/working-with-fields/working-with-json-fields#filtering-by-null-values
-    prismaJsonNullability = true // (default) uses prisma's scheme for JSON field nullability
-    // prismaJsonNullability = false // allows null assignment to optional JSON fields
+    // output   = "./client"
 }
 
 // REF: https://github.com/pantharshit00/prisma-docs-generator
@@ -80,6 +56,11 @@ model Staff {
     /// - `2`: 审核员 | Reviewer
     role     Int    @default(2)
 
+    /// 工作人员使用的令牌 | Token used by staff
+    token    Token? @relation(fields: [token_id], references: [id])
+    /// 令牌 ID | Token ID
+    token_id Int?   @unique
+
     reviews Review[] // 审核列表
 
     /// 是否已逻辑删除 | Whether it has been logically deleted
@@ -107,11 +88,36 @@ model User {
     /// @format uid
     avatar   String? // 头像文件的 uid
 
+    /// 用户使用的令牌 | Token used by users
+    token    Token? @relation(fields: [token_id], references: [id])
+    /// 令牌 ID | Token ID
+    token_id Int?   @unique
+
     assets      Asset[] // 上传的资源文件列表
     drafts      Draft[] // 草稿列表
     reviews     Review[] // 审核列表
     publishs    Publish[] // 发布列表
     coordinates Coordinate[] // 位置列表
+
+    /// 是否已逻辑删除 | Whether it has been logically deleted
+    deleted   Boolean  @default(false)
+    /// 记录创建时间 | Record creation time
+    createdAt DateTime @default(now())
+    /// 记录更新时间 | Record update time
+    updatedAt DateTime @updatedAt
+}
+
+/// 令牌信息 | Token information
+/// @namespace Server
+model Token {
+    /// 主键 | Primary Key
+    id Int @id @default(autoincrement())
+
+    /// 令牌版本 | Token version
+    version Int @default(0)
+
+    Staff Staff?
+    User  User?
 
     /// 是否已逻辑删除 | Whether it has been logically deleted
     deleted   Boolean  @default(false)
@@ -213,7 +219,7 @@ model Review {
 /// @namespace Server
 model Publish {
     /// 主键 | Primary Key
-    id   Int    @id @default(autoincrement())
+    id  Int    @id @default(autoincrement())
     /// 用于路由的 uid | uid for routing
     /// @format ulid
     uid String @unique
@@ -262,7 +268,7 @@ model Publish {
 /// @namespace Server
 model Asset {
     /// 主键 | Primary Key
-    id   Int    @id @default(autoincrement())
+    id  Int    @id @default(autoincrement())
     /// 用于路由的 uid | uid for routing
     /// @format ulid
     uid String @unique

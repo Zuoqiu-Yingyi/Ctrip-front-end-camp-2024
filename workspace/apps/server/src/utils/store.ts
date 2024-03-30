@@ -15,5 +15,10 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-export * from "./test";
-export * from "./session";
+/**
+ * 令牌状态
+ * 令牌 ID -> 令牌版本号
+ * 当令牌的版本号小于该值时，表示令牌已过期
+ * 若对应的令牌不存在则需要从数据库中加载
+ */
+export const tokens = new Map<number, number>();

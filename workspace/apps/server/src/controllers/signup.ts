@@ -39,6 +39,7 @@ export const signupMutation = procedure
             const user = await options.ctx.DB.user.findUnique({
                 where: {
                     name: options.input.username,
+                    deleted: false,
                 },
             });
             if (user) {

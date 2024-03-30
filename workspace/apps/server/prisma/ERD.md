@@ -11,6 +11,7 @@ erDiagram
   String name UK
   String password
   Int role
+  Int token_id FK "nullable"
   Boolean deleted
   DateTime createdAt
   DateTime updatedAt
@@ -20,6 +21,14 @@ erDiagram
   String name UK
   String password
   String avatar "nullable"
+  Int token_id FK "nullable"
+  Boolean deleted
+  DateTime createdAt
+  DateTime updatedAt
+}
+"Token" {
+  Int id PK
+  Int version
   Boolean deleted
   DateTime createdAt
   DateTime updatedAt
@@ -122,6 +131,8 @@ erDiagram
   DateTime createdAt
   DateTime updatedAt
 }
+"Staff" |o--o| "Token" : token
+"User" |o--o| "Token" : token
 "Draft" }o--|| "User" : author
 "Draft" }o--o| "Coordinate" : coordinate
 "Review" }o--|| "User" : submitter
@@ -154,6 +165,7 @@ erDiagram
     > 账户权限 | Account permission
     > - `1`: 管理员 | Administrator
     > - `2`: 审核员 | Reviewer
+  - `token_id`: 令牌 ID | Token ID
   - `deleted`: 是否已逻辑删除 | Whether it has been logically deleted
   - `createdAt`: 记录创建时间 | Record creation time
   - `updatedAt`: 记录更新时间 | Record update time
@@ -171,6 +183,17 @@ erDiagram
     > 用户头像 | User avatar
     > - `NULL`: 使用默认头像 | Use the default avatar
     > - `String`: 头像文件的 uid | uid of the avatar file
+  - `token_id`: 令牌 ID | Token ID
+  - `deleted`: 是否已逻辑删除 | Whether it has been logically deleted
+  - `createdAt`: 记录创建时间 | Record creation time
+  - `updatedAt`: 记录更新时间 | Record update time
+
+### `Token`
+令牌信息 | Token information
+
+**Properties**
+  - `id`: 主键 | Primary Key
+  - `version`: 令牌版本 | Token version
   - `deleted`: 是否已逻辑删除 | Whether it has been logically deleted
   - `createdAt`: 记录创建时间 | Record creation time
   - `updatedAt`: 记录更新时间 | Record update time

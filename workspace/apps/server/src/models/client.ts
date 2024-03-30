@@ -117,6 +117,6 @@ export class DatabaseClient {
     }
 }
 
-export const D = new DatabaseClient();
+export const DB = new DatabaseClient();
 
-export default D;
+export default DB;
