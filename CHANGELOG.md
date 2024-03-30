@@ -1,5 +1,9 @@
 # 更改日志 | Change log
 
+## 2024-03-31
+
+- 添加静态测试页面 | Add static test page
+
 ## 2024-03-30
 
 - 实现用户登录功能 | Implement user login feature

@@ -235,12 +235,12 @@ export const loginMutation = procedure
                         {
                             // REF: https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Cookies
                             // domain: "your.domain", // 默认为同站 (不包括子域名), 设置后将包含子域名
-                            // path: "/", // 将在指定路径下发送该 Cookie
                             // secure: true, // 通过被 HTTPS 协议加密过的请求发送
-                            sameSite: "lax", // 用户从其他站点导航到 Cookie 的源站点时也发送 Cookie
+                            path: "/", // 将在指定路径下发送该 Cookie
+                            sameSite: "lax", // 用户从其他站点导航到 Cookie 的源站点时发送 Cookie
                             httpOnly: true, // 阻止通过 document.cookie 访问该 Cookie
                             expires: options.input.stay // Cookie 有效期
-                                ? new Date(options.ctx.S.jwt.decode<any>(token).exp) // Cookie 有效期与 JWT 一致
+                                ? new Date(options.ctx.S.jwt.decode<any>(token).exp * 1_000) // Cookie 有效期与 JWT 一致
                                 : undefined, // 会话 Cookie (关闭会话时失效)
                         },
                     );

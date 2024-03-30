@@ -45,6 +45,7 @@ export async function register(fastify: FastifyInstance) {
     } satisfies FastifyJWTOptions);
     await fastify.after();
 }
+export default register;
 
 /**
  * 校验令牌是否可信
