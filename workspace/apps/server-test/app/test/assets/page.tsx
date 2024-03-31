@@ -18,6 +18,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useState } from "react";
 
 export interface IAsset {
@@ -72,8 +73,9 @@ export default function Login() {
                 </li>
                 {assets.map((asset) => (
                     <li key={asset.uid}>
-                        <img
+                        <Image
                             src={`/assets/${asset.uid}`}
+                            alt={asset.filename}
                             title={asset.filename}
                         />
                     </li>
