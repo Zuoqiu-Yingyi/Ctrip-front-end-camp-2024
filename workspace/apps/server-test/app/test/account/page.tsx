@@ -33,6 +33,7 @@ type TRole = "staff" | "user";
 export default function Login() {
     const [username, setUsername] = useState("admin");
     const [passphrase, setPassphrase] = useState("admin");
+    const [stay, setStay] = useState(false);
     const [role, setRole] = useState<TRole>("staff");
 
     async function getChallenge(): Promise<string> {
@@ -46,6 +47,15 @@ export default function Login() {
         return challenge;
     }
 
+    async function sighup() {
+        const key = await passphrase2key(username, passphrase, "salt");
+        const response_sighup = await trpc.account.signup.mutate({
+            username,
+            password: ArrayBuffer2HexString(key),
+        });
+        console.debug(response_sighup.data);
+    }
+
     async function login() {
         const challenge = await getChallenge();
         const key = await passphrase2key(username, passphrase, "salt");
@@ -55,7 +65,7 @@ export default function Login() {
         const response_login = await trpc.account.login.mutate({
             challenge,
             response: response_hex,
-            stay: true,
+            stay,
         });
         console.debug(response_login.data);
     }
@@ -103,7 +113,16 @@ export default function Login() {
                     </select>
                 </li>
                 <li>
+                    <label>Stay:</label>
+                    <input
+                        type="checkbox"
+                        checked={stay}
+                        onChange={(event) => setStay(event.target.checked)}
+                    />
+                </li>
+                <li>
                     <button onClick={getChallenge}>Challenge</button>
+                    <button onClick={sighup}>Sighup</button>
                     <button onClick={login}>Login</button>
                     <button onClick={logout}>Logout</button>
                 </li>

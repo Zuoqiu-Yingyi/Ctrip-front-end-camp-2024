@@ -1,5 +1,9 @@
 # 更改日志 | Change log
 
+## 2024-04-01
+
+- 实现文件上传功能 | Implement file upload feature
+
 ## 2024-03-31
 
 - 添加静态测试页面 | Add static test page

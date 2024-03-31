@@ -28,6 +28,9 @@ export default function Test() {
                 <li>
                     <Link href="/test/account">/test/account</Link>
                 </li>
+                <li>
+                    <Link href="/test/assets">/test/assets</Link>
+                </li>
             </ul>
         </>
     );

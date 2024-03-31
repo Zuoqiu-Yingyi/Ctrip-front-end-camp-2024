@@ -15,16 +15,53 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { fastifyPlugin } from "fastify-plugin";
-
 import { uploadHandler } from "./upload";
 import { getHandler } from "./get";
+import { AccessorRole } from "./../../utils/role";
+import { DB } from "./../../models/client";
+
+import type { FastifyPluginCallback } from "fastify";
+import type { IAuthJwtPayload } from "@/utils/jwt";
+
+export interface IAssetsRequest {
+    DB: typeof DB.p;
+    role: AccessorRole;
+    session: IAuthJwtPayload | null;
+}
+
+// REF: https://fastify.dev/docs/latest/Reference/TypeScript/#request
+declare module "fastify" {
+    interface FastifyRequest extends IAssetsRequest {}
+}
 
 /**
  * @see {@link https://fastify.dev/docs/latest/Reference/Plugins/ Fastify Plugins}
  */
-export const assetsFastifyPlugin = fastifyPlugin(async function (fastify, options) {
+export const assetsFastifyPlugin: FastifyPluginCallback = async function (fastify, options) {
     // fastify.log.debug(options);
+    /**
+     * 注入上下文
+     * @see {@link https://fastify.dev/docs/latest/Reference/Decorators/ Decorators}
+     * @see {@link https://fastify.dev/docs/latest/Reference/Hooks/#prehandler preHandler}
+     */
+    fastify
+        // REF: https://fastify.dev/docs/latest/Reference/Decorators/#usage
+        .decorateRequest("DB", DB.p)
+        .decorateRequest("role", AccessorRole.Visitor)
+        .decorateRequest<IAuthJwtPayload | null>("session", null)
+        .addHook("preHandler", async (request, reply) => {
+            // 解析会话信息
+            try {
+                // 失效的令牌也能解码, 且不会抛出异常
+                request.session = await request.jwtVerify<IAuthJwtPayload>();
+                request.role = request.session.data.account.role;
+            } catch (error) {
+                // No Authorization was found in request.cookies
+                request.session = null;
+                request.role = AccessorRole.Visitor;
+            }
+        });
+
     /**
      * 文件上传
      * REF: https://www.npmjs.com/package/@fastify/multipart
@@ -38,5 +75,5 @@ export const assetsFastifyPlugin = fastifyPlugin(async function (fastify, option
     fastify.get("/:uid", getHandler);
 
     await fastify.after();
-});
+};
 export default assetsFastifyPlugin;

@@ -35,6 +35,10 @@ export const trpcFastifyPlugin = fastifyPlugin<RegisterOptions>(async function (
 
     // REF: https://trpc.io/docs/server/adapters/fastify
     await fastify.register(fastifyTRPCPlugin, {
+        /**
+         * REF: https://fastify.dev/docs/latest/Reference/Routes/#route-prefixing-and-fastify-plugin
+         * 使用 {@link fastifyPlugin} 包装的插件, 不能在外部注册时使用 prefix 前缀指定路径前缀
+         */
         prefix: options.prefix,
         useWSS: true,
         trpcOptions: {

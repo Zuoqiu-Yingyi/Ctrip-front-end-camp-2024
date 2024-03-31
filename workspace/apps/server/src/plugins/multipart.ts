@@ -21,6 +21,44 @@ import type { FastifyInstance } from "fastify";
 export async function register(fastify: FastifyInstance) {
     // REF: https://www.npmjs.com/package/@fastify/static
     await fastify.register(fastifyMultipart, {
+        limits: {
+            /**
+             * Max field name size in bytes
+             */
+            // fieldNameSize: 100,
+
+            /**
+             * Max field value size in bytes
+             */
+            // fieldSize: 100,
+
+            /**
+             * Max number of non-file fields
+             */
+            // fields: 10,
+
+            /**
+             * For multipart forms, the max file size in bytes
+             * @default 1048576
+             */
+            fileSize: 1024 ** 2 * 4,
+
+            /**
+             * Max number of file fields
+             */
+            files: 9,
+
+            /**
+             * Max number of header key=>value pairs
+             */
+            // headerPairs: 2000,
+
+            /**
+             * For multipart forms, the max number of parts (fields + files)
+             * @default 1000
+             */
+            // parts: 1000,
+        },
     });
     await fastify.after();
 }

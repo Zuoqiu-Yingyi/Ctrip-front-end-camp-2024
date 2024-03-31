@@ -14,15 +14,185 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+import fs from "node:fs";
+import util from "node:util";
+import path from "node:path";
+import stream from "node:stream";
+import crypto from "node:crypto";
 
-import type { RouteHandlerMethod } from "fastify";
+import cuid2 from "@paralleldrive/cuid2";
+
+import { AccessorRole } from "./../../utils/role";
+
+import type {
+    //
+    RouteHandlerMethod,
+    FastifyRequest,
+} from "fastify";
+import type { IAssetsRequest } from "./router";
+import { ASSETS_PATH } from ".";
+
+export interface IAsset {
+    uid: string; // CUID
+    filename: string; // 原文件名
+    fieldname: string; // 字段名
+    mimetype: string; // 文件 MIME 类型
+    path: string; // 文件在 assets 目录下的路径
+    hash: string; // 文件 SHA256 哈希值
+    size: number; // 文件大小
+}
+
+export interface IFailure {
+    filename: string; // 文件名
+    fieldname: string; // 字段名
+    mimetype: string; // 文件 MIME 类型
+}
+
+export interface ISuccess extends IFailure {
+    uid: string; // CUID
+}
+
+const pump = util.promisify(stream.pipeline);
 
 /**
  * 资源文件上传
- * @param request Fastify 请求对象
- * @param reply Fastify 响应对象
+ * @param request Fastify
  */
-export const uploadHandler: RouteHandlerMethod = async function (request, reply) {
-    // TODO: 资源文件上传
+export const uploadHandler: RouteHandlerMethod = async function (request: IAssetsRequest & FastifyRequest, reply) {
+    try {
+        switch (request.role) {
+            case AccessorRole.User: {
+                // REF: https://www.npmjs.com/package/@fastify/multipart
+                const promises: Array<Promise<IAsset>> = [];
+                const failures: IFailure[] = []; // 文件上传失败的列表
+                const successes: ISuccess[] = []; // 文件上传成功的列表
+
+                const parts = request.files();
+                for await (const part of parts) {
+                    if (part.type === "file") {
+                        promises.push(
+                            new Promise(async (resolve, reject) => {
+                                try {
+                                    /* 文件重命名 */
+                                    const uid = cuid2.createId(); // 文件 UID
+                                    const parsed_filename = path.parse(part.filename); // 解析后的原文件名
+                                    const filename = path.format({
+                                        name: uid,
+                                        ext: parsed_filename.ext,
+                                    }); // 重命名的文件名
+
+                                    const file_path = path.join(ASSETS_PATH, filename); // 文件写入路径
+                                    const sha256 = crypto.createHash("sha256");
+                                    const file = fs.createWriteStream(file_path);
+                                    let size = 0;
+                                    await pump(
+                                        part.file,
+                                        new stream.Writable({
+                                            write(chunk, encoding, callback) {
+                                                sha256.write(chunk);
+                                                file.write(chunk);
+                                                size += chunk.length;
+                                                callback();
+                                            },
+                                            final(callback) {
+                                                sha256.end();
+                                                file.end();
+                                                callback();
+                                            },
+                                        }),
+                                    );
+                                    const hash = sha256.digest("hex");
+
+                                    resolve({
+                                        uid,
+                                        filename: parsed_filename.base,
+                                        fieldname: part.fieldname,
+                                        mimetype: part.mimetype,
+                                        path: file_path,
+                                        hash,
+                                        size,
+                                    });
+                                } catch (error) {
+                                    failures.push({
+                                        filename: part.filename,
+                                        mimetype: part.mimetype,
+                                        fieldname: part.fieldname,
+                                    });
+                                    reject(error);
+                                }
+                            }),
+                        );
+                    }
+                }
+
+                const results = await Promise.allSettled(promises);
+                const results_success = results.filter((result) => result.status === "fulfilled");
+
+                for (let i = 0; i < results.length; ++i) {
+                    const result = results[i];
+                    if (result.status === "fulfilled") {
+                        // 文件写入目录成功
+                        try {
+                            await request.DB.asset.create({
+                                data: {
+                                    uid: result.value.uid,
+                                    filename: result.value.filename,
+                                    path: result.value.path,
+                                    size: result.value.size,
+                                    mime: result.value.mimetype,
+                                    hash: result.value.hash,
+                                    uploader_id: request.session!.data.account.id,
+                                },
+                            });
+                            successes.push({
+                                uid: result.value.uid,
+                                filename: result.value.filename,
+                                mimetype: result.value.mimetype,
+                                fieldname: result.value.fieldname,
+                            });
+                        } catch (error) {
+                            request.server.log.warn(error);
+                            failures.push({
+                                filename: result.value.filename,
+                                mimetype: result.value.mimetype,
+                                fieldname: result.value.fieldname,
+                            });
+                        }
+                    }
+                }
+                return {
+                    code: 0,
+                    message: "",
+                    data: {
+                        successes,
+                        failures,
+                    },
+                };
+            }
+
+            case AccessorRole.Visitor:
+                reply.status(401);
+                return {
+                    code: 1,
+                    message: "Unauthorized",
+                    data: null,
+                };
+            default:
+                reply.status(403);
+                return {
+                    code: 2,
+                    message: "Forbidden",
+                    data: null,
+                };
+        }
+    } catch (error) {
+        request.server.log.error(error);
+        reply.status(500);
+        return {
+            code: -1,
+            message: error,
+            data: null,
+        };
+    }
 };
 export default uploadHandler;

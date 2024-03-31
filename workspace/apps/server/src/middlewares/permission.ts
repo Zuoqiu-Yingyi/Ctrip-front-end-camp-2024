@@ -18,8 +18,9 @@
 import { TRPCError } from "@trpc/server";
 import { t } from ".";
 import { AccessorRole } from "../utils/role";
+
+import type { FastifyRequest } from "fastify";
 import type { IAuthJwtPayload } from "@/utils/jwt";
-import type { TSessionContext } from "@/contexts";
 
 /**
  * 401 Unauthorized
@@ -40,10 +41,10 @@ const STATUS_FORBIDDEN = new TRPCError({ code: "FORBIDDEN" });
  * @param context 上下文
  * @returns 访问者角色
  */
-export async function context2role(context: TSessionContext): Promise<AccessorRole> {
+export async function request2role(request: FastifyRequest): Promise<AccessorRole> {
     /* 校验令牌是否有效 */
     try {
-        const session = await context.req.jwtDecode<IAuthJwtPayload>();
+        const session = await request.jwtVerify<IAuthJwtPayload>();
         return session.data.account.role;
     } catch (error) {
         // 无效的令牌视为游客
@@ -58,7 +59,7 @@ export function permissionMiddlewareFactory(roles: Iterable<AccessorRole>) {
     // REF: https://trpc.io/docs/server/middlewares#extending-middlewares
     const roleSet = new Set(roles);
     return t.middleware(async (options) => {
-        const role = await context2role(options.ctx);
+        const role = await request2role(options.ctx.req);
         if (roleSet.has(role)) {
             return options.next({
                 ctx: {
