@@ -1,10 +1,16 @@
 # 更改日志 | Change log
 
+## 2024-04-01
+
+- 实现文件上传功能 | Implement file upload feature
+- 实现文件获取功能 | Implement file retrieval feature
+
 ## 2024-03-31
 
 - 添加静态测试页面 | Add static test page
 - 实现用户权限控制功能 | Implement user permission control feature
 - 实现用户注销登录功能 | Implement user logout feature
+- 添加资源文件路由 | Add asset file route
 
 ## 2024-03-30
 

@@ -14,31 +14,32 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-
+import { fastifyPlugin } from "fastify-plugin";
 import {
     fastifyTRPCPlugin, //
     type FastifyTRPCPluginOptions,
 } from "@trpc/server/adapters/fastify";
-import type {
-    //
-    FastifyPluginCallback,
-    FastifyPluginOptions,
-} from "fastify";
+import type { RegisterOptions } from "fastify";
 
 import trpcRouter from "./router";
 import { createSessionContext } from "./../../contexts";
 
-export interface ITrpcFastifyPluginOptions extends FastifyPluginOptions {}
+export interface ITrpcFastifyPluginOptions {}
 
 /**
- * @see {@link https://fastify.dev/docs/latest/Reference/Routes/#route-prefixing Route Prefixing}
+ * tRPC Fastify 插件
+ * @see {@link https://www.npmjs.com/package/fastify-plugin fastify-plugin}
  */
-export const trpcFastifyPlugin: FastifyPluginCallback<ITrpcFastifyPluginOptions> = async function (fastify, opts) {
-    // fastify.log.debug(opts);
+export const trpcFastifyPlugin = fastifyPlugin<RegisterOptions>(async function (fastify, options) {
+    // fastify.log.debug(options);
 
     // REF: https://trpc.io/docs/server/adapters/fastify
     await fastify.register(fastifyTRPCPlugin, {
-        // prefix: "/",
+        /**
+         * REF: https://fastify.dev/docs/latest/Reference/Routes/#route-prefixing-and-fastify-plugin
+         * 使用 {@link fastifyPlugin} 包装的插件, 不能在外部注册时使用 prefix 前缀指定路径前缀
+         */
+        prefix: options.prefix,
         useWSS: true,
         trpcOptions: {
             router: trpcRouter,
@@ -50,5 +51,5 @@ export const trpcFastifyPlugin: FastifyPluginCallback<ITrpcFastifyPluginOptions>
         } satisfies FastifyTRPCPluginOptions<typeof trpcRouter>["trpcOptions"],
     });
     // await fastify.after();
-};
+});
 export default trpcFastifyPlugin;

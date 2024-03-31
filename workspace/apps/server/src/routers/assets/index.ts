@@ -15,17 +15,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import type { FastifyInstance } from "fastify";
-import { register as registerJwtPlugin } from "./jwt";
-import { register as registerCookiePlugin } from "./cookie";
-import { register as registerStaticPlugin } from "./static";
-import { register as registerMultipartPlugin } from "./multipart";
+import path from "node:path";
+import { env } from "./../../configs/env";
 
-export async function init(fastify: FastifyInstance) {
-    await registerMultipartPlugin(fastify); // 注册 multipart 解析插件
-
-    await registerJwtPlugin(fastify); // 注册 JWT 插件
-    await registerCookiePlugin(fastify); // 注册 Cookie 插件
-    await registerStaticPlugin(fastify); // 注册静态文件插件
-    await fastify.after();
-}
+// export const ASSETS_PATH = path.resolve(process.cwd(), env.ASSETS_DIRECTORY_PATH);
+export const ASSETS_PATH = path.normalize(env.ASSETS_DIRECTORY_PATH);

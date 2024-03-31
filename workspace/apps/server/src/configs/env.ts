@@ -24,6 +24,7 @@ export interface IEnv {
     /* Web 服务 */
     PORT: number;
     HOST: string;
+    ASSETS_DIRECTORY_PATH: string;
     STATIC_ROOT_DIRECTORY_PATH: string;
 
     /* TLS 配置 */
@@ -58,6 +59,7 @@ export const ENV_DEFAULT: IEnv = {
     /* Web 服务 */
     PORT: 3000,
     HOST: "::",
+    ASSETS_DIRECTORY_PATH: "./data/assets/",
     STATIC_ROOT_DIRECTORY_PATH: "./pages/",
 
     /* TLS 配置 */
@@ -98,6 +100,9 @@ export const env: IEnv = {
     HOST:
         process.env._TD_HOST || //
         ENV_DEFAULT.HOST,
+    ASSETS_DIRECTORY_PATH:
+        process.env._TD_ASSETS_DIRECTORY_PATH || //
+        ENV_DEFAULT.ASSETS_DIRECTORY_PATH,
     STATIC_ROOT_DIRECTORY_PATH:
         process.env._TD_STATIC_ROOT_DIRECTORY_PATH || //
         ENV_DEFAULT.STATIC_ROOT_DIRECTORY_PATH,

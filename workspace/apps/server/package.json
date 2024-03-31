@@ -22,11 +22,13 @@
     "dependencies": {
         "@fastify/cookie": "^9.3.1",
         "@fastify/jwt": "^8.0.0",
+        "@fastify/multipart": "^8.2.0",
         "@fastify/static": "^7.0.2",
         "@paralleldrive/cuid2": "^2.2.2",
         "@prisma/client": "^5.11.0",
         "@trpc/server": "11.0.0-rc.329",
         "fastify": "^4.26.2",
+        "fastify-plugin": "^4.5.1",
         "jsonwebtoken": "^9.0.2"
     },
     "devDependencies": {

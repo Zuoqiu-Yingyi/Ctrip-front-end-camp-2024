@@ -15,7 +15,11 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { createTRPCClient, httpBatchLink } from "@trpc/client";
+import {
+    //
+    createTRPCClient,
+    httpBatchLink,
+} from "@trpc/client";
 import type { TTrpcRouter } from "@/routers/trpc/router";
 
 // REF: https://trpc.io/docs/quickstart#using-your-new-backend-on-the-client

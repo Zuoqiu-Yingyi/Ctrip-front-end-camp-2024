@@ -56,10 +56,10 @@ export class Server {
      * 初始化 Fastify 服务
      */
     public async init() {
+        await DB.init(this.fastify); // 初始化数据库
         await Promise.all([
-            initRouters(this.fastify), // 初始化路由
             initPlugins(this.fastify), // 初始化插件
-            DB.init(this.fastify), // 初始化数据库
+            initRouters(this.fastify), // 初始化路由
         ]);
         await this.fastify.ready(); // 等待 Fastify 准备就绪
     }

@@ -272,7 +272,7 @@ erDiagram
     > [https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Basics_of_HTTP/MIME_types](#https://developer)
   - `hash`
     > 文件摘要 | File digest
-    > 摘要算法: SHA-128 | Digest algorithm: SHA-128
+    > 摘要算法: SHA-256 | Digest algorithm: SHA-256
     > 格式: 十六进制字符串 | Format: Hex string
   - `permission`
     > 访问权限 | Access permission

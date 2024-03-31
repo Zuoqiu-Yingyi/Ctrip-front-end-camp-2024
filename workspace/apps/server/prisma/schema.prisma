@@ -284,7 +284,7 @@ model Asset {
     /// {@link https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Basics_of_HTTP/MIME_types}
     mime              String
     /// 文件摘要 | File digest
-    /// 摘要算法: SHA-128 | Digest algorithm: SHA-128
+    /// 摘要算法: SHA-256 | Digest algorithm: SHA-256
     /// 格式: 十六进制字符串 | Format: Hex string
     hash              String
     /// 访问权限 | Access permission
@@ -292,7 +292,7 @@ model Asset {
     /// - `0b0010`: 审核者可访问 | Accessible to the reviewer
     /// - `0b0100`: 管理员可访问 | Accessible to the administrator
     /// - `0b1000`: 公开访问 | Public access
-    permission        Int
+    permission        Int      @default(1)
     /// 上传时间 | Upload time
     upload_time       DateTime @default(now())
     /// 更改时间 | Modification time

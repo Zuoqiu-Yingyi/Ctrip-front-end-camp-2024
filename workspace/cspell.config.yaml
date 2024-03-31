@@ -19,10 +19,12 @@ words:
     - deshake
     - endregion
     - evenodd
+    - fieldname
     - paralleldrive
     - publishs
     - rgba
     - runing
+    - signup
     - tsbuildinfo
     - turborepo
     - vercel
