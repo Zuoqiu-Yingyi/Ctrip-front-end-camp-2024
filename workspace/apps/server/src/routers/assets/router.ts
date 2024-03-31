@@ -15,20 +15,28 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import {
-    //
-    createTRPCClient,
-    httpBatchLink,
-} from "@trpc/client";
-import type { TTrpcRouter } from "@/routers/trpc/router";
+import { fastifyPlugin } from "fastify-plugin";
 
-// REF: https://trpc.io/docs/quickstart#using-your-new-backend-on-the-client
-export const client = createTRPCClient<TTrpcRouter>({
-    links: [
-        httpBatchLink({
-            url: `${process.env._TD_SERVER_URL}/trpc`,
-        }),
-    ],
+import { uploadHandler } from "./upload";
+import { getHandler } from "./get";
+
+/**
+ * @see {@link https://fastify.dev/docs/latest/Reference/Plugins/ Fastify Plugins}
+ */
+export const assetsFastifyPlugin = fastifyPlugin(async function (fastify, options) {
+    // fastify.log.debug(options);
+    /**
+     * 文件上传
+     * REF: https://www.npmjs.com/package/@fastify/multipart
+     */
+    fastify.post("/upload", uploadHandler);
+
+    /**
+     * 文件获取
+     * REF: https://fastify.dev/docs/latest/Reference/Routes/
+     */
+    fastify.get("/:uid", getHandler);
+
+    await fastify.after();
 });
-
-export default client;
+export default assetsFastifyPlugin;

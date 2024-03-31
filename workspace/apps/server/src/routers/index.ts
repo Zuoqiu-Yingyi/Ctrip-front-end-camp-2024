@@ -17,10 +17,12 @@
 
 import type { FastifyInstance } from "fastify";
 
-import trpcFastifyPlugin from "./trpc/fastify";
+import { trpcFastifyPlugin } from "./trpc/fastify";
+import { assetsFastifyPlugin } from "./assets/router";
 
 export async function init(fastify: FastifyInstance) {
     // REF: https://fastify.dev/docs/latest/Reference/Routes/#route-prefixing
     await fastify.register(trpcFastifyPlugin, { prefix: "/trpc" });
+    await fastify.register(assetsFastifyPlugin, { prefix: "/assets" });
     await fastify.after();
 }

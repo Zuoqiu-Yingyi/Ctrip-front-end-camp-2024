@@ -15,20 +15,13 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import {
-    //
-    createTRPCClient,
-    httpBatchLink,
-} from "@trpc/client";
-import type { TTrpcRouter } from "@/routers/trpc/router";
+import { fastifyMultipart } from "@fastify/multipart";
+import type { FastifyInstance } from "fastify";
 
-// REF: https://trpc.io/docs/quickstart#using-your-new-backend-on-the-client
-export const client = createTRPCClient<TTrpcRouter>({
-    links: [
-        httpBatchLink({
-            url: `${process.env._TD_SERVER_URL}/trpc`,
-        }),
-    ],
-});
-
-export default client;
+export async function register(fastify: FastifyInstance) {
+    // REF: https://www.npmjs.com/package/@fastify/static
+    await fastify.register(fastifyMultipart, {
+    });
+    await fastify.after();
+}
+export default register;

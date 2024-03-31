@@ -150,6 +150,6 @@ export const deletePermissionMiddleware = permissionMiddlewareFactory([
     //
     AccessorRole.Administrator,
     // AccessorRole.Reviewer,
-    // AccessorRole.User,
-    AccessorRole.Visitor,
+    AccessorRole.User,
+    // AccessorRole.Visitor,
 ]);
