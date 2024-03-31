@@ -3,6 +3,7 @@
 ## 2024-04-01
 
 - 实现文件上传功能 | Implement file upload feature
+- 实现文件获取功能 | Implement file retrieval feature
 
 ## 2024-03-31
 

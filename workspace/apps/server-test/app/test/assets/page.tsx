@@ -20,8 +20,16 @@
 import Link from "next/link";
 import { useState } from "react";
 
+export interface IAsset {
+    uid: string;
+    filename: string;
+    mimetype: string;
+    fieldname: string;
+}
+
 export default function Login() {
     const [files, setFiles] = useState<FileList | null>(null);
+    const [assets, setAssets] = useState<IAsset[]>([]);
 
     async function upload() {
         const formData = new FormData();
@@ -33,9 +41,13 @@ export default function Login() {
                 method: "POST",
                 body: formData,
             });
-            const body = await response.json();
-
-            console.debug(body);
+            if (response.ok) {
+                const body = await response.json();
+                console.debug(body);
+                if (body.code === 0) {
+                    setAssets(body.data.successes);
+                }
+            }
             // setFiles(null);
         }
     }
@@ -58,6 +70,14 @@ export default function Login() {
                 <li>
                     <button onClick={upload}>Upload</button>
                 </li>
+                {assets.map((asset) => (
+                    <li key={asset.uid}>
+                        <img
+                            src={`/assets/${asset.uid}`}
+                            title={asset.filename}
+                        />
+                    </li>
+                ))}
             </ul>
         </>
     );

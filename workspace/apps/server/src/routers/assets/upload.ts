@@ -108,7 +108,7 @@ export const uploadHandler: RouteHandlerMethod = async function (request: IAsset
                                         filename: parsed_filename.base,
                                         fieldname: part.fieldname,
                                         mimetype: part.mimetype,
-                                        path: file_path,
+                                        path: filename,
                                         hash,
                                         size,
                                     });
