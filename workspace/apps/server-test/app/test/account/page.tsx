@@ -18,8 +18,8 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useState } from "react";
-import trpc from "@/utils/trpc";
 import {
     //
     passphrase2key,
@@ -28,6 +28,9 @@ import {
     ArrayBuffer2HexString,
 } from "@repo/utils/crypto";
 
+import trpc from "@/utils/trpc";
+import { assetsLoader } from "@/utils/image";
+
 type TRole = "staff" | "user";
 
 export default function Login() {
@@ -35,6 +38,8 @@ export default function Login() {
     const [passphrase, setPassphrase] = useState("admin");
     const [stay, setStay] = useState(false);
     const [role, setRole] = useState<TRole>("staff");
+    const [avatar, setAvatar] = useState<string>("");
+    const [avatarSrc, setAvatarSrc] = useState<string>("");
 
     async function getChallenge(): Promise<string> {
         const response_challenge = await trpc.auth.challenge.query({
@@ -84,6 +89,22 @@ export default function Login() {
         }
     }
 
+    async function updateAvatar() {
+        try {
+            const response_update_info = await trpc.account.update_info.mutate({
+                avatar: avatar ? avatar : null,
+            });
+            console.debug(response_update_info);
+
+            if (response_update_info.code === 0) {
+                const avatar = response_update_info.data?.account.avatar;
+                setAvatarSrc(avatar || "");
+            }
+        } catch (error) {
+            console.warn(error);
+        }
+    }
+
     return (
         <>
             <h1>Account</h1>
@@ -128,9 +149,25 @@ export default function Login() {
                 <li>
                     <button onClick={getChallenge}>Challenge</button>
                     <button onClick={getInfo}>Information</button>
-                    <button onClick={signup}>Signup</button>
-                    <button onClick={login}>Login</button>
-                    <button onClick={logout}>Logout</button>
+                    <button onClick={signup}>Sign up</button>
+                    <button onClick={login}>Log in</button>
+                    <button onClick={logout}>Log out</button>
+                </li>
+                <li>
+                    <label>Avatar:</label>
+                    <input
+                        type="text"
+                        value={avatar}
+                        onChange={(event) => setAvatar(event.target.value)}
+                    />
+                    <button onClick={updateAvatar}>Update Avatar</button>
+                    <br />
+                    <Image
+                        src={avatarSrc}
+                        loader={assetsLoader}
+                        alt="Avatar"
+                        fill={true}
+                    />
                 </li>
             </ul>
         </>

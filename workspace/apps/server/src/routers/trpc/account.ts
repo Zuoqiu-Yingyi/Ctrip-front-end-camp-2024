@@ -19,7 +19,11 @@ import { router } from ".";
 import { signupMutation } from "./../../controllers/signup";
 import { loginMutation } from "./../../controllers/login";
 import { logoutMutation } from "./../../controllers/logout";
-import { infoQuery } from "./../../controllers/account";
+import {
+    //
+    infoQuery,
+    updateInfoMutation,
+} from "./../../controllers/account";
 
 export const accountRouter = router({
     /**
@@ -39,9 +43,9 @@ export const accountRouter = router({
      */
     info: infoQuery,
     /**
-     * TODO: 更改账户信息
+     * 更改账户信息
      */
-    // update_info: updateInfoMutation,
+    update_info: updateInfoMutation,
     /**
      * TODO: 更改密码
      */

@@ -5,6 +5,7 @@
 - 实现文件上传功能 | Implement file upload feature
 - 实现文件获取功能 | Implement file retrieval feature
 - 获取用户账户信息 | Get user account information
+- 实现账户信息更新功能 | Implement account information update feature
 
 ## 2024-03-31
 

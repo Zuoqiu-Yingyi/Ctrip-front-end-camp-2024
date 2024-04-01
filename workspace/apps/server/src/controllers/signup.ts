@@ -19,9 +19,9 @@ import { z } from "zod";
 import { procedure } from ".";
 import {
     //
-    USER_PASSWORD,
-    USER_NAME,
-} from "./../types/user";
+    ACCOUNT_PASSWORD,
+    ACCOUNT_NAME,
+} from "./../types/account";
 
 /**
  * 获取认证用的挑战字符串
@@ -29,8 +29,8 @@ import {
 export const signupMutation = procedure
     .input(
         z.object({
-            username: USER_NAME,
-            password: USER_PASSWORD,
+            username: ACCOUNT_NAME,
+            password: ACCOUNT_PASSWORD,
         }),
     )
     .mutation(async (options) => {

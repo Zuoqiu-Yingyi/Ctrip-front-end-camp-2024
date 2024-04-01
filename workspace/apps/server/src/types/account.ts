@@ -18,31 +18,49 @@
 import { z } from "zod";
 
 /**
- * 用户账户名
+ * CUID 字符串
+ * - 格式: 24 个字符 `[0-9a-z]{24}`
+ */
+export const CUID = z
+    .string({ description: "CUID (Collision Resistant Unique Identifier)" })
+    .length(24)
+    .toLowerCase()
+    .regex(/^[0-9a-z]{24}$/);
+
+/**
+ * 账户名
  * - 2 ~ 32 位字符
  * - 仅支持数字 `0~9`、大小写字母 `a~z`, `A-Z`、短横线 `-`、下划线 `_`
  */
-export const USER_NAME = z
-    .string({ description: "User account name" })
+export const ACCOUNT_NAME = z
+    .string({ description: "Account name" })
     .min(2)
     .max(32)
     .regex(/^[0-9a-zA-Z\-\_]{2,32}$/);
 
 /**
- * 用户登录密码
+ * 账户密码
  * - 格式: hex 十六进制字符串
  * - 64 个字符 `0~f` (256 位, 32 字节)
  */
-export const USER_PASSWORD = z
-    .string({ description: "User login key" })
+export const ACCOUNT_PASSWORD = z
+    .string({ description: "Account login key" })
     .length(64)
     .toLowerCase()
     .regex(/^[0-9a-f]{64}$/);
 
 /**
- * 用户角色
+ * 账户头像
+ * - 格式: CUID 字符串或 null
+ * - 24 个字符 `[0-9a-z]{24}`
  */
-export const USER_ROLE = z // 账户角色
+export const ACCOUNT_AVATAR = z //
+    .nullable(CUID, { description: "Account avatar" });
+
+/**
+ * 账户角色
+ */
+export const ACCOUNT_ROLE = z // 账户角色
     .enum(
         [
             "staff", // 职员

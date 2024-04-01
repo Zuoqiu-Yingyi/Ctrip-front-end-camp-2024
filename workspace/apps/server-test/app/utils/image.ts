@@ -15,14 +15,12 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { router } from ".";
-import { challengeQuery } from "./../../controllers/auth";
+import type { ImageLoader } from "next/image";
 
-export const authRouter = router({
-    /**
-     * 获取登录用的挑战字符串
-     */
-    challenge: challengeQuery,
-});
-export type TAuthRouter = typeof authRouter;
-export default authRouter;
+/**
+ * 资源加载
+ * @see {@link https://nextjs.org/docs/app/api-reference/components/image#loader}
+ */
+export const assetsLoader: ImageLoader = function ({ src, width, quality }) {
+    return `/assets/${src}`;
+};

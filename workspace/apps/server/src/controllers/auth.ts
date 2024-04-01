@@ -22,19 +22,19 @@ import {
     //
     sign,
     type IChallengeJwtPayload,
-} from "./../utils/jwt";
-import { str2accountRole } from "./../utils/role";
+} from "../utils/jwt";
+import { str2accountRole } from "../utils/role";
 import {
     //
-    USER_NAME,
-    USER_ROLE,
-} from "./../types/user";
+    ACCOUNT_NAME,
+    ACCOUNT_ROLE,
+} from "../types/account";
 
 export const challengeQuery = procedure // 获取认证用的挑战字符串
     .input(
         z.object({
-            username: USER_NAME,
-            role: USER_ROLE,
+            username: ACCOUNT_NAME,
+            role: ACCOUNT_ROLE,
         }),
     )
     .query((options) => {

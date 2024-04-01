@@ -21,6 +21,8 @@ import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
 
+import { assetsLoader } from "@/utils/image";
+
 export interface IAsset {
     uid: string;
     filename: string;
@@ -74,9 +76,11 @@ export default function Login() {
                 {assets.map((asset) => (
                     <li key={asset.uid}>
                         <Image
-                            src={`/assets/${asset.uid}`}
-                            alt={asset.filename}
+                            src={asset.uid}
+                            loader={assetsLoader}
+                            alt="Asset"
                             title={asset.filename}
+                            fill={true}
                         />
                     </li>
                 ))}
