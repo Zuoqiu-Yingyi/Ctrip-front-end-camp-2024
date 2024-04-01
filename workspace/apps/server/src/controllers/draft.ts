@@ -159,15 +159,41 @@ export const updateMutation = draftProcedure //
         }
     });
 
-export const infoQuery = draftProcedure
-    .input(
-        z.object({
-            // TODO: 待查询的草稿
-        }),
-    )
+export const infoQuery = draftProcedure //
+    .input(ID.array().optional())
     .query(async (options) => {
         try {
-            // TODO: 查询草稿
+            const author_id = options.ctx.session.data.account.id;
+            const drafts = await options.ctx.DB.draft.findMany({
+                where: {
+                    id:
+                        (Array.isArray(options.input) && {
+                            in: options.input,
+                        }) ||
+                        undefined,
+                    author_id,
+                    deleted: false,
+                },
+                include: {
+                    coordinate: true,
+                    assets: {
+                        select: {
+                            index: true,
+                            asset_uid: true,
+                        },
+                        orderBy: {
+                            index: "asc",
+                        },
+                    },
+                },
+            });
+            return {
+                code: 0,
+                message: "",
+                data: {
+                    drafts,
+                },
+            };
         } catch (error) {
             // options.ctx.S.log.debug(error);
             switch (true) {
@@ -205,9 +231,6 @@ export const deleteMutation = draftProcedure //
                     },
                     data: {
                         deleted: true,
-                        assets: {
-                            set: [],
-                        },
                         reviews: {
                             updateMany: {
                                 where: {
@@ -221,9 +244,6 @@ export const deleteMutation = draftProcedure //
                         publish: {
                             update: {
                                 deleted: true,
-                                assets: {
-                                    set: [],
-                                },
                             },
                         },
                     },
