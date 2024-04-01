@@ -17,7 +17,7 @@
 
 import { z } from "zod";
 
-import { CUID } from ".";
+import { CUID, ID } from ".";
 import { COORDINATE } from "./coordinate";
 
 /**
@@ -41,6 +41,15 @@ export const DIARY_ASSETS = z //
 
 export const DIARY = z //
     .object({
+        title: DIARY_TITLE.optional(),
+        content: DIARY_CONTENT.optional(),
+        assets: DIARY_ASSETS.optional(),
+        coordinate: COORDINATE.optional(),
+    });
+
+export const DIARY_UPDATE = z //
+    .object({
+        id: ID,
         title: DIARY_TITLE.optional(),
         content: DIARY_CONTENT.optional(),
         assets: DIARY_ASSETS.optional(),

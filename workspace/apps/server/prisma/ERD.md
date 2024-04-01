@@ -103,7 +103,7 @@ erDiagram
 "AssetInDraft" {
   Int index
   Int draft_id FK
-  Int asset_id FK
+  String asset_uid FK
   Boolean deleted
   DateTime createdAt
   DateTime updatedAt
@@ -111,7 +111,7 @@ erDiagram
 "AssetInReview" {
   Int index
   Int review_id FK
-  Int asset_id FK
+  String asset_uid FK
   Boolean deleted
   DateTime createdAt
   DateTime updatedAt
@@ -119,7 +119,7 @@ erDiagram
 "AssetInPublish" {
   Int index
   Int publish_id FK
-  Int asset_id FK
+  String asset_uid FK
   Boolean deleted
   DateTime createdAt
   DateTime updatedAt
@@ -317,7 +317,7 @@ erDiagram
     > 排序序号 | Sort order number
     > 升序排列 | Ascending order
   - `draft_id`: 草稿 ID | Draft ID
-  - `asset_id`: 资源 ID | Asset ID
+  - `asset_uid`: 资源 UID | Asset UID
   - `deleted`: 是否已逻辑删除 | Whether it has been logically deleted
   - `createdAt`: 记录创建时间 | Record creation time
   - `updatedAt`: 记录更新时间 | Record update time
@@ -330,7 +330,7 @@ erDiagram
     > 排序序号 | Sort order number
     > 升序排列 | Ascending order
   - `review_id`: 审议项 ID | Review ID
-  - `asset_id`: 资源 ID | Asset ID
+  - `asset_uid`: 资源 UID | Asset UID
   - `deleted`: 是否已逻辑删除 | Whether it has been logically deleted
   - `createdAt`: 记录创建时间 | Record creation time
   - `updatedAt`: 记录更新时间 | Record update time
@@ -341,7 +341,7 @@ erDiagram
 **Properties**
   - `index`: 
   - `publish_id`: 已发布内容 ID | Publish ID
-  - `asset_id`: 资源 ID | Asset ID
+  - `asset_uid`: 资源 UID | Asset UID
   - `deleted`: 是否已逻辑删除 | Whether it has been logically deleted
   - `createdAt`: 记录创建时间 | Record creation time
   - `updatedAt`: 记录更新时间 | Record update time

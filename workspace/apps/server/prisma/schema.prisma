@@ -353,9 +353,9 @@ model AssetInDraft {
     draft_id Int
 
     /// 资源 | Asset
-    asset    Asset @relation(fields: [asset_id], references: [id])
-    /// 资源 ID | Asset ID
-    asset_id Int
+    asset     Asset  @relation(fields: [asset_uid], references: [uid])
+    /// 资源 UID | Asset UID
+    asset_uid String
 
     /// 是否已逻辑删除 | Whether it has been logically deleted
     deleted   Boolean  @default(false)
@@ -364,7 +364,7 @@ model AssetInDraft {
     /// 记录更新时间 | Record update time
     updatedAt DateTime @updatedAt
 
-    @@id([draft_id, asset_id])
+    @@id([draft_id, asset_uid])
 }
 
 /// 审议项中的资源 | Assets in review
@@ -380,9 +380,9 @@ model AssetInReview {
     review_id Int
 
     /// 资源 | Asset
-    asset    Asset @relation(fields: [asset_id], references: [id])
-    /// 资源 ID | Asset ID
-    asset_id Int
+    asset     Asset  @relation(fields: [asset_uid], references: [uid])
+    /// 资源 UID | Asset UID
+    asset_uid String
 
     /// 是否已逻辑删除 | Whether it has been logically deleted
     deleted   Boolean  @default(false)
@@ -391,7 +391,7 @@ model AssetInReview {
     /// 记录更新时间 | Record update time
     updatedAt DateTime @updatedAt
 
-    @@id([review_id, asset_id])
+    @@id([review_id, asset_uid])
 }
 
 /// 已发布内容中的资源 | Assets in publish
@@ -405,9 +405,9 @@ model AssetInPublish {
     publish_id Int
 
     /// 资源 | Asset
-    asset    Asset @relation(fields: [asset_id], references: [id])
-    /// 资源 ID | Asset ID
-    asset_id Int
+    asset     Asset  @relation(fields: [asset_uid], references: [uid])
+    /// 资源 UID | Asset UID
+    asset_uid String
 
     /// 是否已逻辑删除 | Whether it has been logically deleted
     deleted   Boolean  @default(false)
@@ -416,7 +416,7 @@ model AssetInPublish {
     /// 记录更新时间 | Record update time
     updatedAt DateTime @updatedAt
 
-    @@id([publish_id, asset_id])
+    @@id([publish_id, asset_uid])
 }
 
 /// 位置信息 | Location information

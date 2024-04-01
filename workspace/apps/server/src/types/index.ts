@@ -26,3 +26,10 @@ export const CUID = z
     .length(24)
     .toLowerCase()
     .regex(/^[0-9a-z]{24}$/);
+
+/**
+ * 数据库 ID 字段
+ */
+export const ID = z //
+    .number({ description: "Database ID" })
+    .min(1);

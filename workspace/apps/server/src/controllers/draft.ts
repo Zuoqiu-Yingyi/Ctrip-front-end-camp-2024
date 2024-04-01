@@ -18,7 +18,11 @@
 import { z } from "zod";
 import { procedure } from ".";
 import { privatePermissionMiddleware } from "./../middlewares/permission";
-import { DIARY } from "../types/diary";
+import {
+    //
+    DIARY,
+    DIARY_UPDATE,
+} from "./../types/diary";
 
 /**
  * 草稿管理控制器
@@ -44,11 +48,7 @@ export const createMutation = draftProcedure //
                             // REF: https://www.prisma.io/docs/orm/prisma-client/queries/relation-queries#connect-multiple-records
                             create: options.input.assets.map((uid, index) => ({
                                 index,
-                                asset: {
-                                    connect: {
-                                        uid,
-                                    },
-                                },
+                                asset_uid: uid,
                             })),
                         }) ||
                         undefined,
@@ -87,15 +87,60 @@ export const createMutation = draftProcedure //
         }
     });
 
-export const updateMutation = draftProcedure
-    .input(
-        z.object({
-            // TODO: 草稿信息
-        }),
-    )
+export const updateMutation = draftProcedure //
+    .input(DIARY_UPDATE)
     .mutation(async (options) => {
         try {
-            // TODO: 更新草稿
+            const draft = await options.ctx.DB.draft.update({
+                where: {
+                    id: options.input.id,
+                },
+                data: {
+                    title: options.input.title,
+                    content: options.input.content,
+                    assets:
+                        (options.input.assets && {
+                            // REF: https://www.prisma.io/docs/orm/prisma-client/queries/relation-queries#disconnect-all-related-records
+                            set: [],
+                            // REF: https://www.prisma.io/docs/orm/prisma-client/queries/relation-queries#connect-multiple-records
+                            connectOrCreate: options.input.assets.map((uid, index) => ({
+                                where: {
+                                    draft_id_asset_uid: {
+                                        draft_id: options.input.id,
+                                        asset_uid: uid,
+                                    },
+                                },
+                                update: {
+                                    index,
+                                },
+                                create: {
+                                    index,
+                                    asset_uid: uid,
+                                },
+                            })),
+                        }) ||
+                        undefined,
+                    coordinate:
+                        (options.input.coordinate && {
+                            create: {
+                                ...options.input.coordinate,
+                                uploader: {
+                                    connect: {
+                                        id: options.ctx.session.data.account.id,
+                                    },
+                                },
+                            },
+                        }) ||
+                        undefined,
+                },
+            });
+            return {
+                code: 0,
+                message: "",
+                data: {
+                    draft,
+                },
+            };
         } catch (error) {
             // options.ctx.S.log.debug(error);
             switch (true) {
