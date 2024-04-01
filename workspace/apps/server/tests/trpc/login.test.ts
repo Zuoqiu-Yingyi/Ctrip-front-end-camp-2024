@@ -22,16 +22,14 @@ import {
     expect,
 } from "@jest/globals";
 import cuid from "@paralleldrive/cuid2";
-import {
-    //
-    passphrase2key,
-    challenge2response,
-    String2ArrayBuffer,
-    ArrayBuffer2HexString,
-} from "@repo/utils/crypto";
 
 import trpc from ".";
 import { AccessorRole } from "./../../src/utils/role";
+import {
+    //
+    login,
+    signup,
+} from "./../utils/account";
 
 type TRole = Parameters<typeof trpc.auth.challenge.query>[0]["role"];
 
@@ -71,29 +69,12 @@ describe("/trpc/account/login", () => {
     ];
     accounts.forEach((account) => {
         test(`login: ${account.role}`, async () => {
-            const key = await passphrase2key(account.username, account.passphrase, process.env._TD_USER_KEY_SALT!);
-
-            const response_challenge = await trpc.auth.challenge.query({
-                username: account.username,
-                role: account.role,
-            });
-            const challenge = response_challenge.data.challenge;
-            const response = await challenge2response(String2ArrayBuffer(challenge), key);
-            const response_hex = ArrayBuffer2HexString(response);
-
             /* 普通用户先注册 */
-            if (["user", "visitor", undefined].includes(account.role)) {
-                await trpc.account.signup.mutate({
-                    username: account.username,
-                    password: ArrayBuffer2HexString(key),
-                });
+            if (["user", undefined].includes(account.role)) {
+                await signup(account, trpc);
             }
 
-            const response_login = await trpc.account.login.mutate({
-                challenge,
-                response: response_hex,
-                stay: true,
-            });
+            const response_login = await login(account, trpc);
 
             expect(response_login.code).toEqual(0);
             expect(response_login.data?.account.username).toEqual(account.username);

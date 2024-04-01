@@ -248,13 +248,16 @@ export const updateInfoMutation = procedure //
         try {
             const { session, role, DB } = options.ctx;
             if (session.data.profile) {
-                const profile = await options.ctx.DB.profile.update({
+                const profile = await DB.profile.update({
                     where: {
                         id: session.data.profile.id,
                         deleted: false,
                     },
                     data: {
-                        avatar: options.input.avatar !== undefined ? options.input.avatar : null,
+                        avatar:
+                            options.input.avatar !== undefined //
+                                ? options.input.avatar
+                                : undefined,
                     },
                 });
                 return {

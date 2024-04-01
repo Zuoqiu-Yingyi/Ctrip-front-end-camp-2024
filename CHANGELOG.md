@@ -4,6 +4,7 @@
 
 - 实现草稿创建功能 | Implement draft creation feature
 - 添加用户注销登录测试用例 | Add user logout test case
+- 优化用户登录与注销登录的测试用例 | Optimize test cases for user login and logout
 
 ## 2024-04-01
 
