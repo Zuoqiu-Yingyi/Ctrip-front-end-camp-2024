@@ -7,6 +7,7 @@
 - 获取用户账户信息 | Get user account information
 - 实现账户信息更新功能 | Implement account information update feature
 - 改进资源文件获取功能 | Improve asset file retrieval feature
+- 实现更改密码功能 | Implement change password feature
 
 ## 2024-03-31
 

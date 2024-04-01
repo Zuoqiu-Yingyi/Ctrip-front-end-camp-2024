@@ -23,6 +23,7 @@ import {
     //
     infoQuery,
     updateInfoMutation,
+    changePasswordMutation,
 } from "./../../controllers/account";
 
 export const accountRouter = router({
@@ -47,9 +48,9 @@ export const accountRouter = router({
      */
     update_info: updateInfoMutation,
     /**
-     * TODO: 更改密码
+     * 更改密码
      */
-    // change_password: changePasswordMutation,
+    change_password: changePasswordMutation,
     /**
      * TODO: 删除账户
      */

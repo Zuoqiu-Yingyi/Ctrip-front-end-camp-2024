@@ -71,3 +71,19 @@ export function challenge2response(
         .update(challenge)
         .digest();
 }
+
+/**
+ * 校验 挑战-应答 结果
+ * @param challenge 挑战内容
+ * @param response 应答结果
+ * @param key 密钥
+ * @returns 是否通过校验
+ */
+export function verifyChallengeResponse(
+    //
+    challenge: Buffer,
+    response: Buffer,
+    key: Buffer,
+): boolean {
+    return challenge2response(challenge, key).equals(response);
+}

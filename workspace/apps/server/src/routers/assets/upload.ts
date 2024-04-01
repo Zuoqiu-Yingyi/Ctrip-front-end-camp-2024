@@ -52,6 +52,24 @@ export interface ISuccess extends IFailure {
     uid: string; // CUID
 }
 
+/**
+ * 未认证的访问者
+ */
+export class UnauthorizedError extends Error {
+    constructor() {
+        super(`Unauthorized`);
+    }
+}
+
+/**
+ * 未授权的访问者
+ */
+export class ForbiddenError extends Error {
+    constructor() {
+        super(`Forbidden`);
+    }
+}
+
 const pump = util.promisify(stream.pipeline);
 
 /**
@@ -171,28 +189,40 @@ export const uploadHandler: RouteHandlerMethod = async function (request: IAsset
             }
 
             case AccessorRole.Visitor:
+                throw new UnauthorizedError();
+
+            default:
+                throw new ForbiddenError();
+        }
+    } catch (error) {
+        switch (true) {
+            // 未认证
+            case error instanceof UnauthorizedError:
                 reply.status(401);
                 return {
-                    code: 1,
-                    message: "Unauthorized",
+                    code: 10,
+                    message: error.message,
                     data: null,
                 };
-            default:
+
+            // 未授权
+            case error instanceof ForbiddenError:
                 reply.status(403);
                 return {
-                    code: 2,
-                    message: "Forbidden",
+                    code: 20,
+                    message: error.message,
+                    data: null,
+                };
+
+            default:
+                request.server.log.error(error);
+                reply.status(500);
+                return {
+                    code: -1,
+                    message: error,
                     data: null,
                 };
         }
-    } catch (error) {
-        request.server.log.error(error);
-        reply.status(500);
-        return {
-            code: -1,
-            message: error,
-            data: null,
-        };
     }
 };
 export default uploadHandler;
