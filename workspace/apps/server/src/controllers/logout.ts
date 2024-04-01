@@ -40,6 +40,11 @@ export const logoutMutation = procedure //
                     version: version + 1,
                 },
             });
+            return {
+                code: 0,
+                message: "",
+                data: null,
+            };
         } catch (error) {
             options.ctx.S.log.error(error);
             return {

@@ -22,11 +22,12 @@ import {
     expect,
 } from "@jest/globals";
 
-import trpc from ".";
+import { TRPC } from ".";
 import { verifyChallengePayload } from "./../../src/utils/jwt";
 import { str2accountRole } from "./../../src/utils/role";
 
-type TRole = Parameters<typeof trpc.auth.challenge.query>[0]["role"];
+type TRole = Parameters<typeof trpc.client.auth.challenge.query>[0]["role"];
+const trpc = new TRPC();
 
 describe("/trpc/auth", () => {
     const roles: TRole[] = [
@@ -41,8 +42,8 @@ describe("/trpc/auth", () => {
             const payload = {
                 username: `username-${role}`,
                 role,
-            } satisfies Parameters<typeof trpc.auth.challenge.query>[0];
-            const response = await trpc.auth.challenge.query(payload);
+            } satisfies Parameters<typeof trpc.client.auth.challenge.query>[0];
+            const response = await trpc.client.auth.challenge.query(payload);
 
             expect(response.code).toEqual(0);
             expect(

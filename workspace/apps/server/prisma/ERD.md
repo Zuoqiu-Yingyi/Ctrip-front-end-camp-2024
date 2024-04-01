@@ -11,7 +11,7 @@ erDiagram
   String name UK
   String password
   Int role
-  Int token_id FK "nullable"
+  Int token_id FK
   Boolean deleted
   DateTime createdAt
   DateTime updatedAt
@@ -21,8 +21,8 @@ erDiagram
   String name UK
   String password
   Int role
-  Int token_id FK "nullable"
-  Int profile_id FK "nullable"
+  Int token_id FK
+  Int profile_id FK
   Boolean deleted
   DateTime createdAt
   DateTime updatedAt
@@ -65,6 +65,7 @@ erDiagram
   Int submitter_id FK
   Int reviewer_id FK "nullable"
   Int coordinate_id FK "nullable"
+  Int draft_id FK
   Boolean deleted
   DateTime createdAt
   DateTime updatedAt
@@ -103,7 +104,7 @@ erDiagram
 "AssetInDraft" {
   Int index
   Int draft_id FK
-  Int asset_id FK
+  String asset_uid FK
   Boolean deleted
   DateTime createdAt
   DateTime updatedAt
@@ -111,7 +112,7 @@ erDiagram
 "AssetInReview" {
   Int index
   Int review_id FK
-  Int asset_id FK
+  String asset_uid FK
   Boolean deleted
   DateTime createdAt
   DateTime updatedAt
@@ -119,7 +120,7 @@ erDiagram
 "AssetInPublish" {
   Int index
   Int publish_id FK
-  Int asset_id FK
+  String asset_uid FK
   Boolean deleted
   DateTime createdAt
   DateTime updatedAt
@@ -139,14 +140,15 @@ erDiagram
   DateTime createdAt
   DateTime updatedAt
 }
-"Staff" |o--o| "Token" : token
-"User" |o--o| "Token" : token
-"User" |o--o| "Profile" : profile
+"Staff" |o--|| "Token" : token
+"User" |o--|| "Token" : token
+"User" |o--|| "Profile" : profile
 "Draft" }o--|| "User" : author
 "Draft" }o--o| "Coordinate" : coordinate
 "Review" }o--|| "User" : submitter
 "Review" }o--o| "Staff" : reviewer
 "Review" }o--o| "Coordinate" : coordinate
+"Review" }o--|| "Draft" : draft
 "Publish" }o--|| "User" : publisher
 "Publish" }o--o| "Coordinate" : coordinate
 "Publish" |o--|| "Draft" : draft
@@ -255,6 +257,7 @@ erDiagram
   - `submitter_id`: 提交者 ID | Submitter ID
   - `reviewer_id`: 审议者 ID | Reviewer ID
   - `coordinate_id`: 位置 ID | Coordinate ID
+  - `draft_id`: 草稿 ID | Draft ID
   - `deleted`: 是否已逻辑删除 | Whether it has been logically deleted
   - `createdAt`: 记录创建时间 | Record creation time
   - `updatedAt`: 记录更新时间 | Record update time
@@ -317,7 +320,7 @@ erDiagram
     > 排序序号 | Sort order number
     > 升序排列 | Ascending order
   - `draft_id`: 草稿 ID | Draft ID
-  - `asset_id`: 资源 ID | Asset ID
+  - `asset_uid`: 资源 UID | Asset UID
   - `deleted`: 是否已逻辑删除 | Whether it has been logically deleted
   - `createdAt`: 记录创建时间 | Record creation time
   - `updatedAt`: 记录更新时间 | Record update time
@@ -330,7 +333,7 @@ erDiagram
     > 排序序号 | Sort order number
     > 升序排列 | Ascending order
   - `review_id`: 审议项 ID | Review ID
-  - `asset_id`: 资源 ID | Asset ID
+  - `asset_uid`: 资源 UID | Asset UID
   - `deleted`: 是否已逻辑删除 | Whether it has been logically deleted
   - `createdAt`: 记录创建时间 | Record creation time
   - `updatedAt`: 记录更新时间 | Record update time
@@ -341,7 +344,7 @@ erDiagram
 **Properties**
   - `index`: 
   - `publish_id`: 已发布内容 ID | Publish ID
-  - `asset_id`: 资源 ID | Asset ID
+  - `asset_uid`: 资源 UID | Asset UID
   - `deleted`: 是否已逻辑删除 | Whether it has been logically deleted
   - `createdAt`: 记录创建时间 | Record creation time
   - `updatedAt`: 记录更新时间 | Record update time
@@ -359,7 +362,7 @@ erDiagram
     > 单位: 度 (°) | Unit: degree (°)
   - `accuracy`
     > 经纬度的精确度 | Accuracy of latitude and longitude
-    > 单位: 度 (°) | Unit: degree (°)
+    > 单位: 米 (m) | Unit: meter (m)
     > 95% 置信区间 | 95% confidence interval
   - `altitude`
     > 海拔高度 | Altitude

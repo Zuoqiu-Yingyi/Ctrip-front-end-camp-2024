@@ -1,5 +1,19 @@
 # 更改日志 | Change log
 
+## 2024-04-02
+
+- 实现草稿创建功能 | Implement draft creation feature
+- 添加用户注销登录测试用例 | Add user logout test case
+- 优化用户登录与注销登录的测试用例 | Optimize test cases for user login and logout
+- 添加用户信息管理测试用例 | Add user information management test cases
+- 添加更改密码测试用例 | Add change password test case
+- 添加资源文件测试用例 | Add asset file test case
+- 实现草稿更新功能 | Implement draft update feature
+- 优化测试用例 | Optimize test cases
+- 实现草稿删除功能 | Implement draft deletion feature
+- 实现草稿查询功能 | Implement draft query feature
+- 添加草稿管理测试用例 | Add draft management test cases
+
 ## 2024-04-01
 
 - 实现文件上传功能 | Implement file upload feature

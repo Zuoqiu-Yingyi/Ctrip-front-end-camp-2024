@@ -17,15 +17,7 @@
 
 import { z } from "zod";
 
-/**
- * CUID 字符串
- * - 格式: 24 个字符 `[0-9a-z]{24}`
- */
-export const CUID = z
-    .string({ description: "CUID (Collision Resistant Unique Identifier)" })
-    .length(24)
-    .toLowerCase()
-    .regex(/^[0-9a-z]{24}$/);
+import { CUID } from ".";
 
 /**
  * 账户名

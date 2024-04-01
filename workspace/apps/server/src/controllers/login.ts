@@ -106,34 +106,12 @@ export const loginMutation = procedure
                                 },
                             },
                         });
-                        const token = await (async () => {
-                            if (staff.token) {
-                                /* 获取对应的令牌 */
-                                return staff.token;
-                            } else {
-                                /* 新建一个令牌字段并绑定至用户 */
-                                const token = await options.ctx.DB.token.create({ data: {} });
-                                await options.ctx.DB.staff.update({
-                                    where: {
-                                        id: staff.id,
-                                        deleted: false,
-                                    },
-                                    data: {
-                                        token_id: token.id,
-                                    },
-                                });
-                                return {
-                                    id: token.id,
-                                    version: token.version,
-                                };
-                            }
-                        })();
                         return {
                             id: staff.id,
                             name: staff.name,
                             role: staff.role,
                             password: staff.password,
-                            token,
+                            token: staff.token,
                         };
                     }
 
@@ -163,57 +141,13 @@ export const loginMutation = procedure
                                 },
                             },
                         });
-                        const token = await (async () => {
-                            if (user.token) {
-                                /* 获取对应的令牌 */
-                                return user.token;
-                            } else {
-                                /* 新建一个令牌字段并绑定至用户 */
-                                const token = await options.ctx.DB.token.create({ data: {} });
-                                await options.ctx.DB.user.update({
-                                    where: {
-                                        id: user.id,
-                                        deleted: false,
-                                    },
-                                    data: {
-                                        token_id: token.id,
-                                    },
-                                });
-                                return {
-                                    id: token.id,
-                                    version: token.version,
-                                };
-                            }
-                        })();
-                        const profile = await (async () => {
-                            if (user.profile) {
-                                /* 获取对应的账户信息 */
-                                return user.profile;
-                            } else {
-                                /* 新建一个令牌字段并绑定至用户 */
-                                const profile = await options.ctx.DB.profile.create({ data: {} });
-                                await options.ctx.DB.user.update({
-                                    where: {
-                                        id: user.id,
-                                        deleted: false,
-                                    },
-                                    data: {
-                                        profile_id: token.id,
-                                    },
-                                });
-                                return {
-                                    id: profile.id,
-                                    avatar: profile.avatar,
-                                };
-                            }
-                        })();
                         return {
                             id: user.id,
                             name: user.name,
                             role: user.role,
                             password: user.password,
-                            token,
-                            profile,
+                            token: user.token,
+                            profile: user.profile,
                         };
                     }
                 }

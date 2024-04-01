@@ -22,28 +22,27 @@ import {
     expect,
 } from "@jest/globals";
 import cuid from "@paralleldrive/cuid2";
-import crypto from "node:crypto";
-import { TRPC } from ".";
 
-type TPayload = Parameters<typeof trpc.client.account.signup.mutate>[0];
+import { TRPC } from ".";
+import { initAccount } from "./../utils/account";
 
 const trpc = new TRPC();
 
-describe("/trpc/account/signup", () => {
-    const payload: TPayload = {
-        username: cuid.createId(),
-        password: crypto.randomBytes(32).toString("hex"),
-    };
-    test(`signup: ${payload.username}`, async () => {
-        const response1 = await trpc.client.account.signup.mutate(payload);
-        const response2 = await trpc.client.account.signup.mutate(payload);
+describe("/trpc/account/update", () => {
+    test(`update: avatar`, async () => {
+        await initAccount(undefined, trpc);
 
-        /* 成功注册 */
-        expect(response1.code).toEqual(0);
-        expect(response1.data!.user.name).toEqual(payload.username);
+        const avatars = [cuid.createId(), null];
+        for (const avatar of avatars) {
+            const response_update_info = await trpc.client.account.update_info.mutate({
+                avatar,
+            });
+            expect(response_update_info.code).toEqual(0);
+            expect(response_update_info.data?.profile.avatar).toEqual(avatar);
 
-        /* 用户名重复 */
-        expect(response2.code).toEqual(10);
-        expect(response2.data).toBeNull();
+            const response_info = await trpc.client.account.info.query();
+            expect(response_info.code).toEqual(0);
+            expect(response_info.data?.profile?.avatar).toEqual(avatar);
+        }
     });
 });

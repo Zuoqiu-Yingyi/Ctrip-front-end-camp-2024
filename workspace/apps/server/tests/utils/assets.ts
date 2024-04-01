@@ -17,32 +17,34 @@
 
 import {
     //
-    describe,
-    test,
-    expect,
-} from "@jest/globals";
+    trpc,
+    origin,
+} from "../trpc";
 
-import { TRPC } from ".";
-
-const trpc = new TRPC();
-
-describe("/trpc/test", () => {
-    test("_query", async () => {
-        const query_input = "test-query";
-        const query_output = await trpc.client.test._query.query(query_input);
-
-        // console.log(query_output);
-        expect(query_output.input).toEqual(query_input);
+export async function upload<R = any>(
+    //
+    formData: FormData,
+    t = trpc,
+) {
+    const response = await fetch(`${origin}/assets/upload`, {
+        method: "POST",
+        body: formData,
+        headers: {
+            Cookie: t.cookies,
+        },
     });
+    return response.json() as R;
+}
 
-    test("_mutation", async () => {
-        const mutation_input = {
-            str: "test-mutation-str",
-            num: 8,
-        };
-        const mutation_output = await trpc.client.test._mutation.mutate(mutation_input);
-
-        // console.log(mutation_output);
-        expect(mutation_output.input).toEqual(mutation_input);
+export async function get(
+    //
+    uid: string,
+    t = trpc,
+): Promise<any> {
+    const response = await fetch(`${origin}/assets/${uid}`, {
+        headers: {
+            Cookie: t.cookies,
+        },
     });
-});
+    return response;
+}

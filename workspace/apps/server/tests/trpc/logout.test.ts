@@ -33,6 +33,8 @@ import {
 
 type TRole = Parameters<typeof trpc.client.auth.challenge.query>[0]["role"];
 
+const trpc = new TRPC();
+
 interface IAccount {
     username: string;
     passphrase: string;
@@ -40,9 +42,7 @@ interface IAccount {
     _role: AccessorRole;
 }
 
-const trpc = new TRPC();
-
-describe("/trpc/account/login", () => {
+describe("/trpc/account/logout", () => {
     const accounts: IAccount[] = [
         {
             username: "admin",
@@ -70,17 +70,16 @@ describe("/trpc/account/login", () => {
         },
     ];
     accounts.forEach((account) => {
-        test(`login: ${account.role}`, async () => {
+        test(`logout: ${account.role}`, async () => {
             /* 普通用户先注册 */
             if (["user", undefined].includes(account.role)) {
                 await signup(account, trpc);
             }
+            await login(account, trpc);
 
-            const response_login = await login(account, trpc);
-
-            expect(response_login.code).toEqual(0);
-            expect(response_login.data?.account.username).toEqual(account.username);
-            expect(response_login.data?.account.role).toEqual(account._role);
+            const response_logout = await trpc.client.account.logout.query();
+            expect(response_logout.code).toEqual(0);
+            expect(trpc.client.account.logout.query()).rejects.toThrowError();
         });
     });
 });

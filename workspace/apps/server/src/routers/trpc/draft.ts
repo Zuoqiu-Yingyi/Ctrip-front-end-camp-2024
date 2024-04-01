@@ -16,19 +16,34 @@
  */
 
 import { router } from ".";
+import {
+    //
+    infoQuery,
+    createMutation,
+    updateMutation,
+    deleteMutation,
+} from "./../../controllers/draft";
 
-import testRouter from "./test";
-import authRouter from "./auth";
-import accountRouter from "./account";
-import draftRouter from "./draft";
+export const draftRouter = router({
+    /**
+     * 查询草稿
+     */
+    info: infoQuery,
 
-// REF: https://trpc.io/docs/server/merging-routers#merging-with-child-routers
-const trpcRouter = router({
-    test: testRouter,
-    auth: authRouter,
-    account: accountRouter,
-    draft: draftRouter,
+    /**
+     * 创建草稿
+     */
+    create: createMutation,
+
+    /**
+     * 更新草稿
+     */
+    update: updateMutation,
+
+    /**
+     * 删除草稿
+     */
+    delete: deleteMutation,
 });
-
-export type TTrpcRouter = typeof trpcRouter;
-export default trpcRouter;
+export type TAccountRouter = typeof draftRouter;
+export default draftRouter;

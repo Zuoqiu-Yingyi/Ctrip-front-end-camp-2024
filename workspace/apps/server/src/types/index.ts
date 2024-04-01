@@ -15,20 +15,21 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { router } from ".";
+import { z } from "zod";
 
-import testRouter from "./test";
-import authRouter from "./auth";
-import accountRouter from "./account";
-import draftRouter from "./draft";
+/**
+ * CUID 字符串
+ * - 格式: 24 个字符 `[0-9a-z]{24}`
+ */
+export const CUID = z
+    .string({ description: "CUID (Collision Resistant Unique Identifier)" })
+    .length(24)
+    .toLowerCase()
+    .regex(/^[0-9a-z]{24}$/);
 
-// REF: https://trpc.io/docs/server/merging-routers#merging-with-child-routers
-const trpcRouter = router({
-    test: testRouter,
-    auth: authRouter,
-    account: accountRouter,
-    draft: draftRouter,
-});
-
-export type TTrpcRouter = typeof trpcRouter;
-export default trpcRouter;
+/**
+ * 数据库 ID 字段
+ */
+export const ID = z //
+    .number({ description: "Database ID" })
+    .min(1);
