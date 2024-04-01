@@ -66,6 +66,28 @@ export const createMutation = draftProcedure //
                         }) ||
                         undefined,
                 },
+                include: {
+                    coordinate: {
+                        select: {
+                            latitude: true,
+                            longitude: true,
+                            accuracy: true,
+                            altitude: true,
+                            altitude_accuracy: true,
+                            heading: true,
+                            speed: true,
+                        },
+                    },
+                    assets: {
+                        select: {
+                            index: true,
+                            asset_uid: true,
+                        },
+                        orderBy: {
+                            index: "asc",
+                        },
+                    },
+                },
             });
             return {
                 code: 0,
@@ -103,24 +125,11 @@ export const updateMutation = draftProcedure //
                     content: options.input.content,
                     assets:
                         (options.input.assets && {
-                            // REF: https://www.prisma.io/docs/orm/prisma-client/queries/relation-queries#disconnect-all-related-records
-                            set: [],
-                            // REF: https://www.prisma.io/docs/orm/prisma-client/queries/relation-queries#connect-multiple-records
-                            connectOrCreate: options.input.assets.map((uid, index) => ({
-                                where: {
-                                    draft_id_asset_uid: {
-                                        draft_id: options.input.id,
-                                        asset_uid: uid,
-                                    },
-                                    deleted: false,
-                                },
-                                update: {
-                                    index,
-                                },
-                                create: {
-                                    index,
-                                    asset_uid: uid,
-                                },
+                            // REF: https://www.prisma.io/docs/orm/prisma-client/queries/relation-queries#delete-all-related-records
+                            deleteMany: {},
+                            create: options.input.assets.map((uid, index) => ({
+                                index,
+                                asset_uid: uid,
                             })),
                         }) ||
                         undefined,
@@ -136,6 +145,28 @@ export const updateMutation = draftProcedure //
                             },
                         }) ||
                         undefined,
+                },
+                include: {
+                    coordinate: {
+                        select: {
+                            latitude: true,
+                            longitude: true,
+                            accuracy: true,
+                            altitude: true,
+                            altitude_accuracy: true,
+                            heading: true,
+                            speed: true,
+                        },
+                    },
+                    assets: {
+                        select: {
+                            index: true,
+                            asset_uid: true,
+                        },
+                        orderBy: {
+                            index: "asc",
+                        },
+                    },
                 },
             });
             return {
@@ -175,7 +206,17 @@ export const infoQuery = draftProcedure //
                     deleted: false,
                 },
                 include: {
-                    coordinate: true,
+                    coordinate: {
+                        select: {
+                            latitude: true,
+                            longitude: true,
+                            accuracy: true,
+                            altitude: true,
+                            altitude_accuracy: true,
+                            heading: true,
+                            speed: true,
+                        },
+                    },
                     assets: {
                         select: {
                             index: true,
@@ -244,6 +285,28 @@ export const deleteMutation = draftProcedure //
                         publish: {
                             update: {
                                 deleted: true,
+                            },
+                        },
+                    },
+                    include: {
+                        coordinate: {
+                            select: {
+                                latitude: true,
+                                longitude: true,
+                                accuracy: true,
+                                altitude: true,
+                                altitude_accuracy: true,
+                                heading: true,
+                                speed: true,
+                            },
+                        },
+                        assets: {
+                            select: {
+                                index: true,
+                                asset_uid: true,
+                            },
+                            orderBy: {
+                                index: "asc",
                             },
                         },
                     },

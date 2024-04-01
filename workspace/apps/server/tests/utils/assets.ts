@@ -15,20 +15,36 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { router } from ".";
+import {
+    //
+    trpc,
+    origin,
+} from "../trpc";
 
-import testRouter from "./test";
-import authRouter from "./auth";
-import accountRouter from "./account";
-import draftRouter from "./draft";
+export async function upload<R = any>(
+    //
+    formData: FormData,
+    t = trpc,
+) {
+    const response = await fetch(`${origin}/assets/upload`, {
+        method: "POST",
+        body: formData,
+        headers: {
+            Cookie: t.cookies,
+        },
+    });
+    return response.json() as R;
+}
 
-// REF: https://trpc.io/docs/server/merging-routers#merging-with-child-routers
-const trpcRouter = router({
-    test: testRouter,
-    auth: authRouter,
-    account: accountRouter,
-    draft: draftRouter,
-});
-
-export type TTrpcRouter = typeof trpcRouter;
-export default trpcRouter;
+export async function get(
+    //
+    uid: string,
+    t = trpc,
+): Promise<any> {
+    const response = await fetch(`${origin}/assets/${uid}`, {
+        headers: {
+            Cookie: t.cookies,
+        },
+    });
+    return response;
+}

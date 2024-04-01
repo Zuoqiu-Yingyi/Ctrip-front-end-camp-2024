@@ -87,3 +87,16 @@ export const COORDINATE = z.object(
     },
     { description: "Coordinate information" },
 );
+
+export const COORDINATE_UPDATE = z.object(
+    {
+        latitude: COORDINATE_LATITUDE.optional(),
+        longitude: COORDINATE_LONGITUDE.optional(),
+        accuracy: COORDINATE_ACCURACY.optional(),
+        altitude: COORDINATE_ALTITUDE.optional(),
+        altitude_accuracy: COORDINATE_ALTITUDE_ACCURACY.optional(),
+        heading: COORDINATE_HEADING.optional(),
+        speed: COORDINATE_SPEED.optional(),
+    },
+    { description: "Coordinate information" },
+);

@@ -23,12 +23,13 @@ import {
 } from "@jest/globals";
 import cuid from "@paralleldrive/cuid2";
 
+import { TRPC } from ".";
+import { initAccount } from "./../utils/account";
 import {
     //
-    TRPC,
-    origin,
-} from ".";
-import { initAccount } from "./../utils/account";
+    get,
+    upload as _upload,
+} from "./../utils/assets";
 import type { ISuccess } from "@/routers/assets/upload";
 
 const trpc = new TRPC();
@@ -41,23 +42,7 @@ export async function upload(strings: string[]): Promise<any> {
     for (const file of files) {
         formData.append(fieldname, file);
     }
-    const response = await fetch(`${origin}/assets/upload`, {
-        method: "POST",
-        body: formData,
-        headers: {
-            Cookie: trpc.cookies,
-        },
-    });
-    return response.json();
-}
-
-export async function get(uid: string): Promise<any> {
-    const response = await fetch(`${origin}/assets/${uid}`, {
-        headers: {
-            Cookie: trpc.cookies,
-        },
-    });
-    return response.text();
+    return _upload(formData, trpc);
 }
 
 describe("/trpc/assets/upload", () => {
@@ -75,8 +60,8 @@ describe("/trpc/assets/upload", () => {
             expect(success.fieldname).toEqual(fieldname);
             expect(success.mimetype).toEqual(mimetype);
 
-            const response_get = await get(success.uid);
-            expect(response_get).toEqual(success.filename);
+            const response_get = await get(success.uid, trpc);
+            expect(await response_get.text()).toEqual(success.filename);
         }
     });
 });

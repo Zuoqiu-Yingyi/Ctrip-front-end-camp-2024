@@ -48,37 +48,35 @@ export function account2info(account: string): IStaffInfo {
  */
 export async function reset(this: InstanceType<typeof DatabaseClient>) {
     // REF: https://www.prisma.io/docs/orm/prisma-client/queries/crud#update-or-create-records
-    await Promise.all(
-        env.STAFF_ACCOUNTS.split("\n") //
-            .map((account) => account.trim())
-            .filter((account) => !!account)
-            .map(account2info)
-            .map((secret) =>
-                this.p.staff.upsert({
-                    where: {
-                        name: secret.username,
-                    },
+    const secrets = env.STAFF_ACCOUNTS.split("\n") //
+        .map((account) => account.trim())
+        .filter((account) => !!account)
+        .map(account2info);
+    for (const secret of secrets) {
+        await this.p.staff.upsert({
+            where: {
+                name: secret.username,
+            },
+            update: {
+                role: secret.role,
+                password: secret.password,
+                deleted: false,
+                token: {
                     update: {
-                        role: secret.role,
-                        password: secret.password,
-                        deleted: false,
-                        token: {
-                            update: {
-                                version: 0,
-                            },
-                        },
+                        version: 0,
                     },
+                },
+            },
+            create: {
+                name: secret.username,
+                role: secret.role,
+                password: secret.password,
+                token: {
                     create: {
-                        name: secret.username,
-                        role: secret.role,
-                        password: secret.password,
-                        token: {
-                            create: {
-                                version: 0,
-                            },
-                        },
+                        version: 0,
                     },
-                }),
-            ),
-    );
+                },
+            },
+        });
+    }
 }

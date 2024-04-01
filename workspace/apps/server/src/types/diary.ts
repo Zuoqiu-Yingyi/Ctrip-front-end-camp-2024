@@ -17,8 +17,16 @@
 
 import { z } from "zod";
 
-import { CUID, ID } from ".";
-import { COORDINATE } from "./coordinate";
+import {
+    //
+    CUID,
+    ID,
+} from ".";
+import {
+    //
+    COORDINATE,
+    COORDINATE_UPDATE,
+} from "./coordinate";
 
 /**
  * 日记标题
