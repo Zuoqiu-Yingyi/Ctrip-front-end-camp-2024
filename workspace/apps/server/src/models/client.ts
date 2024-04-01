@@ -19,7 +19,7 @@ import {
     //
     PrismaClient,
     type Prisma,
-} from "@prisma/client";
+} from "./../../prisma/client";
 import type { FastifyInstance } from "fastify";
 
 import { reset as resetStaffTable } from "./staff";

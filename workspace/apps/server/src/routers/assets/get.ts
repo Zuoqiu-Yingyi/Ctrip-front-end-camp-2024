@@ -16,9 +16,11 @@
  */
 
 import fs from "node:fs";
+import path from "node:path";
 
 import { ASSETS_PATH } from ".";
 import { AccessorRole } from "./../../utils/role";
+import { assets } from "./../../utils/store";
 
 import type {
     //
@@ -26,7 +28,6 @@ import type {
     FastifyRequest,
 } from "fastify";
 import type { IAssetsRequest } from "./router";
-import path from "node:path";
 
 export interface IParams {
     uid: string;
@@ -40,20 +41,31 @@ export interface IParams {
 export const getHandler: RouteHandlerMethod = async function (request: IAssetsRequest & FastifyRequest, reply) {
     try {
         const { uid } = request.params as IParams;
-        const asset = await request.DB.asset.findUnique({
-            where: {
-                uid,
-                deleted: false,
-            },
-            select: {
-                path: true,
-                mime: true,
-                permission: true,
-                uploader_id: true,
-            },
-        });
+        const asset = await (async () => {
+            const asset = assets.get(uid);
+            if (asset) {
+                return asset;
+            } else {
+                const asset = await request.DB.asset.findUnique({
+                    where: {
+                        uid,
+                        deleted: false,
+                    },
+                    select: {
+                        path: true,
+                        mime: true,
+                        permission: true,
+                        uploader_id: true,
+                    },
+                });
+                if (asset) {
+                    assets.set(uid, asset);
+                }
+                return asset;
+            }
+        })();
         if (asset) {
-            request.server.log.debug(asset);
+            // request.server.log.debug(asset);
             const asset_path = path.join(ASSETS_PATH, asset.path);
             try {
                 let accessible = false;

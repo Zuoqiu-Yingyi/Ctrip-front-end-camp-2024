@@ -24,7 +24,7 @@ datasource db {
 // REF: https://www.prisma.io/docs/orm/prisma-schema/overview/generators
 generator client {
     provider = "prisma-client-js"
-    // output   = "./client"
+    output   = "./client"
 }
 
 // REF: https://github.com/pantharshit00/prisma-docs-generator
@@ -78,20 +78,23 @@ model User {
     id Int @id @default(autoincrement())
 
     /// 账户用户名 | Account Username
-    name     String  @unique // 用户名
+    name     String @unique // 用户名
     /// 账户密码 | Account password
     /// 格式: 十六进制字符串 | Format: Hex string
     password String // Hex 格式的密码
-    /// 用户头像 | User avatar
-    /// - `NULL`: 使用默认头像 | Use the default avatar
-    /// - `String`: 头像文件的 uid | uid of the avatar file
-    /// @format uid
-    avatar   String? // 头像文件的 uid
+    /// 账户权限 | Account permission
+    /// - `10`: 用户 | User
+    role     Int    @default(10)
 
     /// 用户使用的令牌 | Token used by users
     token    Token? @relation(fields: [token_id], references: [id])
     /// 令牌 ID | Token ID
     token_id Int?   @unique
+
+    /// 用户的账户信息 | Account profile of the user
+    profile    Profile? @relation(fields: [profile_id], references: [id])
+    /// 账户信息的 ID | Profile ID
+    profile_id Int?     @unique
 
     assets      Asset[] // 上传的资源文件列表
     drafts      Draft[] // 草稿列表
@@ -118,6 +121,28 @@ model Token {
 
     Staff Staff?
     User  User?
+
+    /// 是否已逻辑删除 | Whether it has been logically deleted
+    deleted   Boolean  @default(false)
+    /// 记录创建时间 | Record creation time
+    createdAt DateTime @default(now())
+    /// 记录更新时间 | Record update time
+    updatedAt DateTime @updatedAt
+}
+
+/// 账户信息 | Account Profile
+/// @namespace Server
+model Profile {
+    /// 主键 | Primary Key
+    id Int @id @default(autoincrement())
+
+    /// Account avatar
+    /// - `NULL`: 使用默认头像 | Use the default avatar
+    /// - `String`: 头像文件的 uid | uid of the avatar file
+    /// @format uid
+    avatar String? // 头像文件的 uid
+
+    User User?
 
     /// 是否已逻辑删除 | Whether it has been logically deleted
     deleted   Boolean  @default(false)

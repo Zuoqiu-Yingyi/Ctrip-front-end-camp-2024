@@ -81,7 +81,7 @@ export const ENV_DEFAULT: IEnv = {
     JWT_SECRET: randomString(32),
     JWT_ISSUER: "travel-diary",
     JWT_EXPIRES_IN: "7d",
-    JWT_COOKIE_NAME: "travel-diary-jwt",
+    JWT_COOKIE_NAME: "td-jwt",
     CHALLENGE_RESPONSE_JWT_SECRET: randomString(32),
     CHALLENGE_RESPONSE_JWT_ISSUER: "travel-diary-challenge-response",
     CHALLENGE_RESPONSE_JWT_EXPIRES_IN: "5m",

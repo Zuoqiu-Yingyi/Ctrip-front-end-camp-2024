@@ -19,6 +19,12 @@ import { router } from ".";
 import { signupMutation } from "./../../controllers/signup";
 import { loginMutation } from "./../../controllers/login";
 import { logoutMutation } from "./../../controllers/logout";
+import {
+    //
+    infoQuery,
+    updateInfoMutation,
+    changePasswordMutation,
+} from "./../../controllers/account";
 
 export const accountRouter = router({
     /**
@@ -33,6 +39,18 @@ export const accountRouter = router({
      * 注销账户
      */
     logout: logoutMutation,
+    /**
+     * 查询账户信息
+     */
+    info: infoQuery,
+    /**
+     * 更改账户信息
+     */
+    update_info: updateInfoMutation,
+    /**
+     * 更改密码
+     */
+    change_password: changePasswordMutation,
     /**
      * TODO: 删除账户
      */

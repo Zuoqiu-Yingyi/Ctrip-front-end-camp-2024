@@ -65,6 +65,7 @@ export interface IAuthJwtPayload {
 
 export interface IAuthJwtPayloadData {
     account: IAuthJwtPayloadAccount;
+    profile: IAuthJwtPayloadProfile;
     token: IAuthJwtPayloadToken;
 }
 
@@ -72,6 +73,10 @@ export interface IAuthJwtPayloadAccount {
     id: number;
     role: AccessorRole;
     username: string;
+}
+
+export interface IAuthJwtPayloadProfile {
+    id?: number;
 }
 
 export interface IAuthJwtPayloadToken {

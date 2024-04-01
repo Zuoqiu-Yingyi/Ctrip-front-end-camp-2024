@@ -19,9 +19,21 @@ import { z } from "zod";
 import { procedure } from ".";
 import {
     //
-    USER_PASSWORD,
-    USER_NAME,
-} from "./../types/user";
+    ACCOUNT_PASSWORD,
+    ACCOUNT_NAME,
+} from "./../types/account";
+
+/**
+ * 用户名已存在错误
+ */
+export class UsernameExistsError extends Error {
+    /**
+     * @param username 用户名
+     */
+    constructor(username: string) {
+        super(`Username ${username} already exists`);
+    }
+}
 
 /**
  * 获取认证用的挑战字符串
@@ -29,8 +41,8 @@ import {
 export const signupMutation = procedure
     .input(
         z.object({
-            username: USER_NAME,
-            password: USER_PASSWORD,
+            username: ACCOUNT_NAME,
+            password: ACCOUNT_PASSWORD,
         }),
     )
     .mutation(async (options) => {
@@ -44,11 +56,7 @@ export const signupMutation = procedure
             });
             if (user) {
                 // 用户名已存在
-                return {
-                    code: 1,
-                    message: `Username ${options.input.username} already exists`,
-                    data: null,
-                };
+                throw new UsernameExistsError(options.input.username);
             } else {
                 // 创建用户
                 const user = await options.ctx.DB.user.create({
@@ -69,11 +77,21 @@ export const signupMutation = procedure
                 };
             }
         } catch (error) {
-            options.ctx.S.log.error(error);
-            return {
-                code: -1,
-                message: error,
-                data: null,
-            };
+            switch (true) {
+                case error instanceof UsernameExistsError:
+                    return {
+                        code: 10,
+                        message: error.message,
+                        data: null,
+                    };
+
+                default:
+                    options.ctx.S.log.error(error);
+                    return {
+                        code: -1,
+                        message: error,
+                        data: null,
+                    };
+            }
         }
     });

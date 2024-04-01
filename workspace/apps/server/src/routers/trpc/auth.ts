@@ -16,7 +16,7 @@
  */
 
 import { router } from ".";
-import { challengeQuery } from "./../../controllers/challenge";
+import { challengeQuery } from "./../../controllers/auth";
 
 export const authRouter = router({
     /**
