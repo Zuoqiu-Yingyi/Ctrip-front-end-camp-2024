@@ -23,29 +23,36 @@ import {
 import type { TTrpcRouter } from "@/routers/trpc/router";
 
 export const origin = process.env._TD_SERVER_URL;
-export const cookies: string[] = [];
 
-// REF: https://trpc.io/docs/quickstart#using-your-new-backend-on-the-client
-export const trpc = createTRPCClient<TTrpcRouter>({
-    links: [
-        httpBatchLink({
-            url: `${origin}/trpc`,
-            headers() {
-                return {
-                    Cookie: cookies,
-                };
-            },
-            async fetch(input, init) {
-                const response = await globalThis.fetch(input, init as RequestInit);
-                const _cookies = response.headers.getSetCookie();
-                if (_cookies.length) {
-                    cookies.length = 0;
-                    cookies.push(..._cookies);
-                }
-                return response;
-            },
-        }),
-    ],
-});
+export class TRPC {
+    public readonly cookies: string[] = [];
+    public readonly client: ReturnType<typeof createTRPCClient<TTrpcRouter>>;
 
+    constructor(url = `${origin}/trpc`) {
+        const that = this;
+        this.client = createTRPCClient<TTrpcRouter>({
+            links: [
+                httpBatchLink({
+                    url,
+                    headers() {
+                        return {
+                            Cookie: that.cookies,
+                        };
+                    },
+                    async fetch(input, init) {
+                        const response = await globalThis.fetch(input, init as RequestInit);
+                        const _cookies = response.headers.getSetCookie();
+                        if (_cookies.length) {
+                            that.cookies.length = 0;
+                            that.cookies.push(..._cookies);
+                        }
+                        return response;
+                    },
+                }),
+            ],
+        });
+    }
+}
+
+export const trpc = new TRPC();
 export default trpc;

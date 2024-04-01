@@ -94,6 +94,7 @@ export const updateMutation = draftProcedure //
             const draft = await options.ctx.DB.draft.update({
                 where: {
                     id: options.input.id,
+                    deleted: false,
                 },
                 data: {
                     title: options.input.title,

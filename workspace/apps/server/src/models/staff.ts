@@ -59,8 +59,9 @@ export async function reset(this: InstanceType<typeof DatabaseClient>) {
                         name: secret.username,
                     },
                     update: {
-                        password: secret.password,
                         role: secret.role,
+                        password: secret.password,
+                        deleted: false,
                         token: {
                             update: {
                                 version: 0,
@@ -69,8 +70,8 @@ export async function reset(this: InstanceType<typeof DatabaseClient>) {
                     },
                     create: {
                         name: secret.username,
-                        password: secret.password,
                         role: secret.role,
+                        password: secret.password,
                         token: {
                             create: {
                                 version: 0,

@@ -25,13 +25,13 @@ import cuid from "@paralleldrive/cuid2";
 
 import {
     //
-    trpc,
+    TRPC,
     origin,
-    cookies,
 } from ".";
 import { initAccount } from "./../utils/account";
 import type { ISuccess } from "@/routers/assets/upload";
 
+const trpc = new TRPC();
 const fieldname = "file[]";
 const mimetype = "text/plain";
 
@@ -45,7 +45,7 @@ export async function upload(strings: string[]): Promise<any> {
         method: "POST",
         body: formData,
         headers: {
-            Cookie: cookies,
+            Cookie: trpc.cookies,
         },
     });
     return response.json();
@@ -54,7 +54,7 @@ export async function upload(strings: string[]): Promise<any> {
 export async function get(uid: string): Promise<any> {
     const response = await fetch(`${origin}/assets/${uid}`, {
         headers: {
-            Cookie: cookies,
+            Cookie: trpc.cookies,
         },
     });
     return response.text();

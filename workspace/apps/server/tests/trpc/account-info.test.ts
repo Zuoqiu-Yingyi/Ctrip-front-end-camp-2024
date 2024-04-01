@@ -23,22 +23,24 @@ import {
 } from "@jest/globals";
 import cuid from "@paralleldrive/cuid2";
 
-import trpc from ".";
+import { TRPC } from ".";
 import { initAccount } from "./../utils/account";
+
+const trpc = new TRPC();
 
 describe("/trpc/account/update", () => {
     test(`update: avatar`, async () => {
-        await initAccount();
+        await initAccount(undefined, trpc);
 
         const avatars = [cuid.createId(), null];
         for (const avatar of avatars) {
-            const response_update_info = await trpc.account.update_info.mutate({
+            const response_update_info = await trpc.client.account.update_info.mutate({
                 avatar,
             });
             expect(response_update_info.code).toEqual(0);
             expect(response_update_info.data?.profile.avatar).toEqual(avatar);
 
-            const response_info = await trpc.account.info.query();
+            const response_info = await trpc.client.account.info.query();
             expect(response_info.code).toEqual(0);
             expect(response_info.data?.profile?.avatar).toEqual(avatar);
         }

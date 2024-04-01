@@ -23,13 +23,15 @@ import {
 } from "@jest/globals";
 import cuid from "@paralleldrive/cuid2";
 
-import trpc from ".";
+import { TRPC } from ".";
 import {
     //
     login,
     signup,
     changePassword,
 } from "./../utils/account";
+
+const trpc = new TRPC();
 
 describe("/trpc/account/change_password", () => {
     test(`change password`, async () => {
@@ -50,7 +52,7 @@ describe("/trpc/account/change_password", () => {
             trpc,
         );
         expect(response_change_password.code).toEqual(0);
-        expect(trpc.account.info.query()).rejects.toThrowError(); // 更改密码后会自动注销登录状态
+        expect(trpc.client.account.info.query()).rejects.toThrowError(); // 更改密码后会自动注销登录状态
 
         const response_login1 = await login(account1, trpc);
         expect(response_login1.code).toEqual(20); // 旧密码登录失败

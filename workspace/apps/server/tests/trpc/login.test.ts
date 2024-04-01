@@ -23,7 +23,7 @@ import {
 } from "@jest/globals";
 import cuid from "@paralleldrive/cuid2";
 
-import trpc from ".";
+import { TRPC } from ".";
 import { AccessorRole } from "./../../src/utils/role";
 import {
     //
@@ -31,7 +31,7 @@ import {
     signup,
 } from "./../utils/account";
 
-type TRole = Parameters<typeof trpc.auth.challenge.query>[0]["role"];
+type TRole = Parameters<typeof trpc.client.auth.challenge.query>[0]["role"];
 
 interface IAccount {
     username: string;
@@ -39,6 +39,8 @@ interface IAccount {
     role: TRole;
     _role: AccessorRole;
 }
+
+const trpc = new TRPC();
 
 describe("/trpc/account/login", () => {
     const accounts: IAccount[] = [

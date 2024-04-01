@@ -23,9 +23,11 @@ import {
 } from "@jest/globals";
 import cuid from "@paralleldrive/cuid2";
 import crypto from "node:crypto";
-import trpc from ".";
+import { TRPC } from ".";
 
-type TPayload = Parameters<typeof trpc.account.signup.mutate>[0];
+type TPayload = Parameters<typeof trpc.client.account.signup.mutate>[0];
+
+const trpc = new TRPC();
 
 describe("/trpc/account/signup", () => {
     const payload: TPayload = {
@@ -33,8 +35,8 @@ describe("/trpc/account/signup", () => {
         password: crypto.randomBytes(32).toString("hex"),
     };
     test(`signup: ${payload.username}`, async () => {
-        const response1 = await trpc.account.signup.mutate(payload);
-        const response2 = await trpc.account.signup.mutate(payload);
+        const response1 = await trpc.client.account.signup.mutate(payload);
+        const response2 = await trpc.client.account.signup.mutate(payload);
 
         /* 成功注册 */
         expect(response1.code).toEqual(0);

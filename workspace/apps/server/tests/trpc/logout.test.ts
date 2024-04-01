@@ -23,7 +23,7 @@ import {
 } from "@jest/globals";
 import cuid from "@paralleldrive/cuid2";
 
-import trpc from ".";
+import { TRPC } from ".";
 import { AccessorRole } from "./../../src/utils/role";
 import {
     //
@@ -31,7 +31,9 @@ import {
     signup,
 } from "./../utils/account";
 
-type TRole = Parameters<typeof trpc.auth.challenge.query>[0]["role"];
+type TRole = Parameters<typeof trpc.client.auth.challenge.query>[0]["role"];
+
+const trpc = new TRPC();
 
 interface IAccount {
     username: string;
@@ -75,9 +77,9 @@ describe("/trpc/account/logout", () => {
             }
             await login(account, trpc);
 
-            const response_logout = await trpc.account.logout.query();
+            const response_logout = await trpc.client.account.logout.query();
             expect(response_logout.code).toEqual(0);
-            expect(trpc.account.logout.query()).rejects.toThrowError();
+            expect(trpc.client.account.logout.query()).rejects.toThrowError();
         });
     });
 });

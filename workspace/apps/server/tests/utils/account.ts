@@ -25,7 +25,7 @@ import {
 } from "@repo/utils/crypto";
 import trpc from "./../trpc";
 
-type TRole = Parameters<typeof trpc.auth.challenge.query>[0]["role"];
+type TRole = Parameters<typeof trpc.client.auth.challenge.query>[0]["role"];
 
 /**
  * 注册新用户
@@ -39,7 +39,7 @@ export async function signup(
     t = trpc,
 ) {
     const key = await passphrase2key(username, passphrase, process.env._TD_USER_KEY_SALT!);
-    const response_signup = await t.account.signup.mutate({
+    const response_signup = await t.client.account.signup.mutate({
         username,
         password: ArrayBuffer2HexString(key),
     });
@@ -60,7 +60,7 @@ export async function login(
 ) {
     const key = await passphrase2key(username, passphrase, process.env._TD_USER_KEY_SALT!);
 
-    const response_challenge = await t.auth.challenge.query({
+    const response_challenge = await t.client.auth.challenge.query({
         username: username,
         role: role as TRole,
     });
@@ -68,7 +68,7 @@ export async function login(
     const response = await challenge2response(String2ArrayBuffer(challenge), key);
     const response_hex = ArrayBuffer2HexString(response);
 
-    const response_login = await t.account.login.mutate({
+    const response_login = await t.client.account.login.mutate({
         challenge,
         response: response_hex,
         stay: false,
@@ -92,7 +92,7 @@ export async function changePassword(
     const key1 = await passphrase2key(username, passphrase1, process.env._TD_USER_KEY_SALT!);
     const key2 = await passphrase2key(username, passphrase2, process.env._TD_USER_KEY_SALT!);
 
-    const response_challenge = await t.auth.challenge.query({
+    const response_challenge = await t.client.auth.challenge.query({
         username: username,
         role: role as TRole,
     });
@@ -100,7 +100,7 @@ export async function changePassword(
     const response = await challenge2response(String2ArrayBuffer(challenge), key1);
     const response_hex = ArrayBuffer2HexString(response);
 
-    const response_change_password = await t.account.change_password.mutate({
+    const response_change_password = await t.client.account.change_password.mutate({
         challenge,
         response: response_hex,
         password: ArrayBuffer2HexString(key2),
@@ -117,6 +117,6 @@ export async function initAccount(
     },
     t = trpc,
 ) {
-    await signup(account);
-    await login(account);
+    await signup(account, t);
+    await login(account, t);
 }
