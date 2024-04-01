@@ -63,6 +63,12 @@ export const signupMutation = procedure
                     data: {
                         name: options.input.username,
                         password: options.input.password,
+                        token: {
+                            create: {},
+                        },
+                        profile: {
+                            create: {},
+                        },
                     },
                 });
                 return {

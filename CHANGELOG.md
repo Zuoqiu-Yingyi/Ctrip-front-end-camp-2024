@@ -1,5 +1,9 @@
 # 更改日志 | Change log
 
+## 2024-04-02
+
+- 实现草稿创建功能 | Implement draft creation feature
+
 ## 2024-04-01
 
 - 实现文件上传功能 | Implement file upload feature

@@ -49,6 +49,7 @@ export interface IFailure {
 }
 
 export interface ISuccess extends IFailure {
+    id: number; // ID
     uid: string; // CUID
 }
 
@@ -151,7 +152,7 @@ export const uploadHandler: RouteHandlerMethod = async function (request: IAsset
                     if (result.status === "fulfilled") {
                         // 文件写入目录成功
                         try {
-                            await request.DB.asset.create({
+                            const asset = await request.DB.asset.create({
                                 data: {
                                     uid: result.value.uid,
                                     filename: result.value.filename,
@@ -163,6 +164,7 @@ export const uploadHandler: RouteHandlerMethod = async function (request: IAsset
                                 },
                             });
                             successes.push({
+                                id: asset.id,
                                 uid: result.value.uid,
                                 filename: result.value.filename,
                                 mimetype: result.value.mimetype,

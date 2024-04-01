@@ -61,11 +61,17 @@ export async function reset(this: InstanceType<typeof DatabaseClient>) {
                     update: {
                         password: secret.password,
                         role: secret.role,
+                        token: {
+                            update: {},
+                        },
                     },
                     create: {
                         name: secret.username,
                         password: secret.password,
                         role: secret.role,
+                        token: {
+                            create: {},
+                        },
                     },
                 }),
             ),

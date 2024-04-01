@@ -314,6 +314,10 @@ export const changePasswordMutation = procedure //
                 id: number;
                 role: AccessorRole;
                 password: string;
+                token: {
+                    id: number;
+                    version: number;
+                };
             } = await (async () => {
                 switch (payload.data.role) {
                     /* 用户 */
@@ -328,6 +332,12 @@ export const changePasswordMutation = procedure //
                                 id: true,
                                 role: true,
                                 password: true,
+                                token: {
+                                    select: {
+                                        id: true,
+                                        version: true,
+                                    },
+                                },
                             },
                         });
                         return user;
@@ -344,6 +354,12 @@ export const changePasswordMutation = procedure //
                                 id: true,
                                 role: true,
                                 password: true,
+                                token: {
+                                    select: {
+                                        id: true,
+                                        version: true,
+                                    },
+                                },
                             },
                         });
                         return staff;
@@ -388,15 +404,14 @@ export const changePasswordMutation = procedure //
                 }
 
                 /* 吊销令牌 */
-                const token = options.ctx.session.data.token;
-                token.version++;
-                tokens.set(token.id, token.version);
+                account.token.version++;
+                tokens.set(account.token.id, account.token.version);
                 await options.ctx.DB.token.update({
                     where: {
-                        id: token.id,
+                        id: account.token.id,
                     },
                     data: {
-                        version: token.version,
+                        version: account.token.version,
                     },
                 });
 

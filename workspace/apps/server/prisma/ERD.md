@@ -11,7 +11,7 @@ erDiagram
   String name UK
   String password
   Int role
-  Int token_id FK "nullable"
+  Int token_id FK
   Boolean deleted
   DateTime createdAt
   DateTime updatedAt
@@ -21,8 +21,8 @@ erDiagram
   String name UK
   String password
   Int role
-  Int token_id FK "nullable"
-  Int profile_id FK "nullable"
+  Int token_id FK
+  Int profile_id FK
   Boolean deleted
   DateTime createdAt
   DateTime updatedAt
@@ -139,9 +139,9 @@ erDiagram
   DateTime createdAt
   DateTime updatedAt
 }
-"Staff" |o--o| "Token" : token
-"User" |o--o| "Token" : token
-"User" |o--o| "Profile" : profile
+"Staff" |o--|| "Token" : token
+"User" |o--|| "Token" : token
+"User" |o--|| "Profile" : profile
 "Draft" }o--|| "User" : author
 "Draft" }o--o| "Coordinate" : coordinate
 "Review" }o--|| "User" : submitter
@@ -359,7 +359,7 @@ erDiagram
     > 单位: 度 (°) | Unit: degree (°)
   - `accuracy`
     > 经纬度的精确度 | Accuracy of latitude and longitude
-    > 单位: 度 (°) | Unit: degree (°)
+    > 单位: 米 (m) | Unit: meter (m)
     > 95% 置信区间 | 95% confidence interval
   - `altitude`
     > 海拔高度 | Altitude

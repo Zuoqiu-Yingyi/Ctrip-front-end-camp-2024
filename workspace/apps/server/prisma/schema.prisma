@@ -57,9 +57,9 @@ model Staff {
     role     Int    @default(2)
 
     /// 工作人员使用的令牌 | Token used by staff
-    token    Token? @relation(fields: [token_id], references: [id])
+    token    Token @relation(fields: [token_id], references: [id])
     /// 令牌 ID | Token ID
-    token_id Int?   @unique
+    token_id Int   @unique
 
     reviews Review[] // 审核列表
 
@@ -87,14 +87,14 @@ model User {
     role     Int    @default(10)
 
     /// 用户使用的令牌 | Token used by users
-    token    Token? @relation(fields: [token_id], references: [id])
+    token    Token @relation(fields: [token_id], references: [id])
     /// 令牌 ID | Token ID
-    token_id Int?   @unique
+    token_id Int   @unique
 
     /// 用户的账户信息 | Account profile of the user
-    profile    Profile? @relation(fields: [profile_id], references: [id])
+    profile    Profile @relation(fields: [profile_id], references: [id])
     /// 账户信息的 ID | Profile ID
-    profile_id Int?     @unique
+    profile_id Int     @unique
 
     assets      Asset[] // 上传的资源文件列表
     drafts      Draft[] // 草稿列表
@@ -159,9 +159,9 @@ model Draft {
     id Int @id @default(autoincrement())
 
     /// 草稿标题 | Draft title
-    title             String
+    title             String   @default("")
     /// 草稿内容 | Draft content
-    content           String
+    content           String   @default("")
     /// 草稿创建时间 | Draft creation time
     creation_time     DateTime @default(now())
     /// 草稿修改时间 | Draft modification time
@@ -195,9 +195,9 @@ model Review {
     id Int @id @default(autoincrement())
 
     /// 标题 | Title
-    title             String
+    title             String   @default("")
     /// 内容 | Content
-    content           String
+    content           String   @default("")
     /// 提交时间 | Submission time
     submission_time   DateTime @default(now())
     /// 修改时间 | Modification time
@@ -250,9 +250,9 @@ model Publish {
     uid String @unique
 
     /// 标题 | Title
-    title             String
+    title             String   @default("")
     /// 内容 | Content
-    content           String
+    content           String   @default("")
     /// 发布时间 | Publication time
     publication_time  DateTime @default(now())
     /// 修改时间 | Modification time
@@ -432,7 +432,7 @@ model Coordinate {
     /// 单位: 度 (°) | Unit: degree (°)
     longitude         Float
     /// 经纬度的精确度 | Accuracy of latitude and longitude
-    /// 单位: 度 (°) | Unit: degree (°)
+    /// 单位: 米 (m) | Unit: meter (m)
     /// 95% 置信区间 | 95% confidence interval
     accuracy          Float
     /// 海拔高度 | Altitude
