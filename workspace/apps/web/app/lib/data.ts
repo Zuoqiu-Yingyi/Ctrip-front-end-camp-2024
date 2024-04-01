@@ -11,7 +11,9 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { TravelNote } from "../lib/definitions";
+import { TravelNote } from "@/app/lib/definitions";
+
+let MAX_NUMBER = 0;
 
 export async function fetchCardData() {
     await new Promise((resolve) => setTimeout(resolve, 3000));
@@ -26,14 +28,19 @@ export async function fetchCardData() {
 export async function fetchItemData() {
     await new Promise((resolve) => setTimeout(resolve, 3000));
 
-    const data: TravelNote[] = Array.from({ length: 23 }).map((_, i) => ({
+    const data: TravelNote[] = Array.from({ length: 5 }).map((_, i) => ({
         href: "https://ant.design",
-        title: `用户 ${i}`,
+        title: `用户 ${MAX_NUMBER + i}`,
         avatar: `https://api.dicebear.com/7.x/miniavs/svg?seed=${i}`,
-        description: '游记标题',
+        description: `游记标题${MAX_NUMBER + i}`,
         content: "We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.",
-        state: i % 2 == 0 ? "waiting" : "fail",
+        // state: i % 2 == 0 ? "waiting" : "fail",
+        state: "waiting",
     }));
+
+    // console.log(data);
+
+    MAX_NUMBER += 5;
 
     return data;
 }

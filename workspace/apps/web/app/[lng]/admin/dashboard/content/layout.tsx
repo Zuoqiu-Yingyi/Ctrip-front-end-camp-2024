@@ -12,15 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 "use client";
-import { Flex } from "antd";
-import CardWrapper from "../../../ui/number-card";
+import MessageContextProvider from "@/app/lib/messageContext";
 
-export default function OverviewPage() {
+export default function OverviewPage({ children }: { children: React.ReactElement<any, any>}): JSX.Element {
     return (
-        <Flex
-        >
-            <CardWrapper />
-            <div className="flex-1"></div>
-        </Flex>
+        <MessageContextProvider>
+            {children}
+        </MessageContextProvider>
     );
 }

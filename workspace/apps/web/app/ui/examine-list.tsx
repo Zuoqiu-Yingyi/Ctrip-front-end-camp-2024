@@ -11,21 +11,30 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import React, { useState } from "react";
-import { Avatar, List, Flex, Image, Skeleton, Modal, Button, Typography } from "antd";
-import { TravelNote } from "../lib/definitions";
+import React, { useState, useContext } from "react";
+import { Avatar, List, Flex, Image, Skeleton, Modal, Button, Typography, Checkbox } from "antd";
+import { TravelNote } from "@/app/lib/definitions";
 import StateOperation from "./state-operation";
+import { MessageContext } from "@/app/lib/messageContext";
 import TimeList from "./time-demo";
+import { CheckboxChangeEvent } from "antd/es/checkbox";
 
-const {Title} = Typography;
+const { Title } = Typography;
 
 export default function ExamineList({ data, loading }: { data: TravelNote[]; loading: boolean }): JSX.Element {
+    const { togglePage, totalDataNumber } = useContext(MessageContext);
+
     return (
         <List
             itemLayout="vertical"
             size="large"
             pagination={{
                 pageSize: 5,
+                total: totalDataNumber,
+                showSizeChanger: false,
+                onChange: async (page, pageSize) => {
+                    await togglePage(page, pageSize);
+                },
             }}
             dataSource={data}
             renderItem={(item) => (
@@ -40,6 +49,8 @@ export default function ExamineList({ data, loading }: { data: TravelNote[]; loa
 
 export function ExamineListItem({ item, loading }: { item: TravelNote; loading: boolean }): JSX.Element {
     const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const { addCheckNumber, subCheckNumber } = useContext(MessageContext);
 
     return (
         <List.Item
@@ -65,14 +76,37 @@ export function ExamineListItem({ item, loading }: { item: TravelNote; loading: 
                 avatar
             >
                 <List.Item.Meta
-                    avatar={<Avatar src={item.avatar} />}
+                    avatar={
+                        <Flex
+                            align="center"
+                            justify="center"
+                        >
+                            <Checkbox
+                                onChange={(e: CheckboxChangeEvent) => {
+                                    if (e.target.checked) {
+                                        addCheckNumber();
+                                    } else {
+                                        subCheckNumber();
+                                    }
+                                }}
+                                style={{
+                                    marginRight: 3,
+                                    marginTop: 5,
+                                }}
+                            ></Checkbox>
+                            <Avatar src={item.avatar} />
+                        </Flex>
+                    }
                     title={
-                        <Title level={5} style={{marginTop: 5}}>
+                        <Title
+                            level={5}
+                            style={{ marginTop: 5 }}
+                        >
                             {item.description}
                         </Title>
                     }
                     // description={item.title}
-                    style={{marginBlockEnd: 5}}
+                    style={{ marginBlockEnd: 5 }}
                 />
                 {!loading ? (item.content.length > 150 ? item.content.substring(0, 150) + "..." : item.content) : null}
                 {!loading && item.content.length > 150 ? (

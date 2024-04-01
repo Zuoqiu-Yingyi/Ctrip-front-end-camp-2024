@@ -16,10 +16,14 @@
 import React from "react";
 import { LockOutlined, UserOutlined, SignatureFilled } from "@ant-design/icons";
 import { Button, Checkbox, Form, Input, Flex, Typography } from "antd";
+import { useTranslation } from "@/app/i18n/client";
 
 const { Title } = Typography;
 
-export default function LoginPage(): JSX.Element {
+export default function LoginPage({ params: { lng } } : { params: { lng: string }}): JSX.Element {
+
+    const { t } = useTranslation(lng);
+
     const onFinish = (values: any) => {
         console.log("Received values of form: ", values);
     };
@@ -38,7 +42,7 @@ export default function LoginPage(): JSX.Element {
                 style={{ marginBottom: "20px" }}
             >
                 <SignatureFilled className="mr-2" />
-                后台审核系统
+                {t("title")}
             </Title>
 
             <Form
@@ -55,7 +59,7 @@ export default function LoginPage(): JSX.Element {
                 >
                     <Input
                         prefix={<UserOutlined className="site-form-item-icon" />}
-                        placeholder="Username"
+                        placeholder={t('userName')}
                     />
                 </Form.Item>
                 <Form.Item
@@ -65,7 +69,7 @@ export default function LoginPage(): JSX.Element {
                     <Input
                         prefix={<LockOutlined className="site-form-item-icon" />}
                         type="password"
-                        placeholder="Password"
+                        placeholder={t('password')}
                     />
                 </Form.Item>
                 <Form.Item>
@@ -74,7 +78,7 @@ export default function LoginPage(): JSX.Element {
                         valuePropName="checked"
                         noStyle
                     >
-                        <Checkbox>Remember me</Checkbox>
+                        <Checkbox>{t('remember')}</Checkbox>
                     </Form.Item>
                 </Form.Item>
 
@@ -85,7 +89,7 @@ export default function LoginPage(): JSX.Element {
                         className="login-form-button"
                         style={{ width: "100%" }}
                     >
-                        Log in
+                        {t('login')}
                     </Button>
                 </Form.Item>
             </Form>

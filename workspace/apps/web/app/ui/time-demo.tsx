@@ -13,7 +13,7 @@
 // limitations under the License.
 import { Space } from "antd";
 import { FileTextOutlined, FileSyncOutlined, FileDoneOutlined } from "@ant-design/icons";
-import { TimeMessage } from "../lib/definitions";
+import { TimeMessage } from "@/app/lib/definitions";
 
 const TIME_PRE: TimeMessage[] = [
     { name: "publish-time", icon: <FileTextOutlined />, text: "发布时间：" },
