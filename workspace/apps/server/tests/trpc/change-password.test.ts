@@ -31,8 +31,8 @@ import {
     changePassword,
 } from "./../utils/account";
 
-describe("/trpc/account/update", () => {
-    test(`update: avatar`, async () => {
+describe("/trpc/account/change_password", () => {
+    test(`change password`, async () => {
         const username = cuid.createId();
         const passphrase1 = cuid.createId();
         const passphrase2 = cuid.createId();

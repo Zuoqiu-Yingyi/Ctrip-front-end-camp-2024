@@ -24,20 +24,11 @@ import {
 import cuid from "@paralleldrive/cuid2";
 
 import trpc from ".";
-import {
-    //
-    login,
-    signup,
-} from "./../utils/account";
+import { initAccount } from "./../utils/account";
 
 describe("/trpc/account/update", () => {
     test(`update: avatar`, async () => {
-        const account = {
-            username: cuid.createId(),
-            passphrase: cuid.createId(),
-        };
-        await signup(account, trpc);
-        await login(account, trpc);
+        await initAccount();
 
         const avatars = [cuid.createId(), null];
         for (const avatar of avatars) {

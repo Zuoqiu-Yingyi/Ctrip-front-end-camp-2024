@@ -60,7 +60,7 @@ export async function login(
 ) {
     const key = await passphrase2key(username, passphrase, process.env._TD_USER_KEY_SALT!);
 
-    const response_challenge = await trpc.auth.challenge.query({
+    const response_challenge = await t.auth.challenge.query({
         username: username,
         role: role as TRole,
     });
@@ -68,7 +68,7 @@ export async function login(
     const response = await challenge2response(String2ArrayBuffer(challenge), key);
     const response_hex = ArrayBuffer2HexString(response);
 
-    const response_login = await trpc.account.login.mutate({
+    const response_login = await t.account.login.mutate({
         challenge,
         response: response_hex,
         stay: false,
@@ -92,7 +92,7 @@ export async function changePassword(
     const key1 = await passphrase2key(username, passphrase1, process.env._TD_USER_KEY_SALT!);
     const key2 = await passphrase2key(username, passphrase2, process.env._TD_USER_KEY_SALT!);
 
-    const response_challenge = await trpc.auth.challenge.query({
+    const response_challenge = await t.auth.challenge.query({
         username: username,
         role: role as TRole,
     });
@@ -100,10 +100,23 @@ export async function changePassword(
     const response = await challenge2response(String2ArrayBuffer(challenge), key1);
     const response_hex = ArrayBuffer2HexString(response);
 
-    const response_change_password = await trpc.account.change_password.mutate({
+    const response_change_password = await t.account.change_password.mutate({
         challenge,
         response: response_hex,
         password: ArrayBuffer2HexString(key2),
     });
     return response_change_password;
+}
+
+export async function initAccount(
+    account = {
+        //
+        username: cuid.createId(),
+        passphrase: cuid.createId(),
+        role: "user",
+    },
+    t = trpc,
+) {
+    await signup(account);
+    await login(account);
 }

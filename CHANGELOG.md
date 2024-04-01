@@ -7,6 +7,7 @@
 - 优化用户登录与注销登录的测试用例 | Optimize test cases for user login and logout
 - 添加用户信息管理测试用例 | Add user information management test cases
 - 添加更改密码测试用例 | Add change password test case
+- 添加资源文件测试用例 | Add asset file test case
 
 ## 2024-04-01
 
