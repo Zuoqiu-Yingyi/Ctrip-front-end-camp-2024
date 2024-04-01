@@ -1,0 +1,19 @@
+{
+    "title": "後台審核系統",
+    "login": "登錄",
+    "userName": "用戶名",
+    "password": "密碼",
+    "remember": "記住我",
+    "overview": "總覽",
+    "audit": "審核",
+    "logout": "登出",
+    "pass": "通過",
+    "reject": "拒絕",
+    "itemTitle": "標題",
+    "itemContent": "內容",
+    "itemTime": "時間",
+    "itemUser": "用戶",
+    "toBeAudited": "待審核",
+    "passed": "已通過",
+    "failed": "已拒絕"
+}

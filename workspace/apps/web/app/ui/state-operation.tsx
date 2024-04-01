@@ -13,7 +13,7 @@
 // limitations under the License.
 import { EditFilled, CheckCircleFilled, ExclamationCircleFilled, CloseCircleFilled } from "@ant-design/icons";
 import React, { useState } from "react";
-import { Button, Flex, Typography, Modal, Form, Radio, Input } from "antd";
+import { Button, Flex, Typography, Modal, Form, Radio, Input, Space } from "antd";
 
 const { Title, Paragraph } = Typography;
 const { TextArea } = Input;
@@ -59,7 +59,7 @@ export default function StateOperation({ stateReceived }: { stateReceived: "succ
     return (
         <Flex
             vertical
-            style={{ width: 130, justifyContent: "center", alignItems: "start", marginLeft: 20 }}
+            style={{ width: 130, justifyContent: "space-around",  alignItems: "center", marginLeft: 20 }}
         >
             <Title
                 level={4}
@@ -67,13 +67,15 @@ export default function StateOperation({ stateReceived }: { stateReceived: "succ
             >
                 {icon}
                 {text}
-                <Button
-                    icon={<EditFilled style={{ color: "#999999" }} />}
-                    size="small"
-                    type="text"
-                    onClick={showModal}
-                    style={{ marginLeft: 5 }}
-                />
+                {/* {state === "waiting" ? (
+                    <Button
+                        icon={<EditFilled style={{ color: "#999999" }} />}
+                        size="small"
+                        type="text"
+                        onClick={showModal}
+                        style={{ marginLeft: 5 }}
+                    />
+                ) : null} */}
                 <Modal
                     title="操作"
                     open={isModalOpen}
@@ -88,20 +90,41 @@ export default function StateOperation({ stateReceived }: { stateReceived: "succ
                         wrapperCol={{ span: 18 }}
                         layout="horizontal"
                         style={{ maxWidth: 600 }}
-                        initialValues={{"operation": "pass"}}
+                        initialValues={{ operation: "pass" }}
                     >
-                        <Form.Item label="选项" name="operation">
+                        <Form.Item
+                            label="选项"
+                            name="operation"
+                        >
                             <Radio.Group>
                                 <Radio value="pass"> 通过 </Radio>
                                 <Radio value="reject"> 拒绝 </Radio>
                             </Radio.Group>
                         </Form.Item>
-                        <Form.Item label="拒绝理由" name="reason">
+                        <Form.Item
+                            label="拒绝理由"
+                            name="reason"
+                        >
                             <TextArea rows={5} />
                         </Form.Item>
                     </Form>
                 </Modal>
             </Title>
+            <Radio.Group
+                options={[
+                    { label: "通过", value: "Apple" },
+                    { label: "拒绝", value: "Pear" },
+                ]}
+                optionType="button"
+            />
+
+            {/* <Radio.Group
+                    
+                    >
+                            <Radio value={1}>同意</Radio>
+                            <Radio value={2}>拒绝</Radio>
+                    </Radio.Group> */}
+
             {state === "fail" ? <Paragraph className="w-32">不符合招录条件不符合招录符合招录条件</Paragraph> : null}
         </Flex>
     );

@@ -19,11 +19,10 @@
         "@trpc/server": "11.0.0-next.320",
         "antd": "^5.15.3",
         "antd-mobile": "^5.34.0",
-        "antd-mobile-icons": "^0.3.0",
-        "less": "^4.2.0",
         "next": "^14.1.4",
         "next-i18next": "^15.2.0",
         "react": "^18.2.0",
+        "react-cookie": "^7.1.2",
         "react-dom": "^18.2.0",
         "zod": "^3.22.4"
     },

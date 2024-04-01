@@ -27,6 +27,7 @@ export type TravelNote = {
     title: string;
     avatar: string;
     content: string;
+    description: string;
     state: "success" | "fail" | "waiting",
 };
 

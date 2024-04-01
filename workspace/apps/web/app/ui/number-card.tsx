@@ -14,8 +14,8 @@
 import { useEffect, useState } from "react";
 import { Card, Typography, Col, Row } from "antd";
 import { CheckCircleOutlined, ExclamationCircleOutlined, CloseCircleOutlined } from "@ant-design/icons";
-import { CardMessage } from "../lib/definitions";
-import { fetchCardData } from "../lib/data";
+import { CardMessage } from "@/app/lib/definitions";
+import { fetchCardData } from "@/app/lib/data";
 
 const { Title } = Typography;
 

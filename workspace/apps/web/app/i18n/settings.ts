@@ -11,10 +11,19 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-"use client";
-import React from "react";
-import ExamineList from "../../../ui/examine-list";
+export const fallbackLng = 'cn'
+export const languages = [fallbackLng, 'en', 'tn']
+export const defaultNS = 'translation'
+export const cookieName = 'i18next'
 
-export default function ContentPage() {
-    return <ExamineList />;
+export function getOptions (lng: string = fallbackLng, ns: string = defaultNS) {
+  return {
+    // debug: true,
+    supportedLngs: languages,
+    fallbackLng,
+    lng,
+    fallbackNS: defaultNS,
+    defaultNS,
+    ns
+  }
 }
