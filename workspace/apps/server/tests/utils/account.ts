@@ -75,3 +75,35 @@ export async function login(
     });
     return response_login;
 }
+
+/**
+ * 更改密码
+ */
+export async function changePassword(
+    {
+        //
+        username = cuid.createId(),
+        passphrase1 = cuid.createId(),
+        passphrase2 = cuid.createId(),
+        role = "user",
+    },
+    t = trpc,
+) {
+    const key1 = await passphrase2key(username, passphrase1, process.env._TD_USER_KEY_SALT!);
+    const key2 = await passphrase2key(username, passphrase2, process.env._TD_USER_KEY_SALT!);
+
+    const response_challenge = await trpc.auth.challenge.query({
+        username: username,
+        role: role as TRole,
+    });
+    const challenge = response_challenge.data.challenge;
+    const response = await challenge2response(String2ArrayBuffer(challenge), key1);
+    const response_hex = ArrayBuffer2HexString(response);
+
+    const response_change_password = await trpc.account.change_password.mutate({
+        challenge,
+        response: response_hex,
+        password: ArrayBuffer2HexString(key2),
+    });
+    return response_change_password;
+}
