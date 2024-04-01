@@ -166,7 +166,8 @@ export default function Login() {
                         src={avatarSrc}
                         loader={assetsLoader}
                         alt="Avatar"
-                        fill={true}
+                        width={64}
+                        height={64}
                     />
                 </li>
             </ul>

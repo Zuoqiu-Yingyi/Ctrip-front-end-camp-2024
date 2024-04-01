@@ -22,3 +22,18 @@
  * 若对应的令牌不存在则需要从数据库中加载
  */
 export const tokens = new Map<number, number>();
+
+export interface IAsset {
+    path: string; // 资源文件路径
+    mime: string; // 资源文件 MIME 类型
+    uploader_id: number; // 上传者 ID
+    permission: number; // 权限
+}
+
+/**
+ * 资源文件权限状态
+ * 资源文件 UID -> 资源文件权限
+ * 当令牌的版本号小于该值时，表示令牌已过期
+ * 若对应的令牌不存在则需要从数据库中加载
+ */
+export const assets = new Map<string, IAsset>();

@@ -80,7 +80,7 @@ export default function Login() {
                             loader={assetsLoader}
                             alt="Asset"
                             title={asset.filename}
-                            fill={true}
+                            width={256}
                         />
                     </li>
                 ))}

@@ -21,6 +21,10 @@ import type { ImageLoader } from "next/image";
  * 资源加载
  * @see {@link https://nextjs.org/docs/app/api-reference/components/image#loader}
  */
-export const assetsLoader: ImageLoader = function ({ src, width, quality }) {
+export const assetsLoader: ImageLoader = function ({
+    src,
+    // width,
+    // quality,
+}) {
     return `/assets/${src}`;
 };
