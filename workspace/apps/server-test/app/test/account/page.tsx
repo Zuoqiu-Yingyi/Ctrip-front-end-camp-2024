@@ -47,6 +47,11 @@ export default function Login() {
         return challenge;
     }
 
+    async function getInfo() {
+        const response_info = await trpc.account.info.query();
+        console.debug(response_info.data);
+    }
+
     async function signup() {
         const key = await passphrase2key(username, passphrase, "salt");
         const response_sighup = await trpc.account.signup.mutate({
@@ -122,6 +127,7 @@ export default function Login() {
                 </li>
                 <li>
                     <button onClick={getChallenge}>Challenge</button>
+                    <button onClick={getInfo}>Information</button>
                     <button onClick={signup}>Signup</button>
                     <button onClick={login}>Login</button>
                     <button onClick={logout}>Logout</button>

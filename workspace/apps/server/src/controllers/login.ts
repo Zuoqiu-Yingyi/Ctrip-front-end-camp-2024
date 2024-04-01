@@ -48,6 +48,7 @@ export interface IAccount {
     name: string; // 账户名
     role: AccessorRole; // 用户角色
     password: string; // 账户密钥
+    avatar: string | null; // 用户头像
     token: {
         id: number;
         version: number;
@@ -132,6 +133,7 @@ export const loginMutation = procedure
                                 name: staff.name,
                                 role: staff.role,
                                 password: staff.password,
+                                avatar: null,
                                 token,
                             };
                         }
@@ -148,6 +150,7 @@ export const loginMutation = procedure
                                     name: true,
                                     password: true,
                                     token_id: true,
+                                    avatar: true,
                                 },
                             });
                             const token = await (async () => {
@@ -180,6 +183,7 @@ export const loginMutation = procedure
                                 name: user.name,
                                 role: AccessorRole.User,
                                 password: user.password,
+                                avatar: user.avatar,
                                 token,
                             };
                         }
@@ -250,6 +254,7 @@ export const loginMutation = procedure
                         message: "",
                         data: {
                             ...payload.data,
+                            avatar: account.avatar,
                         },
                     };
                 } else {
