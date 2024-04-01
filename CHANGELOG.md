@@ -3,6 +3,7 @@
 ## 2024-04-02
 
 - 实现草稿创建功能 | Implement draft creation feature
+- 添加用户注销登录测试用例 | Add user logout test case
 
 ## 2024-04-01
 

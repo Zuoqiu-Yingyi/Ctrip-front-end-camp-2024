@@ -22,11 +22,26 @@ import {
 } from "@trpc/client";
 import type { TTrpcRouter } from "@/routers/trpc/router";
 
+var cookies: string[] = [];
+
 // REF: https://trpc.io/docs/quickstart#using-your-new-backend-on-the-client
 export const client = createTRPCClient<TTrpcRouter>({
     links: [
         httpBatchLink({
             url: `${process.env._TD_SERVER_URL}/trpc`,
+            headers() {
+                return {
+                    Cookie: cookies,
+                };
+            },
+            async fetch(input, init) {
+                const response = await globalThis.fetch(input, init as RequestInit);
+                const _cookies = response.headers.getSetCookie();
+                if (_cookies.length) {
+                    cookies = _cookies;
+                }
+                return response;
+            },
         }),
     ],
 });
