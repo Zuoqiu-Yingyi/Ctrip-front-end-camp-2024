@@ -178,6 +178,7 @@ model Draft {
     coordinate_id Int?
 
     assets  AssetInDraft[] // 文件资源列表
+    reviews Review[] // 审批项列表
     publish Publish? // 已发布内容
 
     /// 是否已逻辑删除 | Whether it has been logically deleted
@@ -228,6 +229,11 @@ model Review {
     coordinate    Coordinate? @relation(fields: [coordinate_id], references: [id])
     /// 位置 ID | Coordinate ID
     coordinate_id Int?
+
+    /// 草稿 | Draft
+    draft    Draft @relation(fields: [draft_id], references: [id])
+    /// 草稿 ID | Draft ID
+    draft_id Int
 
     assets  AssetInReview[] // 文件资源列表
     publish Publish? // 已发布内容

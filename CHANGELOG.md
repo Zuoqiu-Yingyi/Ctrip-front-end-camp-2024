@@ -10,6 +10,7 @@
 - 添加资源文件测试用例 | Add asset file test case
 - 实现草稿更新功能 | Implement draft update feature
 - 优化测试用例 | Optimize test cases
+- 实现草稿删除功能 | Implement draft deletion feature
 
 ## 2024-04-01
 

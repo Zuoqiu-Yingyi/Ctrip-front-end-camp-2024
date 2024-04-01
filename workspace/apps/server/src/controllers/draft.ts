@@ -23,6 +23,7 @@ import {
     DIARY,
     DIARY_UPDATE,
 } from "./../types/diary";
+import { ID } from "./../types";
 
 /**
  * 草稿管理控制器
@@ -97,6 +98,7 @@ export const updateMutation = draftProcedure //
                     deleted: false,
                 },
                 data: {
+                    modification_time: new Date(),
                     title: options.input.title,
                     content: options.input.content,
                     assets:
@@ -110,6 +112,7 @@ export const updateMutation = draftProcedure //
                                         draft_id: options.input.id,
                                         asset_uid: uid,
                                     },
+                                    deleted: false,
                                 },
                                 update: {
                                     index,
@@ -179,15 +182,62 @@ export const infoQuery = draftProcedure
         }
     });
 
-export const deleteMutation = draftProcedure
+export const deleteMutation = draftProcedure //
     .input(
-        z.object({
-            // TODO: 待删除的草稿
-        }),
+        z.union([
+            //
+            ID,
+            ID.array(),
+        ]),
     )
     .mutation(async (options) => {
         try {
-            // TODO: 删除草稿
+            const drafts = [];
+            const ids = Array.isArray(options.input) ? options.input : [options.input];
+            const author_id = options.ctx.session.data.account.id;
+            for (const id of ids) {
+                // 删除单个
+                const draft = await options.ctx.DB.draft.update({
+                    where: {
+                        id,
+                        author_id,
+                        deleted: false,
+                    },
+                    data: {
+                        deleted: true,
+                        assets: {
+                            set: [],
+                        },
+                        reviews: {
+                            updateMany: {
+                                where: {
+                                    deleted: false,
+                                },
+                                data: {
+                                    deleted: true,
+                                },
+                            },
+                        },
+                        publish: {
+                            update: {
+                                deleted: true,
+                                assets: {
+                                    set: [],
+                                },
+                            },
+                        },
+                    },
+                });
+                drafts.push(draft);
+            }
+
+            return {
+                code: 0,
+                message: "",
+                data: {
+                    drafts,
+                },
+            };
         } catch (error) {
             // options.ctx.S.log.debug(error);
             switch (true) {

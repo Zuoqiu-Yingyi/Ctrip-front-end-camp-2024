@@ -65,6 +65,7 @@ erDiagram
   Int submitter_id FK
   Int reviewer_id FK "nullable"
   Int coordinate_id FK "nullable"
+  Int draft_id FK
   Boolean deleted
   DateTime createdAt
   DateTime updatedAt
@@ -147,6 +148,7 @@ erDiagram
 "Review" }o--|| "User" : submitter
 "Review" }o--o| "Staff" : reviewer
 "Review" }o--o| "Coordinate" : coordinate
+"Review" }o--|| "Draft" : draft
 "Publish" }o--|| "User" : publisher
 "Publish" }o--o| "Coordinate" : coordinate
 "Publish" |o--|| "Draft" : draft
@@ -255,6 +257,7 @@ erDiagram
   - `submitter_id`: 提交者 ID | Submitter ID
   - `reviewer_id`: 审议者 ID | Reviewer ID
   - `coordinate_id`: 位置 ID | Coordinate ID
+  - `draft_id`: 草稿 ID | Draft ID
   - `deleted`: 是否已逻辑删除 | Whether it has been logically deleted
   - `createdAt`: 记录创建时间 | Record creation time
   - `updatedAt`: 记录更新时间 | Record update time
