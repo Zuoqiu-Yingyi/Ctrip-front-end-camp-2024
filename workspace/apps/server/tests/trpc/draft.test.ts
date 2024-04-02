@@ -73,9 +73,9 @@ describe("/trpc/draft", () => {
         expect(response_create.data?.draft).toMatchObject(draft1);
         draft1.id = response_create.data!.draft.id;
 
-        const response_info1 = await trpc.client.draft.info.query([response_create.data!.draft.id]);
-        expect(response_info1.code).toEqual(0);
-        expect(response_info1.data?.drafts[0]).toMatchObject(draft1);
+        const response_list1 = await trpc.client.draft.list.query([response_create.data!.draft.id]);
+        expect(response_list1.code).toEqual(0);
+        expect(response_list1.data?.drafts[0]).toMatchObject(draft1);
 
         const draft2 = {
             ...draft1,

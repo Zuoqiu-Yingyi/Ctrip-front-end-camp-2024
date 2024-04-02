@@ -18,7 +18,9 @@
 import { router } from ".";
 import {
     //
-    infoQuery,
+    countQuery,
+    listQuery,
+    pagingQuery,
     createMutation,
     updateMutation,
     deleteMutation,
@@ -26,9 +28,19 @@ import {
 
 export const draftRouter = router({
     /**
-     * 查询草稿
+     * 查询草稿数量
      */
-    info: infoQuery,
+    count: countQuery,
+
+    /**
+     * 查询草稿列表
+     */
+    list: listQuery,
+
+    /**
+     * 分页查询草稿
+     */
+    paging: pagingQuery,
 
     /**
      * 创建草稿
@@ -45,5 +57,5 @@ export const draftRouter = router({
      */
     delete: deleteMutation,
 });
-export type TAccountRouter = typeof draftRouter;
+export type TDraftRouter = typeof draftRouter;
 export default draftRouter;

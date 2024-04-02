@@ -32,4 +32,5 @@ export const CUID = z
  */
 export const ID = z //
     .number({ description: "Database ID" })
+    .int()
     .min(1);

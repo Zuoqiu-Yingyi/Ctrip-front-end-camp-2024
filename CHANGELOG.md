@@ -13,6 +13,7 @@
 - 实现草稿删除功能 | Implement draft deletion feature
 - 实现草稿查询功能 | Implement draft query feature
 - 添加草稿管理测试用例 | Add draft management test cases
+- 添加草稿分页查询功能 | Add draft pagination query feature
 
 ## 2024-04-01
 

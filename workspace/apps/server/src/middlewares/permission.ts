@@ -101,17 +101,6 @@ export const approvePermissionMiddleware = permissionMiddlewareFactory([
 ]);
 
 /**
- * 审阅权限中间件
- */
-export const reviewPermissionMiddleware = permissionMiddlewareFactory([
-    //
-    AccessorRole.Administrator,
-    AccessorRole.Reviewer,
-    AccessorRole.User,
-    // AccessorRole.Visitor,
-]);
-
-/**
  * 账户权限中间件
  */
 export const accountPermissionMiddleware = permissionMiddlewareFactory([

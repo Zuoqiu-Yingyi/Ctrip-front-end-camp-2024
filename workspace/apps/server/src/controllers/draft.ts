@@ -24,12 +24,49 @@ import {
     DIARY_UPDATE,
 } from "./../types/diary";
 import { ID } from "./../types";
+import type { Prisma } from "~/prisma/client";
 
 /**
  * 草稿管理控制器
  */
 const draftProcedure = procedure.use(privatePermissionMiddleware);
 
+/**
+ * 草稿查询内容
+ */
+const DRAFT_INCLUDE: Prisma.DraftSelect = {
+    id: true,
+    title: true,
+    content: true,
+    creation_time: true,
+    modification_time: true,
+    author_id: true,
+
+    coordinate: {
+        select: {
+            latitude: true,
+            longitude: true,
+            accuracy: true,
+            altitude: true,
+            altitude_accuracy: true,
+            heading: true,
+            speed: true,
+        },
+    },
+    assets: {
+        select: {
+            index: true,
+            asset_uid: true,
+        },
+        orderBy: {
+            index: "asc",
+        },
+    },
+};
+
+/**
+ * 创建草稿
+ */
 export const createMutation = draftProcedure //
     .input(DIARY)
     .mutation(async (options) => {
@@ -66,28 +103,7 @@ export const createMutation = draftProcedure //
                         }) ||
                         undefined,
                 },
-                include: {
-                    coordinate: {
-                        select: {
-                            latitude: true,
-                            longitude: true,
-                            accuracy: true,
-                            altitude: true,
-                            altitude_accuracy: true,
-                            heading: true,
-                            speed: true,
-                        },
-                    },
-                    assets: {
-                        select: {
-                            index: true,
-                            asset_uid: true,
-                        },
-                        orderBy: {
-                            index: "asc",
-                        },
-                    },
-                },
+                include: DRAFT_INCLUDE,
             });
             return {
                 code: 0,
@@ -110,6 +126,9 @@ export const createMutation = draftProcedure //
         }
     });
 
+/**
+ * 更新草稿
+ */
 export const updateMutation = draftProcedure //
     .input(DIARY_UPDATE)
     .mutation(async (options) => {
@@ -146,28 +165,7 @@ export const updateMutation = draftProcedure //
                         }) ||
                         undefined,
                 },
-                include: {
-                    coordinate: {
-                        select: {
-                            latitude: true,
-                            longitude: true,
-                            accuracy: true,
-                            altitude: true,
-                            altitude_accuracy: true,
-                            heading: true,
-                            speed: true,
-                        },
-                    },
-                    assets: {
-                        select: {
-                            index: true,
-                            asset_uid: true,
-                        },
-                        orderBy: {
-                            index: "asc",
-                        },
-                    },
-                },
+                include: DRAFT_INCLUDE,
             });
             return {
                 code: 0,
@@ -190,7 +188,44 @@ export const updateMutation = draftProcedure //
         }
     });
 
-export const infoQuery = draftProcedure //
+/**
+ * 当前用户草稿总数
+ */
+export const countQuery = draftProcedure //
+    .query(async (options) => {
+        try {
+            const author_id = options.ctx.session.data.account.id;
+            const count = await options.ctx.DB.draft.count({
+                where: {
+                    author_id,
+                    deleted: false,
+                },
+            });
+            return {
+                code: 0,
+                message: "",
+                data: {
+                    count,
+                },
+            };
+        } catch (error) {
+            // options.ctx.S.log.debug(error);
+            switch (true) {
+                default:
+                    options.ctx.S.log.error(error);
+                    return {
+                        code: -1,
+                        message: String(error),
+                        data: null,
+                    };
+            }
+        }
+    });
+
+/**
+ * 查询指定 ID 的草稿内容
+ */
+export const listQuery = draftProcedure //
     .input(ID.array().optional())
     .query(async (options) => {
         try {
@@ -249,6 +284,70 @@ export const infoQuery = draftProcedure //
         }
     });
 
+/**
+ * 分页查询当前用户的草稿
+ */
+export const pagingQuery = draftProcedure //
+    .input(
+        z.object({
+            /**
+             * 偏移量与查询数
+             * @see {@link https://www.prisma.io/docs/orm/prisma-client/queries/pagination#offset-pagination Offset pagination}
+             */
+            skip: z.number().default(0),
+            take: z.number().default(8),
+            /**
+             * 基于游标的分页
+             * @see {@link https://www.prisma.io/docs/orm/prisma-client/queries/pagination#cursor-based-pagination Cursor-based pagination}
+             */
+            cursor: ID.optional(),
+        }),
+    )
+    .query(async (options) => {
+        try {
+            const author_id = options.ctx.session.data.account.id;
+            const drafts = await options.ctx.DB.draft.findMany({
+                where: {
+                    author_id,
+                    deleted: false,
+                },
+                include: DRAFT_INCLUDE,
+                orderBy: {
+                    id: "desc",
+                },
+                // REF: https://www.prisma.io/docs/orm/prisma-client/queries/pagination
+                skip: options.input.skip,
+                take: options.input.take,
+                cursor:
+                    (options.input.cursor && {
+                        id: options.input.cursor,
+                    }) ||
+                    undefined,
+            });
+            return {
+                code: 0,
+                message: "",
+                data: {
+                    drafts,
+                },
+            };
+        } catch (error) {
+            // options.ctx.S.log.debug(error);
+            switch (true) {
+                default:
+                    options.ctx.S.log.error(error);
+                    return {
+                        code: -1,
+                        message: String(error),
+                        data: null,
+                    };
+            }
+        }
+    });
+
+/**
+ * 删除草稿
+ */
 export const deleteMutation = draftProcedure //
     .input(
         z.union([
