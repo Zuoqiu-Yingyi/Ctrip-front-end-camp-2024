@@ -240,28 +240,7 @@ export const listQuery = draftProcedure //
                     author_id,
                     deleted: false,
                 },
-                include: {
-                    coordinate: {
-                        select: {
-                            latitude: true,
-                            longitude: true,
-                            accuracy: true,
-                            altitude: true,
-                            altitude_accuracy: true,
-                            heading: true,
-                            speed: true,
-                        },
-                    },
-                    assets: {
-                        select: {
-                            index: true,
-                            asset_uid: true,
-                        },
-                        orderBy: {
-                            index: "asc",
-                        },
-                    },
-                },
+                select: DRAFT_SELECT,
             });
             return {
                 code: 0,
@@ -305,6 +284,7 @@ export const pagingQuery = draftProcedure //
     )
     .query(async (options) => {
         try {
+            const { skip, take, cursor } = options.input;
             const author_id = options.ctx.session.data.account.id;
             const drafts = await options.ctx.DB.draft.findMany({
                 where: {
@@ -316,11 +296,11 @@ export const pagingQuery = draftProcedure //
                     id: "desc",
                 },
                 // REF: https://www.prisma.io/docs/orm/prisma-client/queries/pagination
-                skip: options.input.skip,
-                take: options.input.take,
+                skip,
+                take,
                 cursor:
-                    (options.input.cursor && {
-                        id: options.input.cursor,
+                    (cursor && {
+                        id: cursor,
                     }) ||
                     undefined,
             });

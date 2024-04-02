@@ -4,6 +4,7 @@
 
 - 完善草稿管理功能的测试用例 | Improve test cases for draft management feature
 - 修复草稿不能级联逻辑删除发布内容的问题 | Fix the issue that drafts cannot logically delete published content in a cascading manner
+- 实现审批功能 | Implement approval feature
 
 ## 2024-04-02
 
