@@ -1,5 +1,10 @@
 # 更改日志 | Change log
 
+## 2024-04-03
+
+- 完善草稿管理功能的测试用例 | Improve test cases for draft management feature
+- 修复草稿不能级联逻辑删除发布内容的问题 | Fix the issue that drafts cannot logically delete published content in a cascading manner
+
 ## 2024-04-02
 
 - 实现草稿创建功能 | Implement draft creation feature

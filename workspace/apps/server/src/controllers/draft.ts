@@ -34,7 +34,7 @@ const draftProcedure = procedure.use(privatePermissionMiddleware);
 /**
  * 草稿查询内容
  */
-const DRAFT_INCLUDE: Prisma.DraftSelect = {
+const DRAFT_SELECT: Prisma.DraftSelect = {
     id: true,
     title: true,
     content: true,
@@ -103,7 +103,7 @@ export const createMutation = draftProcedure //
                         }) ||
                         undefined,
                 },
-                include: DRAFT_INCLUDE,
+                select: DRAFT_SELECT,
             });
             return {
                 code: 0,
@@ -165,7 +165,7 @@ export const updateMutation = draftProcedure //
                         }) ||
                         undefined,
                 },
-                include: DRAFT_INCLUDE,
+                select: DRAFT_SELECT,
             });
             return {
                 code: 0,
@@ -311,7 +311,7 @@ export const pagingQuery = draftProcedure //
                     author_id,
                     deleted: false,
                 },
-                include: DRAFT_INCLUDE,
+                select: DRAFT_SELECT,
                 orderBy: {
                     id: "desc",
                 },
@@ -361,6 +361,8 @@ export const deleteMutation = draftProcedure //
             const drafts = [];
             const ids = Array.isArray(options.input) ? options.input : [options.input];
             const author_id = options.ctx.session.data.account.id;
+
+            /* 逻辑删除草稿与关联的审批项 */
             for (const id of ids) {
                 // 删除单个
                 const draft = await options.ctx.DB.draft.update({
@@ -381,37 +383,31 @@ export const deleteMutation = draftProcedure //
                                 },
                             },
                         },
-                        publish: {
-                            update: {
-                                deleted: true,
-                            },
-                        },
+                        // !若没有关联的 publish 记录则会抛出异常
+                        // publish: {
+                        //     // REF: https://www.prisma.io/docs/orm/prisma-client/queries/relation-queries#update-a-specific-related-record
+                        //     update: {
+                        //         deleted: true,
+                        //     },
+                        // },
                     },
-                    include: {
-                        coordinate: {
-                            select: {
-                                latitude: true,
-                                longitude: true,
-                                accuracy: true,
-                                altitude: true,
-                                altitude_accuracy: true,
-                                heading: true,
-                                speed: true,
-                            },
-                        },
-                        assets: {
-                            select: {
-                                index: true,
-                                asset_uid: true,
-                            },
-                            orderBy: {
-                                index: "asc",
-                            },
-                        },
-                    },
+                    select: DRAFT_SELECT,
                 });
                 drafts.push(draft);
             }
+
+            /* 逻辑删除关联的发布内容 */
+            await options.ctx.DB.publish.updateMany({
+                where: {
+                    id: {
+                        in: ids,
+                    },
+                    deleted: false,
+                },
+                data: {
+                    deleted: true,
+                },
+            });
 
             return {
                 code: 0,
