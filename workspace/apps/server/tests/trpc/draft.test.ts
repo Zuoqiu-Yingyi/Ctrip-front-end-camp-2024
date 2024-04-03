@@ -46,7 +46,7 @@ export interface IDraft extends Record<string, any> {
 }
 
 describe("/trpc/draft", () => {
-    test(`create-info-update-info-delete-info`, async () => {
+    test(`create ~> count ~> list ~> paging ~> update ~> delete`, async () => {
         await initAccount(undefined, trpc);
 
         const formData = new FormData();
@@ -54,6 +54,7 @@ describe("/trpc/draft", () => {
         formData.append("file[]", new File([cuid.createId()], cuid.createId() + ".txt", { type: "text/plain" }));
         const assets_upload1 = await upload(formData, trpc);
 
+        /* 测试草稿创建 */
         const draft1: IDraft = {
             title: cuid.createId(),
             content: cuid.createId(),
@@ -73,10 +74,40 @@ describe("/trpc/draft", () => {
         expect(response_create.data?.draft).toMatchObject(draft1);
         draft1.id = response_create.data!.draft.id;
 
-        const response_info1 = await trpc.client.draft.info.query([response_create.data!.draft.id]);
-        expect(response_info1.code).toEqual(0);
-        expect(response_info1.data?.drafts[0]).toMatchObject(draft1);
+        /* 测试草稿数量查询 */
+        const response_count1 = await trpc.client.draft.count.query();
+        expect(response_count1.code).toEqual(0);
+        expect(response_count1.data?.count).toEqual(1);
 
+        /* 测试草稿批量查询 */
+        const response_list1 = await trpc.client.draft.list.query();
+        expect(response_list1.code).toEqual(0);
+        expect(response_list1.data?.drafts).toHaveLength(1);
+        expect(response_list1.data?.drafts[0]).toMatchObject(draft1);
+
+        /* 测试草稿指定 ID 查询 */
+        const response_list2 = await trpc.client.draft.list.query([response_create.data!.draft.id]);
+        expect(response_list2.code).toEqual(0);
+        expect(response_list2.data?.drafts).toHaveLength(1);
+        expect(response_list2.data?.drafts[0]).toMatchObject(draft1);
+
+        /* 测试草稿分页查询 */
+        const response_list3 = await trpc.client.draft.paging.query({ skip: 0, take: 1 });
+        expect(response_list3.code).toEqual(0);
+        expect(response_list3.data?.drafts).toHaveLength(1);
+        expect(response_list3.data?.drafts[0]).toMatchObject(draft1);
+
+        const response_list4 = await trpc.client.draft.paging.query({ skip: 1, take: 1 });
+        expect(response_list4.code).toEqual(0);
+        expect(response_list4.data?.drafts).toHaveLength(0);
+
+        /* 测试草稿游标分页查询 */
+        const response_list5 = await trpc.client.draft.paging.query({ skip: 0, take: 1, cursor: response_create.data!.draft.id });
+        expect(response_list5.code).toEqual(0);
+        expect(response_list5.data?.drafts).toHaveLength(1);
+        expect(response_list5.data?.drafts[0]).toMatchObject(draft1);
+
+        /* 测试草稿信息更新 */
         const draft2 = {
             ...draft1,
             id: draft1.id,
@@ -101,6 +132,7 @@ describe("/trpc/draft", () => {
         expect(response_update1.data?.draft.assets.map((asset) => asset.asset_uid)).toMatchObject(draft2.assets);
         expect(response_update1.data?.draft.coordinate).toMatchObject(draft2.coordinate);
 
+        /* 测试草稿资源文件列表更新 */
         const assets_upload2 = await upload(formData, trpc);
         // draft2.assets.push(...assets_upload2.data.successes.map((success: { uid: string }) => success.uid));
         draft2.assets = assets_upload2.data.successes.map((success: { uid: string }) => success.uid);
@@ -109,5 +141,14 @@ describe("/trpc/draft", () => {
         // console.log(response_update2.data?.draft);
         expect(response_update2.code).toEqual(0);
         expect(response_update2.data?.draft.assets.map((asset) => asset.asset_uid)).toMatchObject(draft2.assets);
+
+        /* 测试草稿删除 */
+        const response_delete = await trpc.client.draft.delete.mutate(draft2.id);
+        expect(response_delete.code).toEqual(0);
+        expect(response_delete.data?.drafts).toHaveLength(1);
+
+        const response_count2 = await trpc.client.draft.count.query();
+        expect(response_count2.code).toEqual(0);
+        expect(response_count2.data?.count).toEqual(0);
     });
 });

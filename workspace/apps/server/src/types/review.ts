@@ -15,47 +15,24 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { router } from ".";
-import {
-    //
-    countQuery,
-    listQuery,
-    pagingQuery,
-    createMutation,
-    updateMutation,
-    deleteMutation,
-} from "./../../controllers/draft";
-
-export const draftRouter = router({
+export enum ReviewStatus {
     /**
-     * 查询草稿数量
+     * 待审批
      */
-    count: countQuery,
+    Pending = 0,
 
     /**
-     * 查询草稿列表
+     * 已批准
      */
-    list: listQuery,
+    Approved = 1,
 
     /**
-     * 分页查询草稿
+     * 已拒绝
      */
-    paging: pagingQuery,
+    Rejected = 2,
 
     /**
-     * 创建草稿
+     * 已取消
      */
-    create: createMutation,
-
-    /**
-     * 更新草稿
-     */
-    update: updateMutation,
-
-    /**
-     * 删除草稿
-     */
-    delete: deleteMutation,
-});
-export type TDraftRouter = typeof draftRouter;
-export default draftRouter;
+    Canceled = 3,
+}

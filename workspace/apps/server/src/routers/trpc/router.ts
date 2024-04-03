@@ -21,6 +21,7 @@ import testRouter from "./test";
 import authRouter from "./auth";
 import accountRouter from "./account";
 import draftRouter from "./draft";
+import reviewRouter from "./review";
 
 // REF: https://trpc.io/docs/server/merging-routers#merging-with-child-routers
 const trpcRouter = router({
@@ -28,6 +29,7 @@ const trpcRouter = router({
     auth: authRouter,
     account: accountRouter,
     draft: draftRouter,
+    review: reviewRouter,
 });
 
 export type TTrpcRouter = typeof trpcRouter;
