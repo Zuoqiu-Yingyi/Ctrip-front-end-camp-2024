@@ -251,8 +251,8 @@ model Review {
 model Publish {
     /// 主键 | Primary Key
     id  Int    @id @default(autoincrement())
-    /// 用于路由的 uid | uid for routing
-    /// @format ulid
+    /// 用于访问的 uid | uid for access
+    /// @format cuid
     uid String @unique
 
     /// 标题 | Title
@@ -275,9 +275,9 @@ model Publish {
     coordinate_id Int?
 
     /// 草稿 | Draft
-    draft    Draft @relation(fields: [draft_id], references: [id])
+    draft    Draft? @relation(fields: [draft_id], references: [id])
     /// 草稿 ID | Draft ID
-    draft_id Int   @unique
+    draft_id Int?   @unique
 
     /// 审议项 | Review item
     review    Review @relation(fields: [review_id], references: [id])
@@ -300,8 +300,8 @@ model Publish {
 model Asset {
     /// 主键 | Primary Key
     id  Int    @id @default(autoincrement())
-    /// 用于路由的 uid | uid for routing
-    /// @format ulid
+    /// 用于访问的 uid | uid for access
+    /// @format cuid
     uid String @unique
 
     /// 文件名 | File name

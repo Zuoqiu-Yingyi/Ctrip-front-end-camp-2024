@@ -79,7 +79,7 @@ erDiagram
   DateTime modification_time
   Int publisher_id FK
   Int coordinate_id FK "nullable"
-  Int draft_id FK
+  Int draft_id FK "nullable"
   Int review_id FK
   Boolean deleted
   DateTime createdAt
@@ -151,7 +151,7 @@ erDiagram
 "Review" }o--|| "Draft" : draft
 "Publish" }o--|| "User" : publisher
 "Publish" }o--o| "Coordinate" : coordinate
-"Publish" |o--|| "Draft" : draft
+"Publish" |o--o| "Draft" : draft
 "Publish" |o--|| "Review" : review
 "Asset" }o--|| "User" : uploader
 "AssetInDraft" }o--|| "Draft" : draft
@@ -267,7 +267,7 @@ erDiagram
 
 **Properties**
   - `id`: 主键 | Primary Key
-  - `uid`: 用于路由的 uid | uid for routing
+  - `uid`: 用于访问的 uid | uid for access
   - `title`: 标题 | Title
   - `content`: 内容 | Content
   - `publication_time`: 发布时间 | Publication time
@@ -286,7 +286,7 @@ erDiagram
 
 **Properties**
   - `id`: 主键 | Primary Key
-  - `uid`: 用于路由的 uid | uid for routing
+  - `uid`: 用于访问的 uid | uid for access
   - `filename`: 文件名 | File name
   - `path`: 文件保存路径 | File save path
   - `size`

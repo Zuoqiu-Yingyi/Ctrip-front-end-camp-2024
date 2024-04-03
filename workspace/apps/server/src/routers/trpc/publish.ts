@@ -21,47 +21,29 @@ import {
     countQuery,
     listQuery,
     pagingQuery,
-    submittedQuery,
-    submitMutation,
-    cancelMutation,
-    approveMutation,
-} from "./../../controllers/review";
+    deleteMutation,
+} from "./../../controllers/publish";
 
-export const reviewRouter = router({
+export const publishRouter = router({
     /**
-     * 查询审批项数量 (员工)
+     * 查询已发布的数量
      */
     count: countQuery,
 
     /**
-     * 查询审批项列表 (员工)
+     * 查询发布列表
      */
     list: listQuery,
 
     /**
-     * 分页查询审批项 (员工)
+     * 分页查询发布列表
      */
     paging: pagingQuery,
 
     /**
-     * 查询已提交的审批项 (用户)
+     * 删除发布内容
      */
-    submitted: submittedQuery,
-
-    /**
-     * 提交审批项 (用户)
-     */
-    submit: submitMutation,
-
-    /**
-     * 取消审批项 (用户)
-     */
-    cancel: cancelMutation,
-
-    /**
-     * 批准审批项 (员工)
-     */
-    approve: approveMutation,
+    delete: deleteMutation,
 });
-export type TReviewRouter = typeof reviewRouter;
-export default reviewRouter;
+export type TPublishRouter = typeof publishRouter;
+export default publishRouter;

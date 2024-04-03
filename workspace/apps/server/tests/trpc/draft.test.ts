@@ -80,13 +80,13 @@ describe("/trpc/draft", () => {
         expect(response_count1.data?.count).toEqual(1);
 
         /* 测试草稿批量查询 */
-        const response_list1 = await trpc.client.draft.list.query();
+        const response_list1 = await trpc.client.draft.list.query({});
         expect(response_list1.code).toEqual(0);
         expect(response_list1.data?.drafts).toHaveLength(1);
         expect(response_list1.data?.drafts[0]).toMatchObject(draft1);
 
         /* 测试草稿指定 ID 查询 */
-        const response_list2 = await trpc.client.draft.list.query([response_create.data!.draft.id]);
+        const response_list2 = await trpc.client.draft.list.query({ ids: [response_create.data!.draft.id] });
         expect(response_list2.code).toEqual(0);
         expect(response_list2.data?.drafts).toHaveLength(1);
         expect(response_list2.data?.drafts[0]).toMatchObject(draft1);
@@ -143,7 +143,7 @@ describe("/trpc/draft", () => {
         expect(response_update2.data?.draft.assets.map((asset) => asset.asset_uid)).toMatchObject(draft2.assets);
 
         /* 测试草稿删除 */
-        const response_delete = await trpc.client.draft.delete.mutate(draft2.id);
+        const response_delete = await trpc.client.draft.delete.mutate({ ids: [draft2.id] });
         expect(response_delete.code).toEqual(0);
         expect(response_delete.data?.drafts).toHaveLength(1);
 
