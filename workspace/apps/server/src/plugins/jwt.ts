@@ -22,11 +22,10 @@ import {
 } from "@fastify/jwt";
 import env from "./../configs/env";
 import { DB } from "./../models/client";
-import { tokens } from "../utils/store";
+import { tokens } from "./../utils/store";
 
 import type { FastifyInstance } from "fastify";
 import type { IAuthJwtPayload } from "@/utils/jwt";
-import { AccessorRole } from "@/utils/role";
 
 const audience = "user";
 const subject = "auth";

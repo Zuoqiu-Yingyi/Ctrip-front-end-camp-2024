@@ -15,13 +15,35 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { fastifyCookie } from "@fastify/cookie";
+import { router } from ".";
+import {
+    //
+    countQuery,
+    listQuery,
+    pagingQuery,
+    deleteMutation,
+} from "./../../controllers/publish";
 
-import type { FastifyInstance } from "fastify";
+export const publishRouter = router({
+    /**
+     * 查询已发布的数量
+     */
+    count: countQuery,
 
-export async function register(fastify: FastifyInstance) {
-    // REF: https://www.npmjs.com/package/@fastify/jwt?activeTab=readme#example-using-cookie
-    await fastify.register(fastifyCookie);
-    await fastify.after();
-}
-export default register;
+    /**
+     * 查询发布列表
+     */
+    list: listQuery,
+
+    /**
+     * 分页查询发布列表
+     */
+    paging: pagingQuery,
+
+    /**
+     * 删除发布内容
+     */
+    delete: deleteMutation,
+});
+export type TPublishRouter = typeof publishRouter;
+export default publishRouter;

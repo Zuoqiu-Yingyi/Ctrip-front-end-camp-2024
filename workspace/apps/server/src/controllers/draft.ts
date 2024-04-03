@@ -24,6 +24,7 @@ import {
     DIARY_UPDATE,
 } from "./../types/diary";
 import { ID } from "./../types";
+
 import type { Prisma } from "~/prisma/client";
 
 /**
@@ -71,6 +72,7 @@ export const createMutation = draftProcedure //
     .input(DIARY)
     .mutation(async (options) => {
         try {
+            const author_id = options.ctx.session.data.account.id;
             const draft = await options.ctx.DB.draft.create({
                 data: {
                     title: options.input.title,
@@ -78,7 +80,8 @@ export const createMutation = draftProcedure //
                     author: {
                         // REF: https://www.prisma.io/docs/orm/prisma-client/queries/relation-queries#connect-a-single-record
                         connect: {
-                            id: options.ctx.session.data.account.id,
+                            id: author_id,
+                            assets: {},
                         },
                     },
                     assets:
@@ -96,7 +99,7 @@ export const createMutation = draftProcedure //
                                 ...options.input.coordinate,
                                 uploader: {
                                     connect: {
-                                        id: options.ctx.session.data.account.id,
+                                        id: author_id,
                                     },
                                 },
                             },
@@ -226,15 +229,19 @@ export const countQuery = draftProcedure //
  * 查询指定 ID 的草稿内容
  */
 export const listQuery = draftProcedure //
-    .input(ID.array().optional())
+    .input(
+        z.object({
+            ids: ID.array().optional(), // 发布 UID 列表, 未设置则查询全部发布内容
+        }),
+    )
     .query(async (options) => {
         try {
             const author_id = options.ctx.session.data.account.id;
             const drafts = await options.ctx.DB.draft.findMany({
                 where: {
                     id:
-                        (Array.isArray(options.input) && {
-                            in: options.input,
+                        (Array.isArray(options.input.ids) && {
+                            in: options.input.ids,
                         }) ||
                         undefined,
                     author_id,
@@ -330,64 +337,67 @@ export const pagingQuery = draftProcedure //
  */
 export const deleteMutation = draftProcedure //
     .input(
-        z.union([
-            //
-            ID,
-            ID.array(),
-        ]),
+        z.object({
+            /**
+             * 待删除的发布内容 UID 列表
+             */
+            ids: ID.array(),
+        }),
     )
     .mutation(async (options) => {
         try {
-            const drafts = [];
-            const ids = Array.isArray(options.input) ? options.input : [options.input];
             const author_id = options.ctx.session.data.account.id;
+            const { ids } = options.input;
+            const drafts = [];
 
-            /* 逻辑删除草稿与关联的审批项 */
-            for (const id of ids) {
-                // 删除单个
-                const draft = await options.ctx.DB.draft.update({
+            if (ids.length > 0) {
+                /* 逻辑删除草稿与关联的审批项 */
+                for (const id of ids) {
+                    // 删除单个
+                    const draft = await options.ctx.DB.draft.update({
+                        where: {
+                            id,
+                            author_id,
+                            deleted: false,
+                        },
+                        data: {
+                            deleted: true,
+                            reviews: {
+                                updateMany: {
+                                    where: {
+                                        deleted: false,
+                                    },
+                                    data: {
+                                        deleted: true,
+                                    },
+                                },
+                            },
+                            // !若没有关联的 publish 记录则会抛出异常
+                            // publish: {
+                            //     // REF: https://www.prisma.io/docs/orm/prisma-client/queries/relation-queries#update-a-specific-related-record
+                            //     update: {
+                            //         deleted: true,
+                            //     },
+                            // },
+                        },
+                        select: DRAFT_SELECT,
+                    });
+                    drafts.push(draft);
+                }
+
+                /* 逻辑删除关联的发布内容 */
+                await options.ctx.DB.publish.updateMany({
                     where: {
-                        id,
-                        author_id,
+                        id: {
+                            in: ids,
+                        },
                         deleted: false,
                     },
                     data: {
                         deleted: true,
-                        reviews: {
-                            updateMany: {
-                                where: {
-                                    deleted: false,
-                                },
-                                data: {
-                                    deleted: true,
-                                },
-                            },
-                        },
-                        // !若没有关联的 publish 记录则会抛出异常
-                        // publish: {
-                        //     // REF: https://www.prisma.io/docs/orm/prisma-client/queries/relation-queries#update-a-specific-related-record
-                        //     update: {
-                        //         deleted: true,
-                        //     },
-                        // },
                     },
-                    select: DRAFT_SELECT,
                 });
-                drafts.push(draft);
             }
-
-            /* 逻辑删除关联的发布内容 */
-            await options.ctx.DB.publish.updateMany({
-                where: {
-                    id: {
-                        in: ids,
-                    },
-                    deleted: false,
-                },
-                data: {
-                    deleted: true,
-                },
-            });
 
             return {
                 code: 0,

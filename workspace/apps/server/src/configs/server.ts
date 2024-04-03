@@ -16,6 +16,9 @@
  */
 
 import fs from "node:fs";
+import env from "./env";
+import { fastifyLogger } from "./logger";
+
 import type http from "node:http";
 import type https from "node:https";
 import type http2 from "node:http2";
@@ -27,8 +30,6 @@ import type {
     FastifyHttpsOptions,
     FastifyListenOptions,
 } from "fastify";
-import env from "./env";
-import { fastifyLogger } from "./logger";
 
 export type TFastifyOptions =
     | FastifyHttpOptions<http.Server> //

@@ -63,5 +63,5 @@ export const reviewRouter = router({
      */
     approve: approveMutation,
 });
-export type TPreviewRouter = typeof reviewRouter;
+export type TReviewRouter = typeof reviewRouter;
 export default reviewRouter;

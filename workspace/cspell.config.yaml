@@ -14,6 +14,7 @@ words:
     - callout
     - codepaths
     - cryptjs
+    - cuid
     - datasource
     - deepmerge
     - deshake
@@ -27,6 +28,7 @@ words:
     - signup
     - tsbuildinfo
     - turborepo
+    - uids
     - vercel
     - wordmark
     - xlink

@@ -19,10 +19,11 @@ import {
     fastifyTRPCPlugin, //
     type FastifyTRPCPluginOptions,
 } from "@trpc/server/adapters/fastify";
-import type { RegisterOptions } from "fastify";
 
 import trpcRouter from "./router";
 import { createSessionContext } from "./../../contexts";
+
+import type { RegisterOptions } from "fastify";
 
 export interface ITrpcFastifyPluginOptions {}
 

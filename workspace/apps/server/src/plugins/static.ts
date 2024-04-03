@@ -17,8 +17,9 @@
 
 import path from "node:path";
 import { fastifyStatic } from "@fastify/static";
-import type { FastifyInstance } from "fastify";
 import env from "./../configs/env";
+
+import type { FastifyInstance } from "fastify";
 
 export async function register(fastify: FastifyInstance) {
     // REF: https://www.npmjs.com/package/@fastify/static

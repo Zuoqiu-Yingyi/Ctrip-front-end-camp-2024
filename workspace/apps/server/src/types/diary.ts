@@ -22,11 +22,7 @@ import {
     CUID,
     ID,
 } from ".";
-import {
-    //
-    COORDINATE,
-    COORDINATE_UPDATE,
-} from "./coordinate";
+import { COORDINATE } from "./coordinate";
 
 /**
  * 日记标题
