@@ -16,6 +16,7 @@ const config: Config = {
       },
       backgroundImage: {
         'login-background': "url('https://mdn.alipayobjects.com/yuyan_qk0oxh/afts/img/V-_oS6r-i7wAAAAAAAAAAAAAFl94AQBr')",
+        'edit-background': "url('/background_edit.jpeg')",
       },
       colors: {
         blue: {
