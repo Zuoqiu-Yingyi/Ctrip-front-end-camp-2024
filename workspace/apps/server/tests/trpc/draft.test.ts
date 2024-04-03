@@ -141,7 +141,7 @@ describe("/trpc/draft", () => {
         // console.log(response_update2.data?.draft);
         expect(response_update2.code).toEqual(0);
         expect(response_update2.data?.draft.assets.map((asset) => asset.asset_uid)).toMatchObject(draft2.assets);
-        
+
         /* 测试草稿删除 */
         const response_delete = await trpc.client.draft.delete.mutate(draft2.id);
         expect(response_delete.code).toEqual(0);

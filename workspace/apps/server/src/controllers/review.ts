@@ -128,7 +128,22 @@ export const submitMutation = procedure //
                     author_id,
                     deleted: false,
                 },
-                select: DRAFT_SELECT,
+                select: {
+                    id: true,
+                    title: true,
+                    content: true,
+                    author_id: true,
+                    coordinate_id: true,
+                    assets: {
+                        select: {
+                            index: true,
+                            asset_uid: true,
+                        },
+                        orderBy: {
+                            index: "asc",
+                        },
+                    },
+                },
             });
             if (!draft) {
                 // 提交的草稿不存在
@@ -178,9 +193,23 @@ export const submitMutation = procedure //
                             modification_time: new Date(),
                             status: ReviewStatus.Pending,
 
-                            submitter_id: draft.author_id,
-                            coordinate_id: draft.coordinate_id,
-                            draft_id: draft.id,
+                            submitter: {
+                                connect: {
+                                    id: draft.author_id,
+                                },
+                            },
+                            draft: {
+                                connect: {
+                                    id: draft.id,
+                                },
+                            },
+                            coordinate:
+                                (draft.coordinate_id && {
+                                    connect: {
+                                        id: draft.coordinate_id,
+                                    },
+                                }) ||
+                                undefined,
                             assets:
                                 (draft.assets && {
                                     // REF: https://www.prisma.io/docs/orm/prisma-client/queries/relation-queries#delete-all-related-records
@@ -202,9 +231,23 @@ export const submitMutation = procedure //
                             title: draft.title,
                             content: draft.content,
 
-                            submitter_id: draft.author_id,
-                            coordinate_id: draft.coordinate_id,
-                            draft_id: draft.id,
+                            submitter: {
+                                connect: {
+                                    id: draft.author_id,
+                                },
+                            },
+                            draft: {
+                                connect: {
+                                    id: draft.id,
+                                },
+                            },
+                            coordinate:
+                                (draft.coordinate_id && {
+                                    connect: {
+                                        id: draft.coordinate_id,
+                                    },
+                                }) ||
+                                undefined,
                             assets:
                                 (draft.assets && {
                                     // REF: https://www.prisma.io/docs/orm/prisma-client/queries/relation-queries#connect-multiple-records
@@ -221,21 +264,23 @@ export const submitMutation = procedure //
                 }
             })();
 
-            /* 设置关联的资源文件访问权限 */
-            await options.ctx.DB.asset.updateMany({
-                where: {
-                    uid: {
-                        in: review.assets.map((asset) => asset.asset_uid),
+            /* 更新关联的资源文件访问权限 */
+            if (review.assets.length > 0) {
+                await options.ctx.DB.asset.updateMany({
+                    where: {
+                        uid: {
+                            in: review.assets.map((asset) => asset.asset_uid),
+                        },
+                        permission: {
+                            lte: 0b0001, // 仅文件上传者可访问
+                        },
+                        deleted: false,
                     },
-                    permission: {
-                        lte: 0b0001, // 仅文件上传者可访问
+                    data: {
+                        permission: 0b0111, // 管理员-审核者-上传者 可访问
                     },
-                    deleted: false,
-                },
-                data: {
-                    permission: 0b0111, // 管理员-审核者-上传者 可访问
-                },
-            });
+                });
+            }
 
             return {
                 code: 0,
@@ -334,6 +379,9 @@ export const submittedQuery = procedure //
                     deleted: false,
                 },
                 select: REVIEW_SELECT,
+                orderBy: {
+                    modification_time: "desc",
+                },
             });
             return {
                 code: 0,
@@ -560,8 +608,18 @@ export const approveMutation = procedure //
                         title: review.title,
                         content: review.content,
                         modification_time: new Date(),
-                        coordinate_id: review.coordinate_id,
-                        review_id: review.id,
+                        review: {
+                            connect: {
+                                id: review.id,
+                            },
+                        },
+                        coordinate:
+                            (review.coordinate_id && {
+                                connect: {
+                                    id: review.coordinate_id,
+                                },
+                            }) ||
+                            undefined,
                         assets:
                             (review.assets && {
                                 // REF: https://www.prisma.io/docs/orm/prisma-client/queries/relation-queries#delete-all-related-records
@@ -577,10 +635,28 @@ export const approveMutation = procedure //
                         uid: cuid2.createId(),
                         title: review.title,
                         content: review.content,
-                        publisher_id: review.submitter_id,
-                        coordinate_id: review.coordinate_id,
-                        draft_id: review.draft_id,
-                        review_id: review.id,
+                        publisher: {
+                            connect: {
+                                id: review.submitter_id,
+                            },
+                        },
+                        draft: {
+                            connect: {
+                                id: review.draft_id,
+                            },
+                        },
+                        review: {
+                            connect: {
+                                id: review.id,
+                            },
+                        },
+                        coordinate:
+                            (review.coordinate_id && {
+                                connect: {
+                                    id: review.coordinate_id,
+                                },
+                            }) ||
+                            undefined,
                         assets:
                             (review.assets && {
                                 // REF: https://www.prisma.io/docs/orm/prisma-client/queries/relation-queries#delete-all-related-records
@@ -592,6 +668,24 @@ export const approveMutation = procedure //
                             undefined,
                     },
                 });
+
+                /* 更新关联的资源文件访问权限 */
+                if (review.assets.length > 0) {
+                    await options.ctx.DB.asset.updateMany({
+                        where: {
+                            uid: {
+                                in: review.assets.map((asset) => asset.asset_uid),
+                            },
+                            permission: {
+                                lte: 0b0111, // 管理员-审核者-上传者 可访问
+                            },
+                            deleted: false,
+                        },
+                        data: {
+                            permission: 0b1111, // 公众-管理员-审核者-上传者 可访问
+                        },
+                    });
+                }
             }
 
             return {
