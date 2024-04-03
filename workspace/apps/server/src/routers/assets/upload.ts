@@ -22,6 +22,7 @@ import crypto from "node:crypto";
 
 import cuid2 from "@paralleldrive/cuid2";
 
+import { ASSETS_PATH } from ".";
 import { AccessorRole } from "./../../utils/role";
 
 import type {
@@ -30,7 +31,6 @@ import type {
     FastifyRequest,
 } from "fastify";
 import type { IAssetsRequest } from "./router";
-import { ASSETS_PATH } from ".";
 
 export interface IAsset {
     uid: string; // CUID

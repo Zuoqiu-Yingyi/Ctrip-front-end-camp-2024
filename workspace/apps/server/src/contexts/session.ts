@@ -15,9 +15,10 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import type { CreateFastifyContextOptions } from "@trpc/server/adapters/fastify";
 import { DB } from "./../models/client";
 import { IAuthJwtPayload } from "@/utils/jwt";
+
+import type { CreateFastifyContextOptions } from "@trpc/server/adapters/fastify";
 
 /**
  * @see {@link https://trpc.io/docs/server/adapters/fastify#create-the-context Create the context}

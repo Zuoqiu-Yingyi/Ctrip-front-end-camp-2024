@@ -6,6 +6,7 @@
 - 修复草稿不能级联逻辑删除发布内容的问题 | Fix the issue that drafts cannot logically delete published content in a cascading manner
 - 实现审批功能 | Implement approval feature
 - 添加审批功能测试用例 | Add approval feature test cases
+- 优化类型导入格式 | Optimize type import format
 
 ## 2024-04-02
 

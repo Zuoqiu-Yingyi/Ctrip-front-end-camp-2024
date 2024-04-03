@@ -20,10 +20,11 @@ import type {
     FastifyLoggerOptions,
     PinoLoggerOptions,
 } from "fastify/types/logger";
-import type { Prisma } from "@prisma/client";
 
 import { merge } from "@repo/utils/modules/deepmerge";
 import env from "./env";
+
+import type { Prisma } from "~/prisma/client";
 
 //#region fastify-logger
 

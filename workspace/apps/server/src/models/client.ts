@@ -15,16 +15,14 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import {
-    //
-    PrismaClient,
-    type Prisma,
-} from "./../../prisma/client";
-import type { FastifyInstance } from "fastify";
+import { PrismaClient } from "./../../prisma/client";
 
 import { reset as resetStaffTable } from "./staff";
 import env from "./../configs/env";
 import { prismaClientOptions } from "./../configs/database";
+
+import type { FastifyInstance } from "fastify";
+import type { Prisma } from "~/prisma/client";
 
 // REF: https://www.prisma.io/docs/orm/prisma-client/setup-and-configuration/databases-connections
 

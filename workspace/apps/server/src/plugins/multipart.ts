@@ -16,6 +16,7 @@
  */
 
 import { fastifyMultipart } from "@fastify/multipart";
+
 import type { FastifyInstance } from "fastify";
 
 export async function register(fastify: FastifyInstance) {

@@ -15,10 +15,10 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import type { FastifyInstance } from "fastify";
-
 import { trpcFastifyPlugin } from "./trpc/fastify";
 import { assetsFastifyPlugin } from "./assets/router";
+
+import type { FastifyInstance } from "fastify";
 
 export async function init(fastify: FastifyInstance) {
     // REF: https://fastify.dev/docs/latest/Reference/Routes/#route-prefixing

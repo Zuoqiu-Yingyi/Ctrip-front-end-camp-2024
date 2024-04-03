@@ -15,9 +15,10 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import type { Prisma } from "@prisma/client";
 import { prismaLogger } from "./logger";
 import env from "./env";
+
+import type { Prisma } from "~/prisma/client";
 
 export const prismaClientOptions = {
     log: prismaLogger,
