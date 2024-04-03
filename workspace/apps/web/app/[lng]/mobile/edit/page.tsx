@@ -12,104 +12,28 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 "use client";
-import React, { useRef, useState } from "react";
-import { NavBar, Button, Tabs, ActionSheet, Modal, Swiper } from "antd-mobile";
-import { Layout, FloatButton } from "antd";
-import { Form, Input, Dialog, TextArea, DatePicker, Selector, Slider, Stepper, Switch, Space } from "antd-mobile";
-import { CloseCircleFill, AddOutline, TextOutline, FillinOutline, PicturesOutline, VideoOutline, FileOutline, RedoOutline, CloseOutline } from "antd-mobile-icons";
-import type { Action, ActionSheetShowHandler } from "antd-mobile/es/components/action-sheet";
+import React, { useState } from "react";
+import { NavBar, Tabs, Space } from "antd-mobile";
+import { Layout } from "antd";
+import { CloseCircleFill, FillinOutline, PicturesOutline, VideoOutline } from "antd-mobile-icons";
+import EditTab from "@/app/ui/mobile-edit-tab";
 
-const colors = ["#ace0ff", "#bcffbd", "#e4fabd", "#ffcfac"];
-
-const textTemplates: string[] = ["景点：\n人数: \n花费: \n", "景点：\n人数: \n花费: \n", "景点：\n人数: \n花费: \n", "景点：\n人数: \n花费: \n"];
-
-const items = colors.map((color, index) => (
-    <Swiper.Item key={index}>
-        <TextArea
-            placeholder="请输入内容"
-            value={"景点：\n人数: \n花费: \n"}
-            rows={10}
-            readOnly
-        />
-    </Swiper.Item>
-));
 
 export default function EditPage({ params: { lng } }: { params: { lng: string } }): JSX.Element {
-    const [visible, setVisible] = useState(false);
 
-    const [openButton, setOpenButton] = useState(false);
-
-    const [value, setValue] = useState("");
-
-    const insertedText = useRef<string>(textTemplates[0] as string);
+    const [tab, setTab] = useState<"text" | "album" | "camera">("text");
 
     return (
         <Layout style={{ height: "100vh" }}>
             <NavBar backArrow={<CloseCircleFill color="#CCCCCC" />} />
-            <TextArea
-                placeholder="请输入内容"
-                value={value}
-                onChange={(val) => {
-                    setValue(val);
-                }}
-                rows={10}
-                style={{ flex: 1, height: "100%", padding: "15px" }}
-            />
 
-            <FloatButton.Group
-                shape="circle"
-                open={openButton}
-                trigger="click"
-                style={{ top: "50px", height: "0px" }}
-                onClick={() => {setOpenButton(!openButton)}}
-            >
-                <FloatButton
-                    icon={<FileOutline />}
-                    description="大纲"
-                    onClick={() => {
-                        setVisible(true);
-                    }}
-                />
-                <FloatButton
-                    icon={<RedoOutline />}
-                    description="清空"
-                />
-            </FloatButton.Group>
+            <EditTab tabKey={tab} />
 
-            <Modal
-                closeOnMaskClick={true}
-                title="文字模板"
-                showCloseButton={true}
-                visible={visible}
-                content={
-                    <Swiper
-                        onIndexChange={(index: number) => {
-                            insertedText.current = textTemplates[index] as string;
-                        }}
-                    >
-                        {items}
-                    </Swiper>
-                }
-                actions={[
-                    {
-                        key: "insert",
-                        text: "插入",
-                        primary: true,
-                        onClick: () => {
-                            setValue(insertedText.current);
-                            setVisible(false);
-                        },
-                    },
-                ]}
-            />
-            {/* <ActionSheet
-                visible={visible}
-                actions={actions}
-                onClose={() => setVisible(false)}
-            /> */}
-            {/* <div className="bg-edit-background bg-cover"></div> */}
             <Tabs
-            // style={{ position: "absolute", bottom: "0", width: "100%" }}
+                // style={{ position: "absolute", bottom: "0", width: "100%" }}
+                onChange={(key: string) => {
+                    setTab(key as "text" | "album" | "camera");
+                }}
             >
                 <Tabs.Tab
                     title={
@@ -118,7 +42,7 @@ export default function EditPage({ params: { lng } }: { params: { lng: string } 
                             文字
                         </Space>
                     }
-                    key="fruits"
+                    key="text"
                 />
                 <Tabs.Tab
                     title={
@@ -127,7 +51,7 @@ export default function EditPage({ params: { lng } }: { params: { lng: string } 
                             相册
                         </Space>
                     }
-                    key="vegetables"
+                    key="album"
                 />
                 <Tabs.Tab
                     title={
@@ -136,7 +60,7 @@ export default function EditPage({ params: { lng } }: { params: { lng: string } 
                             拍摄
                         </Space>
                     }
-                    key="animals"
+                    key="camera"
                 />
             </Tabs>
             {/* <NavBar backArrow={<CloseCircleFill color="#CCCCCC" />} />
