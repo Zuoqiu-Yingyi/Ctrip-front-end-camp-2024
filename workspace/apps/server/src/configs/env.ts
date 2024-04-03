@@ -69,11 +69,11 @@ export const ENV_DEFAULT: IEnv = {
 
     /* 日志 */
     LOG_LEVEL: "info",
-    LOG_FILE_PATH: "./logs/travels.log",
+    LOG_FILE_PATH: "./logs/travel-diary.log",
 
     /* 数据库 */
     DATASOURCE_URL: undefined,
-    DATABASE_RESET_STAFF: true,
+    DATABASE_RESET_STAFF: false,
     STAFF_ACCOUNTS: ["1:admin:admin", "2:reviewer:reviewer"].join("\n"),
 
     /* 安全 */

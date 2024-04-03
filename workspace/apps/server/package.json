@@ -4,6 +4,7 @@
     "type": "module",
     "private": true,
     "scripts": {
+        "start": "node --import=@repo/utils/registers/ts-node.js ./scripts/start.ts && pnpm prisma:migrate:init",
         "dev": "dotenvx run --env-file=./.env --env-file=./.env.development.local -- node --import=@repo/utils/registers/ts-node.js ./scripts/dev.ts",
         "prod": "dotenvx run --env-file=./.env --env-file=./.env.production.local -- node --import=@repo/utils/registers/ts-node.js ./scripts/prod.ts",
         "test": "dotenvx run --env-file=./.env --env-file=./.env.test.local  -- jest --watch",

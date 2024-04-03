@@ -18,6 +18,7 @@ words:
     - datasource
     - deepmerge
     - deshake
+    - dotenvx
     - endregion
     - evenodd
     - fieldname
