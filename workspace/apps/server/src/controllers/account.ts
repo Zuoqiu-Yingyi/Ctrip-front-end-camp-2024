@@ -92,6 +92,15 @@ export class OriginalPasswordIncorrectError extends Error {
 }
 
 /**
+ * 密码错误
+ */
+export class PasswordIncorrectError extends Error {
+    constructor() {
+        super("The password is incorrect");
+    }
+}
+
+/**
  * 查询账户信息
  * @param id 账户 ID
  * @param role 账户角色
@@ -455,6 +464,181 @@ export const changePasswordMutation = procedure //
 
                 // 原密码错误
                 case error instanceof OriginalPasswordIncorrectError:
+                    return {
+                        code: 20,
+                        message: error.message,
+                        data: null,
+                    };
+
+                default:
+                    options.ctx.S.log.error(error);
+                    return {
+                        code: -1,
+                        message: error,
+                        data: null,
+                    };
+            }
+        }
+    });
+
+/**
+ * 关闭账户
+ */
+export const closeMutation = procedure //
+    .use(privatePermissionMiddleware) // 验证用户权限
+    .input(
+        z.object({
+            challenge: AUTH_CHALLENGE,
+            response: AUTH_RESPONSE,
+        }),
+    )
+    .mutation(async (options) => {
+        try {
+            const { challenge, response } = options.input;
+            /* 校验挑战字符串是否有效 */
+            const payload = verify<IChallengeJwtPayload>({ token: challenge }, true);
+
+            /* 获取原密码 */
+            const user = await options.ctx.DB.user.findUniqueOrThrow({
+                where: {
+                    name: payload.data.username,
+                    deleted: false,
+                },
+                select: {
+                    id: true,
+                    password: true,
+                    token: {
+                        select: {
+                            id: true,
+                            version: true,
+                        },
+                    },
+                },
+            });
+            /* 校验原密码是否正确 (通过挑战/应答) */
+            if (
+                verifyChallengeResponse(
+                    //
+                    string2Buffer(challenge),
+                    Buffer.from(response, "hex"),
+                    Buffer.from(user.password, "hex"),
+                )
+            ) {
+                /* 吊销令牌 */
+                user.token.version++;
+                tokens.set(user.token.id, user.token.version);
+
+                /* 更新用户信息 */
+                await options.ctx.DB.user.update({
+                    where: {
+                        id: user.id,
+                        deleted: false,
+                    },
+                    data: {
+                        deleted: true,
+                        password: "",
+                        name: `[${user.id}]`,
+                        token: {
+                            update: {
+                                version: user.token.version,
+                                deleted: true,
+                            },
+                        },
+                        profile: {
+                            update: {
+                                deleted: true,
+                            },
+                        },
+                        assets: {
+                            updateMany: {
+                                where: {
+                                    deleted: false,
+                                },
+                                data: {
+                                    deleted: true,
+                                },
+                            },
+                        },
+                        coordinates: {
+                            updateMany: {
+                                where: {
+                                    deleted: false,
+                                },
+                                data: {
+                                    deleted: true,
+                                },
+                            },
+                        },
+                        drafts: {
+                            updateMany: {
+                                where: {
+                                    deleted: false,
+                                },
+                                data: {
+                                    deleted: true,
+                                },
+                            },
+                        },
+                        reviews: {
+                            updateMany: {
+                                where: {
+                                    deleted: false,
+                                },
+                                data: {
+                                    deleted: true,
+                                },
+                            },
+                        },
+                        publishs: {
+                            updateMany: {
+                                where: {
+                                    deleted: false,
+                                },
+                                data: {
+                                    deleted: true,
+                                },
+                            },
+                        },
+                    },
+                });
+
+                /* 清除 Cookie */
+                options.ctx.res.clearCookie(options.ctx.S.jwt.cookie!.cookieName);
+                return {
+                    code: 0,
+                    message: "",
+                    data: null,
+                };
+            } else {
+                // 密码错误
+                throw new PasswordIncorrectError();
+            }
+        } catch (error) {
+            switch (true) {
+                // JWT 未生效
+                case error instanceof jwt.NotBeforeError:
+                    return {
+                        code: 11,
+                        message: error.message,
+                        data: null,
+                    };
+                // JWT 已过期
+                case error instanceof jwt.TokenExpiredError:
+                    return {
+                        code: 12,
+                        message: error.message,
+                        data: null,
+                    };
+                // 其他 JWT 问题
+                case error instanceof jwt.JsonWebTokenError:
+                    return {
+                        code: 10,
+                        message: error.message,
+                        data: null,
+                    };
+
+                // 原密码错误
+                case error instanceof PasswordIncorrectError:
                     return {
                         code: 20,
                         message: error.message,

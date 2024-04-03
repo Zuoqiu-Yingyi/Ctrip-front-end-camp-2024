@@ -11,6 +11,7 @@
         "lint": "eslint . --max-warnings 0",
         "prisma:init": "prisma init --datasource-provider sqlite",
         "prisma:pull": "prisma db pull",
+        "prisma:format": "prisma format",
         "prisma:generate": "prisma generate",
         "prisma:migrate:dev": "prisma migrate dev",
         "prisma:migrate:init": "prisma migrate dev --name init",

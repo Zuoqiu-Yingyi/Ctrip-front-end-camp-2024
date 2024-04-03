@@ -378,7 +378,9 @@ erDiagram
     > - `90`: 正东方向 | Due east
     > - `180`: 正南方向 | Due south
     > - `270`: 正西方向 | Due west
-  - `speed`: 
+  - `speed`
+    > 移动速度 | Speed
+    > 单位: 米/秒 (m/s) | Unit: meter/second (m/s)
   - `upload_time`: 上传时间 | Upload time
   - `uploader_id`: 上传者 ID | Upload ID
   - `deleted`: 是否已逻辑删除 | Whether it has been logically deleted
