@@ -365,6 +365,8 @@ model Coordinate {
   /// - `180`: 正南方向 | Due south
   /// - `270`: 正西方向 | Due west
   heading           Float?
+  /// 移动速度 | Speed
+  /// 单位: 米/秒 (m/s) | Unit: meter/second (m/s)
   speed             Float?
   /// 上传时间 | Upload time
   upload_time       DateTime  @default(now())

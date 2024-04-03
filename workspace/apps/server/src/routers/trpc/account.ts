@@ -24,6 +24,7 @@ import {
     infoQuery,
     updateInfoMutation,
     changePasswordMutation,
+    closeMutation,
 } from "./../../controllers/account";
 
 export const accountRouter = router({
@@ -52,9 +53,9 @@ export const accountRouter = router({
      */
     change_password: changePasswordMutation,
     /**
-     * TODO: 删除账户
+     * 关闭账户
      */
-    // delete,
+    close: closeMutation,
 });
 export type TAccountRouter = typeof accountRouter;
 export default accountRouter;
