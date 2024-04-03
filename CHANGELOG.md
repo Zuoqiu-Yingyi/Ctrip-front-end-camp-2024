@@ -3,6 +3,7 @@
 ## 2024-04-04
 
 - 实现关闭账户功能 | Implement close account feature
+- 添加关闭账户测试用例 | Add close account test cases
 
 ## 2024-04-03
 
