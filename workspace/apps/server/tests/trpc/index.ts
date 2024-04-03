@@ -22,7 +22,7 @@ import {
 } from "@trpc/client";
 import type { TTrpcRouter } from "@/routers/trpc/router";
 
-export const origin = process.env._TD_SERVER_URL;
+export const origin = process.env._TD_TEST_SERVER_URL;
 
 export class TRPC {
     public readonly cookies: string[] = [];
