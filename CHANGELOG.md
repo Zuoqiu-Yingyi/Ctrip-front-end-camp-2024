@@ -8,6 +8,7 @@
 - 添加审批功能测试用例 | Add approval feature test cases
 - 优化类型导入格式 | Optimize type import format
 - 实现发布内容管理功能 | Implement published content management feature
+- 添加发布功能测试用例 | Add publish feature test cases
 
 ## 2024-04-02
 

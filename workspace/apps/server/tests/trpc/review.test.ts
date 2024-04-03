@@ -29,11 +29,8 @@ import {
     login,
     initAccount,
 } from "./../utils/account";
-import {
-    //
-    upload,
-    get,
-} from "./../utils/assets";
+import { initDraft } from "./../utils/draft";
+import { get } from "./../utils/assets";
 import { ReviewStatus } from "./../../src/types/review";
 
 const user = new TRPC();
@@ -61,58 +58,37 @@ describe("/trpc/review", () => {
         await initAccount(undefined, user);
         await login({ username: "reviewer", passphrase: "reviewer", role: "staff" }, reviewer);
 
-        /* 上传资源文件 (用户) */
-        const formData = new FormData();
-        formData.append("file[]", new File([cuid.createId()], cuid.createId() + ".txt", { type: "text/plain" }));
-        formData.append("file[]", new File([cuid.createId()], cuid.createId() + ".txt", { type: "text/plain" }));
-        const response_upload = await upload(formData, user);
-
         /* 创建草稿 (用户) */
-        const draft1: IDraft = {
-            title: cuid.createId(),
-            content: cuid.createId(),
-            assets: response_upload.data.successes.map((success: { uid: string }) => success.uid),
-            coordinate: {
-                latitude: 0,
-                longitude: 1,
-                accuracy: 2,
-                altitude: 3,
-                altitude_accuracy: 4,
-                heading: 5,
-                speed: 6,
-            },
-        };
-        const response_create = await user.client.draft.create.mutate(draft1);
-        const draft_id = response_create.data!.draft.id;
-        const user_id = response_create.data!.draft.author_id;
-        expect(response_create.code).toEqual(0);
+        const { draft, response } = await initDraft(user);
+        const draft_id = response.data!.draft.id;
+        const user_id = response.data!.draft.author_id;
 
         /* 提交审批 (用户) */
         const response_summit1 = await user.client.review.submit.mutate({ draft_id });
         const review_id = response_summit1.data!.review.id;
         expect(response_summit1.code).toEqual(0);
-        expect(response_summit1.data?.review.title).toEqual(draft1.title);
-        expect(response_summit1.data?.review.content).toEqual(draft1.content);
+        expect(response_summit1.data?.review.title).toEqual(draft.title);
+        expect(response_summit1.data?.review.content).toEqual(draft.content);
         expect(response_summit1.data?.review.status).toEqual(ReviewStatus.Pending);
         expect(response_summit1.data?.review.submitter_id).toEqual(user_id);
-        expect(response_summit1.data?.review.assets.map((asset) => asset.asset_uid)).toEqual(draft1.assets);
-        expect(response_summit1.data?.review.coordinate).toMatchObject(draft1.coordinate);
+        expect(response_summit1.data?.review.assets.map((asset) => asset.asset_uid)).toEqual(draft.assets);
+        expect(response_summit1.data?.review.coordinate).toMatchObject(draft.coordinate);
         expect(response_summit1.data?.review.draft_id).toEqual(draft_id);
 
         /* 重复提交审批 (用户) */
         const draft2 = {
-            ...draft1,
+            ...draft,
             id: draft_id,
             title: cuid.createId(),
             content: cuid.createId(),
             coordinate: {
-                latitude: 1,
-                longitude: 2,
-                accuracy: 3,
-                altitude: null,
-                altitude_accuracy: null,
-                heading: null,
-                speed: null,
+                latitude: (Math.random() * (1 << 6)) | 0,
+                longitude: (Math.random() * (1 << 6)) | 0,
+                accuracy: (Math.random() * (1 << 6)) | 0,
+                altitude: (Math.random() * (1 << 6)) | 0,
+                altitude_accuracy: (Math.random() * (1 << 6)) | 0,
+                heading: (Math.random() * (1 << 6)) | 0,
+                speed: (Math.random() * (1 << 6)) | 0,
             },
         };
         // 更新草稿
@@ -197,7 +173,8 @@ describe("/trpc/review", () => {
         expect(response_paging6.data?.reviews[0].id).toEqual(review_id);
 
         /* 测试审批项资源文件获取 (员工) */
-        await get(draft1.assets[0], reviewer);
+        const response_asset = await get(draft.assets[0], reviewer);
+        expect(response_asset.ok).toBeTruthy();
 
         /* 拒绝审批项 (员工) */
         const comment = cuid.createId();

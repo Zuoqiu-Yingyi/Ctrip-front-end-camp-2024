@@ -598,94 +598,101 @@ export const approveMutation = procedure //
             });
 
             /* 若通过审批则更新对应的发布内容 */
-            if (approved) {
-                await options.ctx.DB.publish.upsert({
-                    where: {
-                        draft_id: review.draft_id,
-                        deleted: false,
-                    },
-                    update: {
-                        title: review.title,
-                        content: review.content,
-                        modification_time: new Date(),
-                        review: {
-                            connect: {
-                                id: review.id,
-                            },
-                        },
-                        coordinate:
-                            (review.coordinate_id && {
-                                connect: {
-                                    id: review.coordinate_id,
-                                },
-                            }) ||
-                            undefined,
-                        assets:
-                            (review.assets && {
-                                // REF: https://www.prisma.io/docs/orm/prisma-client/queries/relation-queries#delete-all-related-records
-                                deleteMany: {},
-                                create: review.assets.map(({ index, asset_uid }) => ({
-                                    index,
-                                    asset_uid,
-                                })),
-                            }) ||
-                            undefined,
-                    },
-                    create: {
-                        uid: cuid2.createId(),
-                        title: review.title,
-                        content: review.content,
-                        publisher: {
-                            connect: {
-                                id: review.submitter_id,
-                            },
-                        },
-                        draft: {
-                            connect: {
-                                id: review.draft_id,
-                            },
-                        },
-                        review: {
-                            connect: {
-                                id: review.id,
-                            },
-                        },
-                        coordinate:
-                            (review.coordinate_id && {
-                                connect: {
-                                    id: review.coordinate_id,
-                                },
-                            }) ||
-                            undefined,
-                        assets:
-                            (review.assets && {
-                                // REF: https://www.prisma.io/docs/orm/prisma-client/queries/relation-queries#delete-all-related-records
-                                create: review.assets.map(({ index, asset_uid }) => ({
-                                    index,
-                                    asset_uid,
-                                })),
-                            }) ||
-                            undefined,
-                    },
-                });
-
-                /* 更新关联的资源文件访问权限 */
-                if (review.assets.length > 0) {
-                    await options.ctx.DB.asset.updateMany({
+            const publish = await (async () => {
+                if (approved) {
+                    return await options.ctx.DB.publish.upsert({
                         where: {
-                            uid: {
-                                in: review.assets.map((asset) => asset.asset_uid),
-                            },
-                            permission: {
-                                lte: 0b0111, // 管理员-审核者-上传者 可访问
-                            },
+                            draft_id: review.draft_id,
                             deleted: false,
                         },
-                        data: {
-                            permission: 0b1111, // 公众-管理员-审核者-上传者 可访问
+                        update: {
+                            title: review.title,
+                            content: review.content,
+                            modification_time: new Date(),
+                            review: {
+                                connect: {
+                                    id: review.id,
+                                },
+                            },
+                            coordinate:
+                                (review.coordinate_id && {
+                                    connect: {
+                                        id: review.coordinate_id,
+                                    },
+                                }) ||
+                                undefined,
+                            assets:
+                                (review.assets && {
+                                    // REF: https://www.prisma.io/docs/orm/prisma-client/queries/relation-queries#delete-all-related-records
+                                    deleteMany: {},
+                                    create: review.assets.map(({ index, asset_uid }) => ({
+                                        index,
+                                        asset_uid,
+                                    })),
+                                }) ||
+                                undefined,
+                        },
+                        create: {
+                            uid: cuid2.createId(),
+                            title: review.title,
+                            content: review.content,
+                            publisher: {
+                                connect: {
+                                    id: review.submitter_id,
+                                },
+                            },
+                            draft: {
+                                connect: {
+                                    id: review.draft_id,
+                                },
+                            },
+                            review: {
+                                connect: {
+                                    id: review.id,
+                                },
+                            },
+                            coordinate:
+                                (review.coordinate_id && {
+                                    connect: {
+                                        id: review.coordinate_id,
+                                    },
+                                }) ||
+                                undefined,
+                            assets:
+                                (review.assets && {
+                                    // REF: https://www.prisma.io/docs/orm/prisma-client/queries/relation-queries#delete-all-related-records
+                                    create: review.assets.map(({ index, asset_uid }) => ({
+                                        index,
+                                        asset_uid,
+                                    })),
+                                }) ||
+                                undefined,
+                        },
+                        select: {
+                            uid: true,
                         },
                     });
+                } else {
+                    return undefined;
                 }
+            })();
+
+            /* 更新关联的资源文件访问权限 */
+            if (review.assets.length > 0) {
+                await options.ctx.DB.asset.updateMany({
+                    where: {
+                        uid: {
+                            in: review.assets.map((asset) => asset.asset_uid),
+                        },
+                        permission: {
+                            lte: 0b0111, // 管理员-审核者-上传者 可访问
+                        },
+                        deleted: false,
+                    },
+                    data: {
+                        permission: 0b1111, // 公众-管理员-审核者-上传者 可访问
+                    },
+                });
             }
 
             return {
@@ -693,6 +700,7 @@ export const approveMutation = procedure //
                 message: "",
                 data: {
                     review,
+                    publish,
                 },
             };
         } catch (error) {

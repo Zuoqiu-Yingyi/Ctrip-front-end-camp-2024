@@ -127,6 +127,9 @@ export const listQuery = procedure //
                     deleted: false,
                 },
                 select: PUBLISH_SELECT,
+                orderBy: {
+                    publication_time: "desc",
+                },
             });
             return {
                 code: 0,
@@ -172,8 +175,7 @@ export const pagingQuery = procedure //
     .query(async (options) => {
         try {
             const { skip, take, cursor } = options.input;
-            const author_id = options.ctx.session.data.account.id;
-            const drafts = await options.ctx.DB.publish.findMany({
+            const publishs = await options.ctx.DB.publish.findMany({
                 where: {
                     deleted: false,
                 },
@@ -194,7 +196,7 @@ export const pagingQuery = procedure //
                 code: 0,
                 message: "",
                 data: {
-                    drafts,
+                    publishs,
                 },
             };
         } catch (error) {
@@ -238,15 +240,18 @@ export const deleteMutation = procedure //
                     const publish = await options.ctx.DB.publish.update({
                         where: {
                             uid,
+                            publisher_id,
                             deleted: false,
                         },
                         data: {
                             deleted: true,
+                            // draft_id: null,
                             // REF: https://www.prisma.io/docs/orm/prisma-client/queries/relation-queries#disconnect-a-related-record
                             draft: {
                                 disconnect: true,
                             },
                         },
+                        select: PUBLISH_SELECT,
                     });
                     publishs.push(publish);
                 }
@@ -254,7 +259,9 @@ export const deleteMutation = procedure //
             return {
                 code: 0,
                 message: "",
-                data: publishs,
+                data: {
+                    publishs,
+                },
             };
         } catch (error) {
             // options.ctx.S.log.debug(error);

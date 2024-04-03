@@ -72,6 +72,7 @@ export const createMutation = draftProcedure //
     .input(DIARY)
     .mutation(async (options) => {
         try {
+            const author_id = options.ctx.session.data.account.id;
             const draft = await options.ctx.DB.draft.create({
                 data: {
                     title: options.input.title,
@@ -79,7 +80,8 @@ export const createMutation = draftProcedure //
                     author: {
                         // REF: https://www.prisma.io/docs/orm/prisma-client/queries/relation-queries#connect-a-single-record
                         connect: {
-                            id: options.ctx.session.data.account.id,
+                            id: author_id,
+                            assets: {},
                         },
                     },
                     assets:
@@ -97,7 +99,7 @@ export const createMutation = draftProcedure //
                                 ...options.input.coordinate,
                                 uploader: {
                                     connect: {
-                                        id: options.ctx.session.data.account.id,
+                                        id: author_id,
                                     },
                                 },
                             },

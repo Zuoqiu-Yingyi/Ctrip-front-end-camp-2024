@@ -141,25 +141,25 @@ erDiagram
   DateTime updatedAt
 }
 "Staff" |o--|| "Token" : token
-"User" |o--|| "Token" : token
 "User" |o--|| "Profile" : profile
-"Draft" }o--|| "User" : author
+"User" |o--|| "Token" : token
 "Draft" }o--o| "Coordinate" : coordinate
-"Review" }o--|| "User" : submitter
-"Review" }o--o| "Staff" : reviewer
-"Review" }o--o| "Coordinate" : coordinate
+"Draft" }o--|| "User" : author
 "Review" }o--|| "Draft" : draft
-"Publish" }o--|| "User" : publisher
-"Publish" }o--o| "Coordinate" : coordinate
-"Publish" |o--o| "Draft" : draft
+"Review" }o--o| "Coordinate" : coordinate
+"Review" }o--o| "Staff" : reviewer
+"Review" }o--|| "User" : submitter
 "Publish" |o--|| "Review" : review
+"Publish" |o--o| "Draft" : draft
+"Publish" }o--o| "Coordinate" : coordinate
+"Publish" }o--|| "User" : publisher
 "Asset" }o--|| "User" : uploader
-"AssetInDraft" }o--|| "Draft" : draft
 "AssetInDraft" }o--|| "Asset" : asset
-"AssetInReview" }o--|| "Review" : review
+"AssetInDraft" }o--|| "Draft" : draft
 "AssetInReview" }o--|| "Asset" : asset
-"AssetInPublish" }o--|| "Publish" : publish
+"AssetInReview" }o--|| "Review" : review
 "AssetInPublish" }o--|| "Asset" : asset
+"AssetInPublish" }o--|| "Publish" : publish
 "Coordinate" }o--|| "User" : uploader
 ```
 
