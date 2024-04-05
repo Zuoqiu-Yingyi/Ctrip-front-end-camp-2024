@@ -13,19 +13,33 @@
 // limitations under the License.
 "use client";
 import React, { useState } from "react";
-import { NavBar, Tabs, Space } from "antd-mobile";
+import { NavBar, Tabs, Space, Button } from "antd-mobile";
 import { Layout } from "antd";
 import { CloseCircleFill, FillinOutline, PicturesOutline, VideoOutline } from "antd-mobile-icons";
 import EditTab from "@/app/ui/mobile-edit-tab";
 
-
 export default function EditPage({ params: { lng } }: { params: { lng: string } }): JSX.Element {
-
     const [tab, setTab] = useState<"text" | "album" | "camera">("text");
 
     return (
         <Layout style={{ height: "100vh" }}>
-            <NavBar backArrow={<CloseCircleFill color="#CCCCCC" />} />
+            <NavBar
+                backArrow={<CloseCircleFill color="#CCCCCC" />}
+                right={
+                    <Button
+                        block
+                        size="mini"
+                        shape="rounded"
+                        color="primary"
+                        style={{
+                            marginLeft: "auto",
+                            width: 60
+                        }}
+                    >
+                        发布
+                    </Button>
+                }
+            />
 
             <EditTab tabKey={tab} />
 

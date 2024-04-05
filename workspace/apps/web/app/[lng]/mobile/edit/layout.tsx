@@ -11,18 +11,13 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import EditTextTab from "./mobile-edit-text-tab"
-import EditCameraTab from "./mobile-edit-camera-tab"
-import EditAlbumTab from "./mobile-edit-album-tab"
+"use client";
+import SubmitInfoProvider from "@/app/lib/mobileEditContext";
 
-export default function EditTab({tabKey}: {tabKey: "text" | "album" | "camera"}): JSX.Element {
-
-    if (tabKey === "text") {
-        return <EditTextTab />
-    } else if (tabKey === "album") {
-        return <EditAlbumTab />
-    } else {
-        return <EditCameraTab />
-    }
-
+export default function EditPage({ children }: { children: React.ReactElement<any, any>}): JSX.Element {
+    return (
+        <SubmitInfoProvider>
+            {children}
+        </SubmitInfoProvider>
+    );
 }

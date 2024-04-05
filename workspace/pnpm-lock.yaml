@@ -114,6 +114,9 @@ importers:
       react:
         specifier: ^18.2.0
         version: 18.2.0
+      react-canvas-draw:
+        specifier: ^1.2.1
+        version: 1.2.1(react@18.2.0)
       react-cookie:
         specifier: ^7.1.2
         version: 7.1.2(react@18.2.0)
@@ -3056,6 +3059,10 @@ packages:
   /caniuse-lite@1.0.30001600:
     resolution: {integrity: sha512-+2S9/2JFhYmYaDpZvo0lKkfvuKIglrx68MwOBqMGHhQsNkLjB5xtc/TGoEPs+MxjSyN/72qer2g97nzR641mOQ==}
 
+  /catenary-curve@1.0.1:
+    resolution: {integrity: sha512-vSHQtYFjItV4wxUH5OkicA3Kmln6thBBWlJLiw2f4apfvkKw4BVe8bTbG6lnbJe60CIr8PyHzjSX27blSJ07Ww==}
+    dev: false
+
   /chalk-template@1.1.0:
     resolution: {integrity: sha512-T2VJbcDuZQ0Tb2EWwSotMPJjgpy1/tGee1BTpUNsGZ/qgNjV2t7Mvu+d4600U564nbLesN1x2dPL+xii174Ekg==}
     engines: {node: '>=14.16'}
@@ -5838,6 +5845,10 @@ packages:
       language-subtag-registry: 0.3.22
     dev: true
 
+  /lazy-brush@1.0.1:
+    resolution: {integrity: sha512-xT/iSClTVi7vLoF8dCWTBhCuOWqsLXCMPa6ucVmVAk6hyNCM5JeS1NLhXqIrJktUg+caEYKlqSOUU4u3cpXzKg==}
+    dev: false
+
   /leven@3.1.0:
     resolution: {integrity: sha512-qsda+H8jTaUaN/x5vzW2rzc+8Rw4TAQ/4KjB46IwK5VH+IlVeeeje/EoZRpiXvIqjFgK84QffqPztGI3VBLG1A==}
     engines: {node: '>=6'}
@@ -6208,7 +6219,6 @@ packages:
   /object-assign@4.1.1:
     resolution: {integrity: sha512-rJgTQnkUnH1sFw8yT6VSU3zD3sWmu6sZhIseY8VX+GRu3P6F7Fu+JNDoXfklElbLJSnc3FUQHVe4cU5hj+BcUg==}
     engines: {node: '>=0.10.0'}
-    dev: true
 
   /object-hash@3.0.0:
     resolution: {integrity: sha512-RSn9F68PjH9HqtltsSnqYC1XXoWe9Bju5+213R98cNGttag9q9yAOTzdbsqvIa7aNm5WffBZFpWYr2aWrklWAw==}
@@ -6639,7 +6649,6 @@ packages:
       loose-envify: 1.4.0
       object-assign: 4.1.1
       react-is: 16.13.1
-    dev: true
 
   /proxy-agent@6.3.0:
     resolution: {integrity: sha512-0LdR757eTj/JfuU7TL2YCuAZnxWXu3tkJbg4Oq3geW/qFNT/32T0sp2HnZ9O0lMR4q3vwAt0+xCA8SR0WAD0og==}
@@ -7216,6 +7225,18 @@ packages:
       minimist: 1.2.8
       strip-json-comments: 2.0.1
     dev: true
+
+  /react-canvas-draw@1.2.1(react@18.2.0):
+    resolution: {integrity: sha512-mCHE+Q91a26gUhyraHONedmbCI7dF/4BKdOxba7s4538QNfFWv/NfzLXWZrmjAQ4tO1vTvO+axX5YGIFjGc6uw==}
+    peerDependencies:
+      react: 16.x || 17.x
+    dependencies:
+      catenary-curve: 1.0.1
+      lazy-brush: 1.0.1
+      prop-types: 15.8.1
+      react: 18.2.0
+      resize-observer-polyfill: 1.5.1
+    dev: false
 
   /react-cookie@7.1.2(react@18.2.0):
     resolution: {integrity: sha512-zmxFrVNLl03OAM8Xnh43cg4Tz9t4K0DRToWuyQcDUf0jHZLugvCA5t3skmcKgG07L11qXltzWWJUFTF97Toj9w==}
