@@ -11,54 +11,30 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { Layout } from "antd";
 import { Button, Flex, Typography } from "antd";
 import { HighlightFilled, UpOutlined } from "@ant-design/icons";
 import { ImageUploader, Toast, Popup } from "antd-mobile";
-import { ImageUploadItem } from "antd-mobile/es/components/image-uploader";
 import DrawPanel from "./draw-canvas";
-import { useRef, useState } from "react";
+import { useContext, useState } from "react";
 import React from "react";
+import { SubmitInfoContext } from "@/app/lib/mobileEditContext";
 
 const { Title, Text } = Typography;
 
-const defaultProps = {
-    loadTimeOffset: 5,
-    lazyRadius: 0,
-    brushRadius: 2,
-    catenaryColor: "#0a0302",
-    gridColor: "rgba(150,150,150,0.17)",
-    hideGrid: true,
-    canvasWidth: 400,
-    canvasHeight: 400,
-    disabled: false,
-    imgSrc: "",
-    saveData: "",
-    immediateLoading: false,
-    hideInterface: false,
-};
-
 export default function EditAlbumTab(): JSX.Element {
+
     const maxCount = 3;
-
-    const canvasRef = useRef();
-
-    const [brushColor, setBrushColor] = useState("#000000");
 
     const [popupVisible, setPopupVisible] = useState(false);
 
-    const props = {
-        ...defaultProps,
-        ref: canvasRef,
-        brushColor,
-        catenaryColor: brushColor,
-    };
+    const { fileList, setFileList } = useContext(SubmitInfoContext);
 
-    const [fileList, setFileList] = useState<ImageUploadItem[]>([
-        {
-            url: "https://images.unsplash.com/photo-1567945716310-4745a6b7844b?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=60",
-        },
-    ]);
+
+    // const [fileList, setFileList] = useState<ImageUploadItem[]>([
+    //     {
+    //         url: "https://images.unsplash.com/photo-1567945716310-4745a6b7844b?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=60",
+    //     },
+    // ]);
 
     async function mockUpload(file: File) {
         return {
@@ -78,6 +54,9 @@ export default function EditAlbumTab(): JSX.Element {
                 columns={3}
                 value={fileList}
                 onChange={setFileList}
+                // onChange={(items) => {
+                //     console.log(items);
+                // }}
                 upload={mockUpload}
                 multiple
                 maxCount={3}

@@ -20,12 +20,14 @@ export const SubmitInfoContext = createContext<{
     fileList: ImageUploadItem[];
     resetTitle: Function;
     resetMainContent: Function;
+    setFileList: (items: ImageUploadItem[]) => void;
 }>({
     title: "",
     mainContent: "",
     fileList: [],
     resetTitle: () => {},
-    resetMainContent: () => {}
+    resetMainContent: () => {},
+    setFileList: () => {}
 });
 
 export default function SubmitInfoProvider({ children }: { children: React.ReactElement<any, any> }): JSX.Element {
@@ -65,5 +67,6 @@ export default function SubmitInfoProvider({ children }: { children: React.React
         setMainContent(newMainContent);
     }
 
-    return <SubmitInfoContext.Provider value={{title, mainContent, resetTitle, fileList, resetMainContent}}>{children}</SubmitInfoContext.Provider>;
+
+    return <SubmitInfoContext.Provider value={{title, mainContent, resetTitle, fileList, setFileList, resetMainContent}}>{children}</SubmitInfoContext.Provider>;
 }

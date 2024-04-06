@@ -139,6 +139,9 @@ importers:
       '@types/react':
         specifier: ^18.2.69
         version: 18.2.69
+      '@types/react-canvas-draw':
+        specifier: ^1.2.3
+        version: 1.2.3
       '@types/react-dom':
         specifier: ^18.2.22
         version: 18.2.22
@@ -2007,6 +2010,12 @@ packages:
 
   /@types/prop-types@15.7.5:
     resolution: {integrity: sha512-JCB8C6SnDoQf0cNycqd/35A7MjcnK+ZTqE7judS6o7utxUCg6imJg3QK2qzHKszlTjcj2cn+NwMB2i96ubpj7w==}
+    dev: true
+
+  /@types/react-canvas-draw@1.2.3:
+    resolution: {integrity: sha512-0Y89n63EwSFEN1cITPtq6F99SGDwhXWbbxcdw2WghoyIl4TwLCmv2Igm6B0+c8ArN6I0LFpuHdjpg7pPOsydtw==}
+    dependencies:
+      '@types/react': 18.2.69
     dev: true
 
   /@types/react-dom@18.2.19:

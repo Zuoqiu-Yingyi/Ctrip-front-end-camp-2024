@@ -12,10 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import CanvasDraw from "react-canvas-draw";
-import { useRef, useState } from "react";
+import { useContext, useRef, useState } from "react";
 import { Slider, Space, NavBar } from "antd-mobile";
 import { RollbackOutlined, CheckOutlined } from "@ant-design/icons";
 import { Typography, ColorPicker, Button } from "antd";
+import { SubmitInfoContext } from "@/app/lib/mobileEditContext";
 
 const { Title } = Typography;
 
@@ -32,7 +33,10 @@ const defaultProps = {
 };
 
 export default function DrawPanel({ back }: { back: () => void }): JSX.Element {
-    const canvasRef = useRef();
+
+    const { fileList, setFileList } = useContext(SubmitInfoContext);
+
+    const canvasRef = useRef<CanvasDraw>(null);
 
     const [brushColor, setBrushColor] = useState("#000000");
 
@@ -60,6 +64,18 @@ export default function DrawPanel({ back }: { back: () => void }): JSX.Element {
                     <Button
                         type="primary"
                         icon={<CheckOutlined />}
+                        onClick={() => {
+                            setFileList(
+                                [
+                                    ...fileList,
+                                    {
+                                        url: canvasRef.current?.getDataURL("image/png", null, "#FFFFFF"),
+                                    }
+                                ]
+                            );
+                            canvasRef.current?.clear();
+                            back();
+                        }}
                     >
                         完成
                     </Button>
