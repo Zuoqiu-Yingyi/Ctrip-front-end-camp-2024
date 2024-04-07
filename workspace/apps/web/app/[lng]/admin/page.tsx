@@ -20,8 +20,7 @@ import { useTranslation } from "@/app/i18n/client";
 
 const { Title } = Typography;
 
-export default function LoginPage({ params: { lng } } : { params: { lng: string }}): JSX.Element {
-
+export default function LoginPage({ params: { lng } }: { params: { lng: string } }): JSX.Element {
     const { t } = useTranslation(lng);
 
     const onFinish = (values: any) => {
@@ -59,7 +58,7 @@ export default function LoginPage({ params: { lng } } : { params: { lng: string 
                 >
                     <Input
                         prefix={<UserOutlined className="site-form-item-icon" />}
-                        placeholder={t('userName')}
+                        placeholder={t("userName")}
                     />
                 </Form.Item>
                 <Form.Item
@@ -69,7 +68,7 @@ export default function LoginPage({ params: { lng } } : { params: { lng: string 
                     <Input
                         prefix={<LockOutlined className="site-form-item-icon" />}
                         type="password"
-                        placeholder={t('password')}
+                        placeholder={t("password")}
                     />
                 </Form.Item>
                 <Form.Item>
@@ -78,7 +77,7 @@ export default function LoginPage({ params: { lng } } : { params: { lng: string 
                         valuePropName="checked"
                         noStyle
                     >
-                        <Checkbox>{t('remember')}</Checkbox>
+                        <Checkbox>{t("remember")}</Checkbox>
                     </Form.Item>
                 </Form.Item>
 
@@ -89,7 +88,7 @@ export default function LoginPage({ params: { lng } } : { params: { lng: string 
                         className="login-form-button"
                         style={{ width: "100%" }}
                     >
-                        {t('login')}
+                        {t("login")}
                     </Button>
                 </Form.Item>
             </Form>

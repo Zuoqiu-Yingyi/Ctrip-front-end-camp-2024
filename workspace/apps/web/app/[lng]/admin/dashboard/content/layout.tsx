@@ -14,10 +14,6 @@
 "use client";
 import MessageContextProvider from "@/app/lib/messageContext";
 
-export default function OverviewPage({ children }: { children: React.ReactElement<any, any>}): JSX.Element {
-    return (
-        <MessageContextProvider>
-            {children}
-        </MessageContextProvider>
-    );
+export default function OverviewPage({ children }: { children: React.ReactElement<any, any> }): JSX.Element {
+    return <MessageContextProvider>{children}</MessageContextProvider>;
 }

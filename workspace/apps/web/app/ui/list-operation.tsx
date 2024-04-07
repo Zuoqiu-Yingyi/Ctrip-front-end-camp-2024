@@ -18,9 +18,7 @@ import { useTranslation } from "@/app/i18n/client";
 
 const { Search } = Input;
 
-
-export default function ListOperationBar({ lng } : { lng: string }): JSX.Element {
-
+export default function ListOperationBar({ lng }: { lng: string }): JSX.Element {
     const { t } = useTranslation(lng);
 
     return (
@@ -29,20 +27,18 @@ export default function ListOperationBar({ lng } : { lng: string }): JSX.Element
             align="center"
             className="px-6"
         >
-            <Radio.Group
-                defaultValue={"waiting"}
-            >
+            <Radio.Group defaultValue={"waiting"}>
                 <Radio.Button value="waiting">
                     <ExclamationCircleFilled className="mr-2" />
-                    {t('toBeAudited')}
+                    {t("toBeAudited")}
                 </Radio.Button>
                 <Radio.Button value="success">
                     <CheckCircleFilled className="mr-2" />
-                    {t('passed')}
+                    {t("passed")}
                 </Radio.Button>
                 <Radio.Button value="fail">
                     <CloseCircleFilled className="mr-2" />
-                    {t('failed')}
+                    {t("failed")}
                 </Radio.Button>
             </Radio.Group>
 
@@ -52,10 +48,10 @@ export default function ListOperationBar({ lng } : { lng: string }): JSX.Element
                         defaultValue="title"
                         style={{ width: 80 }}
                         options={[
-                            { value: "title", label: t('itemTitle') },
-                            { value: "content", label: t('itemContent') },
-                            { value: "userName", label: t('itemTime') },
-                            { value: "time", label: t('itemUser') },
+                            { value: "title", label: t("itemTitle") },
+                            { value: "content", label: t("itemContent") },
+                            { value: "userName", label: t("itemTime") },
+                            { value: "time", label: t("itemUser") },
                         ]}
                     />
                 }

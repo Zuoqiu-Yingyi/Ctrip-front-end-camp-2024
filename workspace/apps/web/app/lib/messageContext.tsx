@@ -22,7 +22,7 @@ export const MessageContext = createContext<{
     displayItems: TravelNote[];
     allItems: MutableRefObject<TravelNote[]>;
     toggleLoadingState: Function;
-    fliterItems: Function;
+    filterItems: Function;
     addCheckNumber: Function;
     subCheckNumber: Function;
     firstPullData: Function;
@@ -34,7 +34,7 @@ export const MessageContext = createContext<{
     displayItems: [],
     allItems: { current: [] },
     toggleLoadingState: () => {},
-    fliterItems: () => {},
+    filterItems: () => {},
     addCheckNumber: () => {},
     subCheckNumber: () => {},
     firstPullData: () => {},
@@ -58,7 +58,7 @@ export default function MessageContextProvider({ children }: { children: React.R
 
     const [displayItems, setDisplayItems] = useState<TravelNote[]>(new Array(5).fill({}));
 
-    function fliterItems(items: TravelNote[], state: "success" | "waiting" | "fail") {
+    function filterItems(items: TravelNote[], state: "success" | "waiting" | "fail") {
         setDisplayItems(items.filter((value) => JSON.stringify(value) === "{}" || value.state === state));
     }
 
@@ -81,7 +81,7 @@ export default function MessageContextProvider({ children }: { children: React.R
 
         maxReaderPage.current += 1;
 
-        fliterItems(allItems.current, "waiting");
+        filterItems(allItems.current, "waiting");
 
         setLoading(false);
 
@@ -94,7 +94,7 @@ export default function MessageContextProvider({ children }: { children: React.R
 
             setTotalDataNumber(allItems.current.length);
 
-            fliterItems(allItems.current, "waiting");
+            filterItems(allItems.current, "waiting");
         }
 
         setTotalDataNumber(1000);
@@ -115,21 +115,21 @@ export default function MessageContextProvider({ children }: { children: React.R
             if (!preLoadedPages.current.has(page)) {
                 preLoadedPages.current.add(page);
 
-                let recievedData = await fetchItemData();
+                let receivedData = await fetchItemData();
 
                 for (let index = maxReaderPage.current; index < page; index++) {
                     allItems.current.push(...new Array(5).fill({}));
                 }
 
                 for (let index = 0; index < pageSize; index++) {
-                    allItems.current[index + (page - 1) * pageSize] = recievedData[index]!;
+                    allItems.current[index + (page - 1) * pageSize] = receivedData[index]!;
                 }
 
                 loadedPages.current.add(page);
 
                 maxReaderPage.current = maxReaderPage.current > page ? maxReaderPage.current : page;
 
-                fliterItems(allItems.current, "waiting");
+                filterItems(allItems.current, "waiting");
 
                 console.log(allItems.current);
 
@@ -165,14 +165,14 @@ export default function MessageContextProvider({ children }: { children: React.R
 
         //     if (!preLoadedPages.current.has(page)) {
 
-        //         let recievedData = await fetchItemData();
+        //         let receivedData = await fetchItemData();
 
         //         for (let index = maxReaderPage.current; index < page; index++) {
         //             allItems.current.push(...new Array(5).fill({}));
         //         }
 
         //         for (let index = 0; index < pageSize; index++) {
-        //             allItems.current[index + (page - 1) * pageSize] = recievedData[index]!;
+        //             allItems.current[index + (page - 1) * pageSize] = receivedData[index]!;
         //         }
 
         //         setDisplayItems(allItems.current);
@@ -189,5 +189,5 @@ export default function MessageContextProvider({ children }: { children: React.R
         // }
     }
 
-    return <MessageContext.Provider value={{ checkedNumber, addCheckNumber, subCheckNumber, displayItems, allItems, fliterItems, loading, toggleLoadingState, firstPullData, togglePage, totalDataNumber }}>{children}</MessageContext.Provider>;
+    return <MessageContext.Provider value={{ checkedNumber, addCheckNumber, subCheckNumber, displayItems, allItems, filterItems: filterItems, loading, toggleLoadingState, firstPullData, togglePage, totalDataNumber }}>{children}</MessageContext.Provider>;
 }

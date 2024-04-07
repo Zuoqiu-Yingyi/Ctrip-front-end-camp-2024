@@ -59,7 +59,7 @@ export default function StateOperation({ stateReceived }: { stateReceived: "succ
     return (
         <Flex
             vertical
-            style={{ width: 130, justifyContent: "space-around",  alignItems: "center", marginLeft: 20 }}
+            style={{ width: 130, justifyContent: "space-around", alignItems: "center", marginLeft: 20 }}
         >
             <Title
                 level={4}

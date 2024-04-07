@@ -22,14 +22,14 @@ const TIME_PRE: TimeMessage[] = [
 ];
 
 export default function TimeList(): JSX.Element[] {
-    return (TIME_PRE.map((pre) => (
+    return TIME_PRE.map((pre) => (
         <TimeDemo
             icon={pre.icon}
             text={pre.text}
             time="12:00"
             key={pre.name}
         />
-    )));
+    ));
 }
 
 export function TimeDemo({ icon, text, time }: TimeMessage): JSX.Element {

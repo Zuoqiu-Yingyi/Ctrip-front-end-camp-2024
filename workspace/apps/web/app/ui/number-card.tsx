@@ -24,42 +24,42 @@ const CARD_MESSAGES: CardMessage[] = [
         type: "success",
         icon: <CheckCircleOutlined className="mr-3" />,
         text: "已通过",
-        numberName: "passNumber"
+        numberName: "passNumber",
     },
     {
         type: "danger",
         icon: <CloseCircleOutlined className="mr-3" />,
         text: "未通过",
-        numberName: "failNumber"
+        numberName: "failNumber",
     },
     {
         type: "warning",
         icon: <ExclamationCircleOutlined className="mr-3" />,
         text: "待审核",
-        numberName: "waitingNumber"
+        numberName: "waitingNumber",
     },
     {
         type: "success",
         icon: <CheckCircleOutlined className="mr-3" />,
         text: "已通过",
-        numberName: "waitingNumber"
+        numberName: "waitingNumber",
     },
 ];
 
 export default function CardWrapper(): JSX.Element {
     const [loading, setLoading] = useState(true);
 
-    const [cardNumbers, setcardNumbers] = useState({
+    const [cardNumbers, setCardNumbers] = useState({
         passNumber: 0,
         failNumber: 0,
-        waitingNumber: 0
+        waitingNumber: 0,
     });
 
     useEffect(() => {
         (async () => {
-            setcardNumbers(await fetchCardData());
-            
-            setLoading(false)
+            setCardNumbers(await fetchCardData());
+
+            setLoading(false);
         })();
     }, []);
 

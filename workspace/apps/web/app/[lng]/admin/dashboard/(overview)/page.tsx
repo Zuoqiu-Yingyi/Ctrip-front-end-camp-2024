@@ -17,8 +17,7 @@ import CardWrapper from "@/app/ui/number-card";
 
 export default function OverviewPage() {
     return (
-        <Flex
-        >
+        <Flex>
             <CardWrapper />
             <div className="flex-1"></div>
         </Flex>
