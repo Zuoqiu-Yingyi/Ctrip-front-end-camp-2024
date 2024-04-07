@@ -1,29 +1,48 @@
+# REF: https://cspell.org/configuration/
+
 $schema: https://raw.githubusercontent.com/streetsidesoftware/cspell/main/packages/cspell-types/cspell.schema.json
 
 #  Version of the setting file.
-version: "0.0.2"
+version: "0.0.4"
 
 # language - current active spelling language
 language: en
 
 # words - list of words to be always considered correct
 words:
+    - autoincrement
     - callout
+    - codepaths
+    - cryptjs
+    - cuid
+    - datasource
+    - deepmerge
+    - deshake
+    - dotenvx
+    - endregion
     - evenodd
+    - fieldname
+    - paralleldrive
+    - publishs
     - rgba
+    - runing
+    - signup
+    - tsbuildinfo
     - turborepo
+    - uids
     - vercel
     - wordmark
     - xlink
+    - yingyi
+    - zuoqiu
 
 ignoreRegExpList:
 
 # flagWords - list of words to be always considered incorrect
 flagWords:
 
+useGitignore: true
+
 ignorePaths:
-    - dist
-    - node_modules
     - package.json
     - pnpm-lock.yaml
-    - temp

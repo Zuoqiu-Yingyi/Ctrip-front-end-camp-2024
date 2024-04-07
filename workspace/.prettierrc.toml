@@ -146,6 +146,7 @@ trailingComma = "all"
 
 # endOfLine: "<lf|crlf|cr|auto>"
 # endOfLine = "lf"
+endOfLine = "lf"
 
 
 # 是否格式化嵌入在文件中的引用代码

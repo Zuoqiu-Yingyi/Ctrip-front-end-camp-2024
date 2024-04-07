@@ -2,5 +2,11 @@
     "name": "@repo/utils",
     "version": "0.0.0",
     "private": true,
-    "scripts": {}
+    "type": "module",
+    "scripts": {},
+    "devDependencies": {
+        "@types/crypto-js": "^4.2.2",
+        "crypto-js": "^4.2.0",
+        "deepmerge": "^4.3.1"
+    }
 }

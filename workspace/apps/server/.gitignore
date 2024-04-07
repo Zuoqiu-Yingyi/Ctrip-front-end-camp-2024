@@ -1,0 +1,35 @@
+
+# data
+data
+
+!data/assets/.keep
+
+# database
+*.db
+*.db-journal
+
+# key
+keys
+*.key
+*.cer
+*.pem
+
+!keys/.keep
+
+# log
+logs
+*.log
+
+!logs/.keep
+
+# prisma
+prisma/*
+!prisma/ERD.md
+!prisma/schema.prisma
+
+# modules
+node_modules
+
+# environment variables
+.env.*.local
+!.env
