@@ -35,12 +35,13 @@ const LINKS = [
 export default function Page(): JSX.Element {
     return (
         <main className={styles.main}>
+            <h1 className="text-3xl underline">Hello world!</h1>
             <div className={styles.description}>
                 <p>
                     examples/basic&nbsp;
                     <Code className={styles.code}>web</Code>
                 </p>
-                <div>
+                <div className="absolute bottom-0 left-0">
                     <a
                         href="https://vercel.com?utm_source=create-turbo&utm_medium=basic&utm_campaign=create-turbo"
                         rel="noopener noreferrer"
