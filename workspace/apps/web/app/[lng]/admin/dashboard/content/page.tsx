@@ -23,21 +23,20 @@ import { useTranslation } from "@/app/i18n/client";
 
 const { Text } = Typography;
 
-export default function ContentPage({ params: { lng } } : { params: { lng: string }}): JSX.Element {
-
+export default function ContentPage({ params: { lng } }: { params: { lng: string } }): JSX.Element {
     const { t } = useTranslation(lng);
 
     const { checkedNumber, displayItems, loading, firstPullData } = useContext(MessageContext);
 
     useEffect(() => {
         (async () => {
-            await firstPullData();       
+            await firstPullData();
         })();
     }, []);
 
     return (
         <>
-            <ListOperationBar lng={lng}/>
+            <ListOperationBar lng={lng} />
             <Divider />
             {checkedNumber !== 0 ? (
                 <Flex
@@ -49,13 +48,13 @@ export default function ContentPage({ params: { lng } } : { params: { lng: strin
                         type="dashed"
                         icon={<CheckCircleTwoTone twoToneColor="#52c41a" />}
                     >
-                        <Text type="success">{t('pass')}</Text>
+                        <Text type="success">{t("pass")}</Text>
                     </Button>
                     <Button
                         type="dashed"
                         icon={<CloseCircleTwoTone twoToneColor="red" />}
                     >
-                        <Text type="danger">{t('reject')}</Text>
+                        <Text type="danger">{t("reject")}</Text>
                     </Button>
                 </Flex>
             ) : null}

@@ -28,7 +28,7 @@ export type TravelNote = {
     avatar: string;
     content: string;
     description: string;
-    state: "success" | "fail" | "waiting",
+    state: "success" | "fail" | "waiting";
 };
 
 export type TimeMessage = {

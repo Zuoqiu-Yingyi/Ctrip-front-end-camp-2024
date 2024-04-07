@@ -33,6 +33,7 @@ export async function fetchItemData() {
         title: `用户 ${MAX_NUMBER + i}`,
         avatar: `https://api.dicebear.com/7.x/miniavs/svg?seed=${i}`,
         description: `游记标题${MAX_NUMBER + i}`,
+        /* cspell:disable-next-line */
         content: "We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.",
         // state: i % 2 == 0 ? "waiting" : "fail",
         state: "waiting",

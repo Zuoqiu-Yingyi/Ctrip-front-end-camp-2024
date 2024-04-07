@@ -22,11 +22,11 @@ import { useTranslation } from "@/app/i18n/client";
 const { Header, Content } = Layout;
 const { Title } = Typography;
 const IconFont = createFromIconfontCN({
+    /* cspell:disable-next-line */
     scriptUrl: "//at.alicdn.com/t/c/font_4489509_7860zomd3np.js",
 });
 
-export default function OverviewPage({ children, params: { lng } }: { children: React.ReactNode, params: { lng: string } }): JSX.Element {
-
+export default function OverviewPage({ children, params: { lng } }: { children: React.ReactNode; params: { lng: string } }): JSX.Element {
     const { t } = useTranslation(lng);
 
     const {
@@ -94,8 +94,10 @@ export default function OverviewPage({ children, params: { lng } }: { children: 
                             level={5}
                             type="secondary"
                         >
+                            {/* cspell:disable-next-line */}
                             {/* <IconFont type="icon-zk-shenheyuan" className="mr-3"/> */}
                             <IconFont
+                                /* cspell:disable-next-line */
                                 type="icon-guanliyuan_jiaoseguanli"
                                 className="mr-3"
                                 style={{ color: "red" }}
