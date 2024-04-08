@@ -77,11 +77,6 @@ export default function HomePage() {
                 </NavBar>
             </div>
                 <div className={styles.container}>
-                    {/* <List>
-                    {data.map((item, index) => (
-                        <List.Item key={index}>{item}</List.Item>
-                    ))}
-                </List> */}
 
                     <InfiniteScrollContent />
                 </div>

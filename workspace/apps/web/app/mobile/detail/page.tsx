@@ -15,11 +15,7 @@
 // use client
 'use client'
 import React,{ createContext, useState,Fragment,useEffect} from 'react'
-import { Button,AutoCenter,InfiniteScroll } from 'antd-mobile'
-import { SafeArea } from 'antd-mobile'
-import { NavBar, Space, Toast, List, Card, Swiper, Avatar } from "antd-mobile";
-import { Badge, TabBar,DotLoading } from 'antd-mobile'
-import { SearchOutline, MoreOutline, CloseOutline } from 'antd-mobile-icons'
+import { NavBar, Toast, Swiper, Avatar } from "antd-mobile";
 
 import styles from './page.module.scss'
 
