@@ -13,14 +13,65 @@
 // limitations under the License.
 
 // use client
-"use client";
-import { createContext } from "react";
-import { Button } from "antd-mobile";
+'use client'
+import React,{ createContext, useState,Fragment,useEffect} from 'react'
+import { Button,AutoCenter,InfiniteScroll } from 'antd-mobile'
+import { SafeArea } from 'antd-mobile'
+import { NavBar, Space, Toast, List, Card, Swiper, Avatar } from "antd-mobile";
+import { Badge, TabBar,DotLoading } from 'antd-mobile'
+import { SearchOutline, MoreOutline, CloseOutline } from 'antd-mobile-icons'
 
-export default function Home() {
-    return (
-        <div>
-            <Button />
+import styles from './page.module.scss'
+
+import imgURL from './IMG20180930172935.jpg';
+import { Image } from 'antd-mobile'
+
+
+const colors = ["#ace0ff", "#bcffbd", "#e4fabd", "#ffcfac"];
+const items = colors.map((color, index) => (
+    <Swiper.Item key={index}>
+        <div
+            className={styles.content}
+            style={{ background: color }}
+        >
+            {index + 1}
         </div>
-    );
+    </Swiper.Item>
+));
+
+const left = (
+    <div className={styles.carduser}>
+        <Avatar
+            src=""
+            style={{ "--size": "20px", "--border-radius": "50%" }}
+            fallback={true}
+        />
+        <p className={styles.cardusername}>用户名</p>
+    </div>
+);
+export default function HomePage() {
+
+const back = () =>
+    Toast.show({
+        content: "点击了返回区域",
+        duration: 1000,
+    });
+
+
+  return (
+      <div style={{ width: "100%", margin: "0 auto", height: "100%" }}>
+          <div className={styles.container1}>
+              <NavBar
+                  onBack={back}
+                  left={left}
+              ></NavBar>
+          </div>
+          <div className={styles.container2}>
+              <Swiper className={styles.swiper}>{items}</Swiper>
+          </div>
+          <h4 className={styles.cardtitle}>标题</h4>
+          <p>内容内容</p>
+      </div>
+  );
+  
 }

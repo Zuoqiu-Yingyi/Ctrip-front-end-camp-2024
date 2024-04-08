@@ -19,6 +19,8 @@ import { SafeArea } from "antd-mobile";
 import { NavBar, Space, Toast, List, Card } from "antd-mobile";
 import styles from "./page.module.scss";
 
+let count = 0
+
 export async function mockRequest() {
     // 假设您希望每次加载 5 个卡片
     const cards = [];
