@@ -1,0 +1,59 @@
+{
+    "name": "旅行日记",
+    "short_name": "游记",
+    "description": "旅行日记是所有旅行者分享自己旅途记忆的平台。",
+    "lang": "zh-Hans",
+    "id": "/",
+    "start_url": "/",
+    "scope": "/mobile/",
+    "theme_color": "#AOD5D1",
+    "display": "standalone",
+    "display_override": [
+        "window-controls-overlay",
+        "standalone",
+        "minimal-ui",
+        "browser"
+    ],
+    "categories": [
+        "travel",
+        "social",
+        "lifestyle",
+        "photo"
+    ],
+    "icons": [
+        {
+            "src": "icons/tdiary.svg",
+            "type": "image/svg+xml",
+            "sizes": "any",
+            "purpose": "any"
+        },
+        {
+            "src": "icons/tdiary-512x512.png",
+            "type": "image/png",
+            "sizes": "512x512",
+            "purpose": "any"
+        }
+    ],
+    "shortcuts": [
+        {
+            "name": "旅行日记",
+            "description": "旅行日记客户端",
+            "url": "/mobile/",
+            "icons": [
+                {
+                    "src": "icons/tdiary.png",
+                    "type": "512x512",
+                    "sizes": "256x256"
+                }
+            ]
+        }
+    ],
+    "related_applications": [
+    ],
+    "protocol_handlers": [
+        {
+            "protocol": "web+tdiary",
+            "url": "/?url=%s"
+        }
+    ]
+}
