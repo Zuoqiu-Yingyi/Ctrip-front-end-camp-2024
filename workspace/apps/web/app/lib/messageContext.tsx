@@ -11,7 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { MutableRefObject, createContext, lazy, useRef, useState } from "react";
+import { MutableRefObject, createContext, useRef, useState } from "react";
 import { TravelNote } from "./definitions";
 import { fetchItemData } from "@/app/lib/data";
 
@@ -74,6 +74,9 @@ export default function MessageContextProvider({ children }: { children: React.R
         setLoading(!loading);
     }
 
+    /**
+     * 首次获取数据，获取第一页页面，渲染界面，并异步加载后五页的内容
+     */
     async function firstPullData() {
         allItems.current = await fetchItemData();
 
@@ -100,17 +103,20 @@ export default function MessageContextProvider({ children }: { children: React.R
         setTotalDataNumber(1000);
     }
 
+    /**
+     * 加载页面内容
+     *
+     * @remarks
+     *
+     * @param page - 页面索引
+     * @param pageSize - 页面审核数
+     * @param isLoading - 界面是否等待
+     */
     async function loadPage(page: number, pageSize: number, isLoading: boolean) {
-        console.log(loadedPages.current.has(page));
-
         if (!loadedPages.current.has(page)) {
             if (isLoading) {
                 setLoading(true);
             }
-
-            console.log(preLoadedPages.current.has(page));
-
-            console.log(maxReaderPage.current);
 
             if (!preLoadedPages.current.has(page)) {
                 preLoadedPages.current.add(page);
@@ -140,53 +146,21 @@ export default function MessageContextProvider({ children }: { children: React.R
         }
     }
 
+
+    /**
+     * 切换页面
+     *
+     * @remarks
+     *
+     * @param page - 页面索引
+     * @param pageSize - 页面审核数
+     */
     async function togglePage(page: number, pageSize: number) {
-        console.log(page);
-
-        console.log(pageSize);
-
-        console.log(loadedPages.current);
-
-        console.log(preLoadedPages.current);
-
-        console.log(allItems.current);
-
         await loadPage(page, pageSize, true);
 
         if (page <= Math.floor((totalDataNumber - 1) / pageSize)) {
             await loadPage(page + 1, pageSize, false);
         }
-
-        // preLoadedPages.current.add(page);
-
-        // if (!loadedPages.current.has(page)) {
-
-        //     setLoading(true);
-
-        //     if (!preLoadedPages.current.has(page)) {
-
-        //         let receivedData = await fetchItemData();
-
-        //         for (let index = maxReaderPage.current; index < page; index++) {
-        //             allItems.current.push(...new Array(5).fill({}));
-        //         }
-
-        //         for (let index = 0; index < pageSize; index++) {
-        //             allItems.current[index + (page - 1) * pageSize] = receivedData[index]!;
-        //         }
-
-        //         setDisplayItems(allItems.current);
-
-        //         console.log(allItems.current);
-
-        //         loadedPages.current.add(page);
-
-        //         maxReaderPage.current = maxReaderPage.current > page ? maxReaderPage.current : page;
-
-        //         setLoading(false);
-        //     }
-
-        // }
     }
 
     return <MessageContext.Provider value={{ checkedNumber, addCheckNumber, subCheckNumber, displayItems, allItems, filterItems: filterItems, loading, toggleLoadingState, firstPullData, togglePage, totalDataNumber }}>{children}</MessageContext.Provider>;

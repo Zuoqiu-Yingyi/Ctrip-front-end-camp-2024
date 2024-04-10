@@ -28,8 +28,8 @@ import {
     ArrayBuffer2HexString,
 } from "@repo/utils/crypto";
 
-import trpc from "@/utils/trpc";
-import { assetsLoader } from "@/utils/image";
+import trpc from "@/app/utils/trpc";
+import { assetsLoader } from "@/app/utils/image";
 
 type TRole = "staff" | "user";
 
@@ -43,7 +43,7 @@ export default function Login() {
     const [avatarSrc, setAvatarSrc] = useState<string>("");
 
     async function getChallenge(): Promise<string> {
-        const response_challenge = await trpc.auth.challenge.query({
+        const response_challenge = await trpc.client.auth.challenge.query({
             username,
             role,
         });
@@ -73,7 +73,7 @@ export default function Login() {
         const response = await challenge2response(String2ArrayBuffer(challenge), key);
         const response_hex = ArrayBuffer2HexString(response);
 
-        const response_login = await trpc.account.login.mutate({
+        const response_login = await trpc.client.account.login.mutate({
             challenge,
             response: response_hex,
             stay,

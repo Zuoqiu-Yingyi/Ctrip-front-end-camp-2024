@@ -144,6 +144,7 @@ describe("/trpc/review", () => {
         const response_paging1 = await reviewer.client.review.paging.query({ skip: 0, take: review_count_pending, status: ReviewStatus.Pending });
         expect(response_paging1.code).toEqual(0);
         expect(response_paging1.data?.reviews).toHaveLength(review_count_pending);
+        let s = response_paging1.data?.reviews[0]
         expect(response_paging1.data?.reviews[review_count_pending - 1].id).toEqual(review_id);
 
         const response_paging2 = await reviewer.client.review.paging.query({ skip: 0, take: review_count });

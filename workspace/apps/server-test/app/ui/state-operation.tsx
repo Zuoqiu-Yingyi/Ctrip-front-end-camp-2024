@@ -12,14 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import { CheckCircleFilled, ExclamationCircleFilled, CloseCircleFilled } from "@ant-design/icons";
-import React, { useState } from "react";
-import { Flex, Typography, Modal, Form, Radio, Input } from "antd";
+import React, { useContext, useState } from "react";
+import { Flex, Typography, Modal, Form, Input, RadioChangeEvent, Button } from "antd";
+import { MessageContext } from "@/app/lib/messageContext";
+import RejectModal from "@/app/ui/reject-modal";
+// import { passSingleReview } from "@/app/utils/review";
 
 const { Title, Paragraph } = Typography;
 const { TextArea } = Input;
 
-export default function StateOperation({ stateReceived }: { stateReceived: "success" | "fail" | "waiting" }): JSX.Element {
-    const [state, setState] = useState(stateReceived);
+export default function StateOperation({ stateReceived, id }: { stateReceived: "success" | "fail" | "waiting"; id: number }): JSX.Element {
+    const { operateSingleItem } = useContext(MessageContext);
 
     const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -29,11 +32,11 @@ export default function StateOperation({ stateReceived }: { stateReceived: "succ
 
     let text: string = "error";
 
-    if (state === "success") {
+    if (stateReceived === "success") {
         type = "success";
         icon = <CheckCircleFilled className="mr-2" />;
         text = "已通过";
-    } else if (state === "fail") {
+    } else if (stateReceived === "fail") {
         type = "danger";
         icon = <CloseCircleFilled className="mr-2" />;
         text = "未通过";
@@ -43,12 +46,9 @@ export default function StateOperation({ stateReceived }: { stateReceived: "succ
         text = "待审核";
     }
 
-    const showModal = () => {
-        setIsModalOpen(true);
-    };
+    const handleOk = async () => {
+        await operateSingleItem(id);
 
-    const handleOk = () => {
-        setState("success");
         setIsModalOpen(false);
     };
 
@@ -67,65 +67,56 @@ export default function StateOperation({ stateReceived }: { stateReceived: "succ
             >
                 {icon}
                 {text}
-                {/* {state === "waiting" ? (
-                    <Button
-                        icon={<EditFilled style={{ color: "#999999" }} />}
-                        size="small"
-                        type="text"
-                        onClick={showModal}
-                        style={{ marginLeft: 5 }}
-                    />
-                ) : null} */}
-                <Modal
-                    title="操作"
+                {/* <Modal
+                    title="拒绝理由"
                     open={isModalOpen}
                     onOk={handleOk}
                     onCancel={handleCancel}
-                    width={500}
+                    width={400}
                     okText="提交"
                     cancelText="取消"
                 >
                     <Form
                         labelCol={{ span: 4 }}
-                        wrapperCol={{ span: 18 }}
+                        wrapperCol={{ span: 24 }}
                         layout="horizontal"
-                        style={{ maxWidth: 600 }}
+                        style={{ maxWidth: 400 }}
                         initialValues={{ operation: "pass" }}
                     >
                         <Form.Item
-                            label="选项"
-                            name="operation"
-                        >
-                            <Radio.Group>
-                                <Radio value="pass"> 通过 </Radio>
-                                <Radio value="reject"> 拒绝 </Radio>
-                            </Radio.Group>
-                        </Form.Item>
-                        <Form.Item
-                            label="拒绝理由"
+                            // label="拒绝理由"
                             name="reason"
                         >
                             <TextArea rows={5} />
                         </Form.Item>
                     </Form>
-                </Modal>
+                </Modal> */}
             </Title>
-            <Radio.Group
-                options={[
-                    { label: "通过", value: "Apple" },
-                    { label: "拒绝", value: "Pear" },
-                ]}
-                optionType="button"
-            />
-
-            {/* <Radio.Group
-                    
+            {stateReceived === "waiting" && (
+                <Flex gap="small">
+                    <Button
+                        onClick={async () => {
+                            await operateSingleItem(id);
+                        }}
                     >
-                            <Radio value={1}>同意</Radio>
-                            <Radio value={2}>拒绝</Radio>
-                    </Radio.Group> */}
+                        通过
+                    </Button>
+                    <Button
+                        onClick={() => {
+                            setIsModalOpen(true);
+                        }}
+                    >
+                        拒绝
+                    </Button>
+                    <RejectModal
+                        isModalOpen={isModalOpen}
+                        handleOk={handleOk}
+                        handleCancel={handleCancel}
+                    />
+                </Flex>
+            )}
 
-            {state === "fail" ? <Paragraph className="w-32">不符合招录条件不符合招录符合招录条件</Paragraph> : null}
+            {stateReceived === "fail" ? <Paragraph className="w-32">不符合招录条件不符合招录符合招录条件</Paragraph> : null}
         </Flex>
     );
 }

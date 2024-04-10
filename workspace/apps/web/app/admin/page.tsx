@@ -13,17 +13,38 @@
 // limitations under the License.
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { LockOutlined, UserOutlined, SignatureFilled } from "@ant-design/icons";
-import { Button, Checkbox, Form, Input, Flex, Typography } from "antd";
-import { useTranslation } from "@/app/i18n/client";
+import { Button, Checkbox, Form, Input, Flex, Typography, Alert } from "antd";
+import {  useRouter } from 'next/navigation';
+import { login, handleResponse } from "@/app/utils/auth";
+// import { useTranslation } from "@/app/i18n/client";
 
 const { Title } = Typography;
 
-export default function LoginPage({ params: { lng } }: { params: { lng: string } }): JSX.Element {
-    const { t } = useTranslation(lng);
+export default function LoginPage(): JSX.Element {
+    // const { t } = useTranslation(lng);
+    const { replace } = useRouter();
 
-    const onFinish = (values: any) => {
+    const [loading, setLoading] = useState<boolean>(false);
+
+    const [errorDisplay, setErrorDisplay] = useState<boolean>(false);
+
+    const onFinish = async (values: { userName: string; password: string; remember: boolean }) => {
+        setLoading(true);
+
+        let response = await login({ username: values.userName, passphrase: values.password, remember: values.remember });
+
+        if (handleResponse(response).state === "success") {
+            replace('/admin/dashboard');
+        } else {
+            setErrorDisplay(true);
+
+            setTimeout(() => {
+                setErrorDisplay(false);
+            }, 1000);
+        }
+
         console.log("Received values of form: ", values);
     };
 
@@ -36,12 +57,21 @@ export default function LoginPage({ params: { lng } }: { params: { lng: string }
             className="bg-login-background bg-cover"
             vertical
         >
+            {errorDisplay && (
+                <Alert
+                    message="用户名或密码错误！"
+                    type="error"
+                    showIcon
+                />
+            )}
+
             <Title
                 level={3}
                 style={{ marginBottom: "20px" }}
             >
                 <SignatureFilled className="mr-2" />
-                {t("title")}
+                {/* {t("title")} */}
+                后台管理系统
             </Title>
 
             <Form
@@ -58,7 +88,8 @@ export default function LoginPage({ params: { lng } }: { params: { lng: string }
                 >
                     <Input
                         prefix={<UserOutlined className="site-form-item-icon" />}
-                        placeholder={t("userName")}
+                        // placeholder={t("userName")}
+                        placeholder="用户名"
                     />
                 </Form.Item>
                 <Form.Item
@@ -68,7 +99,8 @@ export default function LoginPage({ params: { lng } }: { params: { lng: string }
                     <Input
                         prefix={<LockOutlined className="site-form-item-icon" />}
                         type="password"
-                        placeholder={t("password")}
+                        // placeholder={t("password")}
+                        placeholder="密码"
                     />
                 </Form.Item>
                 <Form.Item>
@@ -77,7 +109,10 @@ export default function LoginPage({ params: { lng } }: { params: { lng: string }
                         valuePropName="checked"
                         noStyle
                     >
-                        <Checkbox>{t("remember")}</Checkbox>
+                        <Checkbox>
+                            {/* {t("remember")} */}
+                            记住我
+                        </Checkbox>
                     </Form.Item>
                 </Form.Item>
 
@@ -86,9 +121,11 @@ export default function LoginPage({ params: { lng } }: { params: { lng: string }
                         type="primary"
                         htmlType="submit"
                         className="login-form-button"
+                        loading={loading}
                         style={{ width: "100%" }}
                     >
-                        {t("login")}
+                        {/* {t("login")} */}
+                        登录
                     </Button>
                 </Form.Item>
             </Form>

@@ -15,9 +15,9 @@
 
 import React from "react";
 import Link from "next/link";
-import { Layout, Menu, theme, MenuProps, Typography, Dropdown, Space, Flex } from "antd";
-import { PieChartFilled, CarryOutFilled, SignatureFilled, UserOutlined, LogoutOutlined, createFromIconfontCN } from "@ant-design/icons";
-import { useTranslation } from "@/app/i18n/client";
+import { Layout, Menu, theme, MenuProps, Typography, Dropdown, Flex } from "antd";
+import { PieChartFilled, CarryOutFilled, SignatureFilled, LogoutOutlined, createFromIconfontCN } from "@ant-design/icons";
+// import { useTranslation } from "@/app/i18n/client";
 
 const { Header, Content } = Layout;
 const { Title } = Typography;
@@ -26,8 +26,8 @@ const IconFont = createFromIconfontCN({
     scriptUrl: "//at.alicdn.com/t/c/font_4489509_7860zomd3np.js",
 });
 
-export default function OverviewPage({ children, params: { lng } }: { children: React.ReactNode; params: { lng: string } }): JSX.Element {
-    const { t } = useTranslation(lng);
+export default function OverviewPage({ children }: { children: React.ReactNode }): JSX.Element {
+    // const { t } = useTranslation(lng);
 
     const {
         token: { colorBgContainer, borderRadiusLG },
@@ -39,7 +39,8 @@ export default function OverviewPage({ children, params: { lng } }: { children: 
                 <Link href="/admin/dashboard">
                     <Title level={5}>
                         <PieChartFilled className="mr-2" />
-                        {t("overview")}
+                        {/* {t("overview")} */}
+                        总览
                     </Title>
                 </Link>
             ),
@@ -50,7 +51,8 @@ export default function OverviewPage({ children, params: { lng } }: { children: 
                 <Link href="/admin/dashboard/content">
                     <Title level={5}>
                         <CarryOutFilled className="mr-2" />
-                        {t("audit")}
+                        {/* {t("audit")} */}
+                        审核
                     </Title>
                 </Link>
             ),
@@ -69,7 +71,8 @@ export default function OverviewPage({ children, params: { lng } }: { children: 
                     style={{ marginBottom: "20px" }}
                 >
                     <SignatureFilled className="mr-2" />
-                    {t("title")}
+                    {/* {t("title")} */}
+                    后台管理系统
                 </Title>
                 <Flex className="mr-5">
                     <Menu
@@ -85,7 +88,8 @@ export default function OverviewPage({ children, params: { lng } }: { children: 
                                 {
                                     key: 1,
                                     icon: <LogoutOutlined />,
-                                    label: t("logout"),
+                                    // label: t("logout"),
+                                    label: "登出"
                                 },
                             ],
                         }}

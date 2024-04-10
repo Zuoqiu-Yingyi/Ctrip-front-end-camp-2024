@@ -9,6 +9,8 @@
         "lint": "eslint . --max-warnings 0"
     },
     "dependencies": {
+        "@repo/server": "workspace:*",
+        "@repo/utils": "workspace:*",
         "@ant-design/icons": "^5.3.6",
         "@ant-design/nextjs-registry": "^1.0.0",
         "@repo/ui": "workspace:*",

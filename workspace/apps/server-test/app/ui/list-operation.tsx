@@ -11,15 +11,17 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import React from "react";
-import { Input, Flex, Radio, Select } from "antd";
+import React, { useContext } from "react";
+import { Input, Flex, Radio, Select, RadioChangeEvent } from "antd";
 import { CheckCircleFilled, ExclamationCircleFilled, CloseCircleFilled } from "@ant-design/icons";
+import { MessageContext } from "../lib/messageContext";
 // import { useTranslation } from "@/app/i18n/client";
 
 const { Search } = Input;
 
 export default function ListOperationBar(): JSX.Element {
     // const { t } = useTranslation(lng);
+    const { setPageState, togglePageState, searchItem } = useContext(MessageContext);
 
     return (
         <Flex
@@ -27,7 +29,13 @@ export default function ListOperationBar(): JSX.Element {
             align="center"
             className="px-6"
         >
-            <Radio.Group defaultValue={"waiting"}>
+            <Radio.Group
+                defaultValue={"waiting"}
+                onChange={async (e: RadioChangeEvent) => {
+                    setPageState(e.target.value);
+                    await togglePageState(e.target.value);
+                }}
+            >
                 <Radio.Button value="waiting">
                     <ExclamationCircleFilled className="mr-2" />
                     {/* {t("toBeAudited")} */}
@@ -64,7 +72,12 @@ export default function ListOperationBar(): JSX.Element {
                 }
                 placeholder="input search loading default"
                 size="large"
+                // loading={true}
                 style={{ width: "300px" }}
+                onSearch={(value) => {
+                    // console.log(value);
+                    searchItem("title", value);
+                }}
             />
         </Flex>
     );

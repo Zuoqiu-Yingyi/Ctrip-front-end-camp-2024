@@ -15,6 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+import { register as registerCors } from "./cors";
 import { register as registerJwtPlugin } from "./jwt";
 import { register as registerCookiePlugin } from "./cookie";
 import { register as registerStaticPlugin } from "./static";
@@ -23,6 +24,8 @@ import { register as registerMultipartPlugin } from "./multipart";
 import type { FastifyInstance } from "fastify";
 
 export async function init(fastify: FastifyInstance) {
+    await registerCors(fastify); // 注册 multipart 解析插件
+
     await registerMultipartPlugin(fastify); // 注册 multipart 解析插件
 
     await registerJwtPlugin(fastify); // 注册 JWT 插件
