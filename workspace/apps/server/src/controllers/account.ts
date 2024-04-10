@@ -17,6 +17,7 @@
 
 import { z } from "zod";
 import jwt from "jsonwebtoken";
+import cuid2 from "@paralleldrive/cuid2";
 
 import {
     //
@@ -79,6 +80,24 @@ export interface IProfile {
 export class AccountNotFoundError extends Error {
     constructor() {
         super(`Account not found`);
+    }
+}
+
+/**
+ * 账户信息不存在错误
+ */
+export class ProfileNotFoundError extends Error {
+    constructor() {
+        super(`Account profile not found`);
+    }
+}
+
+/**
+ * 资源文件不存在错误
+ */
+export class AssetFileNotFoundError extends Error {
+    constructor(uid: string) {
+        super(`Asset file [${uid}] not found`);
     }
 }
 
@@ -257,6 +276,66 @@ export const updateInfoMutation = procedure //
         try {
             const { session, role, DB } = options.ctx;
             if (session.data.profile) {
+                /* 获取原头像 */
+                const profile_ = await DB.profile.findUnique({
+                    where: {
+                        id: session.data.profile.id,
+                        deleted: false,
+                    },
+                    select: {
+                        avatar: true,
+                    },
+                });
+                if (!profile_) {
+                    throw new ProfileNotFoundError();
+                }
+
+                /* 删除原头像 */
+                if (!!profile_.avatar && options.input.avatar !== profile_.avatar) {
+                    await DB.asset.update({
+                        where: {
+                            uid: profile_.avatar,
+                            deleted: false,
+                        },
+                        data: {
+                            deleted: true,
+                        },
+                    });
+                }
+
+                /* 校验头像 uid 对应的文件有效性 */
+                if (options.input.avatar) {
+                    const asset = await DB.asset.findUnique({
+                        where: {
+                            uid: options.input.avatar,
+                            uploader_id: session.data.account.id,
+                            deleted: false,
+                        },
+                        select: {
+                            id: true,
+                            uid: true,
+                            permission: true,
+                        },
+                    });
+                    if (asset) {
+                        /* 新头像访问权限设置为公开 */
+                        if (asset.permission < 0b1111) {
+                            await DB.asset.update({
+                                where: {
+                                    id: asset.id,
+                                    deleted: false,
+                                },
+                                data: {
+                                    permission: 0b1111,
+                                },
+                            });
+                        }
+                    } else {
+                        throw new AssetFileNotFoundError(options.input.avatar);
+                    }
+                }
+
+                /* 更新用户头像信息 */
                 const profile = await DB.profile.update({
                     where: {
                         id: session.data.profile.id,
@@ -269,6 +348,7 @@ export const updateInfoMutation = procedure //
                                 : undefined,
                     },
                 });
+
                 return {
                     code: 0,
                     message: "",
@@ -289,6 +369,22 @@ export const updateInfoMutation = procedure //
                 case error instanceof AccountNotFoundError:
                     return {
                         code: 10,
+                        message: error.message,
+                        data: null,
+                    };
+
+                // 账户信息未找到错误
+                case error instanceof ProfileNotFoundError:
+                    return {
+                        code: 20,
+                        message: error.message,
+                        data: null,
+                    };
+
+                // 资源文件未找到错误
+                case error instanceof AssetFileNotFoundError:
+                    return {
+                        code: 30,
                         message: error.message,
                         data: null,
                     };

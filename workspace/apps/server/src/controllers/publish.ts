@@ -47,9 +47,18 @@ const PUBLISH_SELECT: Prisma.PublishSelect = {
     publication_time: true,
     modification_time: true,
 
-    publisher_id: true,
     draft_id: true,
 
+    publisher: {
+        select: {
+            name: true,
+            profile: {
+                select: {
+                    avatar: true,
+                },
+            },
+        },
+    },
     coordinate: {
         select: {
             latitude: true,

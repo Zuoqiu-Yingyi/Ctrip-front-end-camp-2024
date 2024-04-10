@@ -25,24 +25,38 @@ import cuid from "@paralleldrive/cuid2";
 
 import { TRPC } from ".";
 import { initAccount } from "./../utils/account";
+import {
+    //
+    get,
+    upload,
+} from "./../utils/assets";
 
-const trpc = new TRPC();
+const user = new TRPC();
+const visitor = new TRPC();
 
 describe("/trpc/account/update", () => {
     test(`update: avatar`, async () => {
-        await initAccount(undefined, trpc);
+        await initAccount(undefined, user);
 
-        const avatars = [cuid.createId(), null];
+        const formData = new FormData();
+        formData.append("file[]", new File([cuid.createId()], cuid.createId() + ".txt", { type: "text/plain" }));
+        const assets_upload = await upload(formData, user);
+
+        const avatars = [...assets_upload.data.successes.map((success: { uid: string }) => success.uid), null];
         for (const avatar of avatars) {
-            const response_update_info = await trpc.client.account.update_info.mutate({
+            const response_update_info = await user.client.account.update_info.mutate({
                 avatar,
             });
             expect(response_update_info.code).toEqual(0);
             expect(response_update_info.data?.profile.avatar).toEqual(avatar);
 
-            const response_info = await trpc.client.account.info.query();
+            const response_info = await user.client.account.info.query();
             expect(response_info.code).toEqual(0);
             expect(response_info.data?.profile?.avatar).toEqual(avatar);
+
+            if (avatar) {
+                expect(get(avatar, visitor)).resolves.toMatchObject({ ok: true });
+            }
         }
     });
 });
