@@ -21,6 +21,7 @@ import {
     test,
     expect,
 } from "@jest/globals";
+import cuid from "@paralleldrive/cuid2";
 
 import { TRPC } from ".";
 import {
@@ -38,7 +39,12 @@ const visitor = new TRPC();
 describe("/trpc/publish", () => {
     test(`Publish process`, async () => {
         /* 初始化账户 */
-        await initAccount(undefined, user);
+        const account = {
+            username: cuid.createId(),
+            passphrase: cuid.createId(),
+            role: "user",
+        };
+        await initAccount(account, user);
         await login({ username: "admin", passphrase: "admin", role: "staff" }, administrator);
 
         /* 创建审批项并审批 */
@@ -53,6 +59,9 @@ describe("/trpc/publish", () => {
         const response_list1 = await visitor.client.publish.list.query({});
         expect(response_list1.code).toEqual(0);
         expect(response_list1.data?.publishs[0].draft_id).toEqual(draft.id);
+        expect(response_list1.data?.publishs[0].publisher.name).toEqual(account.username);
+        // @ts-ignore
+        expect(response_list1.data?.publishs[0].publisher.profile.avatar).toEqual(null);
 
         /* 指定 ID 查询 */
         const response_list2 = await visitor.client.publish.list.query({ uids: [publish!.uid] });
