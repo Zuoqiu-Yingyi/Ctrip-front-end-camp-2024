@@ -29,7 +29,7 @@ import {
 } from "@repo/utils/crypto";
 
 import trpc from "@/utils/trpc";
-import { assetsLoader } from "@/utils/image";
+import { avatarLoader } from "@/utils/image";
 
 type TRole = "staff" | "user";
 
@@ -40,7 +40,7 @@ export default function Login() {
     const [stay, setStay] = useState(false);
     const [role, setRole] = useState<TRole>("user");
     const [avatar, setAvatar] = useState<string>("");
-    const [avatarSrc, setAvatarSrc] = useState<string>("");
+    const [avatarSrc, setAvatarSrc] = useState<string>("default");
 
     async function getChallenge(): Promise<string> {
         const response_challenge = await trpc.auth.challenge.query({
@@ -201,7 +201,7 @@ export default function Login() {
                             <br />
                             <Image
                                 src={avatarSrc}
-                                loader={assetsLoader}
+                                loader={avatarLoader}
                                 alt="Avatar"
                                 width={64}
                                 height={64}

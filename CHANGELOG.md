@@ -4,6 +4,7 @@
 
 - 添加已发布内容的搜索接口 | Add search interface for published content
 - 优化 PWA 配置 | Optimize PWA configuration
+- 添加用户默认头像 | Add a user's default avatar
 
 ## 2024-04-10
 

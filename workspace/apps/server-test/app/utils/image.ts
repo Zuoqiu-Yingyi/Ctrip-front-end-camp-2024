@@ -17,6 +17,8 @@
 
 import type { ImageLoader } from "next/image";
 
+export const DEFAULT_AVATAR_PATH = "/static/avatar.png";
+
 /**
  * 资源加载
  * @see {@link https://nextjs.org/docs/app/api-reference/components/image#loader}
@@ -27,4 +29,16 @@ export const assetsLoader: ImageLoader = function ({
     // quality,
 }) {
     return `/assets/${src}`;
+};
+
+/**
+ * 头像加载
+ * @see {@link https://nextjs.org/docs/app/api-reference/components/image#loader}
+ */
+export const avatarLoader: ImageLoader = function ({
+    src,
+    // width,
+    // quality,
+}) {
+    return /^[0-9a-z]{24}$/.test(src) ? `/assets/${src}` : DEFAULT_AVATAR_PATH;
 };

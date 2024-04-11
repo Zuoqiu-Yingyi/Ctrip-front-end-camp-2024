@@ -2,12 +2,13 @@
     "$schema": "https://json.schemastore.org/web-manifest-combined.json",
     "name": "旅行日记",
     "short_name": "游记",
-    "description": "旅行日记是所有旅行者分享自己旅途记忆的平台。",
+    "description": "旅行日记是所有旅行者分享自己旅途记忆的社区！",
     "lang": "zh-Hans",
     "id": "/",
     "start_url": "/mobile/",
     "scope": "/mobile/",
     "theme_color": "#A0D5D1",
+    "orientation": "any",
     "display": "standalone",
     "display_override": [
         "window-controls-overlay",
@@ -40,7 +41,6 @@
         {
             "name": "旅行日记",
             "description": "旅行日记客户端",
-            "orientation": "portrait",
             "url": "/mobile/",
             "icons": [
                 {
