@@ -47,9 +47,18 @@ const PUBLISH_SELECT: Prisma.PublishSelect = {
     publication_time: true,
     modification_time: true,
 
-    publisher_id: true,
     draft_id: true,
 
+    publisher: {
+        select: {
+            name: true,
+            profile: {
+                select: {
+                    avatar: true,
+                },
+            },
+        },
+    },
     coordinate: {
         select: {
             latitude: true,
@@ -192,6 +201,102 @@ export const pagingQuery = procedure //
                     }) ||
                     undefined,
             });
+            return {
+                code: 0,
+                message: "",
+                data: {
+                    publishs,
+                },
+            };
+        } catch (error) {
+            // options.ctx.S.log.debug(error);
+            switch (true) {
+                default:
+                    options.ctx.S.log.error(error);
+                    return {
+                        code: -1,
+                        message: String(error),
+                        data: null,
+                    };
+            }
+        }
+    });
+
+/**
+ * 搜索发布内容
+ */
+export const searchQuery = procedure //
+    .use(publicPermissionMiddleware)
+    .input(
+        z.object({
+            /**
+             * 搜索关键字
+             * 搜索关键字之间使用空格分隔, 支持以下格式:
+             * - `@<username>`: 搜索指定用户的发布内容
+             * - `<关键字>`: 搜索标题包含指定关键字的发布内容
+             */
+            key: z.string(),
+        }),
+    )
+    .query(async (options) => {
+        try {
+            const { key } = options.input;
+            const keywords = key.trim().split(/\s+/); // 关键字列表
+            const usernames = keywords // 用户名列表
+                .filter((keyword) => keyword.startsWith("@"))
+                .map((keyword) => keyword.substring(1));
+            const words = keywords // 标题关键字列表
+                .filter((keyword) => !keyword.startsWith("@"));
+            const user_ids = // 用户 ID 列表
+                usernames.length > 0
+                    ? await options.ctx.DB.user.findMany({
+                          where: {
+                              name: {
+                                  in: usernames,
+                              },
+                              deleted: false,
+                          },
+                          select: {
+                              id: true,
+                          },
+                      })
+                    : [];
+
+            /* 查询条件 */
+            const wheres: Prisma.PublishWhereInput[] = [];
+            /* 用户名过滤 */
+            if (user_ids.length > 0) {
+                wheres.push({
+                    publisher_id: {
+                        in: user_ids.map((user) => user.id),
+                    },
+                });
+            }
+            /* 标题关键字过滤 */
+            if (words.length > 0) {
+                wheres.push(
+                    ...words.map((word) => ({
+                        title: {
+                            contains: word,
+                        },
+                    })),
+                );
+            }
+
+            const publishs =
+                (wheres.length > 0 &&
+                    (await options.ctx.DB.publish.findMany({
+                        where: {
+                            AND: wheres.concat({
+                                deleted: false,
+                            }),
+                        },
+                        select: PUBLISH_SELECT,
+                        orderBy: {
+                            publication_time: "desc",
+                        },
+                    }))) ||
+                [];
             return {
                 code: 0,
                 message: "",
