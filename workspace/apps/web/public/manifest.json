@@ -1,0 +1,61 @@
+{
+    "$schema": "https://json.schemastore.org/web-manifest-combined.json",
+    "name": "旅行日记",
+    "short_name": "游记",
+    "description": "旅行日记是所有旅行者分享自己旅途记忆的社区！",
+    "lang": "zh-Hans",
+    "id": "/",
+    "start_url": "/mobile/",
+    "scope": "/mobile/",
+    "theme_color": "#A0D5D1",
+    "orientation": "any",
+    "display": "standalone",
+    "display_override": [
+        "window-controls-overlay",
+        "standalone",
+        "minimal-ui",
+        "browser"
+    ],
+    "categories": [
+        "travel",
+        "social",
+        "lifestyle",
+        "photo"
+    ],
+    "icons": [
+        {
+            "src": "icons/tdiary.svg",
+            "type": "image/svg+xml",
+            "sizes": "any",
+            "purpose": "any"
+        },
+        {
+            "src": "icons/tdiary-512x512.png",
+            "type": "image/png",
+            "sizes": "512x512",
+            "purpose": "any"
+        }
+    ],
+    "screenshots": [],
+    "shortcuts": [
+        {
+            "name": "旅行日记",
+            "description": "旅行日记客户端",
+            "url": "/mobile/",
+            "icons": [
+                {
+                    "src": "icons/tdiary-512x512.png",
+                    "type": "image/png",
+                    "sizes": "512x512"
+                }
+            ]
+        }
+    ],
+    "protocol_handlers": [
+        {
+            "protocol": "web+tdiary",
+            "url": "/mobile/?url=%s"
+        }
+    ],
+    "related_applications": []
+}

@@ -35,14 +35,14 @@
         "target": "ESNext"
     },
     "exclude": [
-        "node_modules"
+        "node_modules",
     ],
     "include": [
-        "next-env.d.ts",
         "**/*.ts",
         "**/*.tsx",
         "**/*.json",
-        "next.config.js",
-        ".next/types/**/*.ts"
+        "next-env.d.ts",
+        "next.config.mjs",
+        ".next/types/**/*.ts",
     ]
 }

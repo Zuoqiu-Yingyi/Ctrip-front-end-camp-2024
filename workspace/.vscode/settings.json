@@ -3,5 +3,6 @@
     {
       "mode": "auto"
     }
-  ]
+  ],
+  "i18n-ally.localesPaths": "./app/locales"
 }

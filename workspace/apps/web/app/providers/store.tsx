@@ -15,19 +15,21 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// REF: https://nextjs.org/docs/app/building-your-application/rendering/composition-patterns#using-context-providers
 "use client";
 
-import "@/utils/i18n";
+import { createContext } from "react";
+import trpc from "@/utils/trpc";
 
-// REF: https://www.npmjs.com/package/next-i18next#appwithtranslation
-export function MobileLayout({
-    //
-    children,
-}: {
-    children: React.ReactNode;
-}): JSX.Element {
-    return <>{children}</>;
+export interface IStoreContext {
+    trpc: typeof trpc;
 }
 
-// @ts-ignore
-export default MobileLayout;
+export const StoreValue = { trpc } satisfies IStoreContext;
+
+export const StoreContext = createContext<IStoreContext>(StoreValue);
+
+export function StoreProvider({ children }: { children: React.ReactNode }) {
+    return <StoreContext.Provider value={StoreValue}>{children}</StoreContext.Provider>;
+}
+export default StoreProvider;

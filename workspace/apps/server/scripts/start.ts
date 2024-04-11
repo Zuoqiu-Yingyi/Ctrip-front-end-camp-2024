@@ -16,6 +16,11 @@
  */
 
 import fs from "node:fs";
+import crypto from "node:crypto";
+
+const _TD_USER_KEY_SALT = crypto.randomBytes(32).toString("base64url");
+const _TD_JWT_SECRET = crypto.randomBytes(32).toString("base64url");
+const _TD_CHALLENGE_RESPONSE_JWT_SECRET = crypto.randomBytes(32).toString("base64url");
 
 const ENV_DEV_LOCAL = `
 # 运行环境
@@ -35,6 +40,17 @@ _TD_JWT_SECRET="secret"
 `;
 
 const ENV_PROD_LOCAL = `
+# 运行环境
+_TD_ENV="production"
+
+# 用户密钥盐值
+_TD_USER_KEY_SALT="${_TD_USER_KEY_SALT}"
+
+# 用于用户登录状态的 JWT 密钥
+_TD_JWT_SECRET="${_TD_JWT_SECRET}"
+
+# 用于挑战应答的 JWT 密钥
+_TD_CHALLENGE_RESPONSE_JWT_SECRET="${_TD_CHALLENGE_RESPONSE_JWT_SECRET}"
 `;
 
 const ENV_TEST_LOCAL = `

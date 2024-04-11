@@ -1,0 +1,20 @@
+{
+    "aria": {
+        "card": "游记卡片"
+    },
+    "avatar": "用户头像",
+    "cover": "封面",
+    "draft": "草稿",
+    "empty": {
+        "description": "暂无更多内容"
+    },
+    "home": "首页",
+    "loading": "加载中",
+    "profile": "用户信息",
+    "search": {
+        "placeholder": "搜索用户名或标题"
+    },
+    "title": "标题",
+    "user": "用户",
+    "username": "用户名"
+}

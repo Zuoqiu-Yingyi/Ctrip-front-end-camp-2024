@@ -21,8 +21,6 @@ import {
     httpBatchLink,
 } from "@trpc/client";
 import type { TTrpcRouter } from "@repo/server/src/routers/trpc/router";
-// import type { TTrpcRouter } from "../../../server/src/routers/trpc/router"'
-
 
 export const trpc = createTRPCClient<TTrpcRouter>({
     links: [
@@ -32,4 +30,3 @@ export const trpc = createTRPCClient<TTrpcRouter>({
     ],
 });
 export default trpc;
-trpc.publish

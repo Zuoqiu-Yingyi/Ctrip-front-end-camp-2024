@@ -1,0 +1,20 @@
+{
+    "aria": {
+        "card": "travel cards"
+    },
+    "avatar": "profile avatar",
+    "cover": "Cover",
+    "draft": "Draft",
+    "empty": {
+        "description": "No more content yet"
+    },
+    "home": "Home",
+    "loading": "Loading",
+    "profile": "User Info",
+    "search": {
+        "placeholder": "Search for username or title"
+    },
+    "title": "title",
+    "user": "User",
+    "username": "username"
+}

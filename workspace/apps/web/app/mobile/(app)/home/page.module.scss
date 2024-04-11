@@ -1,0 +1,77 @@
+/**
+ * Copyright (C) 2024 lyt
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
+.navbar {
+    top: 0;
+    position: fixed;
+    background-color: #fff;
+    height: 50px;
+    width: 100%;
+    padding: 0;
+    z-index: 100;
+}
+
+.image {
+    width: 100%;
+}
+
+.card_title {
+    margin-top: 5px;
+    margin-bottom: 0;
+    width: 100%;
+    height: 16px;
+    display: inline-block;
+    max-height: 1.2em; // 设置最大高度为一行文字的高度
+    text-overflow: ellipsis;
+    overflow: hidden; // 隐藏超出部分
+    vertical-align: top; // 保证与相邻元素的垂直对齐
+}
+
+.card_user {
+    display: flex;
+    align-items: center; // 垂直居中
+    height: 40px;
+}
+
+.card_username {
+    margin-left: 10px; // 可选：为了增加两个内容之间的间距
+}
+
+.container3 {
+    margin-top: 50px;
+    display: grid;
+    column-gap: 5px;
+    // padding: 10px;
+    justify-items: center;
+    grid-template-columns: repeat(2, minmax(180px, 1fr));
+}
+
+.card_container {
+    grid-row-start: auto;
+    grid-row-end: span 180;
+    width: 100%;
+    // padding: 5px;
+    box-sizing: border-box;
+    // height: fit-content;
+}
+
+.img_container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}

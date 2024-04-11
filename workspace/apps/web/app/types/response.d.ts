@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2024 Zuoqiu Yingyi
+ * Copyright (C) 2024 lyt
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -15,19 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-"use client";
+import type trpc from "@/utils/trpc";
 
-import "@/utils/i18n";
-
-// REF: https://www.npmjs.com/package/next-i18next#appwithtranslation
-export function MobileLayout({
-    //
-    children,
-}: {
-    children: React.ReactNode;
-}): JSX.Element {
-    return <>{children}</>;
-}
-
-// @ts-ignore
-export default MobileLayout;
+export type TPublishPagingQueryResponse = Awaited<ReturnType<typeof trpc.publish.paging.query>>;
+export type TPublish = NonNullable<TPublishPagingQueryResponse["data"]>["publishs"][0];

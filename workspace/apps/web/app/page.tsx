@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2024 Zuoqiu Yingyi
+ * Copyright (C) 2024 lyt
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -17,17 +17,8 @@
 
 "use client";
 
-import "@/utils/i18n";
+import { redirect } from "next/navigation";
 
-// REF: https://www.npmjs.com/package/next-i18next#appwithtranslation
-export function MobileLayout({
-    //
-    children,
-}: {
-    children: React.ReactNode;
-}): JSX.Element {
-    return <>{children}</>;
+export default function Page() {
+    redirect("/mobile/home");
 }
-
-// @ts-ignore
-export default MobileLayout;

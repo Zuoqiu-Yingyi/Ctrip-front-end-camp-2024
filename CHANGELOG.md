@@ -1,5 +1,9 @@
 # 更改日志 | Change log
 
+## 2024-04-12
+
+- 客户端首页 | Client home page
+
 ## 2024-04-11
 
 - 添加已发布内容的搜索接口 | Add search interface for published content

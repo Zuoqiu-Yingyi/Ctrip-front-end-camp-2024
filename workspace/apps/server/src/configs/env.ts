@@ -60,7 +60,7 @@ export const ENV_DEFAULT: IEnv = {
     PORT: 3000,
     HOST: "::",
     ASSETS_DIRECTORY_PATH: "./data/assets/",
-    STATIC_ROOT_DIRECTORY_PATH: "./pages/",
+    STATIC_ROOT_DIRECTORY_PATH: "./../web/out/",
 
     /* TLS 配置 */
     TLS: false,

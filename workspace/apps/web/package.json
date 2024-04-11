@@ -17,17 +17,20 @@
         "antd": "^5.16.1",
         "antd-mobile": "^5.35.0",
         "antd-mobile-icons": "^0.3.0",
+        "i18next": "^23.11.1",
         "next": "^14.1.4",
-        "pnpm": "^8.15.5",
+        "pnpm": "^8.15.6",
         "react": "^18.2.0",
         "react-cookie": "^7.1.4",
-        "react-dom": "^18.2.0"
+        "react-dom": "^18.2.0",
+        "react-i18next": "^14.1.0"
     },
     "devDependencies": {
+        "@ducanh2912/next-pwa": "^10.2.6",
         "@next/eslint-plugin-next": "^14.1.4",
         "@repo/eslint-config": "workspace:*",
         "@repo/typescript-config": "workspace:*",
-        "@types/react": "^18.2.74",
+        "@types/react": "^18.2.75",
         "@types/react-dom": "^18.2.24",
         "autoprefixer": "^10.4.19",
         "postcss": "^8.4.38",
