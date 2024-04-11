@@ -19,7 +19,7 @@ import { Button, AutoCenter, InfiniteScroll } from "antd-mobile";
 import { SafeArea } from "antd-mobile";
 import { NavBar, Space, Toast, List, Card } from "antd-mobile";
 import { Badge, TabBar, DotLoading } from "antd-mobile";
-import { SearchOutline, MoreOutline, CloseOutline } from "antd-mobile-icons";
+import { SearchOutline, MoreOutline, CloseOutline, AddOutline } from "antd-mobile-icons";
 import { AppOutline, MessageOutline, MessageFill, UnorderedListOutline, UserOutline } from "antd-mobile-icons";
 import styles from "./page.module.scss";
 import { mockRequest } from "./mock-request";
@@ -30,16 +30,11 @@ export default function HomePage() {
         <div style={{ fontSize: 24 }}>
             <Space style={{ "--gap": "16px" }}>
                 <SearchOutline />
-                <MoreOutline />
             </Space>
         </div>
     );
 
-    const back = () =>
-        Toast.show({
-            content: "点击了返回区域",
-            duration: 1000,
-        });
+
 
     const tabs = [
         {
@@ -47,17 +42,19 @@ export default function HomePage() {
             title: "首页",
             icon: <AppOutline />,
             badge: Badge.dot,
+            style: { marginRight: "80px" },
         },
-        {
-            key: "todo",
-            title: "新建",
-            icon: <UnorderedListOutline />,
-            badge: "5",
-        },
+        // {
+        //     key: "todo",
+        //     title: "待办",
+        //     icon: <UnorderedListOutline />,
+        //     badge: "5",
+        // },
         {
             key: "personalCenter",
             title: "我的",
             icon: <UserOutline />,
+            style: { marginLeft: "80px" },
         },
     ];
 
@@ -71,272 +68,41 @@ export default function HomePage() {
     let i = 0;
     return (
         <>
-            <SafeArea position="top" />
-            <NavBar
-                right={right}
-                onBack={back}
-                style={{ background: "#E4E1E0" }}
-            >
-                首页
-            </NavBar>
-            <div style={{ height: 570 }}>
-                <div className={styles.container}>
-                    <Card
-                        headerStyle={{
-                            color: "#1677ff",
-                            height: "100px",
-                            width: "100%",
-                        }}
-                        bodyClassName={styles.list}
-                        title="卡片标题"
-                    >
-                        卡片内容
-                    </Card>
-                    <Card
-                        headerStyle={{
-                            color: "#1677ff",
-                            height: "110px",
-                        }}
-                        bodyClassName={styles.list}
-                        title="卡片标题"
-                    >
-                        卡片内容
-                    </Card>
-                    <Card
-                        headerStyle={{
-                            color: "#1677ff",
-                            height: "120px",
-                        }}
-                        bodyClassName={styles.list}
-                        title="卡片标题"
-                    >
-                        卡片内容
-                    </Card>
-                    <Card
-                        headerStyle={{
-                            color: "#1677ff",
-                            height: "100px",
-                        }}
-                        bodyClassName={styles.list}
-                        title="卡片标题"
-                    >
-                        卡片内容
-                    </Card>
-                    <Card
-                        headerStyle={{
-                            color: "#1677ff",
-                            height: "100px",
-                        }}
-                        bodyClassName={styles.list}
-                        title="卡片标题"
-                    >
-                        卡片内容
-                    </Card>
-                    <Card
-                        headerStyle={{
-                            color: "#1677ff",
-                            height: "110px",
-                        }}
-                        bodyClassName={styles.list}
-                        title="卡片标题"
-                    >
-                        卡片内容
-                    </Card>
-                    <Card
-                        headerStyle={{
-                            color: "#1677ff",
-                            height: "130px",
-                        }}
-                        bodyClassName={styles.list}
-                        title="卡片标题"
-                    >
-                        卡片内容
-                    </Card>
-                    <Card
-                        headerStyle={{
-                            color: "#1677ff",
-                            height: "100px",
-                        }}
-                        bodyClassName={styles.list}
-                        title="卡片标题"
-                    >
-                        卡片内容
-                    </Card>
-                    <Card
-                        headerStyle={{
-                            color: "#1677ff",
-                            height: "120px",
-                        }}
-                        bodyClassName={styles.list}
-                        title="卡片标题"
-                    >
-                        卡片内容
-                    </Card>
-                    <Card
-                        headerStyle={{
-                            color: "#1677ff",
-                            height: "90px",
-                        }}
-                        bodyClassName={styles.list}
-                        title="卡片标题"
-                    >
-                        卡片内容
-                    </Card>
-                    <Card
-                        headerStyle={{
-                            color: "#1677ff",
-                            height: "110px",
-                        }}
-                        bodyClassName={styles.list}
-                        title="卡片标题"
-                    >
-                        卡片内容
-                    </Card>
-                    <Card
-                        headerStyle={{
-                            color: "#1677ff",
-                            height: "120px",
-                        }}
-                        bodyClassName={styles.list}
-                        title="卡片标题"
-                    >
-                        卡片内容
-                    </Card>
-                    <Card
-                        headerStyle={{
-                            color: "#1677ff",
-                            height: "100px",
-                        }}
-                        bodyClassName={styles.list}
-                        title="卡片标题"
-                    >
-                        卡片内容
-                    </Card>
-                    <Card
-                        headerStyle={{
-                            color: "#1677ff",
-                            height: "90px",
-                        }}
-                        bodyClassName={styles.list}
-                        title="卡片标题"
-                    >
-                        卡片内容
-                    </Card>
-                    <Card
-                        headerStyle={{
-                            color: "#1677ff",
-                            height: "120px",
-                        }}
-                        bodyClassName={styles.list}
-                        title="卡片标题"
-                    >
-                        卡片内容
-                    </Card>
-                    <Card
-                        headerStyle={{
-                            color: "#1677ff",
-                            height: "110px",
-                        }}
-                        bodyClassName={styles.list}
-                        title="卡片标题"
-                    >
-                        卡片内容
-                    </Card>
-                    <Card
-                        headerStyle={{
-                            color: "#1677ff",
-                            height: "130px",
-                        }}
-                        bodyClassName={styles.list}
-                        title="卡片标题"
-                    >
-                        卡片内容
-                    </Card>
-                    <Card
-                        headerStyle={{
-                            color: "#1677ff",
-                            height: "140px",
-                        }}
-                        bodyClassName={styles.list}
-                        title="卡片标题"
-                    >
-                        卡片内容
-                    </Card>
-                    <Card
-                        headerStyle={{
-                            color: "#1677ff",
-                            height: "120px",
-                        }}
-                        bodyClassName={styles.list}
-                        title="卡片标题"
-                    >
-                        卡片内容
-                    </Card>
-                    <Card
-                        headerStyle={{
-                            color: "#1677ff",
-                            height: "110px",
-                        }}
-                        bodyClassName={styles.list}
-                        title="卡片标题"
-                    >
-                        卡片内容
-                    </Card>
-                    <Card
-                        headerStyle={{
-                            color: "#1677ff",
-                            height: "100px",
-                        }}
-                        bodyClassName={styles.list}
-                        title="卡片标题"
-                    >
-                        卡片内容
-                    </Card>
-                    <Card
-                        headerStyle={{
-                            color: "#1677ff",
-                            height: "130px",
-                        }}
-                        bodyClassName={styles.list}
-                        title="卡片标题"
-                    >
-                        卡片内容
-                    </Card>
-                    <Card
-                        headerStyle={{
-                            color: "#1677ff",
-                            height: "90px",
-                        }}
-                        bodyClassName={styles.list}
-                        title="卡片标题"
-                    >
-                        卡片内容
-                    </Card>
-
-                    {/* <List>
-                    {data.map((item, index) => (
-                        <List.Item key={index}>{item}</List.Item>
-                    ))}
-                </List> */}
-                    <InfiniteScroll
-                        loadMore={loadMore}
-                        hasMore={hasMore}
-                    >
-                        <InfiniteScrollContent
-                            hasMore={hasMore}
-                            loadMore={loadMore}
-                        />
-                    </InfiniteScroll>
-                </div>
+            <div className={styles.container1}>
+                <NavBar
+                    right={right}
+                    backArrow={false}
+                >
+                    首页
+                </NavBar>
             </div>
+                <div className={styles.container}>
 
-            {/* <Space style = {styles.father}>
-            <TabBar activeKey={activeKey} onChange={setActiveKey} className={"son"}>
-                {tabs.map(item => (
-                    <TabBar.Item key={item.key} icon={item.icon} title={item.title} />
-                ))}
-            </TabBar>
-            </Space> */}
+                    <InfiniteScrollContent />
+                </div>
+            <div className={styles.container2}>
+                <Button
+                    color="primary"
+                    fill="solid"
+                    className={styles.button}
+                >
+                    <AddOutline fontSize={"25px"} />
+                </Button>
+
+                <TabBar
+                    activeKey={activeKey}
+                    onChange={setActiveKey}
+                >
+                    {tabs.map((item) => (
+                        <TabBar.Item
+                            key={item.key}
+                            icon={item.icon}
+                            title={item.title}
+                            style={item.style}
+                        />
+                    ))}
+                </TabBar>
+            </div>
         </>
     );
 }

@@ -70,6 +70,7 @@ describe("/trpc/publish", () => {
         expect(response_list2.data?.publishs).toHaveLength(1);
         expect(response_list2.data?.publishs[0].draft_id).toEqual(draft.id);
 
+
         /* 分页查询 */
         const response_paging1 = await visitor.client.publish.paging.query({ skip: 0, take: 1 });
         expect(response_paging1.code).toEqual(0);
