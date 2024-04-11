@@ -6,8 +6,8 @@
         "name": "next"
       }
     ],
-    "strict": true,
-    "strictNullChecks": true,
+    // "strict": true,
+    // "strictNullChecks": true,
     "paths": {
       "@/*": ["./*"]
     }

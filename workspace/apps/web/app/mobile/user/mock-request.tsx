@@ -17,24 +17,32 @@ import React, { createContext, useState, Fragment, useEffect } from "react";
 import { assetsLoader } from "../../utils/image";
 import trpc from "../../utils/trpc";
 
+const user_id = 1111111
 
-let currentIndex = 0;
 const thisPublish = await trpc.publish.list.query({ uids: undefined });
+const draftNumber = await trpc.draft.count.query({ author_id: user_id });
+const Drafts = await trpc.draft.paging.query({ skip: 0, take: draftNumber.data.count });
+
 try {
-    trpc.publish.list.query({ uids: undefined });
+    trpc.draft.paging.query({ skip: 0, take: draftNumber });
 } catch (error) {
     alert("Error");
 }
 
-// console.log(thisPublish.data.publishs[0].publish_id);
-if (thisPublish.code !== 0) {
+if (Drafts.code !== 0) {
     alert("Error");
 }
-const assetsThis = thisPublish.data?.publishs[0]!.assets;
+let currentIndex = 0;
+// const assetsThis = thisPublish.data?.publishs[0]!.assets;
 export async function mockRequest() {
     const endIndex = currentIndex + 5;
-    const result = thisPublish?.data?.publishs.slice(currentIndex, endIndex);
-    currentIndex = endIndex >= thisPublish?.data!.publishs.length ? 0 : endIndex;
+    const result = Drafts?.data?.drafts.slice(currentIndex, endIndex);
+    // if (result) {
+        
+    //     const secondPart = (result || []).filter((item) => Object.keys(item)[0] !== "[x: string]");
+    //     // const secondPart = result.filter((item) => Object.keys(item)[0] !== "[x: string]");
+    // }
+    currentIndex = endIndex >= Drafts?.data.drafts.length ? 0 : endIndex;
     await sleep(2000); // 等待2秒钟
     return result;
 }

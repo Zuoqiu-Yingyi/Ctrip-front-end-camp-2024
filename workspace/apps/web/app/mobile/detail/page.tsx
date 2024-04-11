@@ -13,25 +13,40 @@
 // limitations under the License.
 
 // use client
-'use client'
-import React,{ createContext, useState,Fragment,useEffect} from 'react'
+"use client";
+import React from "react";
 import { NavBar, Toast, Swiper, Avatar } from "antd-mobile";
+import styles from "./page.module.scss";
+import trpc from "../../utils/trpc";
 
-import styles from './page.module.scss'
+import Image from "next/image";
+import { assetsLoader } from "../../utils/image";
 
-import imgURL from './IMG20180930172935.jpg';
-import { Image } from 'antd-mobile'
+// 调用 listQuery 的函数
+const uid = "1234567890";
+const thisPublish = await trpc.publish.list.query({ uids: [uid] });
+try {
+    trpc.publish.list.query({ uids: [uid] });
+} catch (error) {
+    alert("Error");
+}
 
+// console.log(thisPublish.data.publishs[0].publish_id);
+if (thisPublish.code !== 0) {
+    alert("Error");
+}
+const assetsThis = thisPublish.data?.publishs[0]!.assets;
 
-const colors = ["#ace0ff", "#bcffbd", "#e4fabd", "#ffcfac"];
-const items = colors.map((color, index) => (
-    <Swiper.Item key={index}>
-        <div
-            className={styles.content}
-            style={{ background: color }}
-        >
-            {index + 1}
-        </div>
+const items = assetsThis!.map((asset) => (
+    <Swiper.Item>
+        <li key={asset.asset_uid}>
+            <Image
+                src={asset.asset_uid}
+                loader={assetsLoader}
+                alt="Asset"
+                fill={true}
+            />
+        </li>
     </Swiper.Item>
 ));
 
@@ -42,32 +57,32 @@ const left = (
             style={{ "--size": "20px", "--border-radius": "50%" }}
             fallback={true}
         />
-        <p className={styles.cardusername}>用户名</p>
+        <p className={styles.cardusername}>{thisPublish.data?.publishs[0]!.draft!.author_id}</p>
     </div>
 );
 export default function HomePage() {
+    const back = () =>
+        Toast.show({
+            content: "点击了返回区域",
+            duration: 1000,
+        });
 
-const back = () =>
-    Toast.show({
-        content: "点击了返回区域",
-        duration: 1000,
-    });
-
-
-  return (
-      <div style={{ width: "100%", margin: "0 auto", height: "100%" }}>
-          <div className={styles.container1}>
-              <NavBar
-                  onBack={back}
-                  left={left}
-              ></NavBar>
-          </div>
-          <div className={styles.container2}>
-              <Swiper className={styles.swiper}>{items}</Swiper>
-          </div>
-          <h4 className={styles.cardtitle}>标题</h4>
-          <p>内容内容</p>
-      </div>
-  );
-  
+    return (
+        <div style={{ width: "100%", margin: "0 auto", height: "100%" }}>
+            <div className={styles.container1}>
+                <NavBar
+                    onBack={back}
+                    left={left}
+                ></NavBar>
+            </div>
+            <div className={styles.container2}>
+                <Swiper className={styles.swiper}>{items}</Swiper>
+            </div>
+            <h4 className={styles.cardtitle}>{thisPublish.data?.publishs[0]!.draft!.title}</h4>
+            <p>{thisPublish?.data.publishs[0]!.draft!.content}</p>
+            <div className={styles.cardtime}>
+                <p>{thisPublish?.data.publishs[0]!.draft!.creation_time}</p>
+            </div>
+        </div>
+    );
 }

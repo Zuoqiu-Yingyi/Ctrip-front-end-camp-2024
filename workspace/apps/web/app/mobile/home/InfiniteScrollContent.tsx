@@ -19,24 +19,17 @@ import React, { useRef, useEffect, useState } from "react";
 import { InfiniteScroll, List, DotLoading, Card, Image, Avatar } from "antd-mobile";
 import { mockRequest } from "./mock-request";
 import styles from "./page.module.scss";
-import CardContent from './CardContent'
-
-
-const demoSrc = "https://images.unsplash.com/photo-1567945716310-4745a6b7844b?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1500&q=60";
-const demoSrc2 = "https://images.unsplash.com/photo-1620476214170-1d8080f65cdb?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=3150&q=80";
-const demoSrc3 = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRORGWNUiF7QLWfW8eMdlXSjhYKPThiNQ_gz4Tb-8pcWw&s";
-const demoSrc4 = "https://farmerstation-aws.hmgcdn.com/files/article/a0/41/ASUB_41_181_20230913045850_122568.jpg";
-const demoSrc5 = "https://pic.chaopx.com/chao_water_pic/23/03/03/7283d6a2d4b14777faa74472a3199177.jpg";
+import CardContent from "./CardContent";
 
 /**
  * React component for rendering infinite scroll content with card elements.
- * 
+ *
  * This component renders a list of card elements inside an infinite scroll container.
  * Each card contains an image, a title, a username, and an avatar.
- * 
+ *
  * @param hasMore Indicates whether there are more items to load.
  */
-const InfiniteScrollContent = ({ hasMore }: { hasMore?: boolean }) => {
+const InfiniteContent = ({ hasMore }: { hasMore?: boolean }) => {
     return (
         <>
             {hasMore ? (
@@ -45,7 +38,7 @@ const InfiniteScrollContent = ({ hasMore }: { hasMore?: boolean }) => {
                     <DotLoading />
                 </>
             ) : (
-                <span>--- 我是有底线的 ---</span>
+                <span>--- 没有更多内容了 ---</span>
             )}
         </>
     );
@@ -53,7 +46,6 @@ const InfiniteScrollContent = ({ hasMore }: { hasMore?: boolean }) => {
 
 export default () => {
     const cardRefs = useRef<HTMLDivElement[]>([]);
-
     const handleSetGridRowEnd = (index: number) => {
         const cardRef = cardRefs.current[index];
         if (!cardRef) return;
@@ -63,72 +55,49 @@ export default () => {
         }
     };
 
+    type Data = {
+        [x: string]: {
+            deleted: boolean;
+            createdAt: string;
+            updatedAt: string;
+            index: number;
+            asset_uid: string;
+            publish_id: number;
+
+        }[];
+    };
+
+    const [data, setData] = useState<Data[]>([]);
+    // const [data, setData] = useState<string[]>([])
+    const [hasMore, setHasMore] = useState(true);
+
+    async function loadMore() {
+        const append = await mockRequest();
+        setData((val) => [...val, ...(append || [])]);
+        setHasMore(append!.length > 0);
+    }
+    //     const assetsThis = thisPublish.data?.publishs[0]!.assets;
+    // thisPublish.data?.publishs[0]!.draft!.author_id;
     return (
         <div className={styles.container3}>
-            <CardContent
-                imageUrl={demoSrc5}
-                title="ExampleTitleExampleTitleExampleTitleExampleTitleExampleTitleExample TitleExample Title"
-                username="exampleuser"
-                avatarUrl="avatar.jpg"
-                aspectRatio="1.5"
-                cardRefs={cardRefs}
-                handleSetGridRowEnd={handleSetGridRowEnd}
-            />
-            
-            <CardContent
-                imageUrl={demoSrc}
-                title="ExampleTitleExampleTitleExampleTitleExampleTitleExampleTitleExample TitleExample Title"
-                username="exampleuser"
-                avatarUrl="avatar.jpg"
-                aspectRatio="0.8"
-                cardRefs={cardRefs}
-                handleSetGridRowEnd={handleSetGridRowEnd}
-            />
-            <CardContent
-                imageUrl={demoSrc3}
-                title="ExampleTitleExampleTitleExampleTitleExampleTitleExampleTitleExample TitleExample Title"
-                username="exampleuser"
-                avatarUrl="avatar.jpg"
-                aspectRatio="1.5"
-                cardRefs={cardRefs}
-                handleSetGridRowEnd={handleSetGridRowEnd}
-            />
-            <CardContent
-                imageUrl={demoSrc2}
-                title="ExampleTitleExampleTitleExampleTitleExampleTitleExampleTitleExample TitleExample Title"
-                username="exampleuser"
-                avatarUrl="avatar.jpg"
-                aspectRatio="1.5"
-                cardRefs={cardRefs}
-                handleSetGridRowEnd={handleSetGridRowEnd}
-            />
-            <CardContent
-                imageUrl={demoSrc5}
-                title="ExampleTitleExampleTitleExampleTitleExampleTitleExampleTitleExample TitleExample Title"
-                username="exampleuser"
-                avatarUrl="avatar.jpg"
-                aspectRatio="1.5"
-                cardRefs={cardRefs}
-                handleSetGridRowEnd={handleSetGridRowEnd}
-            />
-            <CardContent
-                imageUrl={demoSrc5}
-                title="ExampleTitleExampleTitleExampleTitleExampleTitleExampleTitleExample TitleExample Title"
-                username="exampleuser"
-                avatarUrl="avatar.jpg"
-                aspectRatio="1.5"
-                cardRefs={cardRefs}
-                handleSetGridRowEnd={handleSetGridRowEnd}
-            />
-            <CardContent
-                imageUrl={demoSrc5}
-                title="ExampleTitleExampleTitleExampleTitleExampleTitleExampleTitleExample TitleExample Title"
-                username="exampleuser"
-                avatarUrl="avatar.jpg"
-                aspectRatio="1.5"
-                cardRefs={cardRefs}
-                handleSetGridRowEnd={handleSetGridRowEnd}
-            />
+            {data.map((publish, index) => (
+                <CardContent
+                    key={index}
+                    imageUrl={publish!.asset[0].asset_uid}
+                    title={publish!.draft!.title}
+                    username={publish!.draft!.author_id}
+                    avatarUrl={publish!.asset[0].asset_uid}
+                    aspectRatio="1.5"
+                    cardRefs={cardRefs}
+                    handleSetGridRowEnd={handleSetGridRowEnd}
+                />
+            ))}
+            <InfiniteScroll
+                loadMore={loadMore}
+                hasMore={hasMore}
+            >
+                <InfiniteContent hasMore={hasMore} />
+            </InfiniteScroll>
         </div>
     );
 };

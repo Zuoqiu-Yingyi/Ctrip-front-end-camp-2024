@@ -34,6 +34,7 @@ export default function User() {
      * Configuration for the tabs in the tab bar.
      * Each tab includes a key, title, icon, and optional styling.
      */
+
     const tabs = [
         {
             key: "home",
@@ -42,12 +43,6 @@ export default function User() {
             badge: Badge.dot,
             style: { marginRight: "80px" },
         },
-        // {
-        //     key: "todo",
-        //     title: "待办",
-        //     icon: <UnorderedListOutline />,
-        //     badge: "5",
-        // },
         {
             key: "personalCenter",
             title: "我的",
@@ -72,7 +67,9 @@ export default function User() {
             </div>
 
             <div>
-                <UserContent></UserContent>
+                <UserContent>
+                    
+                </UserContent>
             </div>
 
             <div className={styles.container2}>
