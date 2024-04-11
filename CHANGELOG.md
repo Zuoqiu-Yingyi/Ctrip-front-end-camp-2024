@@ -1,5 +1,14 @@
 # 更改日志 | Change log
 
+## 2024-04-11
+
+- 添加已发布内容的搜索接口 | Add search interface for published content
+
+## 2024-04-10
+
+- 更新用户头像时同时更新头像文件的访问权限 | Update the access permission of the avatar file when updating the user avatar
+- 查询发布内容获取发布者信息 | Query published content to get publisher information
+
 ## 2024-04-04
 
 - 实现关闭账户功能 | Implement close account feature

@@ -21,6 +21,7 @@ import {
     countQuery,
     listQuery,
     pagingQuery,
+    searchQuery,
     deleteMutation,
 } from "./../../controllers/publish";
 
@@ -39,6 +40,11 @@ export const publishRouter = router({
      * 分页查询发布列表
      */
     paging: pagingQuery,
+
+    /**
+     * 搜索发布内容
+     */
+    search: searchQuery,
 
     /**
      * 删除发布内容
