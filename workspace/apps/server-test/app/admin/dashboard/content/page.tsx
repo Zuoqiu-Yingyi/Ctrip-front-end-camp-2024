@@ -18,8 +18,9 @@ import ExamineList from "@/app/ui/examine-list";
 import ListOperationBar from "@/app/ui/list-operation";
 import { useContext } from "react";
 import { MessageContext } from "@/app/lib/messageContext";
+
 import { CheckCircleTwoTone, CloseCircleTwoTone } from "@ant-design/icons";
-import RejectModal from "@/app/ui/reject-modal"
+import RejectModal from "@/app/ui/reject-modal";
 // import { useTranslation } from "@/app/i18n/client";
 
 const { Text } = Typography;

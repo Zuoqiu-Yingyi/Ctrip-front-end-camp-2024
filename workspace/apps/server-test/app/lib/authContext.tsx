@@ -11,13 +11,21 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+import { MutableRefObject, createContext, useRef } from "react";
+import { TRPC } from "../utils/trpc";
 
-export function handleResponse<T>(response: {code: number, message?: string | unknown, data?: T}) : {state: "success" | "fail", data?: T}{
 
-    if (response.code === 0) {
-        return {state: "success", data: response.data}
-    } else {
-        return {state: "fail"}
-    }
-    
+export const AuthContext = createContext<{
+    user: MutableRefObject<TRPC>
+}>({
+    user: {current: new TRPC()}
+});
+
+
+export default function AuthContextProvider({ children }: { children: React.ReactElement<any, any> }): JSX.Element {
+
+    const user = useRef(new TRPC());
+
+
+    return <AuthContext.Provider value={{ user }}>{children}</AuthContext.Provider>;
 }

@@ -22,7 +22,7 @@ const { Title, Paragraph } = Typography;
 const { TextArea } = Input;
 
 export default function StateOperation({ stateReceived, id }: { stateReceived: "success" | "fail" | "waiting"; id: number }): JSX.Element {
-    const { operateSingleItem } = useContext(MessageContext);
+    const { operateReview } = useContext(MessageContext);
 
     const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -47,7 +47,7 @@ export default function StateOperation({ stateReceived, id }: { stateReceived: "
     }
 
     const handleOk = async () => {
-        await operateSingleItem(id);
+        await operateReview(id, "reject");
 
         setIsModalOpen(false);
     };
@@ -96,7 +96,7 @@ export default function StateOperation({ stateReceived, id }: { stateReceived: "
                 <Flex gap="small">
                     <Button
                         onClick={async () => {
-                            await operateSingleItem(id);
+                            await operateReview(id, "pass");
                         }}
                     >
                         通过

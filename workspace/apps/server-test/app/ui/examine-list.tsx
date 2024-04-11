@@ -11,8 +11,8 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import React, { useState, useContext } from "react";
-import { List, Flex, Image, Skeleton, Modal, Button, Typography, Checkbox } from "antd";
+import React, { useState, useContext, useEffect } from "react";
+import { List, Flex, Image, Skeleton, Modal, Button, Typography, Checkbox, Spin } from "antd";
 import { TravelNote } from "@/app/lib/definitions";
 import StateOperation from "./state-operation";
 import { MessageContext } from "@/app/lib/messageContext";
@@ -61,12 +61,16 @@ export function ExamineListItem({ item, loading }: { item: TravelNote; loading: 
             extra={
                 !loading ? (
                     <Flex>
-                        <Image
-                            width={200}
-                            height={150}
-                            alt="logo"
-                            src="https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png"
-                        />
+                            <Image
+                                width={200}
+                                height={150}
+                                alt="logo"
+                                src={`/assets/${item.image}`}
+                                placeholder={
+                                    <Spin />
+                                }
+                            />
+                            
                         <StateOperation
                             stateReceived={item.state}
                             id={item.id}

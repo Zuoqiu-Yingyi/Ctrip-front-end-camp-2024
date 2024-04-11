@@ -11,23 +11,43 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { trpc } from "./trpc";
+// import { trpc } from "./trpc";
 import { handleResponse } from "./help";
 import { ReviewStatus } from "@repo/server/src/types/review";
+import { TravelNote } from "../lib/definitions";
+import { TRPC } from "./trpc";
 
-export async function getReviewCount() {
-    const count = await trpc.client.review.count.query({ status: ReviewStatus.Pending });
+export async function getReviewCount(state: TravelNote["state"], trpc: TRPC) {
+    let countRes = null;
 
-    const handledResponse = handleResponse(count);
+    if (state === "waiting") {
+        countRes = await trpc.client.review.count.query({ status: ReviewStatus.Pending });
+    } else if (state === "success") {
+        countRes = await trpc.client.review.count.query({ status: ReviewStatus.Approved });
+    } else {
+        countRes = await trpc.client.review.count.query({ status: ReviewStatus.Rejected });
+    }
+
+    const handledResponse = handleResponse(countRes);
 
     if (handledResponse.state === "success") {
         return handledResponse.data?.count;
+    } else {
+        throw Error("Error");
     }
 }
 
-export async function getReviews(itemNumber: number) {
+export async function getReviews(itemNumber: number, state: TravelNote["state"], trpc: TRPC): Promise<TravelNote[]> {
 
-    const response = await trpc.client.review.paging.query({ skip: 0, take: itemNumber, status: ReviewStatus.Pending });
+    let response = null;
+
+    if (state === "waiting") {
+        response = await trpc.client.review.paging.query({ skip: 0, take: itemNumber, status: ReviewStatus.Pending });
+    } else if (state === "success") {
+        response = await trpc.client.review.paging.query({ skip: 0, take: itemNumber, status: ReviewStatus.Approved });
+    } else {
+        response = await trpc.client.review.paging.query({ skip: 0, take: itemNumber, status: ReviewStatus.Rejected });
+    }
 
     const handledResponse = handleResponse(response);
 
@@ -37,15 +57,19 @@ export async function getReviews(itemNumber: number) {
             href: "",
             title: item.title,
             content: item.content,
-            image: "",
-            state: "waiting",
+            image: item.assets[0].asset_uid,
+            isChecked: false,
+            state: state,
         }));
+    } else {
+        throw Error("Error");
     }
 }
 
-export async function passSingleReview(id: number) {
+export async function operateSingleReview(id: number, opeate: "pass" | "reject", trpc: TRPC) {
+    const response_approve = await trpc.client.review.approve.mutate({ id: id, approved: (opeate === "pass"? true: false) });
 
-    const response_approve = await trpc.client.review.approve.mutate({ id: id, approved: true });
-
-    
+    if (handleResponse(response_approve).state === "fail") {
+        throw Error("Error");
+    }
 }

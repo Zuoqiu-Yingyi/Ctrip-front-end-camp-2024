@@ -15,23 +15,10 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import Link from "next/link";
-
-export default function Test() {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
     return (
-        <>
-            <h1>Test</h1>
-            <div>
-                Back to <Link href="/">/</Link>
-            </div>
-            <ul>
-                <li>
-                    <Link href="/test/account">/test/account</Link>
-                </li>
-                <li>
-                    <Link href="/test/assets">/test/assets</Link>
-                </li>
-            </ul>
-        </>
+        <html lang="en">
+            <body>{children}</body>
+        </html>
     );
 }

@@ -24,12 +24,16 @@ import { register as registerMultipartPlugin } from "./multipart";
 import type { FastifyInstance } from "fastify";
 
 export async function init(fastify: FastifyInstance) {
-    await registerCors(fastify); // 注册 multipart 解析插件
-
+    
     await registerMultipartPlugin(fastify); // 注册 multipart 解析插件
 
     await registerJwtPlugin(fastify); // 注册 JWT 插件
+
     await registerCookiePlugin(fastify); // 注册 Cookie 插件
+
     await registerStaticPlugin(fastify); // 注册静态文件插件
+
+    await registerCors(fastify);     
+
     await fastify.after();
 }

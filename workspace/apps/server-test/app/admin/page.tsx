@@ -13,18 +13,21 @@
 // limitations under the License.
 "use client";
 
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { LockOutlined, UserOutlined, SignatureFilled } from "@ant-design/icons";
 import { Button, Checkbox, Form, Input, Flex, Typography, Alert } from "antd";
 import {  useRouter } from 'next/navigation';
-import { login } from "@/app/utils/auth";
 import { handleResponse } from "@/app/utils/help";
+import { login } from "@/app/utils/account";
+import { AuthContext } from "@/app/lib/authContext";
 // import { useTranslation } from "@/app/i18n/client";
 
 const { Title } = Typography;
 
 export default function LoginPage(): JSX.Element {
     // const { t } = useTranslation(lng);
+    const { user } = useContext(AuthContext);
+
     const { replace } = useRouter();
 
     const [loading, setLoading] = useState<boolean>(false);
@@ -35,9 +38,9 @@ export default function LoginPage(): JSX.Element {
         
         setLoading(true);
 
-        let response = await login({ username: values.username, passphrase: values.password, remember: values.remember });
+        let response = await login({ username: values.username, passphrase: values.password, remember: values.remember, role: "staff" }, user.current);
 
-        handleResponse(response)
+        handleResponse(response);
 
         if (handleResponse(response).state === "success") {
             replace('/admin/dashboard');

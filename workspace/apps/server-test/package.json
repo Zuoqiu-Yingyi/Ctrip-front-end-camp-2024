@@ -8,30 +8,30 @@
         "lint": "eslint . --max-warnings 0"
     },
     "dependencies": {
-        "@repo/server": "workspace:*",
-        "@repo/utils": "workspace:*",
-        "@trpc/client": "11.0.0-rc.329",
-        "next": "latest",
-        "react": "^18.2.0",
-        "react-dom": "^18.2.0",
-
         "@ant-design/icons": "^5.3.6",
         "@ant-design/nextjs-registry": "^1.0.0",
+        "@repo/server": "workspace:*",
         "@repo/ui": "workspace:*",
-        
+        "@repo/utils": "workspace:*",
+        "@trpc/client": "11.0.0-rc.329",
         "antd": "^5.16.1",
         "antd-mobile": "^5.35.0",
         "antd-mobile-icons": "^0.3.0",
+        "browser-image-compression": "^2.0.2",
+        "next": "latest",
         "next-i18next": "^15.2.0",
-        "react-cookie": "^7.1.4"
+        "react": "^18.2.0",
+        "react-canvas-draw": "^1.2.1",
+        "react-cookie": "^7.1.4",
+        "react-dom": "^18.2.0"
     },
     "devDependencies": {
-        "@types/react": "^18.2.73",
-        "@types/react-dom": "^18.2.23",
-
         "@next/eslint-plugin-next": "^14.1.4",
         "@repo/eslint-config": "workspace:*",
         "@repo/typescript-config": "workspace:*",
+        "@types/react": "^18.2.73",
+        "@types/react-canvas-draw": "^1.2.3",
+        "@types/react-dom": "^18.2.23",
         "autoprefixer": "^10.4.19",
         "postcss": "^8.4.38",
         "sass": "^1.74.1",

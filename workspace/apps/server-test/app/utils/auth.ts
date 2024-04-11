@@ -22,13 +22,6 @@ import trpc from "@/app/utils/trpc";
 
 type TRole = Parameters<typeof trpc.client.auth.challenge.query>[0]["role"];
 
-export function handleResponse<T>(response: { code: number; message: string; data?: T }): { state: "success" | "fail"; data?: T } {
-    if (response.code === 202) {
-        return { state: "success", data: response.data };
-    } else {
-        return { state: "fail" };
-    }
-}
 
 async function getChallenge(username: string, role: TRole ): Promise<string> {
     const response_challenge = await trpc.client.auth.challenge.query({
@@ -65,27 +58,6 @@ export async function login({
         response: response_hex,
         stay: remember,
     });
-
-    // const key = await passphrase2key(username, passphrase, "salt");
-
-    // const response_challenge = await trpc.client.auth.challenge.query({
-    //     username: username,
-    //     role: role as TRole,
-    // });
-
-    // console.log(response_challenge);
-
-    // const challenge = response_challenge.data.challenge;
-
-    // const response = await challenge2response(String2ArrayBuffer(challenge), key);
-
-    // const response_hex = ArrayBuffer2HexString(response);
-
-    // const response_login = await trpc.client.account.login.mutate({
-    //     challenge,
-    //     response: response_hex,
-    //     stay: remember,
-    // });
 
     console.debug(response_login);
 

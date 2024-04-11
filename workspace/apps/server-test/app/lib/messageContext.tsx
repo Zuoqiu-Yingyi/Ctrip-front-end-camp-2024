@@ -11,27 +11,26 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { MutableRefObject, createContext, useRef, useState } from "react";
+import { createContext, useContext, useRef, useState } from "react";
 import { TravelNote, ManageData, ManagePage, ManagePageNumber } from "./definitions";
-import { fetchItemData, mockRomoteSearch } from "@/app/lib/data";
-import { getReviewCount } from "../utils/review";
+import { mockRomoteSearch } from "@/app/lib/data";
+import { getReviewCount, operateSingleReview, getReviews } from "../utils/review";
+import { AuthContext } from "@/app/lib/authContext";
 
 export const MessageContext = createContext<{
     totalDataNumber: ManagePageNumber;
     loading: boolean;
     onSearch: boolean;
-    // onSearch: ;
     checkedNumber: number;
     displayItems: TravelNote[];
     pageState: TravelNote["state"];
-    // allItems: MutableRefObject<TravelNote[]>;
     toggleLoadingState: Function;
     filterItems: Function;
     addCheckSet: Function;
     subCheckSet: Function;
     firstPullData: Function;
     togglePage: Function;
-    operateSingleItem: Function;
+    operateReview: Function;
     operateBatchItem: Function;
     togglePageState: Function;
     setPageState: Function;
@@ -42,7 +41,6 @@ export const MessageContext = createContext<{
     checkedNumber: 0,
     displayItems: [],
     pageState: "waiting",
-    // allItems: { current: [] },
     onSearch: false,
     toggleLoadingState: () => {},
     filterItems: () => {},
@@ -50,7 +48,7 @@ export const MessageContext = createContext<{
     subCheckSet: () => {},
     firstPullData: () => {},
     togglePage: () => {},
-    operateSingleItem: () => {},
+    operateReview: () => {},
     operateBatchItem: () => {},
     togglePageState: () => {},
     setPageState: () => {},
@@ -58,6 +56,8 @@ export const MessageContext = createContext<{
 });
 
 export default function MessageContextProvider({ children }: { children: React.ReactElement<any, any> }): JSX.Element {
+    const { user } = useContext(AuthContext);
+    
     const checkedSet = useRef<Set<number>>(new Set());
 
     const [checkedNumber, setCheckedNumber] = useState<number>(0);
@@ -217,10 +217,18 @@ export default function MessageContextProvider({ children }: { children: React.R
                 let itemIndex = switchItemIndex(key, index, 5);
 
                 if (itemIndex < totalDataNumber[state] - redNumber && JSON.stringify(allItems.current[state][itemIndex]) === "{}") {
-                    allItems.current[state][itemIndex] = (await fetchItemData(1, state))[0];
+                    allItems.current[state][itemIndex] = (await getReviews(1, state, user.current))[0];
                 }
             }
         }
+    }
+
+    async function operateReview(id: number, operate: "pass" | "reject") {
+        
+        await operateSingleReview(id, operate, user.current);
+
+        await operateSingleItem(id, "waiting");
+
     }
 
     /**
@@ -247,7 +255,7 @@ export default function MessageContextProvider({ children }: { children: React.R
 
         // for (let index = filterIndex; index + 1 <= totalDataNumber - 1 && index < allItems.current.length; index++) {
         //     if (JSON.stringify(allItems.current[index]) === "{}") {
-        //         allItems.current[index] = (await fetchItemData(1))[0];
+        //         allItems.current[index] = (await getReviews(1))[0];
         //     }
         // }
     }
@@ -279,13 +287,13 @@ export default function MessageContextProvider({ children }: { children: React.R
      */
     async function firstPullData(state: TravelNote["state"]) {
         // 获取待审核总数
-        // let allWaitingCount = (await getReviewCount()) as number;
-        let allWaitingCount = 5 as number;
+        let allWaitingCount = (await getReviewCount(state, user.current)) as number;
+        // let allWaitingCount = 5 as number;
 
         if (allWaitingCount > 0) {
             setLoading(true);
 
-            allItems.current[state] = await fetchItemData(5, state);
+            allItems.current[state] = await getReviews(5, state, user.current);
 
             console.log(loadedPages.current[state]);
 
@@ -298,7 +306,7 @@ export default function MessageContextProvider({ children }: { children: React.R
             setLoading(false);
 
             for (let index = 0; index < Math.ceil(allWaitingCount / 5) - 1 && index < 5; index++) {
-                allItems.current[state].push(...(await fetchItemData(5, state)));
+                allItems.current[state].push(...(await getReviews(5, state, user.current)));
 
                 loadedPages.current[state].add(index + 2);
 
@@ -312,6 +320,10 @@ export default function MessageContextProvider({ children }: { children: React.R
 
                 // changeDisplayItems(allItems.current[state]);
             }
+        } else {
+
+            changeDisplayItems(allItems.current[state]);
+
         }
 
         // setTotalDataNumber(allWaitingCount);
@@ -341,7 +353,7 @@ export default function MessageContextProvider({ children }: { children: React.R
             if (!preLoadedPages.current[state].has(page)) {
                 preLoadedPages.current[state].add(page);
 
-                // let receivedData = await fetchItemData(5);
+                // let receivedData = await getReviews(5);
 
                 for (let index = maxReaderPage.current[state]; index < page; index++) {
                     allItems.current[state].push(...new Array(5).fill({}));
@@ -349,7 +361,7 @@ export default function MessageContextProvider({ children }: { children: React.R
 
                 for (let index = 0; index < pageSize; index++) {
                     if (JSON.stringify(allItems.current[state][switchItemIndex(page, index, pageSize)]) === "{}") {
-                        allItems.current[state][switchItemIndex(page, index, pageSize)] = (await fetchItemData(1, state))[0];
+                        allItems.current[state][switchItemIndex(page, index, pageSize)] = (await getReviews(1, state, user.current))[0];
                     }
                 }
 
@@ -402,5 +414,5 @@ export default function MessageContextProvider({ children }: { children: React.R
         changeDisplayItems(allItems.current[state]);
     }
 
-    return <MessageContext.Provider value={{ searchItem, checkedNumber, addCheckSet, subCheckSet, displayItems, filterItems: filterItems, loading, toggleLoadingState, firstPullData, togglePage, totalDataNumber, operateSingleItem, operateBatchItem, togglePageState, pageState, setPageState, onSearch }}>{children}</MessageContext.Provider>;
+    return <MessageContext.Provider value={{ searchItem, checkedNumber, addCheckSet, subCheckSet, displayItems, filterItems: filterItems, loading, toggleLoadingState, firstPullData, togglePage, totalDataNumber, operateReview, operateBatchItem, togglePageState, pageState, setPageState, onSearch }}>{children}</MessageContext.Provider>;
 }

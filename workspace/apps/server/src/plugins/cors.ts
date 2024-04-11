@@ -19,7 +19,7 @@ import type { FastifyInstance } from "fastify";
 export async function register(fastify: FastifyInstance) {
 
     await fastify.register(cors, {
-        origin: "*", // 允许所有域名访问
+        origin: true, // 允许所有域名访问
         // methods: ["GET", "PUT", "POST", "PATCH", "DELETE"], // 允许的 HTTP 方法
         // allowedHeaders: ["Content-Type", "Authorization"], // 允许的请求头
         // exposedHeaders: [], // 可以访问的响应头

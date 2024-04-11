@@ -16,7 +16,7 @@ import React from "react";
 import { NavBar, Button } from "antd-mobile";
 import { CloseCircleFill, AddOutline } from "antd-mobile-icons";
 
-export default function EditPage({ params: { lng } }: { params: { lng: string } }): JSX.Element {
+export default function EditPage(): JSX.Element {
     return (
         <>
             <NavBar backArrow={<CloseCircleFill color="#CCCCCC" />} />

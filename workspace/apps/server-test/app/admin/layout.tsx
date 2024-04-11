@@ -11,13 +11,9 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+"use client";
+import AuthContextProvider from "../lib/authContext";
 
-export function handleResponse<T>(response: {code: number, message?: string | unknown, data?: T}) : {state: "success" | "fail", data?: T}{
-
-    if (response.code === 0) {
-        return {state: "success", data: response.data}
-    } else {
-        return {state: "fail"}
-    }
-    
+export default function OverviewPage({ children }: { children: React.ReactElement<any, any> }): JSX.Element {
+    return <AuthContextProvider>{children}</AuthContextProvider>;
 }
