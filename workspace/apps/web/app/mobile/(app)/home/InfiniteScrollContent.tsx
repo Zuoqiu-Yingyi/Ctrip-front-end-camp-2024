@@ -21,6 +21,7 @@ import {
     //
     useRef,
     useState,
+    useEffect,
     useContext,
 } from "react";
 import { useTranslation } from "react-i18next";
@@ -59,7 +60,7 @@ const InfiniteContent = ({ hasMore }: { hasMore?: boolean }) => {
             ) : (
                 <ErrorBlock
                     status="empty"
-                    description={t("empty.description")}
+                    title={t("empty.description")}
                 />
             )}
         </>
@@ -86,8 +87,38 @@ export function InfiniteScrollContent({ searchInput }: { searchInput: string }):
         }
     };
 
+    useEffect(() => {
+        if (searchInput) {
+            (async () => {
+                try {
+                    const response = await trpc.publish.search.query({
+                        key: searchInput,
+                    });
+                    if (response.code !== 0) {
+                        throw new Error(response.message);
+                    }
+                    const publishs = response.data?.publishs || [];
+                    setData(publishs);
+                    setHasMore(false);
+                } catch (error) {
+                    console.warn(error);
+                    // REF: https://mobile.ant.design/zh/components/toast
+                    Toast.show({
+                        icon: "fail",
+                        content: String(error),
+                    });
+                    setHasMore(false);
+                }
+            })();
+        } else {
+            setCursor(undefined);
+            setData([]);
+            setHasMore(true);
+        }
+    }, [searchInput]);
+
     async function loadMore() {
-        console.debug("loadMore");
+        // console.debug("loadMore");
         try {
             console.debug(cursor);
             const response = await trpc.publish.paging.query({
