@@ -1,9 +1,17 @@
 // @ts-check
+import withPWAInit from "@ducanh2912/next-pwa";
+
+// REF: https://ducanh-next-pwa.vercel.app/docs/next-pwa/getting-started
+export const withPWA = withPWAInit({
+    dest: "public",
+    scope: "/mobile/",
+    sw: "/service-worker.js",
+});
 
 /**
  * @type {import("next").NextConfig}
  */
-const nextConfig = {
+export const nextConfig = {
     output: "export",
     trailingSlash: true,
     typescript: {
@@ -15,4 +23,4 @@ const nextConfig = {
     },
 };
 
-module.exports = nextConfig;
+export default withPWA(nextConfig);

@@ -1,5 +1,9 @@
 # 更改日志 | Change log
 
+## 2024-04-11
+
+- 优化 PWA 配置 | Optimize PWA configuration
+
 ## 2024-04-04
 
 - 实现关闭账户功能 | Implement close account feature

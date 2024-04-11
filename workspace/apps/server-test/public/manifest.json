@@ -1,12 +1,13 @@
 {
+    "$schema": "https://json.schemastore.org/web-manifest-combined.json",
     "name": "旅行日记",
     "short_name": "游记",
     "description": "旅行日记是所有旅行者分享自己旅途记忆的平台。",
     "lang": "zh-Hans",
     "id": "/",
-    "start_url": "/",
+    "start_url": "/mobile/",
     "scope": "/mobile/",
-    "theme_color": "#AOD5D1",
+    "theme_color": "#A0D5D1",
     "display": "standalone",
     "display_override": [
         "window-controls-overlay",
@@ -34,26 +35,27 @@
             "purpose": "any"
         }
     ],
+    "screenshots": [],
     "shortcuts": [
         {
             "name": "旅行日记",
             "description": "旅行日记客户端",
+            "orientation": "portrait",
             "url": "/mobile/",
             "icons": [
                 {
-                    "src": "icons/tdiary.png",
-                    "type": "512x512",
-                    "sizes": "256x256"
+                    "src": "icons/tdiary-512x512.png",
+                    "type": "image/png",
+                    "sizes": "512x512"
                 }
             ]
         }
     ],
-    "related_applications": [
-    ],
     "protocol_handlers": [
         {
             "protocol": "web+tdiary",
-            "url": "/?url=%s"
+            "url": "/mobile/?url=%s"
         }
-    ]
+    ],
+    "related_applications": []
 }

@@ -8,15 +8,14 @@
         "lint": "eslint . --max-warnings 0"
     },
     "dependencies": {
-        "@repo/server": "workspace:*",
+        "@ducanh2912/next-pwa": "^10.2.6",
         "@repo/utils": "workspace:*",
-        "@trpc/client": "11.0.0-rc.329",
         "next": "latest",
         "react": "^18.2.0",
         "react-dom": "^18.2.0"
     },
     "devDependencies": {
-        "@types/react": "^18.2.73",
-        "@types/react-dom": "^18.2.23"
+        "@types/react": "^18.2.75",
+        "@types/react-dom": "^18.2.24"
     }
 }
