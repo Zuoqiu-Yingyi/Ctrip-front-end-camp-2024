@@ -14,31 +14,30 @@
 import { Space } from "antd";
 import { FileTextOutlined, FileSyncOutlined, FileDoneOutlined } from "@ant-design/icons";
 import { TimeMessage } from "@/app/lib/definitions";
+import dayjs from "dayjs";
 
-export default function TimeList(state: "success" | "fail" | "waiting"): JSX.Element[] {
-
+export default function TimeList(state: "success" | "fail" | "waiting", submissionTime: string, modificationTime: string, approvalTime: string): JSX.Element[] {
     let timeBar = [
-            <Space>
-                <FileTextOutlined />
-                提交时间： 12:00
-            </Space>,
-            <Space>
-                <FileSyncOutlined />
-                更改时间： 12:00
-            </Space>             
-    ]
+        <Space>
+            <FileTextOutlined />
+            {`提交时间:${dayjs(submissionTime).format("YYYY-MM-DD HH:mm") }`}
+        </Space>,
+        <Space>
+            <FileSyncOutlined />
+            {`更改时间:${dayjs(modificationTime).format("YYYY-MM-DD HH:mm") }`}
+        </Space>,
+    ];
 
     if (state != "waiting") {
         timeBar.push(
             <Space>
                 <FileDoneOutlined />
-                审核时间： 12:00
-            </Space>  
-        )
+                {`审核时间:${dayjs(approvalTime).format("YYYY-MM-DD HH:mm") }`}
+            </Space>,
+        );
     }
 
     return timeBar;
-
 }
 
 export function TimeDemo({ icon, text, time }: TimeMessage): JSX.Element {

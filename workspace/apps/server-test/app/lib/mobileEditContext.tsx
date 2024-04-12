@@ -70,11 +70,11 @@ export default function SubmitInfoProvider({ children }: { children: React.React
             formData.append("file[]", item);
         }
 
-        const assetsUpload = await upload(formData, user.current);
+        const assetsUpload = await upload(formData);
 
-        if (handleResponse(assetsUpload).state === "fail") {
-            throw Error("Error");
-        }
+        // if (handleResponse(assetsUpload).state === "fail") {
+        //     throw Error("Error");;
+        // }
 
         navigator.geolocation.getCurrentPosition(async (position) => {
             const draft = {
@@ -105,13 +105,7 @@ export default function SubmitInfoProvider({ children }: { children: React.React
             formData.append("file[]", item);
         }
 
-        console.debug(uploadImages.current);
-
-        console.debug(formData);
-
-        const assetsUpload = await upload(formData, user.current);
-
-        console.debug(assetsUpload);
+        const assetsUpload = await upload(formData);
 
         navigator.geolocation.getCurrentPosition(async (position) => {
             const draft = {

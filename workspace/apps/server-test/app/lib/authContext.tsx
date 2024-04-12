@@ -12,13 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import { MutableRefObject, createContext, useRef } from "react";
+import { AccessorRole } from "@repo/server/src/utils/role";
 import { TRPC } from "../utils/trpc";
 
 
 export const AuthContext = createContext<{
     user: MutableRefObject<TRPC>
+    userInfo: MutableRefObject<{username: string | undefined, accessRole: AccessorRole | undefined, avatar?: string | null | undefined, id?: number} | null> 
 }>({
-    user: {current: new TRPC()}
+    user: {current: new TRPC()},
+    userInfo: {current: null},
 });
 
 
@@ -27,5 +30,8 @@ export default function AuthContextProvider({ children }: { children: React.Reac
     const user = useRef(new TRPC());
 
 
-    return <AuthContext.Provider value={{ user }}>{children}</AuthContext.Provider>;
+    const userInfo = useRef<{username: string | undefined, accessRole: AccessorRole | undefined, avatar?: string | null | undefined, id?: number}>(null);
+
+
+    return <AuthContext.Provider value={{ user, userInfo }}>{children}</AuthContext.Provider>;
 }

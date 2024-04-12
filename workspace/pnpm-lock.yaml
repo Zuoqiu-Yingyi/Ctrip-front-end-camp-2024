@@ -154,6 +154,9 @@ importers:
       browser-image-compression:
         specifier: ^2.0.2
         version: 2.0.2
+      dayjs:
+        specifier: ^1.11.10
+        version: 1.11.10
       next:
         specifier: latest
         version: 14.1.4(@babel/core@7.24.4)(react-dom@18.2.0)(react@18.2.0)(sass@1.74.1)

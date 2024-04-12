@@ -16,44 +16,19 @@
  */
 
 import {
-    //
-    trpc,
     origin,
-    TRPC,
 } from "./trpc";
 
 export async function upload<R = any>(
     //
     formData: FormData,
-    t: TRPC,
 ) {
-    console.debug({
-        method: "POST",
-        body: formData,
-        headers: {
-            Cookie: t.cookies,
-        },
-    });
 
     const response = await fetch(`${origin}/assets/upload`, {
         method: "POST",
         body: formData,
-        headers: {
-            Cookie: t.cookies,
-        },
+        credentials: 'include',
     });
+    
     return response.json() as R;
-}
-
-export async function get(
-    //
-    uid: string,
-    t = trpc,
-): Promise<any> {
-    const response = await fetch(`${origin}/assets/${uid}`, {
-        headers: {
-            Cookie: t.cookies,
-        },
-    });
-    return response;
 }

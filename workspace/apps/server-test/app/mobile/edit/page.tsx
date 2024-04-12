@@ -12,13 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 "use client";
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { useContext, useState } from "react";
 import { NavBar, Tabs, Space, Button, SpinLoading } from "antd-mobile";
 import { Layout } from "antd";
 import { CloseCircleFill, FillinOutline, PicturesOutline, VideoOutline } from "antd-mobile-icons";
 import EditTab from "@/app/ui/mobile-edit-tab";
 import { SubmitInfoContext } from "@/app/lib/mobileEditContext";
-import { initAccount } from "@/app/utils/account";
 
 export default function EditPage(): JSX.Element {
     const [tab, setTab] = useState<"text" | "album" | "camera">("text");
@@ -27,19 +26,19 @@ export default function EditPage(): JSX.Element {
 
     const { uploadTrvalNote, user } = useContext(SubmitInfoContext);
 
-    const flag = useRef(true);
+    // const flag = useRef(true);
 
-    useEffect(() => {
+    // useEffect(() => {
 
-        if (flag.current) {
-            flag.current = false;
+    //     if (flag.current) {
+    //         flag.current = false;
 
-            (async () => {
-                await initAccount(undefined, user.current);
-            })();            
-        }
+    //         (async () => {
+    //             await initAccount(undefined, user.current);
+    //         })();            
+    //     }
         
-    }, [])
+    // }, [])
 
     return (
         <Layout style={{ height: "100vh" }}>

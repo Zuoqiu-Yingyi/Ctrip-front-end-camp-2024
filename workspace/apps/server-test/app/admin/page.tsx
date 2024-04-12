@@ -16,7 +16,7 @@
 import React, { useContext, useState } from "react";
 import { LockOutlined, UserOutlined, SignatureFilled } from "@ant-design/icons";
 import { Button, Checkbox, Form, Input, Flex, Typography, Alert } from "antd";
-import {  useRouter } from 'next/navigation';
+import { useRouter } from "next/navigation";
 import { handleResponse } from "@/app/utils/help";
 import { login } from "@/app/utils/account";
 import { AuthContext } from "@/app/lib/authContext";
@@ -26,7 +26,7 @@ const { Title } = Typography;
 
 export default function LoginPage(): JSX.Element {
     // const { t } = useTranslation(lng);
-    const { user } = useContext(AuthContext);
+    const { user, userInfo } = useContext(AuthContext);
 
     const { replace } = useRouter();
 
@@ -35,7 +35,6 @@ export default function LoginPage(): JSX.Element {
     const [errorDisplay, setErrorDisplay] = useState<boolean>(false);
 
     const onFinish = async (values: { username: string; password: string; remember: boolean }) => {
-        
         setLoading(true);
 
         let response = await login({ username: values.username, passphrase: values.password, remember: values.remember, role: "staff" }, user.current);
@@ -43,7 +42,12 @@ export default function LoginPage(): JSX.Element {
         handleResponse(response);
 
         if (handleResponse(response).state === "success") {
-            replace('/admin/dashboard');
+
+            userInfo.current = {username: response.data?.account.username, accessRole: response.data?.account.role};
+
+
+            replace("/admin/dashboard");
+
         } else {
             setErrorDisplay(true);
 
@@ -53,7 +57,6 @@ export default function LoginPage(): JSX.Element {
         }
 
         setLoading(false);
-
     };
 
     return (
@@ -92,7 +95,7 @@ export default function LoginPage(): JSX.Element {
             >
                 <Form.Item
                     name="username"
-                    rules={[{ required: true, message: "Please input your Username!" }]}
+                    rules={[{ required: true, message: "请输入用户名" }]}
                 >
                     <Input
                         prefix={<UserOutlined className="site-form-item-icon" />}
@@ -102,7 +105,7 @@ export default function LoginPage(): JSX.Element {
                 </Form.Item>
                 <Form.Item
                     name="password"
-                    rules={[{ required: true, message: "Please input your Password!" }]}
+                    rules={[{ required: true, message: "请输入密码" }]}
                 >
                     <Input
                         prefix={<LockOutlined className="site-form-item-icon" />}

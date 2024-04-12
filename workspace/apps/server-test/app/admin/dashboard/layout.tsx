@@ -13,11 +13,11 @@
 // limitations under the License.
 "use client";
 
-import React from "react";
+import React, { useContext } from "react";
 import Link from "next/link";
 import { Layout, Menu, theme, MenuProps, Typography, Dropdown, Flex } from "antd";
 import { PieChartFilled, CarryOutFilled, SignatureFilled, LogoutOutlined, createFromIconfontCN } from "@ant-design/icons";
-// import { useTranslation } from "@/app/i18n/client";
+import { AuthContext } from "@/app/lib/authContext";
 
 const { Header, Content } = Layout;
 const { Title } = Typography;
@@ -27,7 +27,8 @@ const IconFont = createFromIconfontCN({
 });
 
 export default function OverviewPage({ children }: { children: React.ReactNode }): JSX.Element {
-    // const { t } = useTranslation(lng);
+
+    const { userInfo } = useContext(AuthContext);
 
     const {
         token: { colorBgContainer, borderRadiusLG },
@@ -89,7 +90,7 @@ export default function OverviewPage({ children }: { children: React.ReactNode }
                                     key: 1,
                                     icon: <LogoutOutlined />,
                                     // label: t("logout"),
-                                    label: "登出"
+                                    label: "登出",
                                 },
                             ],
                         }}
@@ -98,16 +99,24 @@ export default function OverviewPage({ children }: { children: React.ReactNode }
                             level={5}
                             type="secondary"
                         >
-                            {/* cspell:disable-next-line */}
-                            {/* <IconFont type="icon-zk-shenheyuan" className="mr-3"/> */}
-                            <IconFont
-                                /* cspell:disable-next-line */
-                                type="icon-guanliyuan_jiaoseguanli"
-                                className="mr-3"
-                                style={{ color: "red" }}
-                            />
-                            {/* <UserOutlined className="mr-3" /> */}
-                            用户名
+                            
+
+                            {userInfo.current?.accessRole === 2 ? (
+                                <IconFont
+                                    /* cspell:disable-next-line */
+                                    type="icon-zk-shenheyuan"
+                                    className="mr-3"
+                                />
+                            ) : (
+                                <IconFont
+                                    /* cspell:disable-next-line */
+                                    type="icon-guanliyuan_jiaoseguanli"
+                                    className="mr-3"
+                                    style={{ color: "red" }}
+                                />
+                            )}
+                            
+                            {userInfo.current?.username}
                         </Title>
                     </Dropdown>
                 </Flex>

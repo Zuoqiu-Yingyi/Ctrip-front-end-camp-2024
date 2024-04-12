@@ -24,17 +24,16 @@ export const MessageContext = createContext<{
     checkedNumber: number;
     displayItems: TravelNote[];
     pageState: TravelNote["state"];
-    toggleLoadingState: Function;
-    filterItems: Function;
     addCheckSet: Function;
     subCheckSet: Function;
     firstPullData: Function;
     togglePage: Function;
     operateReview: Function;
-    operateBatchItem: Function;
+    operateBatchReview: Function;
     togglePageState: Function;
     setPageState: Function;
-    searchItem: Function
+    searchItem: Function;
+    delTravelNote: Function;
 }>({
     totalDataNumber: { success: 0, waiting: 0, fail: 0 },
     loading: true,
@@ -42,22 +41,21 @@ export const MessageContext = createContext<{
     displayItems: [],
     pageState: "waiting",
     onSearch: false,
-    toggleLoadingState: () => {},
-    filterItems: () => {},
     addCheckSet: () => {},
     subCheckSet: () => {},
     firstPullData: () => {},
     togglePage: () => {},
     operateReview: () => {},
-    operateBatchItem: () => {},
+    operateBatchReview: () => {},
     togglePageState: () => {},
     setPageState: () => {},
     searchItem: () => {},
+    delTravelNote: () => {},
 });
 
 export default function MessageContextProvider({ children }: { children: React.ReactElement<any, any> }): JSX.Element {
     const { user } = useContext(AuthContext);
-    
+
     const checkedSet = useRef<Set<number>>(new Set());
 
     const [checkedNumber, setCheckedNumber] = useState<number>(0);
@@ -66,23 +64,18 @@ export default function MessageContextProvider({ children }: { children: React.R
     const [pageState, setPageState] = useState<TravelNote["state"]>("waiting");
 
     // 已加载全部数据
-    // const allItems = useRef<TravelNote[]>([]);
     const allItems = useRef<ManageData>({ success: [], waiting: [], fail: [] });
 
     // 最大渲染界面
-    // const maxReaderPage = useRef<number>(0);
     const maxReaderPage = useRef<ManagePageNumber>({ success: 0, waiting: 0, fail: 0 });
 
     // 预加载界面
-    // const preLoadedPages = useRef<Set<number>>(new Set());
     const preLoadedPages = useRef<ManagePage>({ success: new Set(), waiting: new Set(), fail: new Set() });
 
     // 已加载界面
-    // const loadedPages = useRef<Set<number>>(new Set());
     const loadedPages = useRef<ManagePage>({ success: new Set(), waiting: new Set(), fail: new Set() });
 
     // 数据总数
-    // const [totalDataNumber, setTotalDataNumber] = useState<number>(0);
     const [totalDataNumber, setTotalDataNumber] = useState<ManagePageNumber>({ success: 0, waiting: 0, fail: 0 });
 
     // 界面呈现数据
@@ -103,8 +96,16 @@ export default function MessageContextProvider({ children }: { children: React.R
      *
      * @param state - 状态
      */
+    async function delTravelNote(id: string) {}
+
+    /**
+     * 切换页面状态
+     *
+     * @remarks
+     *
+     * @param state - 状态
+     */
     async function togglePageState(state: TravelNote["state"]) {
-        
         setOnSearch(false);
 
         searchNumber.current += 1;
@@ -124,38 +125,23 @@ export default function MessageContextProvider({ children }: { children: React.R
      * @param state - 状态
      */
     async function searchItem(field: "title" | "content", searchWord: string) {
-
-        // onSearch.current = true;
         setOnSearch(true);
 
         searchNumber.current += 1;
 
         let record = searchNumber.current;
 
-        let loadedSearchItems = allItems.current[pageState].filter((item) => item[field].includes(searchWord))
+        let loadedSearchItems = allItems.current[pageState].filter((item) => item[field].includes(searchWord));
 
-        changeDisplayItems(
-            loadedSearchItems
-        )
+        changeDisplayItems(loadedSearchItems);
 
-
-        let allSearchItems = [...loadedSearchItems, ...await mockRomoteSearch(3, pageState)];
-        
+        let allSearchItems = [...loadedSearchItems, ...(await mockRomoteSearch(3, pageState))];
 
         if (record === searchNumber.current) {
-
-            changeDisplayItems(
-                allSearchItems
-            );
+            changeDisplayItems(allSearchItems);
 
             setOnSearch(false);
         }
-
-        // onSearch.current = false;
-    }
-
-    function filterItems(items: TravelNote[], state: "success" | "waiting" | "fail") {
-        setDisplayItems(items.filter((value) => JSON.stringify(value) === "{}" || value.state === state));
     }
 
     function changeDisplayItems(items: TravelNote[]) {
@@ -167,6 +153,13 @@ export default function MessageContextProvider({ children }: { children: React.R
         );
     }
 
+    /**
+     * 增加批处理项
+     *
+     * @remarks
+     *
+     * @param id - 审核id
+     */
     function addCheckSet(id: number) {
         checkedSet.current.add(id);
 
@@ -186,6 +179,13 @@ export default function MessageContextProvider({ children }: { children: React.R
         );
     }
 
+    /**
+     * 删除批处理项
+     *
+     * @remarks
+     *
+     * @param id - 审核id
+     */
     function subCheckSet(id: number) {
         checkedSet.current.delete(id);
 
@@ -205,10 +205,6 @@ export default function MessageContextProvider({ children }: { children: React.R
         );
     }
 
-    function toggleLoadingState() {
-        setLoading(!loading);
-    }
-
     async function mendLoadedPages(redNumber: number, state: TravelNote["state"]) {
         for (let key of loadedPages.current[state].keys()) {
             console.log(key);
@@ -223,12 +219,14 @@ export default function MessageContextProvider({ children }: { children: React.R
         }
     }
 
-    async function operateReview(id: number, operate: "pass" | "reject") {
-        
-        await operateSingleReview(id, operate, user.current);
+    async function operateReview(id: number, operate: "pass" | "reject", rejectReason?: string) {
+        if (operate === "pass") {
+            await operateSingleReview(id, operate, user.current);
+        } else {
+            await operateSingleReview(id, operate, user.current, rejectReason);
+        }
 
         await operateSingleItem(id, "waiting");
-
     }
 
     /**
@@ -237,13 +235,12 @@ export default function MessageContextProvider({ children }: { children: React.R
      * @remarks
      *
      * @param id - 审核id
+     * @param state - 状态
+     *
      */
     async function operateSingleItem(id: number, state: TravelNote["state"]) {
-        // let filterIndex = 0;
-
         allItems.current[state] = allItems.current[state].filter((item) => item.id !== id);
 
-        // setTotalDataNumber(totalDataNumber[state] - 1);
         setTotalDataNumber({
             ...totalDataNumber,
             [state]: totalDataNumber[state] - 1,
@@ -252,22 +249,33 @@ export default function MessageContextProvider({ children }: { children: React.R
         setDisplayItems(allItems.current[state]);
 
         mendLoadedPages(1, state);
+    }
 
-        // for (let index = filterIndex; index + 1 <= totalDataNumber - 1 && index < allItems.current.length; index++) {
-        //     if (JSON.stringify(allItems.current[index]) === "{}") {
-        //         allItems.current[index] = (await getReviews(1))[0];
-        //     }
-        // }
+    async function operateBatchReview(operate: "pass" | "reject", rejectReason?: string) {
+        await Promise.all(
+            allItems.current["waiting"].map((element) => {
+                if (operate === "pass") {
+                    return operateSingleReview(element.id, operate, user.current);
+                } else {
+                    return operateSingleReview(element.id, operate, user.current, rejectReason);
+                }
+            }),
+        );
+
+        await operateBatchItem("waiting");
     }
 
     /**
      * 前端批量审核状态改变
      *
+     * @remarks
+     *
+     * @param state - 状态
+     *
      */
     async function operateBatchItem(state: TravelNote["state"]) {
         allItems.current[state] = allItems.current[state].filter((item) => !checkedSet.current.has(item.id));
 
-        // setTotalDataNumber(totalDataNumber[state] - checkedNumber);
         setTotalDataNumber({
             ...totalDataNumber,
             [state]: totalDataNumber[state] - checkedNumber,
@@ -284,11 +292,15 @@ export default function MessageContextProvider({ children }: { children: React.R
 
     /**
      * 首次获取数据，获取第一页页面，渲染界面，并异步加载后五页的内容
+     *
+     * @remarks
+     *
+     * @param state - 状态
+     *
      */
     async function firstPullData(state: TravelNote["state"]) {
         // 获取待审核总数
         let allWaitingCount = (await getReviewCount(state, user.current)) as number;
-        // let allWaitingCount = 5 as number;
 
         if (allWaitingCount > 0) {
             setLoading(true);
@@ -312,21 +324,15 @@ export default function MessageContextProvider({ children }: { children: React.R
 
                 maxReaderPage.current[state] += 1;
 
-                // setTotalDataNumber(allItems.current[state].length);
                 setTotalDataNumber({
                     ...totalDataNumber,
                     [state]: allItems.current[state].length,
                 });
-
-                // changeDisplayItems(allItems.current[state]);
             }
         } else {
-
             changeDisplayItems(allItems.current[state]);
-
         }
 
-        // setTotalDataNumber(allWaitingCount);
         setTotalDataNumber({
             ...totalDataNumber,
             [state]: allWaitingCount,
@@ -343,6 +349,7 @@ export default function MessageContextProvider({ children }: { children: React.R
      * @param page - 页面索引
      * @param pageSize - 页面审核数
      * @param isLoading - 界面是否等待
+     * @param state - 状态
      */
     async function loadPage(page: number, pageSize: number, isLoading: boolean, state: TravelNote["state"]) {
         if (!loadedPages.current[state].has(page)) {
@@ -353,11 +360,15 @@ export default function MessageContextProvider({ children }: { children: React.R
             if (!preLoadedPages.current[state].has(page)) {
                 preLoadedPages.current[state].add(page);
 
-                // let receivedData = await getReviews(5);
-
                 for (let index = maxReaderPage.current[state]; index < page; index++) {
                     allItems.current[state].push(...new Array(5).fill({}));
                 }
+
+                // allItems.current[state].map((item) => {
+
+                //     if
+
+                // })
 
                 for (let index = 0; index < pageSize; index++) {
                     if (JSON.stringify(allItems.current[state][switchItemIndex(page, index, pageSize)]) === "{}") {
@@ -368,8 +379,6 @@ export default function MessageContextProvider({ children }: { children: React.R
                 loadedPages.current[state].add(page);
 
                 maxReaderPage.current[state] = maxReaderPage.current[state] > page ? maxReaderPage.current[state] : page;
-
-                // changeDisplayItems(allItems.current[state]);
 
                 console.log(allItems.current);
 
@@ -414,5 +423,5 @@ export default function MessageContextProvider({ children }: { children: React.R
         changeDisplayItems(allItems.current[state]);
     }
 
-    return <MessageContext.Provider value={{ searchItem, checkedNumber, addCheckSet, subCheckSet, displayItems, filterItems: filterItems, loading, toggleLoadingState, firstPullData, togglePage, totalDataNumber, operateReview, operateBatchItem, togglePageState, pageState, setPageState, onSearch }}>{children}</MessageContext.Provider>;
+    return <MessageContext.Provider value={{ searchItem, delTravelNote, checkedNumber, addCheckSet, subCheckSet, displayItems, loading, firstPullData, togglePage, totalDataNumber, operateReview, operateBatchReview, togglePageState, pageState, setPageState, onSearch }}>{children}</MessageContext.Provider>;
 }

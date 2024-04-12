@@ -14,11 +14,15 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+"use client";
+import AuthContextProvider from "../lib/authContext";
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({ children }: { children: React.ReactElement<any, any> }) {
     return (
         <html lang="en">
-            <body>{children}</body>
+            <body>
+                <AuthContextProvider>{children}</AuthContextProvider>
+            </body>
         </html>
     );
 }

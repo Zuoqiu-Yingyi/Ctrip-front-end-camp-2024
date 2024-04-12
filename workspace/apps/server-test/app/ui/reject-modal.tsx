@@ -16,11 +16,13 @@ import { Modal, Form, Input } from "antd";
 const { TextArea } = Input;
 
 export default function RejectModal({isModalOpen, handleOk, handleCancel}: {isModalOpen: boolean, handleOk: any, handleCancel: any}): JSX.Element {
+    const [form] = Form.useForm();
+    
     return (
         <Modal
             title="拒绝理由"
             open={isModalOpen}
-            onOk={handleOk}
+            onOk={() => {handleOk(form.getFieldValue("reason"))}}
             onCancel={handleCancel}
             width={400}
             okText="提交"
@@ -32,6 +34,7 @@ export default function RejectModal({isModalOpen, handleOk, handleCancel}: {isMo
                 layout="horizontal"
                 style={{ maxWidth: 400 }}
                 initialValues={{ operation: "pass" }}
+                form={form}
             >
                 <Form.Item
                     name="reason"

@@ -13,16 +13,19 @@
 // limitations under the License.
 import { CheckCircleFilled, ExclamationCircleFilled, CloseCircleFilled } from "@ant-design/icons";
 import React, { useContext, useState } from "react";
-import { Flex, Typography, Modal, Form, Input, RadioChangeEvent, Button } from "antd";
+import { Flex, Typography, Modal, Form, Input, RadioChangeEvent, Button, Popconfirm } from "antd";
 import { MessageContext } from "@/app/lib/messageContext";
 import RejectModal from "@/app/ui/reject-modal";
+import { AuthContext } from "../lib/authContext";
 // import { passSingleReview } from "@/app/utils/review";
 
 const { Title, Paragraph } = Typography;
 const { TextArea } = Input;
 
 export default function StateOperation({ stateReceived, id }: { stateReceived: "success" | "fail" | "waiting"; id: number }): JSX.Element {
-    const { operateReview } = useContext(MessageContext);
+    const { operateReview, delTravelNote } = useContext(MessageContext);
+
+    const { user, userInfo } = useContext(AuthContext);
 
     const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -46,8 +49,8 @@ export default function StateOperation({ stateReceived, id }: { stateReceived: "
         text = "待审核";
     }
 
-    const handleOk = async () => {
-        await operateReview(id, "reject");
+    const handleOk = async (reason: string) => {
+        await operateReview(id, "reject", reason);
 
         setIsModalOpen(false);
     };
@@ -61,36 +64,31 @@ export default function StateOperation({ stateReceived, id }: { stateReceived: "
             vertical
             style={{ width: 130, justifyContent: "space-around", alignItems: "center", marginLeft: 20 }}
         >
+            {userInfo.current?.accessRole === 1 && (
+                <Popconfirm
+                    title="删除"
+                    description="你确定删除该项吗？"
+                    onCancel={() => {delTravelNote()}}
+                    okText="确定"
+                    cancelText="取消"
+                >
+                    <Button
+                        danger
+                        size="small"
+                        style={{ marginLeft: 90 }}
+                    >
+                        删除
+                    </Button>
+                </Popconfirm>
+            )}
+
             <Title
                 level={4}
                 type={type}
+                style={{ marginTop: 10 }}
             >
                 {icon}
                 {text}
-                {/* <Modal
-                    title="拒绝理由"
-                    open={isModalOpen}
-                    onOk={handleOk}
-                    onCancel={handleCancel}
-                    width={400}
-                    okText="提交"
-                    cancelText="取消"
-                >
-                    <Form
-                        labelCol={{ span: 4 }}
-                        wrapperCol={{ span: 24 }}
-                        layout="horizontal"
-                        style={{ maxWidth: 400 }}
-                        initialValues={{ operation: "pass" }}
-                    >
-                        <Form.Item
-                            // label="拒绝理由"
-                            name="reason"
-                        >
-                            <TextArea rows={5} />
-                        </Form.Item>
-                    </Form>
-                </Modal> */}
             </Title>
             {stateReceived === "waiting" && (
                 <Flex gap="small">

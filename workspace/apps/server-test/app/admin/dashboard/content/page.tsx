@@ -28,12 +28,12 @@ const { Text } = Typography;
 export default function ContentPage(): JSX.Element {
     // const { t } = useTranslation(lng);
 
-    const { checkedNumber, displayItems, loading, firstPullData, operateBatchItem, onSearch } = useContext(MessageContext);
+    const { checkedNumber, displayItems, loading, firstPullData, operateBatchReview, onSearch } = useContext(MessageContext);
 
     const [isModalOpen, setIsModalOpen] = useState(false);
 
-    const handleOk = async () => {
-        await operateBatchItem();
+    const handleOk = async (reason: string) => {
+        await operateBatchReview("reject", reason);
 
         setIsModalOpen(false);
     };
@@ -62,7 +62,7 @@ export default function ContentPage(): JSX.Element {
                         type="dashed"
                         icon={<CheckCircleTwoTone twoToneColor="#52c41a" />}
                         onClick={async () => {
-                            await operateBatchItem();
+                            await operateBatchReview("pass");
                         }}
                     >
                         <Text type="success">

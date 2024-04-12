@@ -48,11 +48,13 @@ export default function DrawPanel({ back }: { back: () => void }): JSX.Element {
         brushColor,
         brushRadius,
         catenaryColor: brushColor,
-        // canvasWidth: screen.width,
-        // canvasHeight: (screen.height / 10) * 7,
-        canvasWidth: 200,
-        canvasHeight: 200,
+        canvasWidth: screen.width,
+        canvasHeight: (screen.height / 10) * 7,
+        // canvasWidth: 200,
+        // canvasHeight: 200,
     };
+
+    const sliderLength = screen.width - 250;
 
     return (
         <div className="flex flex-col">
@@ -100,8 +102,9 @@ export default function DrawPanel({ back }: { back: () => void }): JSX.Element {
                             setBrushRadius(value as number);
                         }}
                         style={{
-                            // width: `${screen.width - 250}px`,
-                            width: `${250}px`,
+                            width: `${sliderLength}px`,
+                            // width: `${250}px`,
+                            // width: 
                         }}
                     />
                 </Space>

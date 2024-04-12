@@ -11,13 +11,15 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useContext } from "react";
 import { List, Flex, Image, Skeleton, Modal, Button, Typography, Checkbox, Spin } from "antd";
 import { TravelNote } from "@/app/lib/definitions";
 import StateOperation from "./state-operation";
 import { MessageContext } from "@/app/lib/messageContext";
 import TimeList from "./time-demo";
 import { CheckboxChangeEvent } from "antd/es/checkbox";
+import { origin } from "../utils/trpc";
+
 
 const { Title } = Typography;
 
@@ -48,7 +50,6 @@ export default function ExamineList({ data, loading }: { data: TravelNote[]; loa
 }
 
 export function ExamineListItem({ item, loading }: { item: TravelNote; loading: boolean }): JSX.Element {
-    // const [checked, setChecked] = useState(item.isChecked);
 
     const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -57,7 +58,7 @@ export function ExamineListItem({ item, loading }: { item: TravelNote; loading: 
     return (
         <List.Item
             key={item.id}
-            actions={!loading ? TimeList(item.state) : undefined}
+            actions={!loading ? TimeList(item.state, item.submissionTime, item.modificationTime, item.approvalTime) : undefined}
             extra={
                 !loading ? (
                     <Flex>
@@ -65,7 +66,7 @@ export function ExamineListItem({ item, loading }: { item: TravelNote; loading: 
                                 width={200}
                                 height={150}
                                 alt="logo"
-                                src={`/assets/${item.image}`}
+                                src={`${origin}/assets/${item.image}`}
                                 placeholder={
                                     <Spin />
                                 }
@@ -94,7 +95,6 @@ export function ExamineListItem({ item, loading }: { item: TravelNote; loading: 
                                 <Checkbox
                                     checked={item.isChecked}
                                     onChange={(e: CheckboxChangeEvent) => {
-                                        // setChecked(!checked);
                                         if (e.target.checked) {
                                             addCheckSet(item.id);
                                         } else {
@@ -117,7 +117,6 @@ export function ExamineListItem({ item, loading }: { item: TravelNote; loading: 
                             {item.title}
                         </Title>
                     }
-                    // description={item.title}
                     style={{ marginBlockEnd: 5 }}
                 />
                 {!loading ? (item.content.length > 150 ? item.content.substring(0, 150) + "..." : item.content) : null}

@@ -24,7 +24,6 @@ import {
     ArrayBuffer2HexString,
 } from "@repo/utils/crypto";
 import trpc from "./trpc";
-import { handleResponse } from "./help";
 
 type TRole = Parameters<typeof trpc.client.auth.challenge.query>[0]["role"];
 
@@ -44,10 +43,6 @@ export async function signup(
         username,
         password: ArrayBuffer2HexString(key),
     });
-
-    if (handleResponse(response_signup).state === "fail") {
-        throw Error("Error");
-    }
 
     return response_signup;
 }
@@ -81,44 +76,40 @@ export async function login(
         stay: remember,
     });
 
-    if (handleResponse(response_login).state === "fail") {
-        throw Error("Error");
-    }
-
     return response_login;
 }
 
 /**
  * 更改密码
  */
-// export async function changePassword(
-//     {
+export async function changePassword(
+    {
 
-//         username = cuid.createId(),
-//         passphrase1 = cuid.createId(),
-//         passphrase2 = cuid.createId(),
-//         role = "user",
-//     },
-//     t = trpc,
-// ) {
-//     const key1 = await passphrase2key(username, passphrase1, "salt");
-//     const key2 = await passphrase2key(username, passphrase2, "salt");
+        username = "wu",
+        passphrase1 = "1234",
+        passphrase2 = "12345",
+        role = "user",
+    },
+    t = trpc,
+) {
+    const key1 = await passphrase2key(username, passphrase1, "salt");
+    const key2 = await passphrase2key(username, passphrase2, "salt");
 
-//     const response_challenge = await t.client.auth.challenge.query({
-//         username: username,
-//         role: role as TRole,
-//     });
-//     const challenge = response_challenge.data.challenge;
-//     const response = await challenge2response(String2ArrayBuffer(challenge), key1);
-//     const response_hex = ArrayBuffer2HexString(response);
+    const response_challenge = await t.client.auth.challenge.query({
+        username: username,
+        role: role as TRole,
+    });
+    const challenge = response_challenge.data.challenge;
+    const response = await challenge2response(String2ArrayBuffer(challenge), key1);
+    const response_hex = ArrayBuffer2HexString(response);
 
-//     const response_change_password = await t.client.account.change_password.mutate({
-//         challenge,
-//         response: response_hex,
-//         password: ArrayBuffer2HexString(key2),
-//     });
-//     return response_change_password;
-// }
+    const response_change_password = await t.client.account.change_password.mutate({
+        challenge,
+        response: response_hex,
+        password: ArrayBuffer2HexString(key2),
+    });
+    return response_change_password;
+}
 
 export async function initAccount(
     account = {

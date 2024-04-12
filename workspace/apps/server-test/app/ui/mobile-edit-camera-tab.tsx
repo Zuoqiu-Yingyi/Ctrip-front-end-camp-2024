@@ -25,8 +25,6 @@ export default function EditCameraTab(): JSX.Element {
     const [onVedio, setOnVedio] = useState<boolean>(true);
 
     useEffect(() => {
-        // console.log(screen.width);
-
         openCamera(cameraVideoRef, cameraCanvasRef);
     }, []);
 
@@ -48,23 +46,6 @@ export default function EditCameraTab(): JSX.Element {
                 ref={cameraCanvasRef}
                 style={{ border: "1px solid black", display: !onVedio ? "block" : "none" }}
             />
-            {/* {onVedio ? (
-                <video
-                    id="cameraVideo"
-                    ref={cameraVideoRef}
-                    width={320}
-                    height={320}
-                />
-            ) : (
-                <canvas
-                    id="cameraCanvas"
-                    ref={cameraCanvasRef}
-                    // width={320}
-                    // height={320}
-                    style={{ border: "1px solid black", width: "100px", height: "100px" }}
-                />
-            )} */}
-
             {onVedio? 
             (
                 <FloatButton

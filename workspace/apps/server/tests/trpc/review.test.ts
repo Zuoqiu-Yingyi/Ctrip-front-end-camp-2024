@@ -106,7 +106,7 @@ describe("/trpc/review", () => {
         /* 测试审批项获取 (用户) */
         const response_submitted1 = await user.client.review.submitted.query({ draft_id });
         expect(response_submitted1.code).toEqual(0);
-        expect(response_submitted1.data?.reviews).toHaveLength(1);
+        expect(response_submitted1.data?.reviews[0].submission_time).toHaveLength(1);
 
         /* 测试审批项查询 (员工) */
         // 数量查询

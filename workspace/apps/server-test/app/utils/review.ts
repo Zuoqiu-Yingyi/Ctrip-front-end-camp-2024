@@ -11,7 +11,6 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-// import { trpc } from "./trpc";
 import { handleResponse } from "./help";
 import { ReviewStatus } from "@repo/server/src/types/review";
 import { TravelNote } from "../lib/definitions";
@@ -21,11 +20,17 @@ export async function getReviewCount(state: TravelNote["state"], trpc: TRPC) {
     let countRes = null;
 
     if (state === "waiting") {
+
         countRes = await trpc.client.review.count.query({ status: ReviewStatus.Pending });
+
     } else if (state === "success") {
+
         countRes = await trpc.client.review.count.query({ status: ReviewStatus.Approved });
+
     } else {
+
         countRes = await trpc.client.review.count.query({ status: ReviewStatus.Rejected });
+
     }
 
     const handledResponse = handleResponse(countRes);
@@ -60,14 +65,22 @@ export async function getReviews(itemNumber: number, state: TravelNote["state"],
             image: item.assets[0].asset_uid,
             isChecked: false,
             state: state,
+            submissionTime: item.submission_time,
+            modificationTime: item.modification_time,
+            approvalTime: (item.approval_time? item.approval_time: ""),
         }));
     } else {
         throw Error("Error");
     }
 }
 
-export async function operateSingleReview(id: number, opeate: "pass" | "reject", trpc: TRPC) {
-    const response_approve = await trpc.client.review.approve.mutate({ id: id, approved: (opeate === "pass"? true: false) });
+export async function operateSingleReview(id: number, opeate: "pass" | "reject", trpc: TRPC, rejectReason?: string) {
+
+    const response_approve = await trpc.client.review.approve.mutate(
+        (opeate === "pass"?
+            ({ id: id, approved: true }):
+            ({ id: id, approved: false, comment: rejectReason })
+        ))
 
     if (handleResponse(response_approve).state === "fail") {
         throw Error("Error");

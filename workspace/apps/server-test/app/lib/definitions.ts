@@ -30,6 +30,9 @@ export type TravelNote = {
     image: string;
     state: "success" | "fail" | "waiting";
     isChecked: boolean;
+    submissionTime: string;
+    modificationTime: string;
+    approvalTime: string;
 };
 
 export type TimeMessage = {

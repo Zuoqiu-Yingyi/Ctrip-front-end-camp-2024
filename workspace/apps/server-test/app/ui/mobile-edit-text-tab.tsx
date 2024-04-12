@@ -59,6 +59,8 @@ export default function EditTextTab(): JSX.Element {
 
     const insertedText = useRef<string>(textTemplates[0] as string);
 
+    // const rows = Math.floor((screen.height - 42 - 45 - 56 - 32 - 19 - 30) / 25.5);
+
     return (
         <div style={{ flex: 1 }}>
             <TextArea
@@ -111,7 +113,7 @@ export default function EditTextTab(): JSX.Element {
                     resetMainContent(val);
                 }}
                 // rows={Math.floor((screen.height - 42 - 45 - 56 - 32 - 19 - 30) / 25.5)}
-                rows={10}
+                rows={13}
                 style={{ padding: "15px" }}
             />
 
