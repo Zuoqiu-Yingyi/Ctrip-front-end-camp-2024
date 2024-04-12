@@ -106,7 +106,7 @@ describe("/trpc/review", () => {
         /* 测试审批项获取 (用户) */
         const response_submitted1 = await user.client.review.submitted.query({ draft_id });
         expect(response_submitted1.code).toEqual(0);
-        expect(response_submitted1.data?.reviews).toHaveLength(1);
+        expect(response_submitted1.data?.reviews[0].submission_time).toHaveLength(1);
 
         /* 测试审批项查询 (员工) */
         // 数量查询
@@ -144,6 +144,7 @@ describe("/trpc/review", () => {
         const response_paging1 = await reviewer.client.review.paging.query({ skip: 0, take: review_count_pending, status: ReviewStatus.Pending });
         expect(response_paging1.code).toEqual(0);
         expect(response_paging1.data?.reviews).toHaveLength(review_count_pending);
+        let s = response_paging1.data?.reviews[0]
         expect(response_paging1.data?.reviews[review_count_pending - 1].id).toEqual(review_id);
 
         const response_paging2 = await reviewer.client.review.paging.query({ skip: 0, take: review_count });
