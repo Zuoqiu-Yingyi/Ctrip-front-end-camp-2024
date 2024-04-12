@@ -39,13 +39,13 @@ export async function fetchItemData(count: number, state: TravelNote["state"]): 
         /* cspell:disable-next-line */
         content: "We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.",
         state: state,
-        isChecked: false,
+        isChecked: false
     }));
 
     return data;
 }
 
-export async function mockRemoteSearch(count: number, state: TravelNote["state"]): Promise<TravelNote[]> {
+export async function mockRomoteSearch(count: number, state: TravelNote["state"]): Promise<TravelNote[]> {
     await new Promise((resolve) => setTimeout(resolve, 5000));
 
     const data: TravelNote[] = Array.from({ length: count }).map((_, i) => ({
@@ -56,7 +56,7 @@ export async function mockRemoteSearch(count: number, state: TravelNote["state"]
         /* cspell:disable-next-line */
         content: "We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.",
         state: state,
-        isChecked: false,
+        isChecked: false
     }));
 
     return data;

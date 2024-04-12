@@ -16,18 +16,17 @@ import { useTranslation } from "react-i18next";
 
 const { TextArea } = Input;
 
-export default function RejectModal({ isModalOpen, handleOk, handleCancel }: { isModalOpen: boolean; handleOk: any; handleCancel: any }): JSX.Element {
+export default function RejectModal({isModalOpen, handleOk, handleCancel}: {isModalOpen: boolean, handleOk: any, handleCancel: any}): JSX.Element {
+    
     const { t, i18n } = useTranslation();
-
+    
     const [form] = Form.useForm();
-
+    
     return (
         <Modal
             title={t("reject-reason")}
             open={isModalOpen}
-            onOk={() => {
-                handleOk(form.getFieldValue("reason"));
-            }}
+            onOk={() => {handleOk(form.getFieldValue("reason"))}}
             onCancel={handleCancel}
             width={400}
             okText={t("confirmed")}
@@ -41,7 +40,9 @@ export default function RejectModal({ isModalOpen, handleOk, handleCancel }: { i
                 initialValues={{ operation: "pass" }}
                 form={form}
             >
-                <Form.Item name="reason">
+                <Form.Item
+                    name="reason"
+                >
                     <TextArea rows={5} />
                 </Form.Item>
             </Form>

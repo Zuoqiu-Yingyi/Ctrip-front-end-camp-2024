@@ -15,18 +15,23 @@ import { MutableRefObject, createContext, useRef } from "react";
 import { AccessorRole } from "@repo/server/src/utils/role";
 import { TRPC } from "@/utils/trpc";
 
+
 export const AuthContext = createContext<{
-    user: MutableRefObject<TRPC>;
-    userInfo: MutableRefObject<{ username: string | undefined; accessRole: AccessorRole | undefined; avatar?: string | null | undefined; id?: number } | null>;
+    user: MutableRefObject<TRPC>
+    userInfo: MutableRefObject<{username: string | undefined, accessRole: AccessorRole | undefined, avatar?: string | null | undefined, id?: number} | null> 
 }>({
-    user: { current: new TRPC() },
-    userInfo: { current: null },
+    user: {current: new TRPC()},
+    userInfo: {current: null},
 });
 
+
 export default function AuthContextProvider({ children }: { children: React.ReactElement<any, any> }): JSX.Element {
+
     const user = useRef(new TRPC());
 
-    const userInfo = useRef<{ username: string | undefined; accessRole: AccessorRole | undefined; avatar?: string | null | undefined; id?: number }>(null);
+
+    const userInfo = useRef<{username: string | undefined, accessRole: AccessorRole | undefined, avatar?: string | null | undefined, id?: number}>(null);
+
 
     return <AuthContext.Provider value={{ user, userInfo }}>{children}</AuthContext.Provider>;
 }

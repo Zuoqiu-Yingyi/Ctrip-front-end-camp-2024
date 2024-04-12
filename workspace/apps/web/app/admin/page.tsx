@@ -25,6 +25,7 @@ import { useTranslation } from "react-i18next";
 const { Title } = Typography;
 
 export default function LoginPage(): JSX.Element {
+
     const { t, i18n } = useTranslation();
 
     const { user, userInfo } = useContext(AuthContext);
@@ -43,9 +44,11 @@ export default function LoginPage(): JSX.Element {
         handleResponse(response);
 
         if (handleResponse(response).state === "success") {
-            userInfo.current = { username: response.data?.account.username, accessRole: response.data?.account.role };
+
+            userInfo.current = {username: response.data?.account.username, accessRole: response.data?.account.role};
 
             replace("/admin/dashboard");
+
         } else {
             setErrorDisplay(true);
 
@@ -115,7 +118,9 @@ export default function LoginPage(): JSX.Element {
                         valuePropName="checked"
                         noStyle
                     >
-                        <Checkbox>{t("remember")}</Checkbox>
+                        <Checkbox>
+                            {t("remember")}
+                        </Checkbox>
                     </Form.Item>
                 </Form.Item>
 

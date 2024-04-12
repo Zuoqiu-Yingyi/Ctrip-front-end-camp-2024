@@ -22,6 +22,7 @@ import { SubmitInfoContext } from "@/app/lib/mobileEditContext";
 const { Title, Text } = Typography;
 
 export default function EditAlbumTab(): JSX.Element {
+
     const maxCount = 3;
 
     const [popupVisible, setPopupVisible] = useState(false);
@@ -39,12 +40,8 @@ export default function EditAlbumTab(): JSX.Element {
                 columns={3}
                 value={fileList}
                 onChange={setFileList}
-                upload={(file) => {
-                    return addImage(file);
-                }}
-                onDelete={(item: ImageUploadItem) => {
-                    delImage(item);
-                }}
+                upload={(file) => {return addImage(file)}}
+                onDelete={(item: ImageUploadItem) => {delImage(item)}}
                 multiple
                 maxCount={3}
                 showUpload={fileList.length < maxCount}

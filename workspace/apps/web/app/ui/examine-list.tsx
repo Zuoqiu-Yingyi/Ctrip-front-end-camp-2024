@@ -21,6 +21,7 @@ import { CheckboxChangeEvent } from "antd/es/checkbox";
 import { origin } from "../utils/trpc";
 import { useTranslation } from "react-i18next";
 
+
 const { Title } = Typography;
 
 export default function ExamineList({ data, loading }: { data: TravelNote[]; loading: boolean }): JSX.Element {
@@ -50,6 +51,7 @@ export default function ExamineList({ data, loading }: { data: TravelNote[]; loa
 }
 
 export function ExamineListItem({ item, loading }: { item: TravelNote; loading: boolean }): JSX.Element {
+
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     const { addCheckSet, subCheckSet } = useContext(MessageContext);
@@ -63,14 +65,16 @@ export function ExamineListItem({ item, loading }: { item: TravelNote; loading: 
             extra={
                 !loading ? (
                     <Flex>
-                        <Image
-                            width={200}
-                            height={150}
-                            alt="logo"
-                            src={`${origin}/assets/${item.image}`}
-                            placeholder={<Spin />}
-                        />
-
+                            <Image
+                                width={200}
+                                height={150}
+                                alt="logo"
+                                src={`${origin}/assets/${item.image}`}
+                                placeholder={
+                                    <Spin />
+                                }
+                            />
+                            
                         <StateOperation
                             stateReceived={item.state}
                             id={item.id}

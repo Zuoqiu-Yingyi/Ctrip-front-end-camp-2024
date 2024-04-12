@@ -23,6 +23,7 @@ import { useTranslation } from "react-i18next";
 const { Title, Text } = Typography;
 
 export default function EditAlbumTab(): JSX.Element {
+
     const { t, i18n } = useTranslation();
 
     const maxCount = 3;
@@ -42,12 +43,8 @@ export default function EditAlbumTab(): JSX.Element {
                 columns={3}
                 value={fileList}
                 onChange={setFileList}
-                upload={(file) => {
-                    return addImage(file);
-                }}
-                onDelete={(item: ImageUploadItem) => {
-                    delImage(item);
-                }}
+                upload={(file) => {return addImage(file)}}
+                onDelete={(item: ImageUploadItem) => {delImage(item)}}
                 multiple
                 maxCount={3}
                 showUpload={fileList.length < maxCount}

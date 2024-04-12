@@ -33,6 +33,7 @@ const defaultProps = {
 };
 
 export default function DrawPanel({ back }: { back: () => void }): JSX.Element {
+
     const { addDraw } = useContext(SubmitInfoContext);
 
     const canvasRef = useRef<CanvasDraw>(null);
@@ -103,7 +104,7 @@ export default function DrawPanel({ back }: { back: () => void }): JSX.Element {
                         style={{
                             width: `${sliderLength}px`,
                             // width: `${250}px`,
-                            // width:
+                            // width: 
                         }}
                     />
                 </Space>

@@ -112,6 +112,7 @@ export default function EditTextTab(): JSX.Element {
                 onChange={(val) => {
                     resetMainContent(val);
                 }}
+
                 rows={13}
                 style={{ padding: "15px" }}
             />

@@ -32,9 +32,9 @@ export const SubmitInfoContext = createContext<{
     setFileList: (items: ImageUploadItem[]) => void;
     addImage: Function;
     delImage: Function;
-    uploadTravelNote: Function;
+    uploadTrvalNote: Function;
     addDraw: Function;
-    addPicture: Function;
+    addPicture: Function
 }>({
     title: "",
     mainContent: "",
@@ -45,9 +45,9 @@ export const SubmitInfoContext = createContext<{
     addImage: () => {},
     setFileList: () => {},
     delImage: () => {},
-    uploadTravelNote: () => {},
+    uploadTrvalNote: () => {},
     addDraw: () => {},
-    addPicture: () => {},
+    addPicture: () => {}
 });
 
 export default function SubmitInfoProvider({ children }: { children: React.ReactElement<any, any> }): JSX.Element {
@@ -129,7 +129,7 @@ export default function SubmitInfoProvider({ children }: { children: React.React
         });
     }
 
-    async function uploadTravelNote(type: "draft" | "submit") {
+    async function uploadTrvalNote(type: "draft" | "submit") {
         console.log(fileList.length);
 
         console.log(uploadImages.current.size);
@@ -153,6 +153,7 @@ export default function SubmitInfoProvider({ children }: { children: React.React
             });
         } else {
             try {
+
                 if (type === "draft") {
                     await submitNewDraft();
                 } else {
@@ -163,6 +164,7 @@ export default function SubmitInfoProvider({ children }: { children: React.React
                     content: "上传完成！",
                     icon: "success",
                 });
+
             } catch (error) {
                 Toast.show({
                     content: "上传失败！",
@@ -186,7 +188,9 @@ export default function SubmitInfoProvider({ children }: { children: React.React
         ]);
 
         canvas.toBlob((blob: Blob | null) => {
+        
             if (blob !== null) {
+
                 imageCompression(blob, {
                     maxSizeMB: 0.6,
                     maxWidthOrHeight: 1080,
@@ -197,8 +201,9 @@ export default function SubmitInfoProvider({ children }: { children: React.React
                     } else {
                         delImages.current.delete(`picture-${drawIndex}`);
                     }
-                });
+                });                
             }
+
         });
     }
 
@@ -285,5 +290,5 @@ export default function SubmitInfoProvider({ children }: { children: React.React
         setMainContent(newMainContent);
     }
 
-    return <SubmitInfoContext.Provider value={{ addPicture, user, title, uploadTravelNote, mainContent, setFileList, resetTitle, fileList, resetMainContent, addImage, delImage, addDraw }}>{children}</SubmitInfoContext.Provider>;
+    return <SubmitInfoContext.Provider value={{ addPicture, user, title, uploadTrvalNote, mainContent, setFileList, resetTitle, fileList, resetMainContent, addImage, delImage, addDraw }}>{children}</SubmitInfoContext.Provider>;
 }

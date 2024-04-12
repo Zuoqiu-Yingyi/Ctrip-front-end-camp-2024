@@ -23,14 +23,14 @@ import { AuthContext } from "@/context/authContext";
 import { Typography } from "antd";
 import { origin } from "@/utils/trpc";
 import { EyeInvisibleOutline, EyeOutline } from "antd-mobile-icons";
-import ChangeModal from "@/ui/change-modal";
+import ChangeModal from "@/ui/chage-modal";
 
 const { Link } = Typography;
 
 export default function InfoPage(): JSX.Element {
     const [visible, setVisible] = useState(true);
 
-    const [changeModalVisible, setChangeModalVisible] = useState(false);
+    const [chageModalVisible, setChageModalVisible] = useState(false);
 
     const [passwordVisible, setPasswordVisible] = useState(false);
 
@@ -170,10 +170,7 @@ export default function InfoPage(): JSX.Element {
                 }}
             />
 
-            <ChangeModal
-                isModalOpen={changeModalVisible}
-                setIsModalOpen={setChangeModalVisible}
-            />
+            <ChangeModal isModalOpen={chageModalVisible} setIsModalOpen={setChageModalVisible}/>
 
             <NavBar>资料</NavBar>
             <Flex vertical={true}>
@@ -194,13 +191,7 @@ export default function InfoPage(): JSX.Element {
                 <List>
                     <List.Item onClick={() => {}}>{userInfo.current?.username}</List.Item>
                     <List.Item onClick={() => {}}>{userInfo.current?.id}</List.Item>
-                    <List.Item
-                        onClick={() => {
-                            setChangeModalVisible(true);
-                        }}
-                    >
-                        修改密码
-                    </List.Item>
+                    <List.Item onClick={() => {setChageModalVisible(true)}}>修改密码</List.Item>
                     <List.Item onClick={() => {}}>退出</List.Item>
                     <List.Item onClick={() => {}}>注销</List.Item>
                 </List>

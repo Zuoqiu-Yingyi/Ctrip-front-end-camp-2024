@@ -13,7 +13,7 @@
 // limitations under the License.
 import { CheckCircleFilled, ExclamationCircleFilled, CloseCircleFilled } from "@ant-design/icons";
 import React, { useContext, useState } from "react";
-import { Flex, Typography, Input, Button, Popconfirm } from "antd";
+import { Flex, Typography, Modal, Form, Input, RadioChangeEvent, Button, Popconfirm } from "antd";
 import { MessageContext } from "@/app/lib/messageContext";
 import RejectModal from "@/app/ui/reject-modal";
 import { AuthContext } from "../lib/authContext";
@@ -68,9 +68,7 @@ export default function StateOperation({ stateReceived, id }: { stateReceived: "
                 <Popconfirm
                     title="删除"
                     description="你确定删除该项吗？"
-                    onCancel={() => {
-                        delTravelNote();
-                    }}
+                    onCancel={() => {delTravelNote()}}
                     okText="确定"
                     cancelText="取消"
                 >

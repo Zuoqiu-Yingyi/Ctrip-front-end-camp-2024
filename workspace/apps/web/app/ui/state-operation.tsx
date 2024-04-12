@@ -39,15 +39,15 @@ export default function StateOperation({ stateReceived, id }: { stateReceived: "
     if (stateReceived === "success") {
         type = "success";
         icon = <CheckCircleFilled className="mr-2" />;
-        text = t("approved");
+        text = t("approved")
     } else if (stateReceived === "fail") {
         type = "danger";
         icon = <CloseCircleFilled className="mr-2" />;
-        text = t("rejected");
+        text = t("rejected")
     } else {
         type = "warning";
         icon = <ExclamationCircleFilled className="mr-2" />;
-        text = t("pending");
+        text = t("pending")
     }
 
     const handleOk = async (reason: string) => {

@@ -14,6 +14,10 @@
 "use client";
 import SubmitInfoProvider from "@/context/mobileEditContext";
 
-export default function EditPage({ children }: { children: React.ReactElement<any, any> }): JSX.Element {
-    return <SubmitInfoProvider>{children}</SubmitInfoProvider>;
+export default function EditPage({ children }: { children: React.ReactElement<any, any>}): JSX.Element {
+    return (
+        <SubmitInfoProvider>
+            {children}
+        </SubmitInfoProvider>
+    );
 }

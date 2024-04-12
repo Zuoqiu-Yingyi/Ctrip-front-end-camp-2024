@@ -39,7 +39,7 @@ export class TRPC {
                         };
                     },
                     async fetch(input, init) {
-                        const response = await fetch(input, { ...(init as RequestInit), credentials: "include" });
+                        const response = await fetch(input, {...init as RequestInit, credentials: 'include'});
                         // const response = await fetch(input, init as RequestInit);
                         const _cookies = response.headers.getSetCookie();
                         console.debug(_cookies);
@@ -57,6 +57,7 @@ export class TRPC {
 
 export const trpc = new TRPC();
 export default trpc;
+
 
 // import {
 //     //

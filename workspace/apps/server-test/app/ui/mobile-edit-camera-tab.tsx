@@ -22,7 +22,7 @@ export default function EditCameraTab(): JSX.Element {
 
     const cameraCanvasRef = useRef<HTMLCanvasElement>(null);
 
-    const [onVideo, setOnVideo] = useState<boolean>(true);
+    const [onVedio, setOnVedio] = useState<boolean>(true);
 
     useEffect(() => {
         openCamera(cameraVideoRef, cameraCanvasRef);
@@ -30,7 +30,7 @@ export default function EditCameraTab(): JSX.Element {
 
     function takePicture() {
         getPicture(cameraVideoRef, cameraCanvasRef);
-        setOnVideo(false);
+        setOnVedio(false);
     }
 
     return (
@@ -39,20 +39,21 @@ export default function EditCameraTab(): JSX.Element {
                 id="cameraVideo"
                 ref={cameraVideoRef}
                 // width="100%"
-                style={{ display: onVideo ? "block" : "none" }}
+                style={{ display: onVedio ? "block" : "none" }}
             />
             <canvas
                 id="cameraCanvas"
                 ref={cameraCanvasRef}
-                style={{ border: "1px solid black", display: !onVideo ? "block" : "none" }}
+                style={{ border: "1px solid black", display: !onVedio ? "block" : "none" }}
             />
-            {onVideo ? (
+            {onVedio? 
+            (
                 <FloatButton
                     icon={<CameraOutline style={{ height: "30px", width: "30px", marginLeft: "-6" }} />}
                     style={{ right: "42%", bottom: "60px", height: "60px", width: "60px" }}
                     onClick={takePicture}
-                />
-            ) : (
+                />                
+            ):(
                 <>
                     <FloatButton
                         icon={<CheckOutline style={{ height: "30px", width: "30px", marginLeft: "-6" }} />}
@@ -61,12 +62,13 @@ export default function EditCameraTab(): JSX.Element {
                     <FloatButton
                         icon={<CloseOutline style={{ height: "30px", width: "30px", marginLeft: "-6" }} />}
                         style={{ right: "25%", bottom: "60px", height: "60px", width: "60px" }}
-                        onClick={() => {
-                            setOnVideo(true);
-                        }}
-                    />
+                        onClick={() => {setOnVedio(true)}}
+                    />                 
                 </>
             )}
+
+
+
         </Layout>
     );
 }

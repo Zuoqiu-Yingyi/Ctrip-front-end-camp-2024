@@ -23,7 +23,8 @@ export default function Home(): JSX.Element {
             <h1>Home</h1>
             <p>Hello World! This is the Home page</p>
             <p>
-                Visit the <Link href="/test">/test</Link> page. Visit the <Link href="/mobile">/mobile</Link> page.
+                Visit the <Link href="/test">/test</Link> page.
+                Visit the <Link href="/mobile">/mobile</Link> page.
             </p>
         </div>
     );

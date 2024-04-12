@@ -67,8 +67,8 @@ export async function getReviews(index: number, itemNumber: number, state: Trave
     }
 }
 
-export async function operateSingleReview(id: number, operate: "pass" | "reject", trpc: TRPC, rejectReason?: string) {
-    const response_approve = await trpc.client.review.approve.mutate(operate === "pass" ? { id: id, approved: true } : { id: id, approved: false, comment: rejectReason });
+export async function operateSingleReview(id: number, opeate: "pass" | "reject", trpc: TRPC, rejectReason?: string) {
+    const response_approve = await trpc.client.review.approve.mutate(opeate === "pass" ? { id: id, approved: true } : { id: id, approved: false, comment: rejectReason });
 
     if (handleResponse(response_approve).state === "fail") {
         throw Error("Error");

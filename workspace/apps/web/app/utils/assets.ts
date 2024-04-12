@@ -15,17 +15,20 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { origin } from "./trpc";
+import {
+    origin,
+} from "./trpc";
 
 export async function upload<R = any>(
     //
     formData: FormData,
 ) {
+
     const response = await fetch(`${origin}/assets/upload`, {
         method: "POST",
         body: formData,
-        credentials: "include",
+        credentials: 'include',
     });
-
+    
     return response.json() as R;
 }

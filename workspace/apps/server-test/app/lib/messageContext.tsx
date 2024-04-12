@@ -13,7 +13,7 @@
 // limitations under the License.
 import { createContext, useContext, useRef, useState } from "react";
 import { TravelNote, ManageData, ManagePage, ManagePageNumber } from "./definitions";
-import { mockRemoteSearch } from "@/app/lib/data";
+import { mockRomoteSearch } from "@/app/lib/data";
 import { getReviewCount, operateSingleReview, getReviews } from "../utils/review";
 import { AuthContext } from "@/app/lib/authContext";
 
@@ -135,7 +135,7 @@ export default function MessageContextProvider({ children }: { children: React.R
 
         changeDisplayItems(loadedSearchItems);
 
-        let allSearchItems = [...loadedSearchItems, ...(await mockRemoteSearch(3, pageState))];
+        let allSearchItems = [...loadedSearchItems, ...(await mockRomoteSearch(3, pageState))];
 
         if (record === searchNumber.current) {
             changeDisplayItems(allSearchItems);

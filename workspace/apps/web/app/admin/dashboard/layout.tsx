@@ -28,6 +28,7 @@ const IconFont = createFromIconfontCN({
 });
 
 export default function OverviewPage({ children }: { children: React.ReactNode }): JSX.Element {
+
     const { t, i18n } = useTranslation();
 
     const { userInfo } = useContext(AuthContext);
@@ -111,7 +112,7 @@ export default function OverviewPage({ children }: { children: React.ReactNode }
                                     style={{ color: "red" }}
                                 />
                             )}
-
+                            
                             {userInfo.current?.username}
                         </Title>
                     </Dropdown>

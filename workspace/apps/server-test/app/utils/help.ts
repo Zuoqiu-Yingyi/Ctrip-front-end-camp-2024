@@ -12,10 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-export function handleResponse<T>(response: { code: number; message?: string | unknown; data?: T }): { state: "success" | "fail"; data?: T } {
+export function handleResponse<T>(response: {code: number, message?: string | unknown, data?: T}) : {state: "success" | "fail", data?: T}{
+
     if (response.code === 0) {
-        return { state: "success", data: response.data };
+        return {state: "success", data: response.data}
     } else {
-        return { state: "fail" };
+        return {state: "fail"}
     }
+    
 }

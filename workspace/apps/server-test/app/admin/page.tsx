@@ -42,9 +42,12 @@ export default function LoginPage(): JSX.Element {
         handleResponse(response);
 
         if (handleResponse(response).state === "success") {
-            userInfo.current = { username: response.data?.account.username, accessRole: response.data?.account.role };
+
+            userInfo.current = {username: response.data?.account.username, accessRole: response.data?.account.role};
+
 
             replace("/admin/dashboard");
+
         } else {
             setErrorDisplay(true);
 
