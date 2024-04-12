@@ -24,29 +24,17 @@ import type { TTrpcRouter } from "@repo/server/src/routers/trpc/router";
 export const origin = "http://localhost:3000";
 
 export class TRPC {
-    public readonly cookies: string[] = [];
     public readonly client: ReturnType<typeof createTRPCClient<TTrpcRouter>>;
 
-    constructor(url = `${origin}/trpc`) {
+    constructor(url = `/trpc`) {
         const that = this;
         this.client = createTRPCClient<TTrpcRouter>({
             links: [
                 httpBatchLink({
                     url,
-                    headers() {
-                        return {
-                            Cookie: that.cookies,
-                        };
-                    },
                     async fetch(input: string | URL | Request, init: RequestInit) {
                         const response = await fetch(input, { ...(init as RequestInit), credentials: "include" });
-                        // const response = await fetch(input, init as RequestInit);
-                        const _cookies = response.headers.getSetCookie();
-                        // console.debug(_cookies);
-                        if (_cookies.length) {
-                            that.cookies.length = 0;
-                            that.cookies.push(..._cookies);
-                        }
+
                         return response;
                     },
                 }),

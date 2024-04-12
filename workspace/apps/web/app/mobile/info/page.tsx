@@ -21,7 +21,6 @@ import { login, signup } from "@/utils/account";
 import { handleResponse } from "@/utils/help";
 import { AuthContext } from "@/context/authContext";
 import { Typography } from "antd";
-import { origin } from "@/utils/trpc";
 import { EyeInvisibleOutline, EyeOutline } from "antd-mobile-icons";
 import ChangeModal from "@/ui/change-modal";
 
@@ -186,7 +185,7 @@ export default function InfoPage(): JSX.Element {
                     }}
                 >
                     <Avatar
-                        src={userInfo.current && userInfo.current?.avatar ? `${origin}/assets/${userInfo.current?.avatar}` : ""}
+                        src={userInfo.current && userInfo.current?.avatar ? `/assets/${userInfo.current?.avatar}` : ""}
                         style={{ "--size": "64px" }}
                     />
                 </Flex>
