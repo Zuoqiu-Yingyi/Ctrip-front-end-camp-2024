@@ -3,6 +3,7 @@
         "card": "travel cards"
     },
     "avatar": "profile avatar",
+    "content": "content",
     "cover": "Cover",
     "draft": "Draft",
     "empty": {
@@ -11,10 +12,12 @@
     "home": "Home",
     "loading": "Loading",
     "profile": "User Info",
+    "publish-time": "Publication Time",
     "search": {
         "placeholder": "Search for username or title"
     },
     "title": "title",
+    "update-time": "Update time",
     "user": "User",
     "username": "username"
 }

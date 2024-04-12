@@ -29,7 +29,6 @@ import {
     UserOutline,
 } from "antd-mobile-icons";
 
-import "./global.scss";
 import styles from "./layout.module.scss";
 
 export enum TabBarKey {

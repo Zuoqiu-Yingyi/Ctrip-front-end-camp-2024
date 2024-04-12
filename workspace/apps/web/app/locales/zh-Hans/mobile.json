@@ -3,6 +3,7 @@
         "card": "游记卡片"
     },
     "avatar": "用户头像",
+    "content": "内容",
     "cover": "封面",
     "draft": "草稿",
     "empty": {
@@ -11,10 +12,12 @@
     "home": "首页",
     "loading": "加载中",
     "profile": "用户信息",
+    "publish-time": "发布时间",
     "search": {
         "placeholder": "搜索用户名或标题"
     },
     "title": "标题",
+    "update-time": "更新时间",
     "user": "用户",
     "username": "用户名"
 }

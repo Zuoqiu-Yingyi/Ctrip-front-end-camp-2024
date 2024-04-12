@@ -69,8 +69,16 @@ const InfiniteContent = ({ hasMore }: { hasMore?: boolean }) => {
 
 /**
  * @param searchInput The search input value.
+ * @param onCardClick Function to handle clicking on the card.
  */
-export function InfiniteScrollContent({ searchInput }: { searchInput: string }): JSX.Element {
+export function InfiniteScrollContent({
+    //
+    searchInput,
+    onCardClick,
+}: {
+    searchInput: string;
+    onCardClick: (uid: string) => void;
+}): JSX.Element {
     const { t, i18n } = useTranslation();
     const { trpc } = useContext(StoreContext);
     const cardRefs = useRef<HTMLDivElement[]>([]);
@@ -120,7 +128,7 @@ export function InfiniteScrollContent({ searchInput }: { searchInput: string }):
     async function loadMore() {
         // console.debug("loadMore");
         try {
-            console.debug(cursor);
+            // console.debug(cursor);
             const response = await trpc.publish.paging.query({
                 skip: cursor ? 1 : 0,
                 cursor,
@@ -149,7 +157,7 @@ export function InfiniteScrollContent({ searchInput }: { searchInput: string }):
     }
 
     return (
-        <div className={styles.container3}>
+        <div className={styles.container}>
             {data.map((publish) => (
                 <CardContent
                     key={publish.uid}
@@ -160,6 +168,7 @@ export function InfiniteScrollContent({ searchInput }: { searchInput: string }):
                     username={publish.publisher.name}
                     cardRefs={cardRefs}
                     handleSetGridRowEnd={handleSetGridRowEnd}
+                    onClick={onCardClick}
                 />
             ))}
             <InfiniteScroll

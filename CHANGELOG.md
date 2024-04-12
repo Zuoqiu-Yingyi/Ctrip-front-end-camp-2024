@@ -4,6 +4,7 @@
 
 - 客户端首页 | Client home page
 - 实现已发布内容的搜索功能 | Implement search feature for published content
+- 添加游记详情页 | Add travel notes detail page
 
 ## 2024-04-11
 

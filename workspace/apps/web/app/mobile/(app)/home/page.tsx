@@ -18,6 +18,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { useTranslation } from "react-i18next";
 import {
     //
@@ -36,6 +37,7 @@ import InfiniteScrollContent from "./InfiniteScrollContent";
 export default function HomePage() {
     const { t, i18n } = useTranslation();
 
+    const router = useRouter();
     const [searching, setSearching] = useState<boolean>(false);
     const [searchInput, setSearchInput] = useState<string>("");
 
@@ -50,6 +52,13 @@ export default function HomePage() {
     function onSearchBarCancel() {
         setSearchInput("");
         setSearching(false);
+    }
+
+    /**
+     * 点击游记卡片
+     */
+    function onCardClick(uid: string) {
+        router.push(`/mobile/detail?uid=${uid}`);
     }
 
     const nav_bar_right = (
@@ -81,7 +90,10 @@ export default function HomePage() {
                 </NavBar>
             </div>
             <div className={styles.content}>
-                <InfiniteScrollContent searchInput={searchInput} />
+                <InfiniteScrollContent
+                    searchInput={searchInput}
+                    onCardClick={onCardClick}
+                />
             </div>
         </>
     );

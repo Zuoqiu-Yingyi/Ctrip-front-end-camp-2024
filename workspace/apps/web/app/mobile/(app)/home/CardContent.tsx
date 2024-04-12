@@ -47,6 +47,7 @@ import {
  * @param username The username associated with the card.
  * @param cardRefs Refs for tracking the height of each card.
  * @param handleSetGridRowEnd Function to handle setting the grid row end for the card.
+ * @param onClick Function to handle clicking on the card.
  */
 
 export function CardContent({
@@ -58,6 +59,7 @@ export function CardContent({
     username,
     cardRefs,
     handleSetGridRowEnd,
+    onClick,
 }: {
     uid: string;
     coverUid?: string;
@@ -66,6 +68,7 @@ export function CardContent({
     username: string;
     cardRefs: React.RefObject<HTMLDivElement[]>;
     handleSetGridRowEnd: (index: number, height: number) => void;
+    onClick: (uid: string) => void;
 }): JSX.Element {
     const { t, i18n } = useTranslation();
     const contentRef = useRef<HTMLDivElement>(null);
@@ -105,8 +108,10 @@ export function CardContent({
     return (
         <div
             ref={contentRef}
+            onClick={() => onClick(uid)}
             className={styles.card_container}
             style={{ gridRowEnd: height ? `span ${Math.ceil(height)}` : "auto" }}
+            aria-role="button"
             aria-label={t("aria.card")}
         >
             {coverUid && (
@@ -121,12 +126,12 @@ export function CardContent({
                 </div>
             )}
 
-            <h4
+            <h3
                 className={styles.card_title}
                 aria-label={t("title")}
             >
                 {title}
-            </h4>
+            </h3>
             <div
                 className={styles.card_user}
                 aria-label={t("profile")}
