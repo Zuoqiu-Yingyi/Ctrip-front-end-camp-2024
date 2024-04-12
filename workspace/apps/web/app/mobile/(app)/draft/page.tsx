@@ -38,10 +38,6 @@ export default function Draft() {
     const searchParams = useSearchParams();
     const uid = searchParams.get("uid");
 
-    function onSearchButtonClick() {
-        setSearching(true);
-    }
-
     /**
      * 点击游记卡片
      */
