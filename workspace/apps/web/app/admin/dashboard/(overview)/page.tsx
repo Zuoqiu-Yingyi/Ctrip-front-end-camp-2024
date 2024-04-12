@@ -13,7 +13,7 @@
 // limitations under the License.
 "use client";
 import { Flex } from "antd";
-import CardWrapper from "@/app/ui/number-card";
+import CardWrapper from "@/ui/number-card";
 
 export default function OverviewPage() {
     return (

@@ -12,25 +12,39 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 "use client";
-import React, { useEffect } from "react";
-import { Flex, Divider, FloatButton, Button, Typography } from "antd";
-import ExamineList from "@/app/ui/examine-list";
-import ListOperationBar from "@/app/ui/list-operation";
+import React, { useEffect, useState } from "react";
+import { Flex, Divider, FloatButton, Button, Typography, Spin  } from "antd";
+import ExamineList from "@/ui/examine-list";
+import ListOperationBar from "@/ui/list-operation";
 import { useContext } from "react";
-import { MessageContext } from "@/app/lib/messageContext";
+import { MessageContext } from "@/context/messageContext";
+
 import { CheckCircleTwoTone, CloseCircleTwoTone } from "@ant-design/icons";
-// import { useTranslation } from "@/app/i18n/client";
+import RejectModal from "@/ui/reject-modal";
+import { useTranslation } from "react-i18next";
 
 const { Text } = Typography;
 
 export default function ContentPage(): JSX.Element {
-    // const { t } = useTranslation(lng);
+    const { t, i18n } = useTranslation();
 
-    const { checkedNumber, displayItems, loading, firstPullData } = useContext(MessageContext);
+    const { checkedNumber, displayItems, loading, firstPullData, operateBatchReview, onSearch } = useContext(MessageContext);
+
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const handleOk = async (reason: string) => {
+        await operateBatchReview("reject", reason);
+
+        setIsModalOpen(false);
+    };
+
+    const handleCancel = () => {
+        setIsModalOpen(false);
+    };
 
     useEffect(() => {
         (async () => {
-            await firstPullData();
+            await firstPullData("waiting");
         })();
     }, []);
 
@@ -47,27 +61,34 @@ export default function ContentPage(): JSX.Element {
                     <Button
                         type="dashed"
                         icon={<CheckCircleTwoTone twoToneColor="#52c41a" />}
+                        onClick={async () => {
+                            await operateBatchReview("pass");
+                        }}
                     >
                         <Text type="success">
-                            {/* {t("pass")} */}
-                            通过
+                            {t("pass")}
                             </Text>
                     </Button>
                     <Button
                         type="dashed"
                         icon={<CloseCircleTwoTone twoToneColor="red" />}
+                        onClick={() => {
+                            setIsModalOpen(true);
+                        }}
                     >
                         <Text type="danger">
-                            {/* {t("reject")} */}
-                            拒绝
+                            {t("reject")}
                             </Text>
                     </Button>
+                    <RejectModal isModalOpen={isModalOpen} handleOk={handleOk} handleCancel={handleCancel}/>
                 </Flex>
             ) : null}
+            {onSearch && (<Spin />)}            
             <ExamineList
                 data={displayItems}
                 loading={loading}
             />
+
             <FloatButton.Group
                 shape="circle"
                 style={{ right: 5 }}

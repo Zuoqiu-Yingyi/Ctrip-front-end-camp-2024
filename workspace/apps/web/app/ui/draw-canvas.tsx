@@ -16,7 +16,8 @@ import { useContext, useRef, useState } from "react";
 import { Slider, Space, NavBar } from "antd-mobile";
 import { RollbackOutlined, CheckOutlined } from "@ant-design/icons";
 import { Typography, ColorPicker, Button } from "antd";
-import { SubmitInfoContext } from "@/app/lib/mobileEditContext";
+import { SubmitInfoContext } from "@/context/mobileEditContext";
+import { useTranslation } from "react-i18next";
 
 const { Title } = Typography;
 
@@ -34,7 +35,9 @@ const defaultProps = {
 
 export default function DrawPanel({ back }: { back: () => void }): JSX.Element {
 
-    const { fileList, setFileList } = useContext(SubmitInfoContext);
+    const { t, i18n } = useTranslation();
+
+    const { addDraw } = useContext(SubmitInfoContext);
 
     const canvasRef = useRef<CanvasDraw>(null);
 
@@ -52,6 +55,8 @@ export default function DrawPanel({ back }: { back: () => void }): JSX.Element {
         canvasHeight: (screen.height / 10) * 7,
     };
 
+    const sliderLength = screen.width - 250;
+
     return (
         <div className="flex flex-col">
             <NavBar
@@ -65,23 +70,16 @@ export default function DrawPanel({ back }: { back: () => void }): JSX.Element {
                         type="primary"
                         icon={<CheckOutlined />}
                         onClick={() => {
-                            setFileList(
-                                [
-                                    ...fileList,
-                                    {
-                                        url: canvasRef.current?.getDataURL("image/png", null, "#FFFFFF"),
-                                    }
-                                ]
-                            );
+                            addDraw(canvasRef.current);
                             canvasRef.current?.clear();
                             back();
                         }}
                     >
-                        完成
+                        {t("confirmed")}
                     </Button>
                 }
             >
-                画板
+               {t("drawing-board")}
             </NavBar>
             <CanvasDraw {...props} />
             <Space
@@ -96,7 +94,7 @@ export default function DrawPanel({ back }: { back: () => void }): JSX.Element {
                         level={5}
                         style={{ margin: 0 }}
                     >
-                        粗细:{" "}
+                        {t("label-brush-radius") + ": "}
                     </Title>
                     <Slider
                         min={1}
@@ -105,7 +103,9 @@ export default function DrawPanel({ back }: { back: () => void }): JSX.Element {
                             setBrushRadius(value as number);
                         }}
                         style={{
-                            width: `${screen.width - 250}px`,
+                            width: `${sliderLength}px`,
+                            // width: `${250}px`,
+                            // width: 
                         }}
                     />
                 </Space>

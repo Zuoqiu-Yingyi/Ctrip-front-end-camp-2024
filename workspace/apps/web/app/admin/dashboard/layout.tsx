@@ -13,11 +13,12 @@
 // limitations under the License.
 "use client";
 
-import React from "react";
+import React, { useContext } from "react";
 import Link from "next/link";
+import { useTranslation } from "react-i18next";
 import { Layout, Menu, theme, MenuProps, Typography, Dropdown, Flex } from "antd";
 import { PieChartFilled, CarryOutFilled, SignatureFilled, LogoutOutlined, createFromIconfontCN } from "@ant-design/icons";
-// import { useTranslation } from "@/app/i18n/client";
+import { AuthContext } from "@/context/authContext";
 
 const { Header, Content } = Layout;
 const { Title } = Typography;
@@ -27,7 +28,10 @@ const IconFont = createFromIconfontCN({
 });
 
 export default function OverviewPage({ children }: { children: React.ReactNode }): JSX.Element {
-    // const { t } = useTranslation(lng);
+
+    const { t, i18n } = useTranslation();
+
+    const { userInfo } = useContext(AuthContext);
 
     const {
         token: { colorBgContainer, borderRadiusLG },
@@ -39,8 +43,7 @@ export default function OverviewPage({ children }: { children: React.ReactNode }
                 <Link href="/admin/dashboard">
                     <Title level={5}>
                         <PieChartFilled className="mr-2" />
-                        {/* {t("overview")} */}
-                        总览
+                        {t("overview")}
                     </Title>
                 </Link>
             ),
@@ -51,8 +54,7 @@ export default function OverviewPage({ children }: { children: React.ReactNode }
                 <Link href="/admin/dashboard/content">
                     <Title level={5}>
                         <CarryOutFilled className="mr-2" />
-                        {/* {t("audit")} */}
-                        审核
+                        {t("audit")}
                     </Title>
                 </Link>
             ),
@@ -71,8 +73,7 @@ export default function OverviewPage({ children }: { children: React.ReactNode }
                     style={{ marginBottom: "20px" }}
                 >
                     <SignatureFilled className="mr-2" />
-                    {/* {t("title")} */}
-                    后台管理系统
+                    {t("admin-title")}
                 </Title>
                 <Flex className="mr-5">
                     <Menu
@@ -88,8 +89,7 @@ export default function OverviewPage({ children }: { children: React.ReactNode }
                                 {
                                     key: 1,
                                     icon: <LogoutOutlined />,
-                                    // label: t("logout"),
-                                    label: "登出"
+                                    label: t("logout"),
                                 },
                             ],
                         }}
@@ -98,16 +98,22 @@ export default function OverviewPage({ children }: { children: React.ReactNode }
                             level={5}
                             type="secondary"
                         >
-                            {/* cspell:disable-next-line */}
-                            {/* <IconFont type="icon-zk-shenheyuan" className="mr-3"/> */}
-                            <IconFont
-                                /* cspell:disable-next-line */
-                                type="icon-guanliyuan_jiaoseguanli"
-                                className="mr-3"
-                                style={{ color: "red" }}
-                            />
-                            {/* <UserOutlined className="mr-3" /> */}
-                            用户名
+                            {userInfo.current?.accessRole === 2 ? (
+                                <IconFont
+                                    /* cspell:disable-next-line */
+                                    type="icon-zk-shenheyuan"
+                                    className="mr-3"
+                                />
+                            ) : (
+                                <IconFont
+                                    /* cspell:disable-next-line */
+                                    type="icon-guanliyuan_jiaoseguanli"
+                                    className="mr-3"
+                                    style={{ color: "red" }}
+                                />
+                            )}
+                            
+                            {userInfo.current?.username}
                         </Title>
                     </Dropdown>
                 </Flex>

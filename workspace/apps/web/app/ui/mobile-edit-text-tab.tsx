@@ -15,7 +15,7 @@ import React, { useContext, useRef, useState } from "react";
 import { Modal, Swiper, TextArea, Divider, Tag, Space } from "antd-mobile";
 import { FloatButton } from "antd";
 import { FileOutline, RedoOutline } from "antd-mobile-icons";
-import { SubmitInfoContext } from "@/app/lib/mobileEditContext";
+import { SubmitInfoContext } from "@/context/mobileEditContext";
 
 const textTemplates: string[] = [
     `费用：
@@ -58,6 +58,8 @@ export default function EditTextTab(): JSX.Element {
     const [visible, setVisible] = useState(false);
 
     const insertedText = useRef<string>(textTemplates[0] as string);
+
+    // const rows = Math.floor((screen.height - 42 - 45 - 56 - 32 - 19 - 30) / 25.5);
 
     return (
         <div style={{ flex: 1 }}>
@@ -110,12 +112,13 @@ export default function EditTextTab(): JSX.Element {
                 onChange={(val) => {
                     resetMainContent(val);
                 }}
-                rows={Math.floor((screen.height - 42 - 45 - 56 - 32 - 19 - 30) / 25.5)}
+
+                rows={13}
                 style={{ padding: "15px" }}
             />
 
             <FloatButton.Group
-                shape="circle"
+                shape="square"
                 style={{ top: "180px", height: "0px" }}
             >
                 <FloatButton
@@ -128,6 +131,9 @@ export default function EditTextTab(): JSX.Element {
                 <FloatButton
                     icon={<RedoOutline />}
                     description="清空"
+                    onClick={() => {
+                        resetMainContent("");
+                    }}
                 />
             </FloatButton.Group>
 

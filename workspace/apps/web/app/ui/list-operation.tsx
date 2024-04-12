@@ -11,15 +11,19 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import React from "react";
-import { Input, Flex, Radio, Select } from "antd";
+import React, { useContext } from "react";
+import { Input, Flex, Radio, Select, RadioChangeEvent } from "antd";
 import { CheckCircleFilled, ExclamationCircleFilled, CloseCircleFilled } from "@ant-design/icons";
-// import { useTranslation } from "@/app/i18n/client";
+import { MessageContext } from "@/context/messageContext";
+import { useTranslation } from "react-i18next";
 
 const { Search } = Input;
 
 export default function ListOperationBar(): JSX.Element {
-    // const { t } = useTranslation(lng);
+
+    const { t, i18n } = useTranslation();
+
+    const { setPageState, togglePageState, searchItem } = useContext(MessageContext);
 
     return (
         <Flex
@@ -27,21 +31,24 @@ export default function ListOperationBar(): JSX.Element {
             align="center"
             className="px-6"
         >
-            <Radio.Group defaultValue={"waiting"}>
+            <Radio.Group
+                defaultValue={"waiting"}
+                onChange={async (e: RadioChangeEvent) => {
+                    setPageState(e.target.value);
+                    await togglePageState(e.target.value);
+                }}
+            >
                 <Radio.Button value="waiting">
                     <ExclamationCircleFilled className="mr-2" />
-                    {/* {t("toBeAudited")} */}
-                    待审核
+                    {t("pending")}
                 </Radio.Button>
                 <Radio.Button value="success">
                     <CheckCircleFilled className="mr-2" />
-                    {/* {t("passed")} */}
-                    已通过
+                    {t("approved")}
                 </Radio.Button>
                 <Radio.Button value="fail">
                     <CloseCircleFilled className="mr-2" />
-                    {/* {t("failed")} */}
-                    未通过
+                    {t("rejected")}
                 </Radio.Button>
             </Radio.Group>
 
@@ -51,20 +58,19 @@ export default function ListOperationBar(): JSX.Element {
                         defaultValue="title"
                         style={{ width: 80 }}
                         options={[
-                            // { value: "title", label: t("itemTitle") },
-                            // { value: "content", label: t("itemContent") },
-                            // { value: "userName", label: t("itemTime") },
-                            // { value: "time", label: t("itemUser") },
-                            { value: "title", label: "标题" },
-                            { value: "content", label: "内容" },
-                            { value: "userName", label: "时间" },
-                            { value: "time", label: "用户名" },
+                            { value: "title", label: t("item-title") },
+                            { value: "content", label: t("item-content") },
+                            { value: "userName", label: t("item-time") },
+                            { value: "time", label: t("item-user") },
                         ]}
                     />
                 }
                 placeholder="input search loading default"
                 size="large"
                 style={{ width: "300px" }}
+                onSearch={(value) => {
+                    searchItem("title", value);
+                }}
             />
         </Flex>
     );

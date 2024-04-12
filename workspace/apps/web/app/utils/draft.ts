@@ -15,25 +15,24 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-"use client";
+import trpc from "./trpc";
+import { handleResponse } from "./help";
 
-import "./global.scss";
-import "@/utils/i18n";
-import AuthContextProvider from "@/context/authContext";
+export async function uploadDraft(draft: any, t = trpc) {
+    const response = await t.client.draft.create.mutate(draft);
 
-// REF: https://www.npmjs.com/package/next-i18next#appwithtranslation
-export function MobileLayout({
-    //
-    children,
-}: {
-    children: React.ReactElement<any, any>;
-}): JSX.Element {
-    return (
-        <>
-            <AuthContextProvider>{children}</AuthContextProvider>
-        </>
-    );
+    if (handleResponse(response).state === "fail") {
+        throw Error("Error");
+    }
+
+    return response.data!.draft.id;
 }
 
-// @ts-ignore
-export default MobileLayout;
+export async function uploadSubmit(draftId: number, t = trpc) {
+    const response = await t.client.review.submit.mutate({ draft_id: draftId });
+
+    if (handleResponse(response).state === "fail") {
+        throw Error("Error");
+    }
+
+}

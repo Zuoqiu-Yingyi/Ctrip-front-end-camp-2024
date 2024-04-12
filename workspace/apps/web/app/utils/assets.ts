@@ -15,25 +15,20 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-"use client";
+import {
+    origin,
+} from "./trpc";
 
-import "./global.scss";
-import "@/utils/i18n";
-import AuthContextProvider from "@/context/authContext";
-
-// REF: https://www.npmjs.com/package/next-i18next#appwithtranslation
-export function MobileLayout({
+export async function upload<R = any>(
     //
-    children,
-}: {
-    children: React.ReactElement<any, any>;
-}): JSX.Element {
-    return (
-        <>
-            <AuthContextProvider>{children}</AuthContextProvider>
-        </>
-    );
-}
+    formData: FormData,
+) {
 
-// @ts-ignore
-export default MobileLayout;
+    const response = await fetch(`${origin}/assets/upload`, {
+        method: "POST",
+        body: formData,
+        credentials: 'include',
+    });
+    
+    return response.json() as R;
+}

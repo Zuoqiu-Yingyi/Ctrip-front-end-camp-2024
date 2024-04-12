@@ -13,30 +13,42 @@
 // limitations under the License.
 "use client";
 
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { LockOutlined, UserOutlined, SignatureFilled } from "@ant-design/icons";
 import { Button, Checkbox, Form, Input, Flex, Typography, Alert } from "antd";
-import {  useRouter } from 'next/navigation';
-import { login, handleResponse } from "@/app/utils/auth";
-// import { useTranslation } from "@/app/i18n/client";
+import { useRouter } from "next/navigation";
+import { handleResponse } from "@/utils/help";
+import { login } from "@/utils/account";
+import { AuthContext } from "@/context/authContext";
+import { useTranslation } from "react-i18next";
 
 const { Title } = Typography;
 
 export default function LoginPage(): JSX.Element {
-    // const { t } = useTranslation(lng);
+
+    const { t, i18n } = useTranslation();
+
+    const { user, userInfo } = useContext(AuthContext);
+
     const { replace } = useRouter();
 
     const [loading, setLoading] = useState<boolean>(false);
 
     const [errorDisplay, setErrorDisplay] = useState<boolean>(false);
 
-    const onFinish = async (values: { userName: string; password: string; remember: boolean }) => {
+    const onFinish = async (values: { username: string; password: string; remember: boolean }) => {
         setLoading(true);
 
-        let response = await login({ username: values.userName, passphrase: values.password, remember: values.remember });
+        let response = await login({ username: values.username, passphrase: values.password, remember: values.remember, role: "staff" }, user.current);
+
+        handleResponse(response);
 
         if (handleResponse(response).state === "success") {
-            replace('/admin/dashboard');
+
+            userInfo.current = {username: response.data?.account.username, accessRole: response.data?.account.role};
+
+            replace("/admin/dashboard");
+
         } else {
             setErrorDisplay(true);
 
@@ -45,7 +57,7 @@ export default function LoginPage(): JSX.Element {
             }, 1000);
         }
 
-        console.log("Received values of form: ", values);
+        setLoading(false);
     };
 
     return (
@@ -59,7 +71,7 @@ export default function LoginPage(): JSX.Element {
         >
             {errorDisplay && (
                 <Alert
-                    message="用户名或密码错误！"
+                    message={t("error-tip")}
                     type="error"
                     showIcon
                 />
@@ -70,8 +82,7 @@ export default function LoginPage(): JSX.Element {
                 style={{ marginBottom: "20px" }}
             >
                 <SignatureFilled className="mr-2" />
-                {/* {t("title")} */}
-                后台管理系统
+                {t("admin-title")}
             </Title>
 
             <Form
@@ -84,23 +95,21 @@ export default function LoginPage(): JSX.Element {
             >
                 <Form.Item
                     name="username"
-                    rules={[{ required: true, message: "Please input your Username!" }]}
+                    rules={[{ required: true, message: t("prompt-prefix") + t("username") }]}
                 >
                     <Input
                         prefix={<UserOutlined className="site-form-item-icon" />}
-                        // placeholder={t("userName")}
-                        placeholder="用户名"
+                        placeholder={t("username")}
                     />
                 </Form.Item>
                 <Form.Item
                     name="password"
-                    rules={[{ required: true, message: "Please input your Password!" }]}
+                    rules={[{ required: true, message: t("prompt-prefix") + t("password") }]}
                 >
                     <Input
                         prefix={<LockOutlined className="site-form-item-icon" />}
                         type="password"
-                        // placeholder={t("password")}
-                        placeholder="密码"
+                        placeholder={t("password")}
                     />
                 </Form.Item>
                 <Form.Item>
@@ -110,8 +119,7 @@ export default function LoginPage(): JSX.Element {
                         noStyle
                     >
                         <Checkbox>
-                            {/* {t("remember")} */}
-                            记住我
+                            {t("remember")}
                         </Checkbox>
                     </Form.Item>
                 </Form.Item>
@@ -124,8 +132,7 @@ export default function LoginPage(): JSX.Element {
                         loading={loading}
                         style={{ width: "100%" }}
                     >
-                        {/* {t("login")} */}
-                        登录
+                        {t("login")}
                     </Button>
                 </Form.Item>
             </Form>

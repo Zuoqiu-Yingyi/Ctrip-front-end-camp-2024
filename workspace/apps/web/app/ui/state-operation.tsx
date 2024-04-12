@@ -12,14 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import { CheckCircleFilled, ExclamationCircleFilled, CloseCircleFilled } from "@ant-design/icons";
-import React, { useState } from "react";
-import { Flex, Typography, Modal, Form, Radio, Input } from "antd";
+import React, { useContext, useState } from "react";
+import { Flex, Typography, Button, Popconfirm } from "antd";
+import { MessageContext } from "@/context/messageContext";
+import RejectModal from "@/ui/reject-modal";
+import { AuthContext } from "../context/authContext";
+import { useTranslation } from "react-i18next";
 
 const { Title, Paragraph } = Typography;
-const { TextArea } = Input;
 
-export default function StateOperation({ stateReceived }: { stateReceived: "success" | "fail" | "waiting" }): JSX.Element {
-    const [state, setState] = useState(stateReceived);
+export default function StateOperation({ stateReceived, id }: { stateReceived: "success" | "fail" | "waiting"; id: number }): JSX.Element {
+    const { operateReview, delTravelNote } = useContext(MessageContext);
+
+    const { user, userInfo } = useContext(AuthContext);
+
+    const { t, i18n } = useTranslation();
 
     const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -29,26 +36,23 @@ export default function StateOperation({ stateReceived }: { stateReceived: "succ
 
     let text: string = "error";
 
-    if (state === "success") {
+    if (stateReceived === "success") {
         type = "success";
         icon = <CheckCircleFilled className="mr-2" />;
-        text = "已通过";
-    } else if (state === "fail") {
+        text = t("approved")
+    } else if (stateReceived === "fail") {
         type = "danger";
         icon = <CloseCircleFilled className="mr-2" />;
-        text = "未通过";
+        text = t("rejected")
     } else {
         type = "warning";
         icon = <ExclamationCircleFilled className="mr-2" />;
-        text = "待审核";
+        text = t("pending")
     }
 
-    const showModal = () => {
-        setIsModalOpen(true);
-    };
+    const handleOk = async (reason: string) => {
+        await operateReview(id, "reject", reason);
 
-    const handleOk = () => {
-        setState("success");
         setIsModalOpen(false);
     };
 
@@ -61,71 +65,59 @@ export default function StateOperation({ stateReceived }: { stateReceived: "succ
             vertical
             style={{ width: 130, justifyContent: "space-around", alignItems: "center", marginLeft: 20 }}
         >
+            {userInfo.current?.accessRole === 1 && (
+                <Popconfirm
+                    title="删除"
+                    description="你确定删除该项吗？"
+                    onCancel={() => {
+                        delTravelNote();
+                    }}
+                    okText={t("confirmed")}
+                    cancelText={t("cancel")}
+                >
+                    <Button
+                        danger
+                        size="small"
+                        style={{ marginLeft: 90 }}
+                    >
+                        删除
+                    </Button>
+                </Popconfirm>
+            )}
+
             <Title
                 level={4}
                 type={type}
+                style={{ marginTop: 10 }}
             >
                 {icon}
                 {text}
-                {/* {state === "waiting" ? (
-                    <Button
-                        icon={<EditFilled style={{ color: "#999999" }} />}
-                        size="small"
-                        type="text"
-                        onClick={showModal}
-                        style={{ marginLeft: 5 }}
-                    />
-                ) : null} */}
-                <Modal
-                    title="操作"
-                    open={isModalOpen}
-                    onOk={handleOk}
-                    onCancel={handleCancel}
-                    width={500}
-                    okText="提交"
-                    cancelText="取消"
-                >
-                    <Form
-                        labelCol={{ span: 4 }}
-                        wrapperCol={{ span: 18 }}
-                        layout="horizontal"
-                        style={{ maxWidth: 600 }}
-                        initialValues={{ operation: "pass" }}
-                    >
-                        <Form.Item
-                            label="选项"
-                            name="operation"
-                        >
-                            <Radio.Group>
-                                <Radio value="pass"> 通过 </Radio>
-                                <Radio value="reject"> 拒绝 </Radio>
-                            </Radio.Group>
-                        </Form.Item>
-                        <Form.Item
-                            label="拒绝理由"
-                            name="reason"
-                        >
-                            <TextArea rows={5} />
-                        </Form.Item>
-                    </Form>
-                </Modal>
             </Title>
-            <Radio.Group
-                options={[
-                    { label: "通过", value: "Apple" },
-                    { label: "拒绝", value: "Pear" },
-                ]}
-                optionType="button"
-            />
-
-            {/* <Radio.Group
-                    
+            {stateReceived === "waiting" && (
+                <Flex gap="small">
+                    <Button
+                        onClick={async () => {
+                            await operateReview(id, "pass");
+                        }}
                     >
-                            <Radio value={1}>同意</Radio>
-                            <Radio value={2}>拒绝</Radio>
-                    </Radio.Group> */}
+                        {t("pass")}
+                    </Button>
+                    <Button
+                        onClick={() => {
+                            setIsModalOpen(true);
+                        }}
+                    >
+                        {t("reject")}
+                    </Button>
+                    <RejectModal
+                        isModalOpen={isModalOpen}
+                        handleOk={handleOk}
+                        handleCancel={handleCancel}
+                    />
+                </Flex>
+            )}
 
-            {state === "fail" ? <Paragraph className="w-32">不符合招录条件不符合招录符合招录条件</Paragraph> : null}
+            {stateReceived === "fail" ? <Paragraph className="w-32">不符合招录条件不符合招录符合招录条件</Paragraph> : null}
         </Flex>
     );
 }

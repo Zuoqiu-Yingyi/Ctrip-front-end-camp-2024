@@ -12,26 +12,116 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 "use client";
-import React from "react";
-import { NavBar, Button } from "antd-mobile";
-import { CloseCircleFill, AddOutline } from "antd-mobile-icons";
+import React, { useContext, useEffect, useRef, useState } from "react";
+import { NavBar, Tabs, Space, Button, SpinLoading } from "antd-mobile";
+import { Layout } from "antd";
+import { CloseCircleFill, FillinOutline, PicturesOutline, VideoOutline } from "antd-mobile-icons";
+import EditTab from "@/ui/mobile-edit-tab";
+import { SubmitInfoContext } from "@/context/mobileEditContext";
+import { initAccount } from "@/utils/account";
 
 export default function EditPage(): JSX.Element {
+    const [tab, setTab] = useState<"text" | "album" | "camera">("text");
+
+    const [onPress, setOnPress] = useState(false);
+
+    const { uploadTrvalNote, user } = useContext(SubmitInfoContext);
+
+    const flag = useRef(true);
+
+    useEffect(() => {
+
+        if (flag.current) {
+            flag.current = false;
+
+            (async () => {
+                await initAccount(undefined, user.current);
+            })();            
+        }
+        
+    }, [])
+
     return (
-        <>
-            <NavBar backArrow={<CloseCircleFill color="#CCCCCC" />} />
-            <Button
-                fill="none"
-                style={{ width: 100, height: 100, backgroundColor: "#f7f7f7", marginLeft: 20 }}
+        <Layout style={{ height: "100vh" }}>
+            <NavBar
+                backArrow={<CloseCircleFill color="#CCCCCC" />}
+                right={
+                    <Space>
+                        { onPress && <SpinLoading style={{ '--size': '20px' }}/>}
+                        <Button
+                            block
+                            size="mini"
+                            shape="rounded"
+                            disabled={onPress}                            
+                            style={{
+                                marginLeft: "auto",
+                                width: 90,
+                            }}
+                            onClick={async () => {
+                                setOnPress(true);
+                                await uploadTrvalNote("draft");
+                                setOnPress(false);
+                            }}
+                        >
+                            存为草稿
+                        </Button>
+                        <Button
+                            block
+                            size="mini"
+                            shape="rounded"
+                            color="primary"
+                            disabled={onPress}                            
+                            style={{
+                                marginLeft: "auto",
+                                width: 60,
+                            }}
+                            onClick={async () => {
+                                setOnPress(true);
+                                await uploadTrvalNote("submit");
+                                setOnPress(false);
+                            }}
+                        >
+                            发布
+                        </Button>
+                    </Space>
+                }
+            />
+
+            <EditTab tabKey={tab} />
+
+            <Tabs
+                onChange={(key: string) => {
+                    setTab(key as "text" | "album" | "camera");
+                }}
             >
-                <AddOutline color="#CCCCCC" fontSize={20} style={{fontWeight: "bold"}}/>
-            </Button>
-            <Button
-                fill="none"
-                style={{ width: 100, height: 100, backgroundColor: "#f7f7f7", fontWeight: 900 }}
-            >
-                <AddOutline color="#CCCCCC" fontSize={20}/>
-            </Button>
-        </>
+                <Tabs.Tab
+                    title={
+                        <Space align="center">
+                            <FillinOutline className="mt-1" />
+                            文字
+                        </Space>
+                    }
+                    key="text"
+                />
+                <Tabs.Tab
+                    title={
+                        <Space align="center">
+                            <PicturesOutline className="mt-1" />
+                            相册
+                        </Space>
+                    }
+                    key="album"
+                />
+                <Tabs.Tab
+                    title={
+                        <Space align="center">
+                            <VideoOutline className="mt-1" />
+                            拍摄
+                        </Space>
+                    }
+                    key="camera"
+                />
+            </Tabs>
+        </Layout>
     );
 }

@@ -14,10 +14,13 @@
 
 import { Layout, FloatButton } from "antd";
 import { CameraOutline, CheckOutline, CloseOutline } from "antd-mobile-icons";
-import { useEffect, useRef, useState } from "react";
-import { openCamera, getPicture } from "@/app/lib/utils";
+import { useContext, useEffect, useRef, useState } from "react";
+import { openCamera, getPicture, closeCamera } from "@/utils/camera";
+import { SubmitInfoContext } from "@/context/mobileEditContext";
 
 export default function EditCameraTab(): JSX.Element {
+    const { addPicture } = useContext(SubmitInfoContext);
+
     const cameraVideoRef = useRef<HTMLVideoElement>(null);
 
     const cameraCanvasRef = useRef<HTMLCanvasElement>(null);
@@ -25,8 +28,6 @@ export default function EditCameraTab(): JSX.Element {
     const [onVedio, setOnVedio] = useState<boolean>(true);
 
     useEffect(() => {
-        console.log(screen.width);
-
         openCamera(cameraVideoRef, cameraCanvasRef);
     }, []);
 
@@ -48,46 +49,31 @@ export default function EditCameraTab(): JSX.Element {
                 ref={cameraCanvasRef}
                 style={{ border: "1px solid black", display: !onVedio ? "block" : "none" }}
             />
-            {/* {onVedio ? (
-                <video
-                    id="cameraVideo"
-                    ref={cameraVideoRef}
-                    width={320}
-                    height={320}
-                />
-            ) : (
-                <canvas
-                    id="cameraCanvas"
-                    ref={cameraCanvasRef}
-                    // width={320}
-                    // height={320}
-                    style={{ border: "1px solid black", width: "100px", height: "100px" }}
-                />
-            )} */}
-
-            {onVedio? 
-            (
+            {onVedio ? (
                 <FloatButton
                     icon={<CameraOutline style={{ height: "30px", width: "30px", marginLeft: "-6" }} />}
                     style={{ right: "42%", bottom: "60px", height: "60px", width: "60px" }}
                     onClick={takePicture}
-                />                
-            ):(
+                />
+            ) : (
                 <>
                     <FloatButton
                         icon={<CheckOutline style={{ height: "30px", width: "30px", marginLeft: "-6" }} />}
                         style={{ right: "42%", bottom: "60px", height: "60px", width: "60px" }}
+                        onClick={() => {
+                            addPicture(cameraCanvasRef.current);
+                            closeCamera(cameraVideoRef);
+                        }}
                     />
                     <FloatButton
                         icon={<CloseOutline style={{ height: "30px", width: "30px", marginLeft: "-6" }} />}
                         style={{ right: "25%", bottom: "60px", height: "60px", width: "60px" }}
-                        onClick={() => {setOnVedio(true)}}
-                    />                 
+                        onClick={() => {
+                            setOnVedio(true);
+                        }}
+                    />
                 </>
             )}
-
-
-
         </Layout>
     );
 }
