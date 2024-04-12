@@ -11,18 +11,16 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import EditTextTab from "./mobile-edit-text-tab"
-import EditCameraTab from "./mobile-edit-camera-tab"
-import EditAlbumTab from "./mobile-edit-album-tab"
+import EditTextTab from "./mobile-edit-text-tab";
+import EditCameraTab from "./mobile-edit-camera-tab";
+import EditAlbumTab from "./mobile-edit-album-tab";
 
-export default function EditTab({tabKey}: {tabKey: "text" | "album" | "camera"}): JSX.Element {
-
+export default function EditTab({ tabKey }: { tabKey: "text" | "album" | "camera" }): JSX.Element {
     if (tabKey === "text") {
-        return <EditTextTab />
+        return <EditTextTab />;
     } else if (tabKey === "album") {
-        return <EditAlbumTab />
+        return <EditAlbumTab />;
     } else {
-        return <EditCameraTab />
+        return <EditCameraTab />;
     }
-
 }

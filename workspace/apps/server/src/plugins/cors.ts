@@ -17,7 +17,6 @@ import cors from "@fastify/cors";
 import type { FastifyInstance } from "fastify";
 
 export async function register(fastify: FastifyInstance) {
-
     await fastify.register(cors, {
         origin: true, // 允许所有域名访问
         // methods: ["GET", "PUT", "POST", "PATCH", "DELETE"], // 允许的 HTTP 方法

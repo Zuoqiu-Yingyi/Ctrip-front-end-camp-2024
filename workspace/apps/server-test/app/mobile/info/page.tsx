@@ -22,7 +22,7 @@ import { handleResponse } from "@/app/utils/help";
 import { AuthContext } from "@/app/lib/authContext";
 import { Typography } from "antd";
 import { origin } from "@/app/utils/trpc";
-import { EyeInvisibleOutline, EyeOutline } from 'antd-mobile-icons'
+import { EyeInvisibleOutline, EyeOutline } from "antd-mobile-icons";
 
 const { Link } = Typography;
 
@@ -37,11 +37,10 @@ export default function InfoPage(): JSX.Element {
 
     const [onLogin, setOnLogin] = useState(true);
 
-    const onFinish = async (values: { username: string; password: string, passwordVerify?: string }) => {
+    const onFinish = async (values: { username: string; password: string; passwordVerify?: string }) => {
         setLoading(true);
 
         if (!onLogin && values.password !== values.passwordVerify) {
-
             Toast.show({
                 icon: "fail",
                 content: "两次密码不一致",
@@ -49,7 +48,7 @@ export default function InfoPage(): JSX.Element {
 
             setLoading(false);
 
-            return
+            return;
         }
 
         let response = null;
@@ -161,7 +160,6 @@ export default function InfoPage(): JSX.Element {
                         >
                             {onLogin ? "没有账号？请注册" : "已有账号？登录"}
                         </Link>
-
                     </Form>
                 }
                 onClose={() => {
@@ -189,10 +187,9 @@ export default function InfoPage(): JSX.Element {
                 <List>
                     <List.Item onClick={() => {}}>{userInfo.current?.username}</List.Item>
                     <List.Item onClick={() => {}}>{userInfo.current?.id}</List.Item>
-                    <List.Item onClick={() => {}}>修改密码</List.Item>                    
+                    <List.Item onClick={() => {}}>修改密码</List.Item>
                     <List.Item onClick={() => {}}>退出</List.Item>
                     <List.Item onClick={() => {}}>注销</List.Item>
-
                 </List>
             </Flex>
         </>

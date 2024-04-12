@@ -20,17 +20,11 @@ export async function getReviewCount(state: TravelNote["state"], trpc: TRPC) {
     let countRes = null;
 
     if (state === "waiting") {
-
         countRes = await trpc.client.review.count.query({ status: ReviewStatus.Pending });
-
     } else if (state === "success") {
-
         countRes = await trpc.client.review.count.query({ status: ReviewStatus.Approved });
-
     } else {
-
         countRes = await trpc.client.review.count.query({ status: ReviewStatus.Rejected });
-
     }
 
     const handledResponse = handleResponse(countRes);
@@ -43,7 +37,6 @@ export async function getReviewCount(state: TravelNote["state"], trpc: TRPC) {
 }
 
 export async function getReviews(itemNumber: number, state: TravelNote["state"], trpc: TRPC): Promise<TravelNote[]> {
-
     let response = null;
 
     if (state === "waiting") {
@@ -67,20 +60,15 @@ export async function getReviews(itemNumber: number, state: TravelNote["state"],
             state: state,
             submissionTime: item.submission_time,
             modificationTime: item.modification_time,
-            approvalTime: (item.approval_time? item.approval_time: ""),
+            approvalTime: item.approval_time ? item.approval_time : "",
         }));
     } else {
         throw Error("Error");
     }
 }
 
-export async function operateSingleReview(id: number, opeate: "pass" | "reject", trpc: TRPC, rejectReason?: string) {
-
-    const response_approve = await trpc.client.review.approve.mutate(
-        (opeate === "pass"?
-            ({ id: id, approved: true }):
-            ({ id: id, approved: false, comment: rejectReason })
-        ))
+export async function operateSingleReview(id: number, operate: "pass" | "reject", trpc: TRPC, rejectReason?: string) {
+    const response_approve = await trpc.client.review.approve.mutate(operate === "pass" ? { id: id, approved: true } : { id: id, approved: false, comment: rejectReason });
 
     if (handleResponse(response_approve).state === "fail") {
         throw Error("Error");

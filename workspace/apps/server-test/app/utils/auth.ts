@@ -22,8 +22,7 @@ import trpc from "@/app/utils/trpc";
 
 type TRole = Parameters<typeof trpc.client.auth.challenge.query>[0]["role"];
 
-
-async function getChallenge(username: string, role: TRole ): Promise<string> {
+async function getChallenge(username: string, role: TRole): Promise<string> {
     const response_challenge = await trpc.client.auth.challenge.query({
         username,
         role,
@@ -31,7 +30,7 @@ async function getChallenge(username: string, role: TRole ): Promise<string> {
     console.debug(response_challenge);
 
     const challenge = response_challenge.data.challenge;
-    
+
     return challenge;
 }
 
@@ -47,7 +46,6 @@ export async function login({
     role?: TRole;
     remember?: boolean;
 }) {
-
     const challenge = await getChallenge(username, role);
     const key = await passphrase2key(username, passphrase, "salt");
     const response = await challenge2response(String2ArrayBuffer(challenge), key);

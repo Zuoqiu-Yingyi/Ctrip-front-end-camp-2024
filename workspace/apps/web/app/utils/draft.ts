@@ -34,5 +34,4 @@ export async function uploadSubmit(draftId: number, t = trpc) {
     if (handleResponse(response).state === "fail") {
         throw Error("Error");
     }
-
 }

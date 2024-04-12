@@ -15,7 +15,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-
 import {
     //
     passphrase2key,
@@ -56,7 +55,7 @@ export async function login(
         username = "wu",
         passphrase = "1234",
         role = "user",
-        remember = false
+        remember = false,
     },
     t = trpc,
 ) {
@@ -82,16 +81,7 @@ export async function login(
 /**
  * 更改密码
  */
-export async function changePassword(
-    {
-
-        username = "wu",
-        passphrase1 = "1234",
-        passphrase2 = "12345",
-        role = "user",
-    },
-    t = trpc,
-) {
+export async function changePassword({ username = "wu", passphrase1 = "1234", passphrase2 = "12345", role = "user" }, t = trpc) {
     const key1 = await passphrase2key(username, passphrase1, "salt");
     const key2 = await passphrase2key(username, passphrase2, "salt");
 

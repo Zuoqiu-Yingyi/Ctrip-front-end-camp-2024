@@ -34,7 +34,6 @@ const defaultProps = {
 };
 
 export default function DrawPanel({ back }: { back: () => void }): JSX.Element {
-
     const { t, i18n } = useTranslation();
 
     const { addDraw } = useContext(SubmitInfoContext);
@@ -79,7 +78,7 @@ export default function DrawPanel({ back }: { back: () => void }): JSX.Element {
                     </Button>
                 }
             >
-               {t("drawing-board")}
+                {t("drawing-board")}
             </NavBar>
             <CanvasDraw {...props} />
             <Space
@@ -105,7 +104,7 @@ export default function DrawPanel({ back }: { back: () => void }): JSX.Element {
                         style={{
                             width: `${sliderLength}px`,
                             // width: `${250}px`,
-                            // width: 
+                            // width:
                         }}
                     />
                 </Space>

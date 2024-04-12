@@ -13,7 +13,7 @@
 // limitations under the License.
 "use client";
 import React, { useEffect, useState } from "react";
-import { Flex, Divider, FloatButton, Button, Typography, Spin  } from "antd";
+import { Flex, Divider, FloatButton, Button, Typography, Spin } from "antd";
 import ExamineList from "@/ui/examine-list";
 import ListOperationBar from "@/ui/list-operation";
 import { useContext } from "react";
@@ -65,9 +65,7 @@ export default function ContentPage(): JSX.Element {
                             await operateBatchReview("pass");
                         }}
                     >
-                        <Text type="success">
-                            {t("pass")}
-                            </Text>
+                        <Text type="success">{t("pass")}</Text>
                     </Button>
                     <Button
                         type="dashed"
@@ -76,14 +74,16 @@ export default function ContentPage(): JSX.Element {
                             setIsModalOpen(true);
                         }}
                     >
-                        <Text type="danger">
-                            {t("reject")}
-                            </Text>
+                        <Text type="danger">{t("reject")}</Text>
                     </Button>
-                    <RejectModal isModalOpen={isModalOpen} handleOk={handleOk} handleCancel={handleCancel}/>
+                    <RejectModal
+                        isModalOpen={isModalOpen}
+                        handleOk={handleOk}
+                        handleCancel={handleCancel}
+                    />
                 </Flex>
             ) : null}
-            {onSearch && (<Spin />)}            
+            {onSearch && <Spin />}
             <ExamineList
                 data={displayItems}
                 loading={loading}

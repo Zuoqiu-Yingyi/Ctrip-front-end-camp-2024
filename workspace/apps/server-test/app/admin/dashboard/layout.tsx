@@ -27,7 +27,6 @@ const IconFont = createFromIconfontCN({
 });
 
 export default function OverviewPage({ children }: { children: React.ReactNode }): JSX.Element {
-
     const { userInfo } = useContext(AuthContext);
 
     const {
@@ -99,8 +98,6 @@ export default function OverviewPage({ children }: { children: React.ReactNode }
                             level={5}
                             type="secondary"
                         >
-                            
-
                             {userInfo.current?.accessRole === 2 ? (
                                 <IconFont
                                     /* cspell:disable-next-line */
@@ -115,7 +112,7 @@ export default function OverviewPage({ children }: { children: React.ReactNode }
                                     style={{ color: "red" }}
                                 />
                             )}
-                            
+
                             {userInfo.current?.username}
                         </Title>
                     </Dropdown>

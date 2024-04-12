@@ -24,7 +24,7 @@ export default function EditPage(): JSX.Element {
 
     const [onPress, setOnPress] = useState(false);
 
-    const { uploadTrvalNote, user } = useContext(SubmitInfoContext);
+    const { uploadTravelNote, user } = useContext(SubmitInfoContext);
 
     // const flag = useRef(true);
 
@@ -35,9 +35,9 @@ export default function EditPage(): JSX.Element {
 
     //         (async () => {
     //             await initAccount(undefined, user.current);
-    //         })();            
+    //         })();
     //     }
-        
+
     // }, [])
 
     return (
@@ -46,19 +46,19 @@ export default function EditPage(): JSX.Element {
                 backArrow={<CloseCircleFill color="#CCCCCC" />}
                 right={
                     <Space>
-                        { onPress && <SpinLoading style={{ '--size': '20px' }}/>}
+                        {onPress && <SpinLoading style={{ "--size": "20px" }} />}
                         <Button
                             block
                             size="mini"
                             shape="rounded"
-                            disabled={onPress}                            
+                            disabled={onPress}
                             style={{
                                 marginLeft: "auto",
                                 width: 90,
                             }}
                             onClick={async () => {
                                 setOnPress(true);
-                                await uploadTrvalNote("draft");
+                                await uploadTravelNote("draft");
                                 setOnPress(false);
                             }}
                         >
@@ -69,14 +69,14 @@ export default function EditPage(): JSX.Element {
                             size="mini"
                             shape="rounded"
                             color="primary"
-                            disabled={onPress}                            
+                            disabled={onPress}
                             style={{
                                 marginLeft: "auto",
                                 width: 60,
                             }}
                             onClick={async () => {
                                 setOnPress(true);
-                                await uploadTrvalNote("submit");
+                                await uploadTravelNote("submit");
                                 setOnPress(false);
                             }}
                         >

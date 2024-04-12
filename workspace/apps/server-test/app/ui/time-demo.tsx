@@ -20,11 +20,11 @@ export default function TimeList(state: "success" | "fail" | "waiting", submissi
     let timeBar = [
         <Space>
             <FileTextOutlined />
-            {`提交时间:${dayjs(submissionTime).format("YYYY-MM-DD HH:mm") }`}
+            {`提交时间:${dayjs(submissionTime).format("YYYY-MM-DD HH:mm")}`}
         </Space>,
         <Space>
             <FileSyncOutlined />
-            {`更改时间:${dayjs(modificationTime).format("YYYY-MM-DD HH:mm") }`}
+            {`更改时间:${dayjs(modificationTime).format("YYYY-MM-DD HH:mm")}`}
         </Space>,
     ];
 
@@ -32,7 +32,7 @@ export default function TimeList(state: "success" | "fail" | "waiting", submissi
         timeBar.push(
             <Space>
                 <FileDoneOutlined />
-                {`审核时间:${dayjs(approvalTime).format("YYYY-MM-DD HH:mm") }`}
+                {`审核时间:${dayjs(approvalTime).format("YYYY-MM-DD HH:mm")}`}
             </Space>,
         );
     }

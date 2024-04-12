@@ -13,7 +13,7 @@
 // limitations under the License.
 import { createContext, useContext, useRef, useState } from "react";
 import { TravelNote, ManageData, ManagePage, ManagePageNumber } from "../types/definitions";
-import { mockRomoteSearch } from "@/context/data";
+import { mockRemoteSearch } from "@/context/data";
 import { getReviewCount, operateSingleReview, getReviews } from "../utils/review";
 import { AuthContext } from "@/context/authContext";
 
@@ -135,7 +135,7 @@ export default function MessageContextProvider({ children }: { children: React.R
 
         changeDisplayItems(loadedSearchItems);
 
-        let allSearchItems = [...loadedSearchItems, ...(await mockRomoteSearch(3, pageState))];
+        let allSearchItems = [...loadedSearchItems, ...(await mockRemoteSearch(3, pageState))];
 
         if (record === searchNumber.current) {
             changeDisplayItems(allSearchItems);
@@ -320,7 +320,7 @@ export default function MessageContextProvider({ children }: { children: React.R
             setLoading(false);
 
             for (let index = 0; index < Math.ceil(allWaitingCount / 5) - 1 && index < 5; index++) {
-                allItems.current[state].push(...(await getReviews((index + 1) * 5 , 5, state, user.current)));
+                allItems.current[state].push(...(await getReviews((index + 1) * 5, 5, state, user.current)));
 
                 loadedPages.current[state].add(index + 2);
 
@@ -365,7 +365,6 @@ export default function MessageContextProvider({ children }: { children: React.R
                 for (let index = maxReaderPage.current[state]; index < page; index++) {
                     allItems.current[state].push(...new Array(5).fill({}));
                 }
-
 
                 for (let index = 0; index < pageSize; index++) {
                     let tempIndex = switchItemIndex(page, index, pageSize);

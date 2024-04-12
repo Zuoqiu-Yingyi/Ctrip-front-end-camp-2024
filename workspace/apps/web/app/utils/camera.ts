@@ -34,7 +34,7 @@ export function openCamera(cameraVideoRef: React.RefObject<HTMLVideoElement>, ca
     navigator.mediaDevices
         .getUserMedia(opt)
         .then((mediaStream) => {
-            displayVedio(cameraVideoRef, mediaStream);
+            displayVideo(cameraVideoRef, mediaStream);
         })
         .catch((err) => {
             console.error(`An error occurred: ${err}`);
@@ -45,7 +45,6 @@ export function openCamera(cameraVideoRef: React.RefObject<HTMLVideoElement>, ca
     let width = screen.width;
 
     if (video !== null) {
-
         video.addEventListener(
             "canplay",
             () => {
@@ -67,11 +66,8 @@ export function openCamera(cameraVideoRef: React.RefObject<HTMLVideoElement>, ca
                 }
             },
             false,
-        );   
-
+        );
     }
-
-
 }
 
 /**
@@ -108,7 +104,7 @@ export function closeCamera(cameraVideoRef: React.RefObject<HTMLVideoElement>) {
  *
  * @beta
  */
-export function displayVedio(cameraVideoRef: React.RefObject<HTMLVideoElement>, mediaStream: MediaStream) {
+export function displayVideo(cameraVideoRef: React.RefObject<HTMLVideoElement>, mediaStream: MediaStream) {
     const video = cameraVideoRef.current as HTMLVideoElement;
 
     if ("srcObject" in video) {

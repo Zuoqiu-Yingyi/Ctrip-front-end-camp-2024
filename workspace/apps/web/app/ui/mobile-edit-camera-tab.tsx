@@ -25,7 +25,7 @@ export default function EditCameraTab(): JSX.Element {
 
     const cameraCanvasRef = useRef<HTMLCanvasElement>(null);
 
-    const [onVedio, setOnVedio] = useState<boolean>(true);
+    const [onVideo, setOnVideo] = useState<boolean>(true);
 
     useEffect(() => {
         openCamera(cameraVideoRef, cameraCanvasRef);
@@ -33,7 +33,7 @@ export default function EditCameraTab(): JSX.Element {
 
     function takePicture() {
         getPicture(cameraVideoRef, cameraCanvasRef);
-        setOnVedio(false);
+        setOnVideo(false);
     }
 
     return (
@@ -42,14 +42,14 @@ export default function EditCameraTab(): JSX.Element {
                 id="cameraVideo"
                 ref={cameraVideoRef}
                 // width="100%"
-                style={{ display: onVedio ? "block" : "none" }}
+                style={{ display: onVideo ? "block" : "none" }}
             />
             <canvas
                 id="cameraCanvas"
                 ref={cameraCanvasRef}
-                style={{ border: "1px solid black", display: !onVedio ? "block" : "none" }}
+                style={{ border: "1px solid black", display: !onVideo ? "block" : "none" }}
             />
-            {onVedio ? (
+            {onVideo ? (
                 <FloatButton
                     icon={<CameraOutline style={{ height: "30px", width: "30px", marginLeft: "-6" }} />}
                     style={{ right: "42%", bottom: "60px", height: "60px", width: "60px" }}
@@ -69,7 +69,7 @@ export default function EditCameraTab(): JSX.Element {
                         icon={<CloseOutline style={{ height: "30px", width: "30px", marginLeft: "-6" }} />}
                         style={{ right: "25%", bottom: "60px", height: "60px", width: "60px" }}
                         onClick={() => {
-                            setOnVedio(true);
+                            setOnVideo(true);
                         }}
                     />
                 </>
