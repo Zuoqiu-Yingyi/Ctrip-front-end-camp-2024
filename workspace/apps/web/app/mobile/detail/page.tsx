@@ -59,6 +59,10 @@ export function Detail() {
     const [loading, setLoading] = useState<boolean>(true);
     const [loaded, setLoaded] = useState<boolean>(false);
     const [data, setData] = useState<any>(null);
+    // const response = trpc.review.submitted.query({
+    //     thisUid,
+    // });
+    // response_content = response.data?.reviews[0]?.content;
 
     // console.debug(searchParams.toString());
     const uid = searchParams.get("uid");
