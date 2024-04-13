@@ -22,6 +22,7 @@ import {
     String2ArrayBuffer,
     ArrayBuffer2HexString,
 } from "@repo/utils/crypto";
+import { handleResponse } from "./help";
 import trpc from "./trpc";
 
 type TRole = Parameters<typeof trpc.client.auth.challenge.query>[0]["role"];
@@ -42,6 +43,12 @@ export async function signup(
         username,
         password: ArrayBuffer2HexString(key),
     });
+
+    console.log(response_signup);
+
+    if (handleResponse(response_signup).state === "fail") {
+        throw Error("注册失败");
+    }
 
     return response_signup;
 }
@@ -75,7 +82,28 @@ export async function login(
         stay: remember,
     });
 
+    console.log(response_login);
+
+    if (handleResponse(response_login).state === "fail") {
+        throw Error("登录失败");
+    }
+
     return response_login;
+}
+
+/**
+ * 用户登出
+ */
+export async function logout(
+    t = trpc,
+) {
+    const response_logout = await t.client.account.logout.query();
+
+    if (handleResponse(response_logout).state === "fail") {
+        throw Error("登出失败");
+    }
+
+    return response_logout;
 }
 
 /**

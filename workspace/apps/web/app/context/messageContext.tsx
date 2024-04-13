@@ -205,17 +205,22 @@ export default function MessageContextProvider({ children }: { children: React.R
         );
     }
 
-    async function mendLoadedPages(redNumber: number, state: TravelNote["state"]) {
+    async function mendLoadedPages(changedTotlNum: number, state: TravelNote["state"]) {
+        console.log(loadedPages.current[state]);
+
         for (let key of loadedPages.current[state].keys()) {
-            console.log(key);
-
-            for (let index = 0; index < 5; index++) {
-                let itemIndex = switchItemIndex(key, index, 5);
-
-                if (itemIndex < totalDataNumber[state] - redNumber && JSON.stringify(allItems.current[state][itemIndex]) === "{}") {
-                    allItems.current[state][itemIndex] = (await getReviews(itemIndex, 1, state, user.current))[0];
-                }
-            }
+            await Promise.all(
+                [0, 1, 2, 3, 4]
+                    .map((index) => switchItemIndex(key, index, 5))
+                    .filter((switchIndex) => switchIndex < changedTotlNum)
+                    .map((switchIndex) => {
+                        if (switchIndex >= allItems.current[state].length || JSON.stringify(allItems.current[state][switchIndex]) === "{}") {
+                            return getReviews(switchIndex, 1, state, user.current).then((value) => {
+                                allItems.current[state][switchIndex] = value[0];
+                            });
+                        }
+                    }),
+            );
         }
     }
 
@@ -239,25 +244,29 @@ export default function MessageContextProvider({ children }: { children: React.R
      *
      */
     async function operateSingleItem(id: number, state: TravelNote["state"]) {
+        let changedTotlNum = totalDataNumber[state] - 1;
+
         allItems.current[state] = allItems.current[state].filter((item) => item.id !== id);
 
         setTotalDataNumber({
             ...totalDataNumber,
-            [state]: totalDataNumber[state] - 1,
+            [state]: changedTotlNum,
         });
 
         setDisplayItems(allItems.current[state]);
 
-        mendLoadedPages(1, state);
+        mendLoadedPages(changedTotlNum, state);
     }
 
     async function operateBatchReview(operate: "pass" | "reject", rejectReason?: string) {
+        console.log(checkedSet.current);
+
         await Promise.all(
-            allItems.current["waiting"].map((element) => {
+            [...checkedSet.current].map((id) => {
                 if (operate === "pass") {
-                    return operateSingleReview(element.id, operate, user.current);
+                    return operateSingleReview(id, operate, user.current);
                 } else {
-                    return operateSingleReview(element.id, operate, user.current, rejectReason);
+                    return operateSingleReview(id, operate, user.current, rejectReason);
                 }
             }),
         );
@@ -274,14 +283,16 @@ export default function MessageContextProvider({ children }: { children: React.R
      *
      */
     async function operateBatchItem(state: TravelNote["state"]) {
+        let changedTotlNum = totalDataNumber[state] - checkedNumber;
+
         allItems.current[state] = allItems.current[state].filter((item) => !checkedSet.current.has(item.id));
 
         setTotalDataNumber({
             ...totalDataNumber,
-            [state]: totalDataNumber[state] - checkedNumber,
+            [state]: changedTotlNum,
         });
 
-        mendLoadedPages(checkedNumber, state);
+        mendLoadedPages(changedTotlNum, state);
 
         setDisplayItems(allItems.current[state]);
 
@@ -309,6 +320,8 @@ export default function MessageContextProvider({ children }: { children: React.R
 
             allItems.current[state] = await getReviews(0, 5, state, user.current);
 
+            console.log("loadedPages: ");
+
             console.log(loadedPages.current[state]);
 
             loadedPages.current[state].add(1);
@@ -319,7 +332,7 @@ export default function MessageContextProvider({ children }: { children: React.R
 
             setLoading(false);
 
-            for (let index = 0; index < Math.ceil(allWaitingCount / 5) - 1 && index < 5; index++) {
+            for (let index = 0; index < Math.ceil(allWaitingCount / 5) - 1 && index < 1; index++) {
                 allItems.current[state].push(...(await getReviews((index + 1) * 5, 5, state, user.current)));
 
                 loadedPages.current[state].add(index + 2);
@@ -340,7 +353,9 @@ export default function MessageContextProvider({ children }: { children: React.R
             [state]: allWaitingCount,
         });
 
-        console.log(allItems.current);
+        console.log("allItems.current: ");
+
+        console.log(allItems.current[state]);
     }
 
     /**
@@ -362,17 +377,22 @@ export default function MessageContextProvider({ children }: { children: React.R
             if (!preLoadedPages.current[state].has(page)) {
                 preLoadedPages.current[state].add(page);
 
-                for (let index = maxReaderPage.current[state]; index < page; index++) {
+                for (let index = maxReaderPage.current[state]; index < page - 1; index++) {
                     allItems.current[state].push(...new Array(5).fill({}));
                 }
 
-                for (let index = 0; index < pageSize; index++) {
-                    let tempIndex = switchItemIndex(page, index, pageSize);
-
-                    if (JSON.stringify(allItems.current[state][tempIndex]) === "{}") {
-                        allItems.current[state][tempIndex] = (await getReviews(tempIndex, 1, state, user.current))[0];
-                    }
-                }
+                await Promise.all(
+                    [0, 1, 2, 3, 4]
+                        .map((index) => switchItemIndex(page, index, pageSize))
+                        .filter((switchIndex) => switchIndex < totalDataNumber[state])
+                        .map((switchIndex) => {
+                            if (switchIndex >= allItems.current[state].length || JSON.stringify(allItems.current[state][switchIndex]) === "{}") {
+                                return getReviews(switchIndex, 1, state, user.current).then((value) => {
+                                    allItems.current[state][switchIndex] = value[0];
+                                });
+                            }
+                        }),
+                );
 
                 loadedPages.current[state].add(page);
 
@@ -414,11 +434,13 @@ export default function MessageContextProvider({ children }: { children: React.R
     async function togglePage(page: number, pageSize: number, state: TravelNote["state"]) {
         await loadPage(page, pageSize, true, state);
 
+        changeDisplayItems(allItems.current[state]);       
+
         if (page <= Math.floor((totalDataNumber[state] - 1) / pageSize)) {
             await loadPage(page + 1, pageSize, false, state);
         }
 
-        changeDisplayItems(allItems.current[state]);
+        // changeDisplayItems(allItems.current[state]);
     }
 
     return <MessageContext.Provider value={{ searchItem, delTravelNote, checkedNumber, addCheckSet, subCheckSet, displayItems, loading, firstPullData, togglePage, totalDataNumber, operateReview, operateBatchReview, togglePageState, pageState, setPageState, onSearch }}>{children}</MessageContext.Provider>;

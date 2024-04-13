@@ -46,5 +46,7 @@
     "details": "詳情",
     "graffiti": "塗鴉" ,
     "graffiti-tip": "可以隨手畫點日常生活吧！",
-    "reject-reason": "拒絕理由"
+    "reject-reason": "拒絕理由",
+    "delete": "刪除",
+    "delete-tip": "你確定刪除該項嗎？"
 }

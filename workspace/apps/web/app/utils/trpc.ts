@@ -26,13 +26,12 @@ export const origin = "http://localhost:3000";
 export class TRPC {
     public readonly client: ReturnType<typeof createTRPCClient<TTrpcRouter>>;
 
-    constructor(url = `/trpc`) {
-        const that = this;
+    constructor(url = `${origin}/trpc`) {
         this.client = createTRPCClient<TTrpcRouter>({
             links: [
                 httpBatchLink({
                     url,
-                    async fetch(input: string | URL | Request, init: RequestInit) {
+                    async fetch(input, init) {
                         const response = await fetch(input, { ...(init as RequestInit), credentials: "include" });
 
                         return response;

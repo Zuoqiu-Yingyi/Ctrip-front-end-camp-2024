@@ -39,19 +39,22 @@ export default function LoginPage(): JSX.Element {
         setLoading(true);
 
         let response = await login({ username: values.username, passphrase: values.password, remember: values.remember, role: "staff" }, user.current);
-
+        
         handleResponse(response);
 
         if (handleResponse(response).state === "success") {
             userInfo.current = { username: response.data?.account.username, accessRole: response.data?.account.role };
 
             replace("/admin/dashboard");
+
         } else {
+            
             setErrorDisplay(true);
 
             setTimeout(() => {
                 setErrorDisplay(false);
             }, 1000);
+
         }
 
         setLoading(false);

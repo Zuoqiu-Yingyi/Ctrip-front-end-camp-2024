@@ -47,5 +47,7 @@
     "details": "details",
     "graffiti": "graffiti" ,
     "graffiti-tip": "You can paint some daily life!",
-    "reject-reason": "reject reason"
+    "reject-reason": "reject reason",
+    "delete": "delete",
+    "delete-tip": "Are you sure you want to delete this item?"
 }

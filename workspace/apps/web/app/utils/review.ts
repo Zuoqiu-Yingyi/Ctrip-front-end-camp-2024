@@ -61,6 +61,7 @@ export async function getReviews(index: number, itemNumber: number, state: Trave
             submissionTime: item.submission_time,
             modificationTime: item.modification_time,
             approvalTime: item.approval_time ? item.approval_time : "",
+            comment: item.comment ? item.comment : "",
         }));
     } else {
         throw Error("Error");
@@ -69,7 +70,9 @@ export async function getReviews(index: number, itemNumber: number, state: Trave
 
 export async function operateSingleReview(id: number, operate: "pass" | "reject", trpc: TRPC, rejectReason?: string) {
     const response_approve = await trpc.client.review.approve.mutate(operate === "pass" ? { id: id, approved: true } : { id: id, approved: false, comment: rejectReason });
-
+    
+    console.log(response_approve);
+    
     if (handleResponse(response_approve).state === "fail") {
         throw Error("Error");
     }

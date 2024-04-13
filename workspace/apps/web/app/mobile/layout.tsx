@@ -18,6 +18,7 @@
 "use client";
 
 import "./global.scss";
+import "antd-mobile/es/global"
 import "@/utils/i18n";
 import AuthContextProvider from "@/context/authContext";
 

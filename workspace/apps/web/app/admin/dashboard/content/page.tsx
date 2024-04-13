@@ -12,18 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 "use client";
-import React, { useEffect, useState } from "react";
-import { Flex, Divider, FloatButton, Button, Typography, Spin } from "antd";
+import React, { useEffect, useRef, useState } from "react";
+import { Flex, Divider, FloatButton, Button, Typography, Spin, notification } from "antd";
 import ExamineList from "@/ui/examine-list";
 import ListOperationBar from "@/ui/list-operation";
 import { useContext } from "react";
 import { MessageContext } from "@/context/messageContext";
-
 import { CheckCircleTwoTone, CloseCircleTwoTone } from "@ant-design/icons";
 import RejectModal from "@/ui/reject-modal";
 import { useTranslation } from "react-i18next";
 
 const { Text } = Typography;
+
+type NotificationType = "success" | "error";
 
 export default function ContentPage(): JSX.Element {
     const { t, i18n } = useTranslation();
@@ -32,21 +33,49 @@ export default function ContentPage(): JSX.Element {
 
     const [isModalOpen, setIsModalOpen] = useState(false);
 
-    const handleOk = async (reason: string) => {
-        await operateBatchReview("reject", reason);
+    const [api] = notification.useNotification();
 
-        setIsModalOpen(false);
+    const [batchLoading, setBatchLoading] = useState(false);
+
+    const flag = useRef(true);
+
+    useEffect(() => {
+        if (flag.current) {
+            flag.current = false;
+
+            (async () => {
+                await firstPullData("waiting");
+            })();
+        }
+    }, []);  
+
+    const openNotification = (type: NotificationType) => {
+        api[type]({
+            placement: "bottomLeft",
+            message: (type === "success"? "审核成功": "审核失败"),
+        });
+    };
+
+    const handleOk = async (reason: string) => {
+
+        setIsModalOpen(false);  
+
+        setBatchLoading(true);
+        try {
+            await operateBatchReview("reject", reason);
+            openNotification('success');
+        } catch (error) {
+            openNotification('error');                                
+        }  
+        setBatchLoading(false);   
+
     };
 
     const handleCancel = () => {
         setIsModalOpen(false);
     };
 
-    useEffect(() => {
-        (async () => {
-            await firstPullData("waiting");
-        })();
-    }, []);
+
 
     return (
         <>
@@ -61,8 +90,16 @@ export default function ContentPage(): JSX.Element {
                     <Button
                         type="dashed"
                         icon={<CheckCircleTwoTone twoToneColor="#52c41a" />}
+                        loading={batchLoading}
                         onClick={async () => {
-                            await operateBatchReview("pass");
+                            setBatchLoading(true);
+                            try {
+                                await operateBatchReview("pass");
+                                openNotification('success');
+                            } catch (error) {
+                                openNotification('error');                                
+                            }  
+                            setBatchLoading(false);                         
                         }}
                     >
                         <Text type="success">{t("pass")}</Text>
@@ -70,12 +107,14 @@ export default function ContentPage(): JSX.Element {
                     <Button
                         type="dashed"
                         icon={<CloseCircleTwoTone twoToneColor="red" />}
+                        loading={batchLoading}
                         onClick={() => {
                             setIsModalOpen(true);
                         }}
                     >
                         <Text type="danger">{t("reject")}</Text>
                     </Button>
+                    {batchLoading && <Spin />}
                     <RejectModal
                         isModalOpen={isModalOpen}
                         handleOk={handleOk}

@@ -17,7 +17,7 @@ export type CardMessage = {
     type: "secondary" | "success" | "warning" | "danger";
     icon: React.ReactNode;
     text: string;
-    numberName?: "passNumber" | "waitingNumber" | "failNumber";
+    numberName?: "success" | "fail" | "waiting" | "total";
     loading?: boolean;
     number?: number;
 };
@@ -33,6 +33,7 @@ export type TravelNote = {
     submissionTime: string;
     modificationTime: string;
     approvalTime: string;
+    comment?: string
 };
 
 export type TimeMessage = {

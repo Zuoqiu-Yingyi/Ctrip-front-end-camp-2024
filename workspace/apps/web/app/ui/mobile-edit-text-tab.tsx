@@ -42,7 +42,7 @@ const textTemplates: string[] = [
 const titleTemplates: string[] = ["**出发！", "*** *天*夜 人均**", "**去哪玩？", "****旅游攻略", "**** 超全避雷攻略"];
 
 const items = textTemplates.map((value, index) => (
-    <Swiper.Item key={index}>
+    <Swiper.Item key={`text_${index}`}>
         <TextArea
             placeholder="请输入内容"
             value={value}
@@ -80,8 +80,9 @@ export default function EditTextTab(): JSX.Element {
                     width: "100%",
                 }}
             >
-                {titleTemplates.map((item) => (
+                {titleTemplates.map((item, index) => (
                     <Tag
+                        key={`tag_${index}`}
                         round
                         color="#CCCCCC"
                         style={{

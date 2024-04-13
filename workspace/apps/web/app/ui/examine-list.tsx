@@ -74,6 +74,7 @@ export function ExamineListItem({ item, loading }: { item: TravelNote; loading: 
                         <StateOperation
                             stateReceived={item.state}
                             id={item.id}
+                            rejectReason={item.comment}
                         />
                     </Flex>
                 ) : undefined

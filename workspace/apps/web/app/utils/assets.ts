@@ -14,12 +14,13 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+import { origin } from "./trpc";
 
 export async function upload<R = any>(
     //
     formData: FormData,
 ) {
-    const response = await fetch(`/assets/upload`, {
+    const response = await fetch(`${origin}/assets/upload`, {
         method: "POST",
         body: formData,
         credentials: "include",

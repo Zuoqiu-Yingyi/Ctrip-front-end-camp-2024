@@ -21,6 +21,8 @@ import { handleResponse } from "./help";
 export async function uploadDraft(draft: any, t = trpc) {
     const response = await t.client.draft.create.mutate(draft);
 
+    console.log(response);
+
     if (handleResponse(response).state === "fail") {
         throw Error("Error");
     }
@@ -30,6 +32,8 @@ export async function uploadDraft(draft: any, t = trpc) {
 
 export async function uploadSubmit(draftId: number, t = trpc) {
     const response = await t.client.review.submit.mutate({ draft_id: draftId });
+
+    console.log(response);
 
     if (handleResponse(response).state === "fail") {
         throw Error("Error");

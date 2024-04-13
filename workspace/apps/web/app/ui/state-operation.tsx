@@ -13,7 +13,7 @@
 // limitations under the License.
 import { CheckCircleFilled, ExclamationCircleFilled, CloseCircleFilled } from "@ant-design/icons";
 import React, { useContext, useState } from "react";
-import { Flex, Typography, Button, Popconfirm } from "antd";
+import { Flex, Typography, Button, Popconfirm, Spin, notification } from "antd";
 import { MessageContext } from "@/context/messageContext";
 import RejectModal from "@/ui/reject-modal";
 import { AuthContext } from "../context/authContext";
@@ -21,14 +21,20 @@ import { useTranslation } from "react-i18next";
 
 const { Title, Paragraph } = Typography;
 
-export default function StateOperation({ stateReceived, id }: { stateReceived: "success" | "fail" | "waiting"; id: number }): JSX.Element {
+type NotificationType = "success" | "error";
+
+export default function StateOperation({ stateReceived, id, rejectReason }: { stateReceived: "success" | "fail" | "waiting"; id: number; rejectReason?: string }): JSX.Element {
     const { operateReview, delTravelNote } = useContext(MessageContext);
 
     const { user, userInfo } = useContext(AuthContext);
 
     const { t, i18n } = useTranslation();
 
+    const [api] = notification.useNotification();
+
     const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const [singleLoading, setSingleLoading] = useState(false);
 
     let type: "secondary" | "success" | "warning" | "danger" = "secondary";
 
@@ -50,10 +56,24 @@ export default function StateOperation({ stateReceived, id }: { stateReceived: "
         text = t("pending");
     }
 
-    const handleOk = async (reason: string) => {
-        await operateReview(id, "reject", reason);
+    const openNotification = (type: NotificationType) => {
+        api[type]({
+            placement: "bottomLeft",
+            message: type === "success" ? "审核成功" : "审核失败",
+        });
+    };
 
+    const handleOk = async (reason: string) => {
         setIsModalOpen(false);
+
+        setSingleLoading(true);
+        try {
+            await operateReview(id, "reject", reason);
+            openNotification("success");
+        } catch (error) {
+            openNotification("error");
+        }
+        setSingleLoading(false);
     };
 
     const handleCancel = () => {
@@ -67,8 +87,8 @@ export default function StateOperation({ stateReceived, id }: { stateReceived: "
         >
             {userInfo.current?.accessRole === 1 && (
                 <Popconfirm
-                    title="删除"
-                    description="你确定删除该项吗？"
+                    title={t("delete")}
+                    description={t("delete-tip")}
                     onCancel={() => {
                         delTravelNote();
                     }}
@@ -80,7 +100,7 @@ export default function StateOperation({ stateReceived, id }: { stateReceived: "
                         size="small"
                         style={{ marginLeft: 90 }}
                     >
-                        删除
+                        {t("delete")}
                     </Button>
                 </Popconfirm>
             )}
@@ -95,14 +115,24 @@ export default function StateOperation({ stateReceived, id }: { stateReceived: "
             </Title>
             {stateReceived === "waiting" && (
                 <Flex gap="small">
+                    {singleLoading && <Spin />}
                     <Button
+                        loading={singleLoading}
                         onClick={async () => {
-                            await operateReview(id, "pass");
+                            setSingleLoading(true);
+                            try {
+                                await operateReview(id, "pass");
+                                openNotification('success');
+                            } catch (error) {
+                                openNotification('error');                                
+                            }  
+                            setSingleLoading(false); 
                         }}
                     >
                         {t("pass")}
                     </Button>
                     <Button
+                        loading={singleLoading}
                         onClick={() => {
                             setIsModalOpen(true);
                         }}
@@ -117,7 +147,7 @@ export default function StateOperation({ stateReceived, id }: { stateReceived: "
                 </Flex>
             )}
 
-            {stateReceived === "fail" ? <Paragraph className="w-32">不符合招录条件不符合招录符合招录条件</Paragraph> : null}
+            {stateReceived === "fail" ? <Paragraph className="w-32">{rejectReason}</Paragraph> : null}
         </Flex>
     );
 }
