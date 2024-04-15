@@ -14,6 +14,9 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+import "./globals.css";
+
+import { AntdRegistry } from "@ant-design/nextjs-registry";
 
 import StoreProvider from "./providers/store";
 
@@ -91,7 +94,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 />
             </head>
             <body>
-                <StoreProvider>{children}</StoreProvider>
+                <StoreProvider>
+                    <AntdRegistry>{children}</AntdRegistry>
+                </StoreProvider>
             </body>
         </html>
     );

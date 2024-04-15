@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-
 import {
     //
     createTRPCClient,
@@ -22,11 +21,55 @@ import {
 } from "@trpc/client";
 import type { TTrpcRouter } from "@repo/server/src/routers/trpc/router";
 
-export const trpc = createTRPCClient<TTrpcRouter>({
-    links: [
-        httpBatchLink({
-            url: `/trpc`,
-        }),
-    ],
-});
+export const origin = "http://localhost:3000";
+
+export class TRPC {
+    public readonly cookies: string[] = [];
+    public readonly client: ReturnType<typeof createTRPCClient<TTrpcRouter>>;
+
+    constructor(url = `${origin}/trpc`) {
+        const that = this;
+        this.client = createTRPCClient<TTrpcRouter>({
+            links: [
+                httpBatchLink({
+                    url,
+                    headers() {
+                        return {
+                            Cookie: that.cookies,
+                        };
+                    },
+                    async fetch(input, init) {
+                        const response = await fetch(input, { ...(init as RequestInit), credentials: "include" });
+                        // const response = await fetch(input, init as RequestInit);
+                        const _cookies = response.headers.getSetCookie();
+                        console.debug(_cookies);
+                        if (_cookies.length) {
+                            that.cookies.length = 0;
+                            that.cookies.push(..._cookies);
+                        }
+                        return response;
+                    },
+                }),
+            ],
+        });
+    }
+}
+
+export const trpc = new TRPC();
 export default trpc;
+
+// import {
+//     //
+//     createTRPCClient,
+//     httpBatchLink,
+// } from "@trpc/client";
+// import type { TTrpcRouter } from "@repo/server/src/routers/trpc/router";
+
+// export const trpc = createTRPCClient<TTrpcRouter>({
+//     links: [
+//         httpBatchLink({
+//             url: `/trpc`,
+//         }),
+//     ],
+// });
+// export default trpc;

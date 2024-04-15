@@ -15,23 +15,23 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import Link from "next/link";
+import trpc from "./trpc";
+import { handleResponse } from "./help";
 
-export default function Test() {
-    return (
-        <>
-            <h1>Test</h1>
-            <div>
-                Back to <Link href="/">/</Link>
-            </div>
-            <ul>
-                <li>
-                    <Link href="/test/account">/test/account</Link>
-                </li>
-                <li>
-                    <Link href="/test/assets">/test/assets</Link>
-                </li>
-            </ul>
-        </>
-    );
+export async function uploadDraft(draft: any, t = trpc) {
+    const response = await t.client.draft.create.mutate(draft);
+
+    if (handleResponse(response).state === "fail") {
+        throw Error("Error");
+    }
+
+    return response.data!.draft.id;
+}
+
+export async function uploadSubmit(draftId: number, t = trpc) {
+    const response = await t.client.review.submit.mutate({ draft_id: draftId });
+
+    if (handleResponse(response).state === "fail") {
+        throw Error("Error");
+    }
 }

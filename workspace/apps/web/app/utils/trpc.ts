@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-
 import {
     //
     createTRPCClient,
@@ -22,11 +21,42 @@ import {
 } from "@trpc/client";
 import type { TTrpcRouter } from "@repo/server/src/routers/trpc/router";
 
-export const trpc = createTRPCClient<TTrpcRouter>({
-    links: [
-        httpBatchLink({
-            url: `/trpc`,
-        }),
-    ],
-});
+export const origin = "http://localhost:3000";
+
+export class TRPC {
+    public readonly client: ReturnType<typeof createTRPCClient<TTrpcRouter>>;
+
+    constructor(url = `/trpc`) {
+        this.client = createTRPCClient<TTrpcRouter>({
+            links: [
+                httpBatchLink({
+                    url,
+                    async fetch(input, init) {
+                        const response = await fetch(input, { ...(init as RequestInit), credentials: "include" });
+
+                        return response;
+                    },
+                }),
+            ],
+        });
+    }
+}
+
+export const trpc = new TRPC();
 export default trpc;
+
+// import {
+//     //
+//     createTRPCClient,
+//     httpBatchLink,
+// } from "@trpc/client";
+// import type { TTrpcRouter } from "@repo/server/src/routers/trpc/router";
+
+// export const trpc = createTRPCClient<TTrpcRouter>({
+//     links: [
+//         httpBatchLink({
+//             url: `/trpc`,
+//         }),
+//     ],
+// });
+// export default trpc;

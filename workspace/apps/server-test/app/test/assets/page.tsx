@@ -75,7 +75,6 @@ export default function Login() {
                 </li>
                 {assets.map((asset) => (
                     <li key={asset.uid}>
-                        
                         <Image
                             src={asset.uid}
                             loader={assetsLoader}
@@ -83,10 +82,8 @@ export default function Login() {
                             title={asset.filename}
                             width={256}
                         />
-
                     </li>
                 ))}
-                
             </ul>
         </>
     );

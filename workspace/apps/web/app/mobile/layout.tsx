@@ -18,16 +18,22 @@
 "use client";
 
 import "./global.scss";
+import "antd-mobile/es/global"
 import "@/utils/i18n";
+import AuthContextProvider from "@/context/authContext";
 
 // REF: https://www.npmjs.com/package/next-i18next#appwithtranslation
 export function MobileLayout({
     //
     children,
 }: {
-    children: React.ReactNode;
+    children: React.ReactElement<any, any>;
 }): JSX.Element {
-    return <>{children}</>;
+    return (
+        <>
+            <AuthContextProvider>{children}</AuthContextProvider>
+        </>
+    );
 }
 
 // @ts-ignore
