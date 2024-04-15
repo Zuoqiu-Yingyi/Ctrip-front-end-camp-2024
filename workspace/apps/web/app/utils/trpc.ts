@@ -26,7 +26,7 @@ export const origin = "http://localhost:3000";
 export class TRPC {
     public readonly client: ReturnType<typeof createTRPCClient<TTrpcRouter>>;
 
-    constructor(url = `${origin}/trpc`) {
+    constructor(url = `/trpc`) {
         this.client = createTRPCClient<TTrpcRouter>({
             links: [
                 httpBatchLink({

@@ -18,7 +18,6 @@ import StateOperation from "./state-operation";
 import { MessageContext } from "@/context/messageContext";
 import TimeList from "./time-demo";
 import { CheckboxChangeEvent } from "antd/es/checkbox";
-import { origin } from "../utils/trpc";
 import { useTranslation } from "react-i18next";
 
 const { Title } = Typography;
@@ -67,7 +66,7 @@ export function ExamineListItem({ item, loading }: { item: TravelNote; loading: 
                             width={200}
                             height={150}
                             alt="logo"
-                            src={`${origin}/assets/${item.image}`}
+                            src={`/assets/${item.image}`}
                             placeholder={<Spin />}
                         />
 
