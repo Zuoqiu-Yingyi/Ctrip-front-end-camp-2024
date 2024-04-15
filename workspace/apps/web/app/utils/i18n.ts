@@ -22,7 +22,7 @@ import en from "@/locales/en/common.json";
 import zh_Hans from "@/locales/zh-Hans/common.json";
 import zh_Hant from "@/locales/zh-Hant/common.json";
 
-import { mapLocale } from "./l10n";
+import { mapLocale } from "./locale";
 
 export type I18N = typeof zh_Hans;
 

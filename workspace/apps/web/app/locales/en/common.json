@@ -40,8 +40,10 @@
         "card": "travel cards"
     },
     "audit": "audit",
+    "auto": "automatic",
     "avatar": "profile avatar",
-    "cancel": "cancel",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
     "confirmed": "confirmed",
     "content": "content",
     "cover": "Cover",
@@ -117,6 +119,14 @@
     "remember": "remember me",
     "search": {
         "placeholder": "Search for username or title"
+    },
+    "settings": {
+        "language": {
+            "label": "Language Settings"
+        },
+        "theme": {
+            "label": "Theme Settings"
+        }
     },
     "signup": "Register",
     "title": "title",

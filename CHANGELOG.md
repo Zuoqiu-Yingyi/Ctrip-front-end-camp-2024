@@ -1,5 +1,9 @@
 # 更改日志 | Change log
 
+## 2024-04-16
+
+- 实现移动端界面语言切换功能 | Implement mobile interface language switching feature
+
 ## 2024-04-15
 
 - 重构移动端用户登录/注册组件 | Refactor mobile user login/register component

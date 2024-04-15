@@ -30,6 +30,7 @@ import {
     Avatar,
     ActionSheet,
     Toast,
+    Picker,
 } from "antd-mobile";
 import type { Action } from "antd-mobile/es/components/action-sheet";
 
@@ -43,13 +44,17 @@ import {
     handleError,
     handleResponse,
 } from "@/utils/message";
+import { Locale } from "@/utils/locale";
 
 export default function InfoPage(): JSX.Element {
     const { t } = useTranslation();
     const { trpc } = useContext(ClientContext);
-    const { user, updateUser } = useStore((state) => ({
+    const { user, updateUser, locale, setLocale } = useStore((state) => ({
         user: state.user,
         updateUser: state.updateUser,
+
+        locale: state.locale,
+        setLocale: state.setLocale,
     }));
 
     const [loginPopupVisible, setLoginPopupVisible] = useState(false);
@@ -109,7 +114,7 @@ export default function InfoPage(): JSX.Element {
                 <List.Item
                     prefix={
                         <Avatar
-                            src={uid2path(user.avatar ?? "default")}
+                            src={user.avatar ? uid2path(user.avatar) : ""}
                             alt={t("avatar")}
                             onClick={(e) => {
                                 // console.debug(e);
@@ -132,19 +137,31 @@ export default function InfoPage(): JSX.Element {
                     {user.loggedIn ? user.name : t("visitor")}
                 </List.Item>
                 <List.Item
-                    onClick={() => {
-                        setChangeModalVisible(true);
+                    onClick={async () => {
+                        // REF: https://mobile.ant.design/zh/components/picker
+                        const value = (await Picker.prompt({
+                            columns: [
+                                [
+                                    { label: t("auto"), value: Locale.auto, key: Locale.auto },
+                                    { label: "简体中文 (zh-Hans)", value: Locale.zh_Hans, key: Locale.zh_Hans },
+                                    { label: "繁體中文 (zh-Hant)", value: Locale.zh_Hant, key: Locale.zh_Hant },
+                                    { label: "English (en)", value: Locale.en, key: Locale.en },
+                                ],
+                            ],
+                            confirmText: t("confirm"),
+                            cancelText: t("cancel"),
+                            defaultValue: [locale],
+                        })) as [Locale] | null;
+
+                        const l = value?.at(0);
+                        if (l) {
+                            setLocale(l);
+                        }
                     }}
                 >
-                    TODO: 切换语言
+                    {t("settings.language.label")}
                 </List.Item>
-                <List.Item
-                    onClick={() => {
-                        setChangeModalVisible(true);
-                    }}
-                >
-                    TODO: 切换主题模式
-                </List.Item>
+                <List.Item onClick={() => {}}>TODO: {t("settings.theme.label")}</List.Item>
             </List>
 
             {/**

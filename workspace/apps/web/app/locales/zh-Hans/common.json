@@ -40,8 +40,10 @@
         "card": "游记卡片"
     },
     "audit": "审核",
+    "auto": "自动",
     "avatar": "用户头像",
     "cancel": "取消",
+    "confirm": "确认",
     "confirmed": "确认",
     "content": "内容",
     "cover": "封面",
@@ -118,6 +120,14 @@
     "remember": "记住我",
     "search": {
         "placeholder": "搜索用户名或标题"
+    },
+    "settings": {
+        "language": {
+            "label": "语言设置"
+        },
+        "theme": {
+            "label": "主题设置"
+        }
     },
     "signup": "注册",
     "title": "标题",

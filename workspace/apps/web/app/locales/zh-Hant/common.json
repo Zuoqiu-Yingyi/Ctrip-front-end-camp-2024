@@ -40,8 +40,10 @@
         "card": "遊記卡片"
     },
     "audit": "審核",
+    "auto": "自動",
     "avatar": "使用者頭像",
     "cancel": "取消",
+    "confirm": "確認",
     "confirmed": "確認",
     "content": "內容",
     "cover": "封面",
@@ -117,6 +119,14 @@
     "remember": "記住我",
     "search": {
         "placeholder": "搜尋使用者名稱或標題"
+    },
+    "settings": {
+        "language": {
+            "label": "語言設定"
+        },
+        "theme": {
+            "label": "主題設定"
+        }
     },
     "signup": "註冊",
     "title": "標題",

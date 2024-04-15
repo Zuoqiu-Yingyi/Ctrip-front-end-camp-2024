@@ -20,7 +20,8 @@ import { persist } from "zustand/middleware";
 
 import { AccessorRole } from "@repo/server/src/utils/role";
 import { trpc } from "@/utils/trpc";
-import { log } from "console";
+import { Locale } from "@/utils/locale";
+import { changeLocale } from "@/utils/l10n";
 
 export interface IUserBase {
     loggedIn: boolean;
@@ -44,13 +45,18 @@ export interface IUserState {
     updateUser: (user: TUser) => void;
 }
 
+export interface ILocaleState {
+    locale: Locale;
+    setLocale: (locale: Locale) => void;
+}
+
 export interface ILineState {
     line: boolean;
     online: () => void;
     offline: () => void;
 }
 
-export interface IStates extends IUserState, ILineState {}
+export interface IStates extends IUserState, ILocaleState, ILineState {}
 
 // REF: https://www.npmjs.com/package/zustand#typescript-usage
 export const useStore = create<IStates>()(
@@ -61,6 +67,12 @@ export const useStore = create<IStates>()(
                     loggedIn: false,
                 },
                 updateUser: (user) => set({ user }),
+
+                locale: Locale.auto,
+                setLocale: (locale) => {
+                    changeLocale(locale);
+                    set({ locale });
+                },
 
                 line: true,
                 online: () => {
