@@ -15,7 +15,7 @@ import React, { useContext, useRef, useState } from "react";
 import { Modal, Swiper, TextArea, Divider, Tag, Space } from "antd-mobile";
 import { FloatButton } from "antd";
 import { FileOutline, RedoOutline } from "antd-mobile-icons";
-import { SubmitInfoContext } from "@/context/mobileEditContext";
+import { SubmitInfoContext } from "@/contexts/mobileEditContext";
 
 const textTemplates: string[] = [
     `费用：

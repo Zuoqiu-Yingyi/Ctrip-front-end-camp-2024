@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 "use client";
-import SubmitInfoProvider from "@/context/mobileEditContext";
+import SubmitInfoProvider from "@/contexts/mobileEditContext";
 
 export default function EditPage({ children }: { children: React.ReactElement<any, any> }): JSX.Element {
     return <SubmitInfoProvider>{children}</SubmitInfoProvider>;

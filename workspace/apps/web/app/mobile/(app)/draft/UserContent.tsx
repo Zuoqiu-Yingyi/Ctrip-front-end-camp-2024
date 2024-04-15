@@ -35,7 +35,7 @@ import { Button, AutoCenter, InfiniteScroll, ErrorBlock, Avatar, DotLoading, Toa
 import { useTranslation } from "react-i18next";
 import styles from "./page.module.scss";
 import UserCard from "./UserCard";
-import { StoreContext } from "@/providers/store";
+import { ClientContext } from "@/contexts/client";
 
 const InfiniteContent = ({ hasMore }: { hasMore?: boolean }) => {
     const { t, i18n } = useTranslation();
@@ -59,14 +59,12 @@ const InfiniteContent = ({ hasMore }: { hasMore?: boolean }) => {
 
 export function UserContent({
     //
-    userUid,
     onCardClick,
 }: {
-    userUid: string;
     onCardClick: (uid: string) => void;
 }): JSX.Element {
     const { t, i18n } = useTranslation();
-    const { trpc } = useContext(StoreContext);
+    const { trpc } = useContext(ClientContext);
     const cardRefs = useRef<HTMLDivElement[]>([]);
     const [data, setData] = useState<any[]>([]);
     const [hasMore, setHasMore] = useState(true);
@@ -82,7 +80,7 @@ export function UserContent({
             // console.debug(cursor);
             const response = await trpc.draft.paging.query({
                 skip: cursor ? 1 : 0,
-                take:10,
+                take: 10,
                 // cursor
             });
             // const response = await trpc.publish.paging.query({

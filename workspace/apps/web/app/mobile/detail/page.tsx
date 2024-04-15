@@ -46,15 +46,14 @@ import {
 } from "antd-mobile-icons";
 
 import styles from "./page.module.scss";
-import { StoreContext } from "@/providers/store";
+import { ClientContext } from "@/contexts/client";
 import { assetsLoader, uid2path } from "@/utils/image";
-import { StaticImport } from "next/dist/shared/lib/get-img-props";
 
 // REF: https://nextjs.org/docs/messages/missing-suspense-with-csr-bailout
 export function Detail() {
     const router = useRouter();
     const searchParams = useSearchParams();
-    const { trpc } = useContext(StoreContext);
+    const { trpc } = useContext(ClientContext);
     const { t, i18n } = useTranslation();
     const [loading, setLoading] = useState<boolean>(true);
     const [loaded, setLoaded] = useState<boolean>(false);

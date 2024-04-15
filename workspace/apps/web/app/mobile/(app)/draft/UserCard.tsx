@@ -23,7 +23,7 @@ import {
     assetsLoader,
 } from "@/utils/image";
 import { useTranslation } from "react-i18next";
-import { StoreContext } from "@/providers/store";
+import { ClientContext } from "@/contexts/client";
 
 const UserCard = ({ key, thisUid, coverUid, title, content, onClick }: { key: string; thisUid: string; coverUid: string; title: string; content: string; onClick: (uid: string) => void }) => {
     const { t, i18n } = useTranslation();

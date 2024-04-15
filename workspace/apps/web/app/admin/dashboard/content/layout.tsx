@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 "use client";
-import MessageContextProvider from "@/context/messageContext";
+import MessageContextProvider from "@/contexts/messageContext";
 
 export default function OverviewPage({ children }: { children: React.ReactElement<any, any> }): JSX.Element {
     return <MessageContextProvider>{children}</MessageContextProvider>;

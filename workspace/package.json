@@ -49,7 +49,7 @@
         "@jest/globals": "^29.7.0",
         "@trpc/client": "11.0.0-rc.334",
         "@trpc/server": "11.0.0-rc.334",
-        "@types/eslint": "^8.56.7",
+        "@types/eslint": "^8.56.9",
         "@types/node": "^20.12.7",
         "cspell": "^8.7.0",
         "eslint": "^8.57.0",

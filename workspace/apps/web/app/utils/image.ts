@@ -17,10 +17,11 @@
 
 import type { ImageLoader } from "next/image";
 
+import { origin } from "./env";
 export const DEFAULT_AVATAR_PATH = "/static/avatar.png";
 
 export function uid2path(uid: string): string {
-    return `/assets/${uid}`;
+    return `${origin}/assets/${uid}`;
 }
 
 /**

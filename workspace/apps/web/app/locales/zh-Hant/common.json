@@ -1,0 +1,127 @@
+{
+    "actions": {
+        "change-password": {
+            "text": "修改密碼"
+        },
+        "delete-account": {
+            "description": "刪除後將同時刪除所有資料且無法恢復！",
+            "text": "刪除帳戶"
+        },
+        "extra": "請選擇你要進行操作",
+        "login": {
+            "prompt": {
+                "incorrect": {
+                    "content": "使用者名稱或密碼錯誤"
+                },
+                "success": {
+                    "content": "登入成功！"
+                }
+            }
+        },
+        "logout": {
+            "prompt": {
+                "success": {
+                    "content": "登出登入成功"
+                }
+            },
+            "text": "登出登入"
+        },
+        "signup": {
+            "prompt": {
+                "success": {
+                    "content": "用戶註冊成功"
+                }
+            }
+        }
+    },
+    "admin-title": "後台審核系統",
+    "approved": "已通過",
+    "aria": {
+        "card": "遊記卡片"
+    },
+    "audit": "審核",
+    "avatar": "使用者頭像",
+    "cancel": "取消",
+    "confirmed": "確認",
+    "content": "內容",
+    "cover": "封面",
+    "delete": "刪除",
+    "delete-tip": "你確定刪除該項嗎？",
+    "details": "詳情",
+    "draft": "草稿",
+    "drawing-board": "畫板",
+    "empty": {
+        "description": "暫無更多內容"
+    },
+    "error-tip": "用戶名或密碼錯誤！",
+    "graffiti": "塗鴉",
+    "graffiti-tip": "可以隨手畫點日常生活吧！",
+    "home": "首頁",
+    "input": {
+        "confirm-password": {
+            "label": "確認密碼",
+            "placeholder": "請再次輸入密碼",
+            "rules": {
+                "inconsistent": {
+                    "message": "兩次輸入的密碼不一致"
+                }
+            }
+        },
+        "password": {
+            "placeholder": "請輸入密碼",
+            "rules": {
+                "length": {
+                    "message": "密碼長度至少為 8 個字符"
+                },
+                "required": {
+                    "message": "密碼不能為空"
+                }
+            }
+        },
+        "username": {
+            "placeholder": "請輸入使用者名稱",
+            "rules": {
+                "length": {
+                    "message": "使用者名稱長度必須為 2~32 個字符"
+                },
+                "pattern": {
+                    "message": "使用者名稱僅支援大小寫英文字母、數字、短橫線 - 與底線 _"
+                },
+                "required": {
+                    "message": "使用者名稱不能為空"
+                }
+            }
+        }
+    },
+    "item-content": "內容",
+    "item-time": "時間",
+    "item-title": "標題",
+    "item-user": "用戶",
+    "keep-login": "保持登入狀態",
+    "label-brush-radius": "粗細",
+    "loading": "載入中",
+    "login": "登錄",
+    "login-signup": "登入 / 註冊",
+    "logout": "登出登入",
+    "me": "我的",
+    "overview": "總覽",
+    "pass": "通過",
+    "password": "密碼",
+    "pending": "待審核",
+    "profile": "使用者資訊",
+    "prompt-prefix": "請輸入",
+    "publish-time": "發佈時間",
+    "reject": "拒絕",
+    "reject-reason": "拒絕理由",
+    "rejected": "已拒絕",
+    "remember": "記住我",
+    "search": {
+        "placeholder": "搜尋使用者名稱或標題"
+    },
+    "signup": "註冊",
+    "title": "標題",
+    "update-time": "更新時間",
+    "user": "使用者",
+    "username": "使用者名稱",
+    "visitor": "遊客"
+}

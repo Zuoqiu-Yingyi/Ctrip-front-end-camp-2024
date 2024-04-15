@@ -1,5 +1,9 @@
 # 更改日志 | Change log
 
+## 2024-04-15
+
+- 重构移动端用户登录/注册组件 | Refactor mobile user login/register component
+
 ## 2024-04-12
 
 - 客户端首页 | Client home page

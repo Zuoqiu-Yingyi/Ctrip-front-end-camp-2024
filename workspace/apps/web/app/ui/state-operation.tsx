@@ -14,9 +14,9 @@
 import { CheckCircleFilled, ExclamationCircleFilled, CloseCircleFilled } from "@ant-design/icons";
 import React, { useContext, useState } from "react";
 import { Flex, Typography, Button, Popconfirm, Spin, notification } from "antd";
-import { MessageContext } from "@/context/messageContext";
+import { MessageContext } from "@/contexts/messageContext";
 import RejectModal from "@/ui/reject-modal";
-import { AuthContext } from "../context/authContext";
+import { AuthContext } from "../contexts/authContext";
 import { useTranslation } from "react-i18next";
 
 const { Title, Paragraph } = Typography;

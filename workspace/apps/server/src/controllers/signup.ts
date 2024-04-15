@@ -95,7 +95,7 @@ export const signupMutation = procedure
                     options.ctx.S.log.error(error);
                     return {
                         code: -1,
-                        message: error,
+                        message: String(error),
                         data: null,
                     };
             }

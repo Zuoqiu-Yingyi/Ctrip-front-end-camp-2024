@@ -17,7 +17,7 @@ import { ImageUploader, Toast, Popup, ImageUploadItem } from "antd-mobile";
 import DrawPanel from "./draw-canvas";
 import { useContext, useState } from "react";
 import React from "react";
-import { SubmitInfoContext } from "@/context/mobileEditContext";
+import { SubmitInfoContext } from "@/contexts/mobileEditContext";
 import { useTranslation } from "react-i18next";
 
 const { Title, Text } = Typography;

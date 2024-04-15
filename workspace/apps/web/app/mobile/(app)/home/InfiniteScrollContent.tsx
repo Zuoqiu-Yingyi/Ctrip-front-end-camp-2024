@@ -34,7 +34,7 @@ import {
     Toast,
 } from "antd-mobile";
 
-import { StoreContext } from "@/providers/store";
+import { ClientContext } from "@/contexts/client";
 
 import styles from "./page.module.scss";
 import CardContent from "./CardContent";
@@ -48,7 +48,7 @@ import CardContent from "./CardContent";
  * @param hasMore Indicates whether there are more items to load.
  */
 const InfiniteContent = ({ hasMore }: { hasMore?: boolean }) => {
-    const { t, i18n } = useTranslation();
+    const { t } = useTranslation();
 
     return (
         <>
@@ -79,8 +79,7 @@ export function InfiniteScrollContent({
     searchInput: string;
     onCardClick: (uid: string) => void;
 }): JSX.Element {
-    const { t, i18n } = useTranslation();
-    const { trpc } = useContext(StoreContext);
+    const { trpc } = useContext(ClientContext);
     const cardRefs = useRef<HTMLDivElement[]>([]);
     const [data, setData] = useState<any[]>([]);
     const [hasMore, setHasMore] = useState(true);
@@ -89,7 +88,7 @@ export function InfiniteScrollContent({
     const handleSetGridRowEnd = (index: number) => {
         const cardRef = cardRefs.current[index];
         if (!cardRef) return;
-        const height = cardRef!.offsetHeight;
+        const height = cardRef.offsetHeight;
         if (cardRef && height) {
             cardRef.style.gridRowEnd = `span ${Math.ceil(height)}`;
         }

@@ -13,9 +13,9 @@
 // limitations under the License.
 import { createContext, useContext, useRef, useState } from "react";
 import { TravelNote, ManageData, ManagePage, ManagePageNumber } from "../types/definitions";
-import { mockRemoteSearch } from "@/context/data";
+import { mockRemoteSearch } from "@/contexts/data";
 import { getReviewCount, operateSingleReview, getReviews } from "../utils/review";
-import { AuthContext } from "@/context/authContext";
+import { AuthContext } from "@/contexts/authContext";
 
 export const MessageContext = createContext<{
     totalDataNumber: ManagePageNumber;

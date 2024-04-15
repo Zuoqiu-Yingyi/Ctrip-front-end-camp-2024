@@ -66,11 +66,11 @@ export function CardContent({
     title: string;
     avatar: string;
     username: string;
-    cardRefs: React.RefObject<HTMLDivElement[]>;
-    handleSetGridRowEnd: (index: number, height: number) => void;
+    cardRefs: React.MutableRefObject<HTMLDivElement[]>;
+    handleSetGridRowEnd: (index: number) => void;
     onClick: (uid: string) => void;
 }): JSX.Element {
-    const { t, i18n } = useTranslation();
+    const { t } = useTranslation();
     const contentRef = useRef<HTMLDivElement>(null);
     const [height, setHeight] = useState<number | null>(null);
 
@@ -94,14 +94,14 @@ export function CardContent({
 
     useEffect(() => {
         if (contentRef.current && height !== null) {
-            cardRefs.current?.push({ ref: contentRef, height });
+            cardRefs.current?.push(contentRef.current);
         }
     }, [cardRefs, height]);
 
     useEffect(() => {
-        const index = cardRefs.current?.findIndex(({ ref }) => ref.current === contentRef.current);
+        const index = cardRefs.current?.findIndex((element) => element === contentRef.current);
         if (index !== -1 && height !== null) {
-            handleSetGridRowEnd(index, height);
+            handleSetGridRowEnd(index);
         }
     }, [handleSetGridRowEnd, height]);
 

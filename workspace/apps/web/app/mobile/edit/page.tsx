@@ -17,7 +17,7 @@ import { NavBar, Tabs, Space, Button, SpinLoading } from "antd-mobile";
 import { Layout } from "antd";
 import { CloseCircleFill, FillinOutline, PicturesOutline, VideoOutline } from "antd-mobile-icons";
 import EditTab from "@/ui/mobile-edit-tab";
-import { SubmitInfoContext } from "@/context/mobileEditContext";
+import { SubmitInfoContext } from "@/contexts/mobileEditContext";
 import { initAccount } from "@/utils/account";
 
 export default function EditPage(): JSX.Element {

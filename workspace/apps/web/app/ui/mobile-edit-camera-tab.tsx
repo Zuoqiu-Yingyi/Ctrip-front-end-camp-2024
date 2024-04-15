@@ -16,7 +16,7 @@ import { Layout, FloatButton } from "antd";
 import { CameraOutline, CheckOutline, CloseOutline } from "antd-mobile-icons";
 import { useContext, useEffect, useRef, useState } from "react";
 import { openCamera, getPicture, closeCamera } from "@/utils/camera";
-import { SubmitInfoContext } from "@/context/mobileEditContext";
+import { SubmitInfoContext } from "@/contexts/mobileEditContext";
 
 export default function EditCameraTab(): JSX.Element {
     const { addPicture } = useContext(SubmitInfoContext);

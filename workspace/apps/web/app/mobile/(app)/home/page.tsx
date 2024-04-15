@@ -35,7 +35,7 @@ import styles from "./page.module.scss";
 import InfiniteScrollContent from "./InfiniteScrollContent";
 
 export default function HomePage() {
-    const { t, i18n } = useTranslation();
+    const { t } = useTranslation();
 
     const router = useRouter();
     const [searching, setSearching] = useState<boolean>(false);

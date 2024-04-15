@@ -15,7 +15,7 @@ import React, { useState, useContext } from "react";
 import { List, Flex, Image, Skeleton, Modal, Button, Typography, Checkbox, Spin } from "antd";
 import { TravelNote } from "@/types/definitions";
 import StateOperation from "./state-operation";
-import { MessageContext } from "@/context/messageContext";
+import { MessageContext } from "@/contexts/messageContext";
 import TimeList from "./time-demo";
 import { CheckboxChangeEvent } from "antd/es/checkbox";
 import { useTranslation } from "react-i18next";

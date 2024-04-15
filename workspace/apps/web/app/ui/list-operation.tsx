@@ -14,7 +14,7 @@
 import React, { useContext } from "react";
 import { Input, Flex, Radio, Select, RadioChangeEvent } from "antd";
 import { CheckCircleFilled, ExclamationCircleFilled, CloseCircleFilled } from "@ant-design/icons";
-import { MessageContext } from "@/context/messageContext";
+import { MessageContext } from "@/contexts/messageContext";
 import { useTranslation } from "react-i18next";
 
 const { Search } = Input;

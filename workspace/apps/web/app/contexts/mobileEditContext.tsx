@@ -11,21 +11,34 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { MutableRefObject, createContext, useRef, useState } from "react";
-import { ImageUploadItem } from "antd-mobile/es/components/image-uploader";
+import {
+    //
+    MutableRefObject,
+    createContext,
+    useRef,
+    useState,
+} from "react";
+import {
+    //
+    Toast,
+    ImageUploadItem,
+} from "antd-mobile";
 import imageCompression from "browser-image-compression";
-import { Toast } from "antd-mobile";
-import { upload } from "@/utils/assets";
-import { uploadDraft, uploadSubmit } from "@/utils/draft";
 import CanvasDraw from "react-canvas-draw";
-import { TRPC } from "../utils/trpc";
-import { handleResponse } from "../utils/help";
+
+import { upload } from "@/utils/assets";
+import {
+    //
+    uploadDraft,
+    uploadSubmit,
+} from "@/utils/draft";
+import { trpc } from "@/utils/trpc";
 
 export const SubmitInfoContext = createContext<{
     title: string;
     mainContent: string;
     fileList: ImageUploadItem[];
-    user: MutableRefObject<TRPC>;
+    user: MutableRefObject<typeof trpc>;
     resetTitle: Function;
     resetMainContent: Function;
     // setFileList: (items: ImageUploadItem[]) => void;
@@ -40,7 +53,7 @@ export const SubmitInfoContext = createContext<{
     mainContent: "",
     fileList: [],
     resetTitle: () => {},
-    user: { current: new TRPC() },
+    user: { current: trpc },
     resetMainContent: () => {},
     addImage: () => {},
     setFileList: () => {},
@@ -61,7 +74,7 @@ export default function SubmitInfoProvider({ children }: { children: React.React
 
     const uploadImages = useRef<Map<string, Blob>>(new Map());
 
-    const user = useRef<TRPC>(new TRPC());
+    const user = useRef(trpc);
 
     const delImages = useRef<Set<string>>(new Set());
 
@@ -187,7 +200,7 @@ export default function SubmitInfoProvider({ children }: { children: React.React
 
         canvas.toBlob((blob: Blob | null) => {
             if (blob !== null) {
-                imageCompression(blob, {
+                imageCompression(new File([blob], "temp.png"), {
                     maxSizeMB: 0.6,
                     maxWidthOrHeight: 1080,
                     useWebWorker: true,

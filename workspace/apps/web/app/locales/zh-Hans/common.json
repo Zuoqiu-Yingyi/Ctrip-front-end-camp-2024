@@ -1,0 +1,128 @@
+{
+    "actions": {
+        "change-password": {
+            "text": "修改密码"
+        },
+        "delete-account": {
+            "description": "删除后将同时删除所有数据且不可恢复！",
+            "text": "删除账户"
+        },
+        "extra": "请选择你要进行操作",
+        "login": {
+            "prompt": {
+                "incorrect": {
+                    "content": "用户名或密码错误"
+                },
+                "success": {
+                    "content": "登录成功！"
+                }
+            }
+        },
+        "logout": {
+            "prompt": {
+                "success": {
+                    "content": "退出登录成功"
+                }
+            },
+            "text": "退出登录"
+        },
+        "signup": {
+            "prompt": {
+                "success": {
+                    "content": "用户注册成功"
+                }
+            }
+        }
+    },
+    "admin-title": "后台审核系统",
+    "approved": "已通过",
+    "aria": {
+        "card": "游记卡片"
+    },
+    "audit": "审核",
+    "avatar": "用户头像",
+    "cancel": "取消",
+    "confirmed": "确认",
+    "content": "内容",
+    "cover": "封面",
+    "delete": "删除",
+    "delete-tip": "你确定删除该项吗？",
+    "details": "详情",
+    "draft": "草稿",
+    "drawing-board": "画板",
+    "empty": {
+        "description": "暂无更多内容"
+    },
+    "error-tip": "用户名或密码错误！",
+    "graffiti": "涂鸦",
+    "graffiti-tip": "可以随手画点日常生活吧！",
+    "home": "首页",
+    "input": {
+        "confirm-password": {
+            "label": "确认密码",
+            "placeholder": "请再次输入密码",
+            "rules": {
+                "inconsistent": {
+                    "message": "两次输入的密码不一致"
+                }
+            }
+        },
+        "password": {
+            "placeholder": "请输入密码",
+            "rules": {
+                "length": {
+                    "message": "密码长度至少为 8 个字符"
+                },
+                "required": {
+                    "message": "密码不能为空"
+                }
+            }
+        },
+        "username": {
+            "placeholder": "请输入用户名",
+            "rules": {
+                "length": {
+                    "message": "用户名长度必须为 2~32 个字符"
+                },
+                "pattern": {
+                    "message": "用户名仅支持大小写英文字母、数字、短横线 - 与下划线 _"
+                },
+                "required": {
+                    "message": "用户名不能为空"
+                }
+            },
+            "rules[0]": "用户名不能为空"
+        }
+    },
+    "item-content": "内容",
+    "item-time": "时间",
+    "item-title": "标题",
+    "item-user": "用户",
+    "keep-login": "保持登录状态",
+    "label-brush-radius": "粗细",
+    "loading": "加载中",
+    "login": "登录",
+    "login-signup": "登录 / 注册",
+    "logout": "注销登录",
+    "me": "我的",
+    "overview": "总览",
+    "pass": "通过",
+    "password": "密码",
+    "pending": "待审核",
+    "profile": "用户信息",
+    "prompt-prefix": "请输入",
+    "publish-time": "发布时间",
+    "reject": "拒绝",
+    "reject-reason": "拒绝理由",
+    "rejected": "已拒绝",
+    "remember": "记住我",
+    "search": {
+        "placeholder": "搜索用户名或标题"
+    },
+    "signup": "注册",
+    "title": "标题",
+    "update-time": "更新时间",
+    "user": "用户",
+    "username": "用户名",
+    "visitor": "游客"
+}

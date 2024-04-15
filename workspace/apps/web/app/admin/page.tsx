@@ -19,7 +19,7 @@ import { Button, Checkbox, Form, Input, Flex, Typography, Alert } from "antd";
 import { useRouter } from "next/navigation";
 import { handleResponse } from "@/utils/help";
 import { login } from "@/utils/account";
-import { AuthContext } from "@/context/authContext";
+import { AuthContext } from "@/contexts/authContext";
 import { useTranslation } from "react-i18next";
 
 const { Title } = Typography;

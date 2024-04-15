@@ -18,7 +18,7 @@ import Link from "next/link";
 import { useTranslation } from "react-i18next";
 import { Layout, Menu, theme, MenuProps, Typography, Dropdown, Flex } from "antd";
 import { PieChartFilled, CarryOutFilled, SignatureFilled, LogoutOutlined, createFromIconfontCN } from "@ant-design/icons";
-import { AuthContext } from "@/context/authContext";
+import { AuthContext } from "@/contexts/authContext";
 
 const { Header, Content } = Layout;
 const { Title } = Typography;

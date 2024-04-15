@@ -68,7 +68,7 @@ export function AppLayout({
         },
         {
             key: TabBarKey.user,
-            title: t("user"),
+            title: t("me"),
             icon: <UserOutline />,
             // badge: Badge.dot,
             style: {},

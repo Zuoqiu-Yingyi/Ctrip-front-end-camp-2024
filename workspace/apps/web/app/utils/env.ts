@@ -15,21 +15,11 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-// REF: https://nextjs.org/docs/app/building-your-application/rendering/composition-patterns#using-context-providers
-"use client";
-
-import { createContext } from "react";
-import trpc from "@/utils/trpc";
-
-export interface IStoreContext {
-    trpc: typeof trpc;
-}
-
-export const StoreValue = { trpc } satisfies IStoreContext;
-
-export const StoreContext = createContext<IStoreContext>(StoreValue);
-
-export function StoreProvider({ children }: { children: React.ReactNode }) {
-    return <StoreContext.Provider value={StoreValue}>{children}</StoreContext.Provider>;
-}
-export default StoreProvider;
+export const origin = (() => {
+    switch (process.env.NODE_ENV) {
+        case "development":
+            return process.env.NEXT_PUBLIC_DEV_SERVER_ORIGIN || "";
+        default:
+            return "";
+    }
+})();

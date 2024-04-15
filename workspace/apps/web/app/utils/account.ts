@@ -22,10 +22,15 @@ import {
     String2ArrayBuffer,
     ArrayBuffer2HexString,
 } from "@repo/utils/crypto";
-import { handleResponse } from "./help";
-import trpc from "./trpc";
+import CONSTANTS from "@/constants";
+import type { TRPC } from "./trpc";
 
-type TRole = Parameters<typeof trpc.client.auth.challenge.query>[0]["role"];
+export type TRole = "user" | "staff" | undefined;
+
+export interface ISignupOptions {
+    username: string;
+    passphrase: string;
+}
 
 /**
  * 注册新用户
@@ -33,24 +38,24 @@ type TRole = Parameters<typeof trpc.client.auth.challenge.query>[0]["role"];
 export async function signup(
     {
         //
-        username = "wu",
-        passphrase = "1234",
-    },
-    t = trpc,
+        username,
+        passphrase,
+    }: ISignupOptions,
+    t: TRPC,
 ) {
     const key = await passphrase2key(username, passphrase, "salt");
-    const response_signup = await t.client.account.signup.mutate({
+    const response_signup = await t.account.signup.mutate({
         username,
         password: ArrayBuffer2HexString(key),
     });
-
-    console.log(response_signup);
-
-    if (handleResponse(response_signup).state === "fail") {
-        throw Error("注册失败");
-    }
-
     return response_signup;
+}
+
+export interface ILoginOptions {
+    username: string;
+    passphrase: string;
+    role?: TRole;
+    keep?: boolean;
 }
 
 /**
@@ -59,16 +64,16 @@ export async function signup(
 export async function login(
     {
         //
-        username = "wu",
-        passphrase = "1234",
+        username,
+        passphrase,
         role = "user",
-        remember = false,
-    },
-    t = trpc,
+        keep = false,
+    }: ILoginOptions,
+    t: TRPC,
 ) {
-    const key = await passphrase2key(username, passphrase, "salt");
+    const key = await passphrase2key(username, passphrase, CONSTANTS.USER_KEY_SALT);
 
-    const response_challenge = await t.client.auth.challenge.query({
+    const response_challenge = await t.auth.challenge.query({
         username: username,
         role: role as TRole,
     });
@@ -76,17 +81,11 @@ export async function login(
     const response = await challenge2response(String2ArrayBuffer(challenge), key);
     const response_hex = ArrayBuffer2HexString(response);
 
-    const response_login = await t.client.account.login.mutate({
+    const response_login = await t.account.login.mutate({
         challenge,
         response: response_hex,
-        stay: remember,
+        stay: keep,
     });
-
-    console.log(response_login);
-
-    if (handleResponse(response_login).state === "fail") {
-        throw Error("登录失败");
-    }
 
     return response_login;
 }
@@ -94,26 +93,35 @@ export async function login(
 /**
  * 用户登出
  */
-export async function logout(
-    t = trpc,
-) {
-    const response_logout = await t.client.account.logout.query();
-
-    if (handleResponse(response_logout).state === "fail") {
-        throw Error("登出失败");
-    }
-
+export async function logout(t: TRPC) {
+    const response_logout = await t.account.logout.query();
     return response_logout;
 }
 
-/**
- * 更改密码
- */
-export async function changePassword({ username = "wu", passphrase1 = "1234", passphrase2 = "12345", role = "user" }, t = trpc) {
-    const key1 = await passphrase2key(username, passphrase1, "salt");
-    const key2 = await passphrase2key(username, passphrase2, "salt");
+export interface IChangePasswordOptions {
+    username: string;
+    passphrase1: string;
+    passphrase2: string;
+    role?: TRole;
+}
 
-    const response_challenge = await t.client.auth.challenge.query({
+/**
+ * 用户更改密码
+ */
+export async function changePassword(
+    {
+        //
+        username,
+        passphrase1,
+        passphrase2,
+        role = "user",
+    }: IChangePasswordOptions,
+    t: TRPC,
+) {
+    const key1 = await passphrase2key(username, passphrase1, CONSTANTS.USER_KEY_SALT);
+    const key2 = await passphrase2key(username, passphrase2, CONSTANTS.USER_KEY_SALT);
+
+    const response_challenge = await t.auth.challenge.query({
         username: username,
         role: role as TRole,
     });
@@ -121,23 +129,10 @@ export async function changePassword({ username = "wu", passphrase1 = "1234", pa
     const response = await challenge2response(String2ArrayBuffer(challenge), key1);
     const response_hex = ArrayBuffer2HexString(response);
 
-    const response_change_password = await t.client.account.change_password.mutate({
+    const response_change_password = await t.account.change_password.mutate({
         challenge,
         response: response_hex,
         password: ArrayBuffer2HexString(key2),
     });
     return response_change_password;
-}
-
-export async function initAccount(
-    account = {
-        //
-        username: "wu",
-        passphrase: "1234",
-        role: "user",
-    },
-    t = trpc,
-) {
-    await signup(account, t);
-    await login(account, t);
 }

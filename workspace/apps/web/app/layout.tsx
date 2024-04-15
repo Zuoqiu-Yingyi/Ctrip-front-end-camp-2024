@@ -18,7 +18,7 @@ import "./globals.css";
 
 import { AntdRegistry } from "@ant-design/nextjs-registry";
 
-import StoreProvider from "./providers/store";
+import StoreProvider from "./contexts/client";
 
 import manifest from "~/public/manifest.json";
 

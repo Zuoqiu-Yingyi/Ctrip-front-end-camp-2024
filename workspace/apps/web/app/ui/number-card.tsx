@@ -15,8 +15,7 @@ import { useContext, useEffect, useState } from "react";
 import { Card, Typography, Col, Row } from "antd";
 import { CheckCircleOutlined, ExclamationCircleOutlined, CloseCircleOutlined, MinusCircleOutlined } from "@ant-design/icons";
 import { CardMessage, TravelNote } from "@/types/definitions";
-import { fetchCardData } from "@/context/data";
-import { AuthContext } from "@/context/authContext";
+import { AuthContext } from "@/contexts/authContext";
 import { getReviewCount } from "@/utils/review";
 
 const { Title } = Typography;

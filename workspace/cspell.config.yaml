@@ -1,59 +1,47 @@
-# REF: https://cspell.org/configuration/
-
 $schema: https://raw.githubusercontent.com/streetsidesoftware/cspell/main/packages/cspell-types/cspell.schema.json
-
-#  Version of the setting file.
-version: "0.0.4"
-
-# language - current active spelling language
+version: 0.0.4
 language: en
-
-# words - list of words to be always considered correct
 words:
-    - antd
-    - autoincrement
-    - callout
-    - codepaths
-    - cryptjs
-    - cuid
-    - datasource
-    - deepmerge
-    - deshake
-    - dotenvx
-    - endregion
-    - evenodd
-    - fieldname
-    - iconfont
-    - languagedetector
-    - paralleldrive
-    - publishs
-    - rgba
-    - runing
-    - signup
-    - tailwindcss
-    - tsbuildinfo
-    - turborepo
-    - uids
-    - vercel
-    - wordmark
-    - xlink
-    - yingyi
-    - zuoqiu
-    - Fillin
-    - Swiper
-    - Popconfirm
-    - ducanh
-    - tdiary
-    - swiper
-    - tdiary
-
-ignoreRegExpList:
-
-# flagWords - list of words to be always considered incorrect
-flagWords:
-
+  - antd
+  - autoincrement
+  - callout
+  - codepaths
+  - cryptjs
+  - cuid
+  - datasource
+  - deepmerge
+  - deshake
+  - dotenvx
+  - ducanh
+  - endregion
+  - evenodd
+  - fieldname
+  - Fillin
+  - iconfont
+  - languagedetector
+  - paralleldrive
+  - Popconfirm
+  - publishs
+  - rgba
+  - runing
+  - SAMESITE
+  - signup
+  - swiper
+  - Swiper
+  - tailwindcss
+  - tdiary
+  - tsbuildinfo
+  - turborepo
+  - uids
+  - vercel
+  - wordmark
+  - xlink
+  - yingyi
+  - zuoqiu
+  - zustand
+ignoreRegExpList: null
+flagWords: null
 useGitignore: true
-
 ignorePaths:
-    - package.json
-    - pnpm-lock.yaml
+  - package.json
+  - pnpm-lock.yaml

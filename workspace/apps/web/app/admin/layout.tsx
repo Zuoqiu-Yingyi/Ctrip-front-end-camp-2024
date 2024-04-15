@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 "use client";
-import AuthContextProvider from "@/context/authContext";
+import AuthContextProvider from "@/contexts/authContext";
 import "@/utils/i18n";
 
 export default function OverviewPage({ children }: { children: React.ReactElement<any, any> }): JSX.Element {

@@ -16,7 +16,7 @@ import { useContext, useRef, useState } from "react";
 import { Slider, Space, NavBar } from "antd-mobile";
 import { RollbackOutlined, CheckOutlined } from "@ant-design/icons";
 import { Typography, ColorPicker, Button } from "antd";
-import { SubmitInfoContext } from "@/context/mobileEditContext";
+import { SubmitInfoContext } from "@/contexts/mobileEditContext";
 import { useTranslation } from "react-i18next";
 
 const { Title } = Typography;
