@@ -35,9 +35,9 @@ import {
 import type { Action } from "antd-mobile/es/components/action-sheet";
 
 import LoginPopup from "./LoginPopup";
+import ChangePasswordPopup from "./ChangePasswordPopup";
 import { ClientContext } from "@/contexts/client";
 import { useStore } from "@/contexts/store";
-import ChangeModal from "@/ui/change-modal";
 import { uid2path } from "@/utils/image";
 import {
     //
@@ -78,7 +78,7 @@ export default function InfoPage(): JSX.Element {
 
     const [loginPopupVisible, setLoginPopupVisible] = useState(false);
     const [accountActionSheetVisible, setAccountActionSheetVisible] = useState(false);
-    const [changeModalVisible, setChangeModalVisible] = useState(false);
+    const [changePasswordPopupVisible, setChangePasswordPopupVisible] = useState(false);
 
     // REF: https://mobile.ant.design/zh/components/action-sheet#action
     const account_actions: Action[] = [
@@ -87,7 +87,7 @@ export default function InfoPage(): JSX.Element {
             text: t("actions.change-password.text"),
             onClick: () => {
                 // TODO: 修改密码
-                setChangeModalVisible(true);
+                setChangePasswordPopupVisible(true);
                 setAccountActionSheetVisible(false);
             },
         },
@@ -102,7 +102,7 @@ export default function InfoPage(): JSX.Element {
                         icon: "success",
                         content: t("actions.logout.prompt.success.content"),
                     });
-                    updateUser({ loggedIn: false });
+                    clearUserData();
                 } catch (error) {
                     handleError(error);
                 } finally {
@@ -166,6 +166,13 @@ export default function InfoPage(): JSX.Element {
             setTheme(_theme);
             setThemeLabel(theme_labels.get(_theme)!);
         }
+    }
+
+    /**
+     * 注销登录后清理用户数据
+     */
+    function clearUserData() {
+        updateUser({ loggedIn: false });
     }
 
     return (
@@ -232,10 +239,14 @@ export default function InfoPage(): JSX.Element {
             />
 
             {/* 更改密码 弹出层 */}
-            <ChangeModal
-                isModalOpen={changeModalVisible}
-                setIsModalOpen={setChangeModalVisible}
-            />
+            {user.loggedIn && (
+                <ChangePasswordPopup
+                    username={user.name}
+                    visible={changePasswordPopupVisible}
+                    onSuccess={clearUserData}
+                    onClose={() => setChangePasswordPopupVisible(false)}
+                />
+            )}
         </>
     );
 }

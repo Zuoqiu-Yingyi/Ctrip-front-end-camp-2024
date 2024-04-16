@@ -3,6 +3,19 @@
         "change-password": {
             "text": "修改密碼"
         },
+        "confirm-password": {
+            "prompt": {
+                "password-incorrect": {
+                    "content": "目前密碼錯誤"
+                },
+                "success": {
+                    "content": "修改密碼成功"
+                },
+                "username-incorrect": {
+                    "content": "使用者名稱與目前使用者不一致"
+                }
+            }
+        },
         "delete-account": {
             "description": "刪除後將同時刪除所有資料且無法恢復！",
             "text": "刪除帳戶"
@@ -68,6 +81,14 @@
                     "message": "兩次輸入的密碼不一致"
                 }
             }
+        },
+        "new-password": {
+            "label": "新密碼",
+            "placeholder": "請輸入新密碼"
+        },
+        "old-password": {
+            "label": "目前密碼",
+            "placeholder": "請輸入目前密碼"
         },
         "password": {
             "placeholder": "請輸入密碼",

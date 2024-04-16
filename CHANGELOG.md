@@ -4,6 +4,7 @@
 
 - 实现移动端界面语言切换功能 | Implement mobile interface language switching feature
 - 实现移动端界面主题切换功能 | Implement mobile interface theme switching feature
+- 重构修改密码功能 | Refactor change password feature
 
 ## 2024-04-15
 

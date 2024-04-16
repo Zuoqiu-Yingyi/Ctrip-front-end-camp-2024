@@ -100,8 +100,8 @@ export async function logout(t: TRPC) {
 
 export interface IChangePasswordOptions {
     username: string;
-    passphrase1: string;
-    passphrase2: string;
+    oldPassphrase: string; // 旧口令
+    newPassphrase: string; // 新口令
     role?: TRole;
 }
 
@@ -112,27 +112,27 @@ export async function changePassword(
     {
         //
         username,
-        passphrase1,
-        passphrase2,
+        oldPassphrase,
+        newPassphrase,
         role = "user",
     }: IChangePasswordOptions,
     t: TRPC,
 ) {
-    const key1 = await passphrase2key(username, passphrase1, CONSTANTS.USER_KEY_SALT);
-    const key2 = await passphrase2key(username, passphrase2, CONSTANTS.USER_KEY_SALT);
+    const key_old = await passphrase2key(username, oldPassphrase, CONSTANTS.USER_KEY_SALT);
+    const key_new = await passphrase2key(username, newPassphrase, CONSTANTS.USER_KEY_SALT);
 
     const response_challenge = await t.auth.challenge.query({
         username: username,
         role: role as TRole,
     });
     const challenge = response_challenge.data.challenge;
-    const response = await challenge2response(String2ArrayBuffer(challenge), key1);
+    const response = await challenge2response(String2ArrayBuffer(challenge), key_old);
     const response_hex = ArrayBuffer2HexString(response);
 
     const response_change_password = await t.account.change_password.mutate({
         challenge,
         response: response_hex,
-        password: ArrayBuffer2HexString(key2),
+        password: ArrayBuffer2HexString(key_new),
     });
     return response_change_password;
 }

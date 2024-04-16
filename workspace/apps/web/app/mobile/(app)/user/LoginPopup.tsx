@@ -104,6 +104,8 @@ export function LoginPopup({
 
         passphrase1.current?.clear();
         passphrase1.current?.clear();
+
+        setPasswordVisible(false);
     }, [visible]);
 
     async function onFinish(values: {
@@ -231,7 +233,6 @@ export function LoginPopup({
                     </Button>
                 }
             >
-                <Form.Header />
                 <Form.Item
                     label={t("username")}
                     name="username"
@@ -323,7 +324,6 @@ export function LoginPopup({
                         />
                     </Form.Item>
                 )}
-                <Form.Header />
             </Form>
         </Popup>
     );

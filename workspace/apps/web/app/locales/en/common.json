@@ -3,6 +3,19 @@
         "change-password": {
             "text": "Change Password"
         },
+        "confirm-password": {
+            "prompt": {
+                "password-incorrect": {
+                    "content": "Current password is wrong"
+                },
+                "success": {
+                    "content": "Password has been updated"
+                },
+                "username-incorrect": {
+                    "content": "The username is inconsistent with the current user"
+                }
+            }
+        },
         "delete-account": {
             "description": "After deletion, all data will be deleted and cannot be recovered!",
             "text": "Delete Account"
@@ -68,6 +81,14 @@
                     "message": "The passwords entered twice are inconsistent"
                 }
             }
+        },
+        "new-password": {
+            "label": "New Password",
+            "placeholder": "Please enter a new password"
+        },
+        "old-password": {
+            "label": "Current Password",
+            "placeholder": "Please enter current password"
         },
         "password": {
             "placeholder": "Please enter password",

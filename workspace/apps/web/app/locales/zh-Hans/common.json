@@ -3,6 +3,19 @@
         "change-password": {
             "text": "修改密码"
         },
+        "confirm-password": {
+            "prompt": {
+                "password-incorrect": {
+                    "content": "当前密码错误"
+                },
+                "success": {
+                    "content": "修改密码成功"
+                },
+                "username-incorrect": {
+                    "content": "用户名与当前用户不一致"
+                }
+            }
+        },
         "delete-account": {
             "description": "删除后将同时删除所有数据且不可恢复！",
             "text": "删除账户"
@@ -21,10 +34,10 @@
         "logout": {
             "prompt": {
                 "success": {
-                    "content": "退出登录成功"
+                    "content": "注销登录成功"
                 }
             },
-            "text": "退出登录"
+            "text": "注销登录"
         },
         "signup": {
             "prompt": {
@@ -68,6 +81,14 @@
                     "message": "两次输入的密码不一致"
                 }
             }
+        },
+        "new-password": {
+            "label": "新密码",
+            "placeholder": "请输入新密码"
+        },
+        "old-password": {
+            "label": "当前密码",
+            "placeholder": "请输入当前密码"
         },
         "password": {
             "placeholder": "请输入密码",
