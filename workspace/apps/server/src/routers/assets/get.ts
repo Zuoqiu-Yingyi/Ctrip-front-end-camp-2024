@@ -28,6 +28,7 @@ import type {
     FastifyRequest,
 } from "fastify";
 import type { IAssetsRequest } from "./router";
+import { isCuid } from "@paralleldrive/cuid2";
 
 export interface IParams {
     uid: string;
@@ -42,6 +43,10 @@ export const getHandler: RouteHandlerMethod = async function (request: IAssetsRe
     try {
         const { uid } = request.params as IParams;
         const asset = await (async () => {
+            if (!isCuid(uid)) {
+                return null;
+            }
+
             const asset = assets.get(uid);
             if (asset) {
                 return asset;

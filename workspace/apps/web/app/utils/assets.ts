@@ -15,11 +15,13 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+import { origin } from "./env";
+
 export async function upload<R = any>(
     //
     formData: FormData,
 ) {
-    const response = await fetch(`/assets/upload`, {
+    const response = await fetch(`${origin}/assets/upload`, {
         method: "POST",
         body: formData,
         credentials: "include",

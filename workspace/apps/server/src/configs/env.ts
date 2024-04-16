@@ -47,6 +47,9 @@ export interface IEnv {
     JWT_ISSUER: string;
     JWT_EXPIRES_IN: string;
     JWT_COOKIE_NAME: string;
+    JWT_COOKIE_DOMAIN: string;
+    JWT_COOKIE_SECURE: boolean;
+    JWT_COOKIE_SAMESITE: "lax" | "none" | "strict";
     CHALLENGE_RESPONSE_JWT_SECRET: string;
     CHALLENGE_RESPONSE_JWT_ISSUER: string;
     CHALLENGE_RESPONSE_JWT_EXPIRES_IN: string;
@@ -82,6 +85,9 @@ export const ENV_DEFAULT: IEnv = {
     JWT_ISSUER: "travel-diary",
     JWT_EXPIRES_IN: "7d",
     JWT_COOKIE_NAME: "td-jwt",
+    JWT_COOKIE_DOMAIN: "",
+    JWT_COOKIE_SECURE: false,
+    JWT_COOKIE_SAMESITE: "lax",
     CHALLENGE_RESPONSE_JWT_SECRET: randomString(32),
     CHALLENGE_RESPONSE_JWT_ISSUER: "travel-diary-challenge-response",
     CHALLENGE_RESPONSE_JWT_EXPIRES_IN: "5m",
@@ -154,6 +160,15 @@ export const env: IEnv = {
     JWT_COOKIE_NAME:
         process.env._TD_JWT_COOKIE_NAME || //
         ENV_DEFAULT.JWT_COOKIE_NAME,
+    JWT_COOKIE_DOMAIN:
+        process.env._TD_JWT_COOKIE_DOMAIN || //
+        ENV_DEFAULT.JWT_COOKIE_DOMAIN,
+    JWT_COOKIE_SECURE:
+        process.env._TD_JWT_COOKIE_SECURE === "true" || //
+        ENV_DEFAULT.JWT_COOKIE_SECURE,
+    JWT_COOKIE_SAMESITE:
+        (process.env._TD_JWT_COOKIE_SAMESITE as IEnv["JWT_COOKIE_SAMESITE"]) || //
+        ENV_DEFAULT.JWT_COOKIE_SAMESITE,
     CHALLENGE_RESPONSE_JWT_SECRET:
         process.env._TD_CHALLENGE_RESPONSE_JWT_SECRET || //
         ENV_DEFAULT.CHALLENGE_RESPONSE_JWT_SECRET,

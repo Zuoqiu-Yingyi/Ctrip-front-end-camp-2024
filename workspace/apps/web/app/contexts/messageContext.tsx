@@ -1,21 +1,25 @@
-// Copyright 2024 wu
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     https://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+/**
+ * Copyright (C) 2024 wu
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
 import { createContext, useContext, useRef, useState } from "react";
 import { TravelNote, ManageData, ManagePage, ManagePageNumber } from "../types/definitions";
-import { mockRemoteSearch } from "@/context/data";
+import { mockRemoteSearch } from "@/contexts/data";
 import { getReviewCount, operateSingleReview, getReviews } from "../utils/review";
-import { AuthContext } from "@/context/authContext";
+import { AuthContext } from "@/contexts/authContext";
 
 export const MessageContext = createContext<{
     totalDataNumber: ManagePageNumber;
@@ -434,7 +438,7 @@ export default function MessageContextProvider({ children }: { children: React.R
     async function togglePage(page: number, pageSize: number, state: TravelNote["state"]) {
         await loadPage(page, pageSize, true, state);
 
-        changeDisplayItems(allItems.current[state]);       
+        changeDisplayItems(allItems.current[state]);
 
         if (page <= Math.floor((totalDataNumber[state] - 1) / pageSize)) {
             await loadPage(page + 1, pageSize, false, state);

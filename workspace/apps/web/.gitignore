@@ -1,3 +1,5 @@
 # PWA output
 /public/service-worker.js
 /public/workbox-*.js
+
+certificates

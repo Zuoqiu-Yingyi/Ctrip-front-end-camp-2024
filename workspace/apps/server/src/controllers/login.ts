@@ -42,13 +42,15 @@ import {
     AccessorRole,
     AccountRole,
 } from "./../utils/role";
-import { tokens } from "../utils/store";
+import { tokens } from "./../utils/store";
+import env from "./../configs/env";
 
 export interface IAccount {
     id: number; // 账户 ID
     name: string; // 账户名
     role: AccessorRole; // 用户角色
     password: string; // 账户密钥
+    createdAt: Date; // 账户创建时间
     profile?: {
         id: number;
         avatar: string | null; // 用户头像
@@ -85,10 +87,10 @@ export const loginMutation = procedure
             const payload = verify<IChallengeJwtPayload>({ token: options.input.challenge }, true);
 
             /* 校验用户名是否有效 */
-            const account: IAccount = await (async () => {
+            const account: IAccount | null = await (async () => {
                 switch (payload.data.role) {
                     case AccountRole.Staff: {
-                        const staff = await options.ctx.DB.staff.findUniqueOrThrow({
+                        const staff = await options.ctx.DB.staff.findUnique({
                             where: {
                                 name: payload.data.username,
                                 deleted: false,
@@ -98,6 +100,7 @@ export const loginMutation = procedure
                                 name: true,
                                 role: true,
                                 password: true,
+                                createdAt: true,
                                 token: {
                                     select: {
                                         id: true,
@@ -106,18 +109,22 @@ export const loginMutation = procedure
                                 },
                             },
                         });
+                        if (!staff) {
+                            return null;
+                        }
                         return {
                             id: staff.id,
                             name: staff.name,
                             role: staff.role,
                             password: staff.password,
+                            createdAt: staff.createdAt,
                             token: staff.token,
                         };
                     }
 
                     case AccountRole.User:
                     default: {
-                        const user = await options.ctx.DB.user.findUniqueOrThrow({
+                        const user = await options.ctx.DB.user.findUnique({
                             where: {
                                 name: payload.data.username,
                                 deleted: false,
@@ -127,6 +134,7 @@ export const loginMutation = procedure
                                 name: true,
                                 password: true,
                                 role: true,
+                                createdAt: true,
                                 token: {
                                     select: {
                                         id: true,
@@ -141,11 +149,15 @@ export const loginMutation = procedure
                                 },
                             },
                         });
+                        if (!user) {
+                            return null;
+                        }
                         return {
                             id: user.id,
                             name: user.name,
                             role: user.role,
                             password: user.password,
+                            createdAt: user.createdAt,
                             token: user.token,
                             profile: user.profile,
                         };
@@ -210,7 +222,9 @@ export const loginMutation = procedure
                         // domain: "your.domain", // 默认为同站 (不包括子域名), 设置后将包含子域名
                         // secure: true, // 通过被 HTTPS 协议加密过的请求发送
                         path: "/", // 将在指定路径下发送该 Cookie
-                        sameSite: "lax", // 用户从其他站点导航到 Cookie 的源站点时发送 Cookie
+                        domain: env.JWT_COOKIE_DOMAIN || undefined, // Cookie 有效域名
+                        secure: env.JWT_COOKIE_SECURE, // 指定是否仅于 HTTPS 协议加密过的连接中请求发送
+                        sameSite: env.JWT_COOKIE_SAMESITE, // 指定是否/何时通过跨站点请求发送
                         httpOnly: true, // 阻止通过 document.cookie 访问该 Cookie
                         expires: options.input.stay // Cookie 有效期
                             ? new Date(options.ctx.S.jwt.decode<any>(token).exp * 1_000) // Cookie 有效期与 JWT 一致
@@ -224,8 +238,9 @@ export const loginMutation = procedure
                         account: {
                             id: account.id,
                             role: account.role,
-                            username: account.name,
-                            avatar: account.profile?.avatar,
+                            name: account.name,
+                            avatar: account.profile?.avatar ?? null,
+                            createdAt: account.createdAt,
                         },
                     },
                 };

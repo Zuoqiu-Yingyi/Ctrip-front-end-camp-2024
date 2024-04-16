@@ -46,26 +46,23 @@ import {
 } from "antd-mobile-icons";
 
 import styles from "./page.module.scss";
-import { StoreContext } from "@/providers/store";
+import { ClientContext } from "@/contexts/client";
 import { assetsLoader, uid2path } from "@/utils/image";
-import { StaticImport } from "next/dist/shared/lib/get-img-props";
 
 // REF: https://nextjs.org/docs/messages/missing-suspense-with-csr-bailout
 export function Detail() {
+    const { t } = useTranslation();
+    const { trpc } = useContext(ClientContext);
     const router = useRouter();
     const searchParams = useSearchParams();
-    const { trpc } = useContext(StoreContext);
-    const { t, i18n } = useTranslation();
+
     const [loading, setLoading] = useState<boolean>(true);
     const [loaded, setLoaded] = useState<boolean>(false);
     const [data, setData] = useState<any>(null);
-    // const response = trpc.review.submitted.query({
-    //     thisUid,
-    // });
-    // response_content = response.data?.reviews[0]?.content;
-
-    // console.debug(searchParams.toString());
     const uid = searchParams.get("uid");
+
+    // TODO: 若为草稿, 查看审批列表
+    // TODO: 若为草稿, 查看已发布的内容
 
     useEffect(() => {
         if (uid) {

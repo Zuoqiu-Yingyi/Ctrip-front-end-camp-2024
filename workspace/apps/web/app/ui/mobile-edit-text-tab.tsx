@@ -1,23 +1,46 @@
-// Copyright 2024 wu
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     https://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-import React, { useContext, useRef, useState } from "react";
-import { Modal, Swiper, TextArea, Divider, Tag, Space } from "antd-mobile";
-import { FloatButton } from "antd";
-import { FileOutline, RedoOutline } from "antd-mobile-icons";
-import { SubmitInfoContext } from "@/context/mobileEditContext";
+/**
+ * Copyright (C) 2024 wu
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
 
-const textTemplates: string[] = [
+import {
+    //
+    useContext,
+    useRef,
+    useState,
+} from "react";
+import { useTranslation } from "react-i18next";
+import {
+    //
+    Modal,
+    Swiper,
+    TextArea,
+    Divider,
+    Tag,
+    Space,
+    Input,
+} from "antd-mobile";
+import {
+    //
+    FileOutline,
+    RedoOutline,
+} from "antd-mobile-icons";
+import { FloatButton } from "antd";
+import { SubmitInfoContext } from "@/contexts/mobileEditContext";
+
+const contentTemplates: string[] = [
     `费用：
 路线: Day1…
      Day2…
@@ -39,38 +62,28 @@ const textTemplates: string[] = [
 交通：`,
 ];
 
-const titleTemplates: string[] = ["**出发！", "*** *天*夜 人均**", "**去哪玩？", "****旅游攻略", "**** 超全避雷攻略"];
-
-const items = textTemplates.map((value, index) => (
-    <Swiper.Item key={`text_${index}`}>
-        <TextArea
-            placeholder="请输入内容"
-            value={value}
-            rows={10}
-            readOnly
-        />
-    </Swiper.Item>
-));
+const titleTemplates: string[] = ["** 出发！", "*** *天*夜 人均 **", "** 去哪玩？", "** 旅游攻略", "** 超全避雷攻略"];
 
 export default function EditTextTab(): JSX.Element {
+    const { t } = useTranslation();
+
     const { title, mainContent, resetMainContent, resetTitle } = useContext(SubmitInfoContext);
 
     const [visible, setVisible] = useState(false);
 
-    const insertedText = useRef<string>(textTemplates[0] as string);
+    const insertedText = useRef<string>(contentTemplates[0] as string);
 
     // const rows = Math.floor((screen.height - 42 - 45 - 56 - 32 - 19 - 30) / 25.5);
 
     return (
         <div style={{ flex: 1 }}>
-            <TextArea
-                placeholder="请输入标题"
+            <Input
+                placeholder={t("input.draft.title.placeholder")}
                 value={title}
                 onChange={(val) => {
                     resetTitle(val);
                 }}
-                rows={1}
-                style={{ padding: "15px" }}
+                style={{ padding: "16px" }}
             />
 
             <Space
@@ -84,7 +97,6 @@ export default function EditTextTab(): JSX.Element {
                     <Tag
                         key={`tag_${index}`}
                         round
-                        color="#CCCCCC"
                         style={{
                             fontSize: 13,
                             marginInline: 5,
@@ -102,13 +114,12 @@ export default function EditTextTab(): JSX.Element {
 
             <Divider
                 style={{
-                    borderColor: "#CCCCCC",
                     borderStyle: "dashed",
                 }}
             />
 
             <TextArea
-                placeholder="请输入内容"
+                placeholder={t("input.draft.content.placeholder")}
                 value={mainContent}
                 onChange={(val) => {
                     resetMainContent(val);
@@ -145,10 +156,19 @@ export default function EditTextTab(): JSX.Element {
                 content={
                     <Swiper
                         onIndexChange={(index: number) => {
-                            insertedText.current = textTemplates[index] as string;
+                            insertedText.current = contentTemplates[index] as string;
                         }}
                     >
-                        {items}
+                        {contentTemplates.map((value, index) => (
+                            <Swiper.Item key={`text_${index}`}>
+                                <TextArea
+                                    placeholder="请输入内容"
+                                    value={value}
+                                    rows={10}
+                                    readOnly
+                                />
+                            </Swiper.Item>
+                        ))}
                     </Swiper>
                 }
                 actions={[

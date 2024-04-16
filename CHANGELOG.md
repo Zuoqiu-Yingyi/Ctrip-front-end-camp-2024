@@ -1,5 +1,20 @@
 # 更改日志 | Change log
 
+## 2024-04-17
+
+- 完善草稿列表页面 | Improve draft list page
+
+## 2024-04-16
+
+- 实现移动端界面语言切换功能 | Implement mobile interface language switching feature
+- 实现移动端界面主题切换功能 | Implement mobile interface theme switching feature
+- 重构修改密码功能 | Refactor change password feature
+- 实现删除账户功能 | Implement delete account feature
+
+## 2024-04-15
+
+- 重构移动端用户登录/注册组件 | Refactor mobile user login/register component
+
 ## 2024-04-12
 
 - 客户端首页 | Client home page

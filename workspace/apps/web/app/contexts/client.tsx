@@ -19,17 +19,17 @@
 "use client";
 
 import { createContext } from "react";
+
 import trpc from "@/utils/trpc";
 
-export interface IStoreContext {
+export interface IClientContext {
     trpc: typeof trpc;
 }
 
-export const StoreValue = { trpc } satisfies IStoreContext;
+export const ClientContext = createContext<IClientContext>(undefined as any);
 
-export const StoreContext = createContext<IStoreContext>(StoreValue);
-
-export function StoreProvider({ children }: { children: React.ReactNode }) {
-    return <StoreContext.Provider value={StoreValue}>{children}</StoreContext.Provider>;
+export function ClientProvider({ children }: { children: any }) {
+    const value = { trpc } satisfies IClientContext;
+    return <ClientContext.Provider value={value}>{children}</ClientContext.Provider>;
 }
-export default StoreProvider;
+export default ClientProvider;

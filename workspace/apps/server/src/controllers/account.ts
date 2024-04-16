@@ -17,7 +17,6 @@
 
 import { z } from "zod";
 import jwt from "jsonwebtoken";
-import cuid2 from "@paralleldrive/cuid2";
 
 import {
     //
@@ -107,6 +106,15 @@ export class AssetFileNotFoundError extends Error {
 export class OriginalPasswordIncorrectError extends Error {
     constructor() {
         super("The original password is incorrect");
+    }
+}
+
+/**
+ * 用户名错误
+ */
+export class UsernameIncorrectError extends Error {
+    constructor() {
+        super("The username is incorrect");
     }
 }
 
@@ -417,6 +425,11 @@ export const changePasswordMutation = procedure //
             /* 校验挑战字符串是否有效 */
             const payload = verify<IChallengeJwtPayload>({ token: options.input.challenge }, true);
 
+            /* 校验用户名是否一致 */
+            if (payload.data.username !== options.ctx.session.data.account.username) {
+                throw new UsernameIncorrectError();
+            }
+
             /* 获取原密码 */
             const account: {
                 id: number;
@@ -558,10 +571,18 @@ export const changePasswordMutation = procedure //
                         data: null,
                     };
 
+                // 用户名错误
+                case error instanceof UsernameIncorrectError:
+                    return {
+                        code: 20,
+                        message: error.message,
+                        data: null,
+                    };
+
                 // 原密码错误
                 case error instanceof OriginalPasswordIncorrectError:
                     return {
-                        code: 20,
+                        code: 30,
                         message: error.message,
                         data: null,
                     };
@@ -570,7 +591,7 @@ export const changePasswordMutation = procedure //
                     options.ctx.S.log.error(error);
                     return {
                         code: -1,
-                        message: error,
+                        message: String(error),
                         data: null,
                     };
             }
@@ -594,7 +615,12 @@ export const closeMutation = procedure //
             /* 校验挑战字符串是否有效 */
             const payload = verify<IChallengeJwtPayload>({ token: challenge }, true);
 
-            /* 获取原密码 */
+            /* 校验用户名是否一致 */
+            if (payload.data.username !== options.ctx.session.data.account.username) {
+                throw new UsernameIncorrectError();
+            }
+
+            /* 获取密码 */
             const user = await options.ctx.DB.user.findUniqueOrThrow({
                 where: {
                     name: payload.data.username,
@@ -611,7 +637,8 @@ export const closeMutation = procedure //
                     },
                 },
             });
-            /* 校验原密码是否正确 (通过挑战/应答) */
+
+            /* 校验密码是否正确 (通过挑战/应答) */
             if (
                 verifyChallengeResponse(
                     //
@@ -733,10 +760,18 @@ export const closeMutation = procedure //
                         data: null,
                     };
 
-                // 原密码错误
-                case error instanceof PasswordIncorrectError:
+                // 用户名错误
+                case error instanceof UsernameIncorrectError:
                     return {
                         code: 20,
+                        message: error.message,
+                        data: null,
+                    };
+
+                // 密码错误
+                case error instanceof PasswordIncorrectError:
+                    return {
+                        code: 30,
                         message: error.message,
                         data: null,
                     };
@@ -745,7 +780,7 @@ export const closeMutation = procedure //
                     options.ctx.S.log.error(error);
                     return {
                         code: -1,
-                        message: error,
+                        message: String(error),
                         data: null,
                     };
             }

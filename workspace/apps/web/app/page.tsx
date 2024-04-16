@@ -18,7 +18,8 @@
 "use client";
 
 import { redirect } from "next/navigation";
+import { PATHNAME } from "./utils/pathname";
 
 export default function Page() {
-    redirect("/mobile/home");
+    redirect(PATHNAME.mobile.home);
 }

@@ -18,53 +18,13 @@
 import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
 
-import en from "@/locales/en/mobile.json";
-import zh_Hans from "@/locales/zh-Hans/mobile.json";
-import zh_Hant from "@/locales/zh-Hant/mobile.json";
+import en from "@/locales/en/common.json";
+import zh_Hans from "@/locales/zh-Hans/common.json";
+import zh_Hant from "@/locales/zh-Hant/common.json";
+
+import { mapLocale } from "./locale";
 
 export type I18N = typeof zh_Hans;
-export type TLocale = "zh-Hans" | "zh-Hant" | "en";
-
-export function mapLang(lang: string = globalThis.navigator.language, preset: string[] = []): string {
-    lang = lang.replace("_", "-").toLowerCase();
-
-    switch (true) {
-        case lang in preset:
-            break;
-
-        case lang.startsWith("zh-chs"):
-        case lang.startsWith("zh-cns"):
-            lang = "zh-Hans";
-            break;
-        case lang.startsWith("zh-cht"):
-        case lang.startsWith("zh-cnt"):
-            lang = "zh-Hant";
-            break;
-
-        case lang.startsWith("zh-hans"):
-        case lang.startsWith("zh-cn"):
-        case lang.startsWith("zh-sg"):
-            lang = "zh-Hans";
-            break;
-
-        case lang.startsWith("zh-hant"):
-        case lang.startsWith("zh-tw"):
-        case lang.startsWith("zh-hk"):
-        case lang.startsWith("zh-mo"):
-            lang = "zh-Hant";
-            break;
-
-        case lang.startsWith("zh"):
-            lang = "zh-Hans";
-            break;
-
-        case lang.startsWith("en"):
-        default:
-            lang = "en";
-            break;
-    }
-    return lang;
-}
 
 // the translations
 // (tip move them in a JSON file and import them,
@@ -85,7 +45,7 @@ i18n.use(initReactI18next) // passes i18n down to react-i18next
     .init({
         resources,
         fallbackLng: "en",
-        lng: mapLang(), // language to use, more information here: https://www.i18next.com/overview/configuration-options#languages-namespaces-resources
+        lng: mapLocale(), // language to use, more information here: https://www.i18next.com/overview/configuration-options#languages-namespaces-resources
         // you can use the i18n.changeLanguage function to change the language manually: https://www.i18next.com/overview/api#changelanguage
         // if you're using a language detector, do not define the lng option
         interpolation: {

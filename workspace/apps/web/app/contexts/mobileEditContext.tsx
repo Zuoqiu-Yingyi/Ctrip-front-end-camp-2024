@@ -1,31 +1,55 @@
-// Copyright 2024 wu
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     https://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-import { MutableRefObject, createContext, useRef, useState } from "react";
-import { ImageUploadItem } from "antd-mobile/es/components/image-uploader";
+/**
+ * Copyright (C) 2024 wu
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
+import {
+    //
+    MutableRefObject,
+    createContext,
+    useRef,
+    useState,
+} from "react";
+import {
+    //
+    Toast,
+    ImageUploadItem,
+} from "antd-mobile";
 import imageCompression from "browser-image-compression";
-import { Toast } from "antd-mobile";
-import { upload } from "@/utils/assets";
-import { uploadDraft, uploadSubmit } from "@/utils/draft";
 import CanvasDraw from "react-canvas-draw";
-import { TRPC } from "../utils/trpc";
-import { handleResponse } from "../utils/help";
+
+import { upload } from "@/utils/assets";
+import {
+    //
+    uploadDraft,
+    uploadSubmit,
+} from "@/utils/draft";
+import { trpc } from "@/utils/trpc";
 
 export const SubmitInfoContext = createContext<{
+    id: number | null;
     title: string;
     mainContent: string;
     fileList: ImageUploadItem[];
-    user: MutableRefObject<TRPC>;
+    coordinate?: GeolocationCoordinates;
+    user: MutableRefObject<typeof trpc>;
+    saved: boolean;
+
+    setId: (id: number | null) => void;
+    setSaved: (saved: boolean) => void;
+
     resetTitle: Function;
     resetMainContent: Function;
     // setFileList: (items: ImageUploadItem[]) => void;
@@ -35,33 +59,28 @@ export const SubmitInfoContext = createContext<{
     uploadTravelNote: Function;
     addDraw: Function;
     addPicture: Function;
-}>({
-    title: "",
-    mainContent: "",
-    fileList: [],
-    resetTitle: () => {},
-    user: { current: new TRPC() },
-    resetMainContent: () => {},
-    addImage: () => {},
-    setFileList: () => {},
-    delImage: () => {},
-    uploadTravelNote: () => {},
-    addDraw: () => {},
-    addPicture: () => {},
-});
+    updateCoordinate: Function;
+    deleteCoordinate: Function;
+}>(undefined as any);
 
 export default function SubmitInfoProvider({ children }: { children: React.ReactElement<any, any> }): JSX.Element {
     const drawNum = useRef(0);
+
+    const [id, setId] = useState<number | null>(null);
 
     const [title, setTitle] = useState("");
 
     const [mainContent, setMainContent] = useState("");
 
+    const [saved, setSaved] = useState(true);
+
     const [fileList, setFileList] = useState<ImageUploadItem[]>([]);
+
+    const [coordinate, setCoordinate] = useState<GeolocationCoordinates | undefined>();
 
     const uploadImages = useRef<Map<string, Blob>>(new Map());
 
-    const user = useRef<TRPC>(new TRPC());
+    const user = useRef(trpc);
 
     const delImages = useRef<Set<string>>(new Set());
 
@@ -78,26 +97,14 @@ export default function SubmitInfoProvider({ children }: { children: React.React
         //     throw Error("Error");;
         // }
 
-        navigator.geolocation.getCurrentPosition(async (position) => {
-            const draft = {
-                title: title,
-                content: mainContent,
-                assets: assetsUpload.data.successes.map((success: { uid: string }) => success.uid),
-                coordinate: {
-                    latitude: position.coords.latitude,
-                    longitude: position.coords.longitude,
-                    accuracy: position.coords.accuracy,
-                    altitude: position.coords.altitude,
-                    altitude_accuracy: position.coords.altitudeAccuracy,
-                    heading: position.coords.heading,
-                    speed: position.coords.speed,
-                },
-            };
-
-            let draftId = await uploadDraft(draft, user.current);
-
-            await uploadSubmit(draftId, user.current);
-        });
+        const draft = {
+            title: title,
+            content: mainContent,
+            coordinate: coordinate,
+            assets: assetsUpload.data.successes.map((success: { uid: string }) => success.uid),
+        };
+        const draftId = await uploadDraft(draft, user.current);
+        await uploadSubmit(draftId, user.current);
     }
 
     async function submitNewDraft() {
@@ -109,32 +116,19 @@ export default function SubmitInfoProvider({ children }: { children: React.React
 
         const assetsUpload = await upload(formData);
 
-        navigator.geolocation.getCurrentPosition(async (position) => {
-            const draft = {
-                title: title,
-                content: mainContent,
-                assets: assetsUpload.data.successes.map((success: { uid: string }) => success.uid),
-                coordinate: {
-                    latitude: position.coords.latitude,
-                    longitude: position.coords.longitude,
-                    accuracy: position.coords.accuracy,
-                    altitude: position.coords.altitude,
-                    altitude_accuracy: position.coords.altitudeAccuracy,
-                    heading: position.coords.heading,
-                    speed: position.coords.speed,
-                },
-            };
-
-            await uploadDraft(draft, user.current);
-        });
+        const draft = {
+            title: title,
+            content: mainContent,
+            coordinate: coordinate,
+            assets: assetsUpload.data.successes.map((success: { uid: string }) => success.uid),
+        };
+        await uploadDraft(draft, user.current);
     }
 
     async function uploadTravelNote(type: "draft" | "submit") {
-        console.log(fileList.length);
-
-        console.log(uploadImages.current.size);
-
-        console.log(delImages.current.size);
+        console.debug(fileList.length);
+        console.debug(uploadImages.current.size);
+        console.debug(delImages.current.size);
 
         if (title === "") {
             Toast.show({
@@ -146,7 +140,12 @@ export default function SubmitInfoProvider({ children }: { children: React.React
                 content: "内容不能为空",
                 icon: "fail",
             });
-        } else if (fileList.length !== uploadImages.current.size || delImages.current.size !== 0 || fileList.length === 0) {
+        } else if (
+            //
+            fileList.length !== uploadImages.current.size ||
+            delImages.current.size !== 0 ||
+            fileList.length === 0
+        ) {
             Toast.show({
                 content: "图片未准备好",
                 icon: "fail",
@@ -172,10 +171,32 @@ export default function SubmitInfoProvider({ children }: { children: React.React
         }
     }
 
+    async function updateCoordinate() {
+        const position = await new Promise<GeolocationPosition | null>((resolve) => {
+            navigator.geolocation.getCurrentPosition(
+                //
+                resolve,
+                () => resolve(null),
+                {
+                    timeout: 8_000,
+                },
+            );
+        });
+        if (position) {
+            setCoordinate(position.coords);
+            return position.coords;
+        } else {
+            return null;
+        }
+    }
+
+    function deleteCoordinate() {
+        setCoordinate(undefined);
+    }
+
     function addPicture(canvas: HTMLCanvasElement) {
         drawNum.current += 1;
-
-        let drawIndex = drawNum.current;
+        const drawIndex = drawNum.current;
 
         setFileList([
             ...fileList,
@@ -187,7 +208,7 @@ export default function SubmitInfoProvider({ children }: { children: React.React
 
         canvas.toBlob((blob: Blob | null) => {
             if (blob !== null) {
-                imageCompression(blob, {
+                imageCompression(new File([blob], "temp.png"), {
                     maxSizeMB: 0.6,
                     maxWidthOrHeight: 1080,
                     useWebWorker: true,
@@ -204,17 +225,18 @@ export default function SubmitInfoProvider({ children }: { children: React.React
 
     function addDraw(draw: CanvasDraw | null) {
         drawNum.current += 1;
-
-        let drawIndex = drawNum.current;
+        const drawIndex = drawNum.current;
 
         setFileList([
             ...fileList,
             {
                 key: `draw-${drawIndex}`,
+                // @ts-ignore
                 url: draw?.getDataURL("image/png", null, "#FFFFFF"),
             },
         ]);
 
+        // @ts-ignore
         draw?.canvasContainer.children[1].toBlob((file: File) => {
             imageCompression(file, {
                 maxSizeMB: 0.6,
@@ -285,5 +307,34 @@ export default function SubmitInfoProvider({ children }: { children: React.React
         setMainContent(newMainContent);
     }
 
-    return <SubmitInfoContext.Provider value={{ addPicture, user, title, uploadTravelNote, mainContent, setFileList, resetTitle, fileList, resetMainContent, addImage, delImage, addDraw }}>{children}</SubmitInfoContext.Provider>;
+    return (
+        <SubmitInfoContext.Provider
+            value={{
+                user,
+                saved,
+
+                id,
+                title,
+                mainContent,
+                coordinate,
+                fileList,
+
+                setId,
+                setSaved,
+
+                addPicture,
+                uploadTravelNote,
+                setFileList,
+                resetTitle,
+                resetMainContent,
+                addImage,
+                delImage,
+                addDraw,
+                updateCoordinate,
+                deleteCoordinate,
+            }}
+        >
+            {children}
+        </SubmitInfoContext.Provider>
+    );
 }

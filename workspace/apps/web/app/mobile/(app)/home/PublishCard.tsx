@@ -50,7 +50,7 @@ import {
  * @param onClick Function to handle clicking on the card.
  */
 
-export function CardContent({
+export function PublishCard({
     //
     uid,
     coverUid,
@@ -62,15 +62,15 @@ export function CardContent({
     onClick,
 }: {
     uid: string;
-    coverUid?: string;
+    coverUid: string | null;
     title: string;
-    avatar: string;
+    avatar: string | null;
     username: string;
-    cardRefs: React.RefObject<HTMLDivElement[]>;
-    handleSetGridRowEnd: (index: number, height: number) => void;
+    cardRefs: React.MutableRefObject<HTMLDivElement[]>;
+    handleSetGridRowEnd: (index: number) => void;
     onClick: (uid: string) => void;
 }): JSX.Element {
-    const { t, i18n } = useTranslation();
+    const { t } = useTranslation();
     const contentRef = useRef<HTMLDivElement>(null);
     const [height, setHeight] = useState<number | null>(null);
 
@@ -94,14 +94,14 @@ export function CardContent({
 
     useEffect(() => {
         if (contentRef.current && height !== null) {
-            cardRefs.current?.push({ ref: contentRef, height });
+            cardRefs.current?.push(contentRef.current);
         }
     }, [cardRefs, height]);
 
     useEffect(() => {
-        const index = cardRefs.current?.findIndex(({ ref }) => ref.current === contentRef.current);
+        const index = cardRefs.current?.findIndex((element) => element === contentRef.current);
         if (index !== -1 && height !== null) {
-            handleSetGridRowEnd(index, height);
+            handleSetGridRowEnd(index);
         }
     }, [handleSetGridRowEnd, height]);
 
@@ -109,9 +109,8 @@ export function CardContent({
         <div
             ref={contentRef}
             onClick={() => onClick(uid)}
-            className={styles.card_container}
+            className={styles.card}
             style={{ gridRowEnd: height ? `span ${Math.ceil(height)}` : "auto" }}
-            aria-role="button"
             aria-label={t("aria.card")}
         >
             {coverUid && (
@@ -137,7 +136,7 @@ export function CardContent({
                 aria-label={t("profile")}
             >
                 <Avatar
-                    src={uid2path(avatar)}
+                    src={avatar ? uid2path(avatar) : ""}
                     alt={t("avatar")}
                     style={{ "--size": "20px", "--border-radius": "50%" }}
                 />
@@ -152,4 +151,4 @@ export function CardContent({
     );
 }
 
-export default CardContent;
+export default PublishCard;

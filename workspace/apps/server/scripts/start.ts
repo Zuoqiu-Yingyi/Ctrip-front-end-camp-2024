@@ -64,11 +64,20 @@ _TD_USER_KEY_SALT="salt"
 _TD_TEST_SERVER_URL="http://localhost:3000"
 `;
 
+const NEXT_ENV_LOCAL = `
+# 开发服务地址
+NEXT_PUBLIC_DEV_SERVER_ORIGIN="http://localhost:3000"
+
+# 用户密钥盐值
+NEXT_PUBLIC_USER_KEY_SALT="${_TD_USER_KEY_SALT}"
+`;
+
 async function start() {
     /* 创建本地环境变量文件 */
     !fs.existsSync("./.env.development.local") && (await fs.promises.writeFile("./.env.development.local", ENV_DEV_LOCAL));
     !fs.existsSync("./.env.production.local") && (await fs.promises.writeFile("./.env.production.local", ENV_PROD_LOCAL));
     !fs.existsSync("./.env.test.local") && (await fs.promises.writeFile("./.env.test.local", ENV_TEST_LOCAL));
+    !fs.existsSync("./../web/.env.local") && (await fs.promises.writeFile("./../web/.env.local", NEXT_ENV_LOCAL));
 }
 
 if (process.argv.includes(import.meta.filename)) {

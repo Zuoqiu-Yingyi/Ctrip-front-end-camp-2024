@@ -34,10 +34,19 @@ import {
     Toast,
 } from "antd-mobile";
 
-import { StoreContext } from "@/providers/store";
+import {
+    //
+    handleError,
+    handleResponse,
+} from "@/utils/message";
+
+import PullRefresh from "@/mobile/components/PullRefresh";
+import { ClientContext } from "@/contexts/client";
 
 import styles from "./page.module.scss";
-import CardContent from "./CardContent";
+import CardContent from "./PublishCard";
+
+import type { IPublish } from "@/types/response";
 
 /**
  * React component for rendering infinite scroll content with card elements.
@@ -47,8 +56,8 @@ import CardContent from "./CardContent";
  *
  * @param hasMore Indicates whether there are more items to load.
  */
-const InfiniteContent = ({ hasMore }: { hasMore?: boolean }) => {
-    const { t, i18n } = useTranslation();
+const InfiniteScrollDirect = ({ hasMore }: { hasMore?: boolean }) => {
+    const { t } = useTranslation();
 
     return (
         <>
@@ -71,7 +80,7 @@ const InfiniteContent = ({ hasMore }: { hasMore?: boolean }) => {
  * @param searchInput The search input value.
  * @param onCardClick Function to handle clicking on the card.
  */
-export function InfiniteScrollContent({
+export function PublishList({
     //
     searchInput,
     onCardClick,
@@ -79,17 +88,19 @@ export function InfiniteScrollContent({
     searchInput: string;
     onCardClick: (uid: string) => void;
 }): JSX.Element {
-    const { t, i18n } = useTranslation();
-    const { trpc } = useContext(StoreContext);
+    const { t } = useTranslation();
+    const { trpc } = useContext(ClientContext);
+
     const cardRefs = useRef<HTMLDivElement[]>([]);
-    const [data, setData] = useState<any[]>([]);
+    const [data, setData] = useState<IPublish[]>([]);
     const [hasMore, setHasMore] = useState(true);
+    const [reload, setReload] = useState(true);
     const [cursor, setCursor] = useState<string | undefined>();
 
     const handleSetGridRowEnd = (index: number) => {
         const cardRef = cardRefs.current[index];
         if (!cardRef) return;
-        const height = cardRef!.offsetHeight;
+        const height = cardRef.offsetHeight;
         if (cardRef && height) {
             cardRef.style.gridRowEnd = `span ${Math.ceil(height)}`;
         }
@@ -105,7 +116,7 @@ export function InfiniteScrollContent({
                     if (response.code !== 0) {
                         throw new Error(response.message);
                     }
-                    const publishs = response.data?.publishs || [];
+                    const publishs: IPublish[] = (response.data?.publishs as any[]) || [];
                     setData(publishs);
                     setHasMore(false);
                 } catch (error) {
@@ -131,53 +142,63 @@ export function InfiniteScrollContent({
             // console.debug(cursor);
             const response = await trpc.publish.paging.query({
                 skip: cursor ? 1 : 0,
-                cursor,
+                cursor: reload ? undefined : cursor,
             });
-            if (response.code !== 0) {
-                throw new Error(response.message);
-            }
-            const publishs = response.data?.publishs || [];
+            handleResponse(response);
+            const publishs: IPublish[] = (response.data?.publishs as any[]) || [];
             // console.debug(publishs);
             if (publishs.length > 0) {
                 setHasMore(true);
-                setData((val) => [...val, ...publishs]);
+                if (reload) {
+                    setReload(false);
+                    // @ts-ignore
+                    setData(publishs);
+                } else {
+                    setData((val) => [...val, ...publishs]);
+                }
                 setCursor(publishs.at(-1)!.uid as unknown as string);
             } else {
                 setHasMore(false);
             }
         } catch (error) {
-            console.warn(error);
-            // REF: https://mobile.ant.design/zh/components/toast
-            Toast.show({
-                icon: "fail",
-                content: String(error),
-            });
+            handleError(error);
             setHasMore(false);
         }
     }
 
+    /* REF: https://mobile.ant.design/zh/components/pull-to-refresh/ */
     return (
-        <div className={styles.container}>
-            {data.map((publish) => (
-                <CardContent
-                    key={publish.uid}
-                    uid={publish.uid}
-                    coverUid={publish.assets.at(0)?.asset_uid}
-                    title={publish.title}
-                    avatar={publish.publisher.profile.avatar}
-                    username={publish.publisher.name}
-                    cardRefs={cardRefs}
-                    handleSetGridRowEnd={handleSetGridRowEnd}
-                    onClick={onCardClick}
-                />
-            ))}
-            <InfiniteScroll
-                loadMore={loadMore}
-                hasMore={hasMore}
-            >
-                <InfiniteContent hasMore={hasMore} />
-            </InfiniteScroll>
-        </div>
+        <PullRefresh
+            onRefresh={async () => {
+                // console.debug("onRefresh");
+                // 下拉刷新
+                setReload(true);
+                setCursor(undefined);
+                loadMore();
+            }}
+        >
+            <div className={styles.cards}>
+                {data.map((publish) => (
+                    <CardContent
+                        key={publish.uid}
+                        uid={publish.uid}
+                        coverUid={publish.assets.at(0)?.asset_uid ?? null}
+                        title={publish.title}
+                        avatar={publish.publisher.profile.avatar}
+                        username={publish.publisher.name}
+                        cardRefs={cardRefs}
+                        handleSetGridRowEnd={handleSetGridRowEnd}
+                        onClick={onCardClick}
+                    />
+                ))}
+                <InfiniteScroll
+                    loadMore={loadMore}
+                    hasMore={hasMore}
+                >
+                    <InfiniteScrollDirect hasMore={hasMore} />
+                </InfiniteScroll>
+            </div>
+        </PullRefresh>
     );
 }
-export default InfiniteScrollContent;
+export default PublishList;

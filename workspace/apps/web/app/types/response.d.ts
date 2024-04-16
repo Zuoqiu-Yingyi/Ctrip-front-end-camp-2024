@@ -19,3 +19,91 @@ import type trpc from "@/utils/trpc";
 
 export type TPublishPagingQueryResponse = Awaited<ReturnType<typeof trpc.publish.paging.query>>;
 export type TPublish = NonNullable<TPublishPagingQueryResponse["data"]>["publishs"][0];
+
+/**
+ * ISO 8601 格式时间戳
+ */
+export type TTimestamp_ISO_8601 = string;
+
+/**
+ * Cuid 格式的 UID
+ */
+export type TCuid = string;
+
+/**
+ * 审批状态
+ */
+export enum ReviewStatus {
+    padding = 0,
+    passed = 1,
+    failed = 2,
+    canceled = 3,
+}
+
+/**
+ * 资源文件
+ */
+export interface IAsset {
+    index: number;
+    asset_uid: string;
+}
+
+/**
+ * 坐标
+ */
+export interface ICoordinate {
+    latitude: number;
+    longitude: number;
+    accuracy: number;
+    altitude?: number;
+    altitude_accuracy?: number;
+    heading?: number;
+    speed?: number;
+}
+
+/**
+ * 游记
+ */
+export interface INote {
+    title: string;
+    content: string;
+    assets: IAsset[];
+    coordinate?: ICoordinate;
+    modification_time: TTimestamp_ISO_8601;
+}
+
+/**
+ * 游记草稿
+ */
+export interface IDraft extends INote {
+    id: number;
+    creation_time: TTimestamp_ISO_8601;
+    author_id: number;
+}
+
+/**
+ * 游记审批
+ */
+export interface IReview extends INote {
+    id: number;
+    status: ReviewStatus;
+    comment?: string;
+    approval_time?: TTimestamp_ISO_8601;
+    submitter_id: number;
+    draft_id: number;
+}
+
+/**
+ * 游记发布
+ */
+export interface IPublish extends INote {
+    uid: TCuid;
+    publication_time: TTimestamp_ISO_8601;
+    draft_id: number;
+    publisher: {
+        name: string;
+        profile: {
+            avatar: TCuid | null;
+        };
+    };
+}
