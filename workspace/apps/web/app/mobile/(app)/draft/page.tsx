@@ -22,16 +22,31 @@ import {
     Suspense,
     useState,
 } from "react";
+import { useRouter } from "next/navigation";
+import { useTranslation } from "react-i18next";
 import {
     //
-    useRouter,
-    useSearchParams,
-} from "next/navigation";
-import { NavBar } from "antd-mobile";
-import { useTranslation } from "react-i18next";
+    NavBar,
+    SearchBar,
+    Space,
+} from "antd-mobile";
+import {
+    //
+    AddSquareOutline,
+    CloseCircleOutline,
+    SearchOutline,
+} from "antd-mobile-icons";
 
-import styles from "./page.module.scss";
-import UserContent from "./UserContent";
+import { useStore } from "@/contexts/store";
+
+import {
+    //
+    MobileHeader,
+    MobileContent,
+} from "@/mobile/components/MobileLayout";
+import DraftList from "./DraftList";
+import NotLoginError from "@/mobile/components/NotLoginError";
+import { PATHNAME } from "@/utils/pathname";
 
 /**
  * React component for the user profile page.
@@ -44,34 +59,87 @@ export function Draft() {
      * Configuration for the tabs in the tab bar.
      * Each tab includes a key, title, icon, and optional styling.
      */
-    const { t, i18n } = useTranslation();
+    const { t } = useTranslation();
     const router = useRouter();
+    const { user } = useStore.getState();
+
     const [searching, setSearching] = useState<boolean>(false);
-    const searchParams = useSearchParams();
-    const uid = searchParams.get("uid");
+    const [searchInput, setSearchInput] = useState<string>("");
+
+    function onSearchButtonClick() {
+        setSearching(true);
+    }
+
+    function onSearchBarCancel() {
+        setSearchInput("");
+        setSearching(false);
+    }
+
+    function onSearchBarSearch(value: string) {
+        setSearchInput(value);
+    }
 
     /**
      * 点击游记卡片
      */
     function onCardClick(uid: string) {
-        router.push(`/mobile/detail?uid=${uid}`);
+        // TODO: 跳转到卡片详情
+        // router.push(`/mobile/detail?uid=${uid}`);
     }
 
-    const nav_bar_right = <div style={{ fontSize: 24 }}></div>;
+    const nav_bar_right = (
+        <div style={{ fontSize: 24 }}>
+            <Space style={{ "--gap": "16px" }}>
+                {searching && (
+                    <CloseCircleOutline
+                        onClick={onSearchBarCancel}
+                        aria-label={t("aria.cancel-search")}
+                    />
+                )}
+                {!searching && (
+                    <SearchOutline
+                        onClick={onSearchButtonClick}
+                        aria-label={t("aria.search")}
+                    />
+                )}
+                {!searching && (
+                    <AddSquareOutline
+                        onClick={() => {
+                            router.push(PATHNAME.mobile.edit)
+                        }}
+                        aria-label={t("aria.create")}
+                    />
+                )}
+            </Space>
+        </div>
+    );
 
     return (
         <>
-            <div className={styles.navbar}>
+            <MobileHeader>
                 <NavBar
                     backArrow={false}
-                    right={!searching ? nav_bar_right : undefined}
+                    right={nav_bar_right}
                 >
-                    {t("draft")}
+                    {searching ? (
+                        <SearchBar
+                            placeholder={t("search.draft.placeholder")}
+                            onSearch={onSearchBarSearch}
+                            onCancel={onSearchBarCancel}
+                        />
+                    ) : (
+                        t("draft")
+                    )}
                 </NavBar>
-            </div>
-            <div className={styles.content}>
-                <UserContent onCardClick={onCardClick} />
-            </div>
+            </MobileHeader>
+
+            <MobileContent>
+                {user.loggedIn ? ( //
+                    <DraftList onCardClick={onCardClick} />
+                ) : (
+                    <NotLoginError />
+                )}
+            </MobileContent>
         </>
     );
 }

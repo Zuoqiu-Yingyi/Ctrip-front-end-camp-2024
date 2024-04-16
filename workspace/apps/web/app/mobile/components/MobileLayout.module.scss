@@ -15,12 +15,29 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-.footer {
-    position: fixed;
-    width: 100%;
-    bottom: 0;
-    border-top: 1px solid var(--adm-color-border);
-    background-color: var(--adm-color-background);
+.app {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+
+    .header {
+        flex: 0;
+        width: 100%;
+        border-bottom: solid 1px var(--adm-color-border);
+    }
+
+    .content {
+        flex: 1;
+        width: 100%;
+        overflow-x: hidden;
+        overflow-y: auto;
+    }
+
+    .footer {
+        flex: 0;
+        width: 100%;
+        border-top: solid 1px var(--adm-color-border);
+    }
 }
 
 .add_button {

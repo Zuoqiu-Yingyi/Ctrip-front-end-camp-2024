@@ -70,7 +70,10 @@
     "admin-title": "后台审核系统",
     "approved": "已通过",
     "aria": {
-        "card": "游记卡片"
+        "cancel-search": "取消搜索",
+        "card": "游记卡片",
+        "create": "创建",
+        "search": "搜索"
     },
     "audit": "审核",
     "auto": "自动",
@@ -158,12 +161,23 @@
     "profile": "用户信息",
     "prompt-prefix": "请输入",
     "publish-time": "发布时间",
+    "pull-status": {
+        "canRelease": "释放以刷新",
+        "complete": "刷新完成",
+        "pulling": "下拉刷新",
+        "refreshing": "刷新中"
+    },
     "reject": "拒绝",
     "reject-reason": "拒绝理由",
     "rejected": "已拒绝",
     "remember": "记住我",
     "search": {
-        "placeholder": "搜索用户名或标题"
+        "draft": {
+            "placeholder": "请输入待搜索的关键字"
+        },
+        "publish": {
+            "placeholder": "搜索用户名或标题"
+        }
     },
     "settings": {
         "language": {
@@ -174,6 +188,12 @@
         }
     },
     "signup": "注册",
+    "status": {
+        "not-login": {
+            "description": "前往账户页面",
+            "title": "当前用户未登录"
+        }
+    },
     "theme": {
         "dark": {
             "label": "深色"

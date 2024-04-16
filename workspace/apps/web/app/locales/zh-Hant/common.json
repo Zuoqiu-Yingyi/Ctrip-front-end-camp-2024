@@ -67,7 +67,10 @@
     "admin-title": "後台審核系統",
     "approved": "已通過",
     "aria": {
-        "card": "遊記卡片"
+        "cancel-search": "取消搜尋",
+        "card": "遊記卡片",
+        "create": "創建",
+        "search": "搜尋"
     },
     "audit": "審核",
     "auto": "自動",
@@ -154,12 +157,23 @@
     "profile": "使用者資訊",
     "prompt-prefix": "請輸入",
     "publish-time": "發佈時間",
+    "pull-status": {
+        "canRelease": "釋放以刷新",
+        "complete": "重新整理完成",
+        "pulling": "下拉重新整理",
+        "refreshing": "重新整理中"
+    },
     "reject": "拒絕",
     "reject-reason": "拒絕理由",
     "rejected": "已拒絕",
     "remember": "記住我",
     "search": {
-        "placeholder": "搜尋使用者名稱或標題"
+        "draft": {
+            "placeholder": "請輸入待搜尋的關鍵字"
+        },
+        "publish": {
+            "placeholder": "搜尋使用者名稱或標題"
+        }
     },
     "settings": {
         "language": {
@@ -170,6 +184,12 @@
         }
     },
     "signup": "註冊",
+    "status": {
+        "not-login": {
+            "description": "前往帳戶頁面",
+            "title": "目前用戶未登入"
+        }
+    },
     "theme": {
         "dark": {
             "label": "深色"

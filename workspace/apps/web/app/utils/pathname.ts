@@ -15,11 +15,14 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-"use client";
+export const PATHNAME = {
+    _: "/",
+    mobile: {
+        _: "/mobile/",
+        home: "/mobile/home/",
+        draft: "/mobile/draft/",
+        user: "/mobile/user/",
 
-import { redirect } from "next/navigation";
-import { PATHNAME } from "@/utils/pathname";
-
-export default function Page() {
-    redirect(PATHNAME.mobile.home);
-}
+        edit: "/mobile/edit/",
+    } as const,
+} as const;

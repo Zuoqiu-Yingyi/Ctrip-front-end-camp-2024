@@ -34,6 +34,11 @@ import {
 } from "antd-mobile";
 import type { Action } from "antd-mobile/es/components/action-sheet";
 
+import {
+    //
+    MobileHeader,
+    MobileContent,
+} from "@/mobile/components/MobileLayout";
 import LoginPopup from "./LoginPopup";
 import ChangePasswordPopup from "./ChangePasswordPopup";
 import { ClientContext } from "@/contexts/client";
@@ -46,6 +51,7 @@ import {
 } from "@/utils/message";
 import { Locale } from "@/utils/locale";
 import { Theme } from "@/utils/theme";
+
 import DeleteAccountPopup from "./DeleteAccountPopup";
 
 export default function InfoPage(): JSX.Element {
@@ -194,48 +200,51 @@ export default function InfoPage(): JSX.Element {
 
     return (
         <>
-            <NavBar backArrow={false}>{t("me")}</NavBar>
-
-            {/* REF: https://mobile.ant.design/zh/components/list */}
-            <List>
-                <List.Item
-                    prefix={
-                        <Avatar
-                            src={user.avatar ? uid2path(user.avatar) : ""}
-                            alt={t("avatar")}
-                            onClick={(e) => {
-                                // console.debug(e);
-                                e.stopPropagation();
-                                if (user.loggedIn) {
-                                    // TODO: 更改用户头像
-                                }
-                            }}
-                        />
-                    }
-                    extra={user.loggedIn ? undefined : t("login-signup")}
-                    onClick={() => {
-                        if (user.loggedIn) {
-                            setAccountActionSheetVisible(true);
-                        } else {
-                            setLoginPopupVisible(true);
+            <MobileHeader>
+                <NavBar backArrow={false}>{t("me")}</NavBar>
+            </MobileHeader>
+            <MobileContent>
+                {/* REF: https://mobile.ant.design/zh/components/list */}
+                <List>
+                    <List.Item
+                        prefix={
+                            <Avatar
+                                src={user.avatar ? uid2path(user.avatar) : ""}
+                                alt={t("avatar")}
+                                onClick={(e) => {
+                                    // console.debug(e);
+                                    e.stopPropagation();
+                                    if (user.loggedIn) {
+                                        // TODO: 更改用户头像
+                                    }
+                                }}
+                            />
                         }
-                    }}
-                >
-                    {user.loggedIn ? user.name : t("visitor")}
-                </List.Item>
-                <List.Item
-                    extra={languageLabel}
-                    onClick={languageSettings}
-                >
-                    {t("settings.language.label")}
-                </List.Item>
-                <List.Item
-                    extra={themeLabel}
-                    onClick={themeSettings}
-                >
-                    {t("settings.theme.label")}
-                </List.Item>
-            </List>
+                        extra={user.loggedIn ? undefined : t("login-signup")}
+                        onClick={() => {
+                            if (user.loggedIn) {
+                                setAccountActionSheetVisible(true);
+                            } else {
+                                setLoginPopupVisible(true);
+                            }
+                        }}
+                    >
+                        {user.loggedIn ? user.name : t("visitor")}
+                    </List.Item>
+                    <List.Item
+                        extra={languageLabel}
+                        onClick={languageSettings}
+                    >
+                        {t("settings.language.label")}
+                    </List.Item>
+                    <List.Item
+                        extra={themeLabel}
+                        onClick={themeSettings}
+                    >
+                        {t("settings.theme.label")}
+                    </List.Item>
+                </List>
+            </MobileContent>
 
             {/**
              * 账户操作
@@ -263,7 +272,7 @@ export default function InfoPage(): JSX.Element {
                         visible={changePasswordPopupVisible}
                         onSuccess={clearUserData}
                         onClose={() => setChangePasswordPopupVisible(false)}
-                        />
+                    />
 
                     {/* 删除账户 */}
                     <DeleteAccountPopup

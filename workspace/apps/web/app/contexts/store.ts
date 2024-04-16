@@ -31,6 +31,7 @@ import {
     Theme,
     changeTheme,
 } from "@/utils/theme";
+import { IDraft } from "@/types/response";
 
 export interface IUserBase {
     loggedIn: boolean;
@@ -51,30 +52,36 @@ export type TUser = IUserLoggedIn | IUserNotLoggedIn;
 
 export interface IUserState {
     user: TUser;
-    updateUser: (user: TUser) => void;
+    updateUser: (user: TUser) => any;
 }
 
 export interface ILocaleState {
     locale: Locale;
-    setLocale: (locale: Locale) => void;
+    setLocale: (locale: Locale) => any;
 }
 
 export interface IThemeState {
     theme: Theme;
-    setTheme: (theme: Theme) => void;
+    setTheme: (theme: Theme) => any;
 }
 
 export interface ILineState {
     line: boolean;
-    online: () => void;
-    offline: () => void;
+    online: () => any;
+    offline: () => any;
+}
+
+export interface IDraftData {
+    drafts: IDraft[];
+    setDrafts: (drafts: IDraft[]) => any;
 }
 
 export interface IStates //
     extends IUserState,
         ILocaleState,
         IThemeState,
-        ILineState {}
+        ILineState,
+        IDraftData {}
 
 // REF: https://www.npmjs.com/package/zustand#typescript-usage
 export const useStore = create<IStates>()(
@@ -106,6 +113,11 @@ export const useStore = create<IStates>()(
                 offline: () => {
                     console.debug("offline");
                     set({ line: false });
+                },
+
+                drafts: [],
+                setDrafts: (drafts: IDraft[]) => {
+                    set({ drafts });
                 },
             }) satisfies IStates,
         {

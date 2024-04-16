@@ -34,11 +34,14 @@ import {
     Toast,
     Checkbox,
     type InputRef,
+    Space,
 } from "antd-mobile";
 import {
     //
     EyeInvisibleOutline,
     EyeOutline,
+    UserAddOutline,
+    UserCircleOutline,
 } from "antd-mobile-icons";
 
 import { ClientContext } from "@/contexts/client";
@@ -210,11 +213,21 @@ export function LoginPopup({
                 onChange={(key) => setActiveTabKey(key as TabKey)}
             >
                 <Tabs.Tab
-                    title={t("login")}
+                    title={
+                        <Space align="baseline">
+                            <UserCircleOutline />
+                            <span>{t("login")}</span>
+                        </Space>
+                    }
                     key={TabKey.login}
                 />
                 <Tabs.Tab
-                    title={t("signup")}
+                    title={
+                        <Space align="baseline">
+                            <UserAddOutline />
+                            <span>{t("signup")}</span>
+                        </Space>
+                    }
                     key={TabKey.signup}
                 />
             </Tabs>

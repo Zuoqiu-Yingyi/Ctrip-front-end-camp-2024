@@ -1,5 +1,9 @@
 # 更改日志 | Change log
 
+## 2024-04-17
+
+- 完善草稿列表页面 | Improve draft list page
+
 ## 2024-04-16
 
 - 实现移动端界面语言切换功能 | Implement mobile interface language switching feature

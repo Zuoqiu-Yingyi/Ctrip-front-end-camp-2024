@@ -67,7 +67,10 @@
     "admin-title": "Background audit system",
     "approved": "passed",
     "aria": {
-        "card": "travel cards"
+        "cancel-search": "Cancel search",
+        "card": "travel cards",
+        "create": "Create",
+        "search": "Search"
     },
     "audit": "audit",
     "auto": "Automatic",
@@ -154,12 +157,23 @@
     "profile": "User Info",
     "prompt-prefix": "please enter the ",
     "publish-time": "Publication Time",
+    "pull-status": {
+        "canRelease": "Release to refresh",
+        "complete": "Refresh completed",
+        "pulling": "Pull down to refresh",
+        "refreshing": "Refreshing"
+    },
     "reject": "reject",
     "reject-reason": "reject reason",
     "rejected": "failed",
     "remember": "remember me",
     "search": {
-        "placeholder": "Search for username or title"
+        "draft": {
+            "placeholder": "Please enter the keyword to be searched"
+        },
+        "publish": {
+            "placeholder": "Search for username or title"
+        }
     },
     "settings": {
         "language": {
@@ -170,6 +184,12 @@
         }
     },
     "signup": "Register",
+    "status": {
+        "not-login": {
+            "description": "Go to account page",
+            "title": "The current user is not logged in"
+        }
+    },
     "theme": {
         "dark": {
             "label": "Dark"

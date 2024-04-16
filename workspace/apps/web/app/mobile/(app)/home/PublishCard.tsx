@@ -50,7 +50,7 @@ import {
  * @param onClick Function to handle clicking on the card.
  */
 
-export function CardContent({
+export function PublishCard({
     //
     uid,
     coverUid,
@@ -62,9 +62,9 @@ export function CardContent({
     onClick,
 }: {
     uid: string;
-    coverUid?: string;
+    coverUid: string | null;
     title: string;
-    avatar: string;
+    avatar: string | null;
     username: string;
     cardRefs: React.MutableRefObject<HTMLDivElement[]>;
     handleSetGridRowEnd: (index: number) => void;
@@ -109,9 +109,8 @@ export function CardContent({
         <div
             ref={contentRef}
             onClick={() => onClick(uid)}
-            className={styles.card_container}
+            className={styles.card}
             style={{ gridRowEnd: height ? `span ${Math.ceil(height)}` : "auto" }}
-            aria-role="button"
             aria-label={t("aria.card")}
         >
             {coverUid && (
@@ -137,7 +136,7 @@ export function CardContent({
                 aria-label={t("profile")}
             >
                 <Avatar
-                    src={uid2path(avatar)}
+                    src={avatar ? uid2path(avatar) : ""}
                     alt={t("avatar")}
                     style={{ "--size": "20px", "--border-radius": "50%" }}
                 />
@@ -152,4 +151,4 @@ export function CardContent({
     );
 }
 
-export default CardContent;
+export default PublishCard;

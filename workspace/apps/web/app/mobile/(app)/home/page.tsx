@@ -27,12 +27,17 @@ import {
     Space,
 } from "antd-mobile";
 import {
+    CloseCircleOutline,
     //
     SearchOutline,
 } from "antd-mobile-icons";
 
-import styles from "./page.module.scss";
-import InfiniteScrollContent from "./InfiniteScrollContent";
+import {
+    //
+    MobileHeader,
+    MobileContent,
+} from "@/mobile/components/MobileLayout";
+import InfiniteScrollContent from "./PublishList";
 
 export default function HomePage() {
     const { t } = useTranslation();
@@ -64,23 +69,32 @@ export default function HomePage() {
     const nav_bar_right = (
         <div style={{ fontSize: 24 }}>
             <Space style={{ "--gap": "16px" }}>
-                <SearchOutline onClick={onSearchButtonClick} />
+                {searching ? (
+                    <CloseCircleOutline
+                        onClick={onSearchBarCancel}
+                        aria-label={t("aria.cancel-search")}
+                    />
+                ) : (
+                    <SearchOutline
+                        onClick={onSearchButtonClick}
+                        aria-label={t("aria.search")}
+                    />
+                )}
             </Space>
         </div>
     );
 
     return (
         <>
-            <div className={styles.navbar}>
+            <MobileHeader>
                 <NavBar
                     backArrow={false}
-                    right={!searching ? nav_bar_right : undefined}
+                    right={nav_bar_right}
                 >
                     {searching ? (
                         // REF: https://mobile.ant.design/zh/components/search-bar
                         <SearchBar
-                            placeholder={t("search.placeholder")}
-                            showCancelButton={() => true}
+                            placeholder={t("search.publish.placeholder")}
                             onSearch={onSearchBarSearch}
                             onCancel={onSearchBarCancel}
                         />
@@ -88,13 +102,13 @@ export default function HomePage() {
                         t("home")
                     )}
                 </NavBar>
-            </div>
-            <div className={styles.content}>
+            </MobileHeader>
+            <MobileContent>
                 <InfiniteScrollContent
                     searchInput={searchInput}
                     onCardClick={onCardClick}
                 />
-            </div>
+            </MobileContent>
         </>
     );
 }
