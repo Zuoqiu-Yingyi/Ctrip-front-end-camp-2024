@@ -129,6 +129,14 @@
         }
     },
     "signup": "註冊",
+    "theme": {
+        "dark": {
+            "label": "深色"
+        },
+        "light": {
+            "label": "淺色"
+        }
+    },
     "title": "標題",
     "update-time": "更新時間",
     "user": "使用者",

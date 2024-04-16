@@ -129,6 +129,14 @@
         }
     },
     "signup": "Register",
+    "theme": {
+        "dark": {
+            "label": "Dark"
+        },
+        "light": {
+            "label": "Light"
+        }
+    },
     "title": "title",
     "update-time": "Update time",
     "user": "User",

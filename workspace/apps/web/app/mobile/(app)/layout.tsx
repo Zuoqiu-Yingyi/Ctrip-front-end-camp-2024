@@ -18,7 +18,11 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import {
+    //
+    useRouter,
+    usePathname,
+} from "next/navigation";
 import { useTranslation } from "react-i18next";
 
 import { TabBar } from "antd-mobile";
@@ -45,10 +49,24 @@ export function AppLayout({
 }): JSX.Element {
     // REF: https://nextjs.org/docs/app/building-your-application/routing/linking-and-navigating#userouter-hook
     const router = useRouter();
-    const [activeKey, setActiveKey] = useState(TabBarKey.home);
+    const pathname = usePathname();
+    const [activeKey, setActiveKey] = useState(
+        (() => {
+            // console.debug(pathname);
+            switch (true) {
+                default:
+                case pathname.endsWith(`/${TabBarKey.home}/`):
+                    return TabBarKey.home;
+                case pathname.endsWith(`/${TabBarKey.draft}/`):
+                    return TabBarKey.draft;
+                case pathname.endsWith(`/${TabBarKey.user}/`):
+                    return TabBarKey.user;
+            }
+        })(),
+    );
 
     // REF: https://react.i18next.com/guides/quick-start#using-the-hook
-    const { t, i18n } = useTranslation();
+    const { t } = useTranslation();
 
     // REF: https://mobile.ant.design/zh/components/tab-bar
     const tabs = [

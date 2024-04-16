@@ -19,7 +19,8 @@
     position: fixed;
     width: 100%;
     bottom: 0;
-    background-color: #fff;
+    border-top: 1px solid var(--adm-color-border);
+    background-color: var(--adm-color-background);
 }
 
 .add_button {

@@ -45,21 +45,39 @@ import {
     handleResponse,
 } from "@/utils/message";
 import { Locale } from "@/utils/locale";
+import { Theme } from "@/utils/theme";
 
 export default function InfoPage(): JSX.Element {
     const { t } = useTranslation();
     const { trpc } = useContext(ClientContext);
-    const { user, updateUser, locale, setLocale } = useStore((state) => ({
-        user: state.user,
-        updateUser: state.updateUser,
+    const {
+        //
+        user,
+        updateUser,
+        locale,
+        setLocale,
+        theme,
+        setTheme,
+    } = useStore.getState();
 
-        locale: state.locale,
-        setLocale: state.setLocale,
-    }));
+    const language_labels = new Map<Locale, string>([
+        [Locale.auto, t("auto")],
+        [Locale.zh_Hans, "简体中文 (zh-Hans)"],
+        [Locale.zh_Hant, "繁體中文 (zh-Hant)"],
+        [Locale.en, "English (en)"],
+    ]);
+
+    const theme_labels = new Map<Theme, string>([
+        [Theme.auto, t("auto")],
+        [Theme.light, t("theme.light.label")],
+        [Theme.dark, t("theme.dark.label")],
+    ]);
+
+    const [languageLabel, setLanguageLabel] = useState(language_labels.get(locale)!);
+    const [themeLabel, setThemeLabel] = useState(theme_labels.get(theme)!);
 
     const [loginPopupVisible, setLoginPopupVisible] = useState(false);
     const [accountActionSheetVisible, setAccountActionSheetVisible] = useState(false);
-
     const [changeModalVisible, setChangeModalVisible] = useState(false);
 
     // REF: https://mobile.ant.design/zh/components/action-sheet#action
@@ -105,6 +123,51 @@ export default function InfoPage(): JSX.Element {
         },
     ];
 
+    /**
+     * 界面语言设置
+     */
+    async function languageSettings() {
+        // REF: https://mobile.ant.design/zh/components/picker
+        const value = (await Picker.prompt({
+            columns: [
+                Object.values(Locale).map((locale) => {
+                    return { label: language_labels.get(locale)!, value: locale, key: locale };
+                }),
+            ],
+            confirmText: t("confirm"),
+            cancelText: t("cancel"),
+            defaultValue: [locale],
+        })) as [Locale] | null;
+
+        const _locale = value?.at(0);
+        if (_locale) {
+            setLocale(_locale);
+            setLanguageLabel(language_labels.get(_locale)!);
+        }
+    }
+
+    /**
+     * 界面主题设置
+     */
+    async function themeSettings() {
+        const value = (await Picker.prompt({
+            columns: [
+                Object.values(Theme).map((theme) => {
+                    return { label: theme_labels.get(theme)!, value: theme, key: theme };
+                }),
+            ],
+            confirmText: t("confirm"),
+            cancelText: t("cancel"),
+            defaultValue: [theme],
+        })) as [Theme] | null;
+
+        const _theme = value?.at(0);
+        if (_theme) {
+            setTheme(_theme);
+            setThemeLabel(theme_labels.get(_theme)!);
+        }
+    }
+
     return (
         <>
             <NavBar backArrow={false}>{t("me")}</NavBar>
@@ -137,31 +200,17 @@ export default function InfoPage(): JSX.Element {
                     {user.loggedIn ? user.name : t("visitor")}
                 </List.Item>
                 <List.Item
-                    onClick={async () => {
-                        // REF: https://mobile.ant.design/zh/components/picker
-                        const value = (await Picker.prompt({
-                            columns: [
-                                [
-                                    { label: t("auto"), value: Locale.auto, key: Locale.auto },
-                                    { label: "简体中文 (zh-Hans)", value: Locale.zh_Hans, key: Locale.zh_Hans },
-                                    { label: "繁體中文 (zh-Hant)", value: Locale.zh_Hant, key: Locale.zh_Hant },
-                                    { label: "English (en)", value: Locale.en, key: Locale.en },
-                                ],
-                            ],
-                            confirmText: t("confirm"),
-                            cancelText: t("cancel"),
-                            defaultValue: [locale],
-                        })) as [Locale] | null;
-
-                        const l = value?.at(0);
-                        if (l) {
-                            setLocale(l);
-                        }
-                    }}
+                    extra={languageLabel}
+                    onClick={languageSettings}
                 >
                     {t("settings.language.label")}
                 </List.Item>
-                <List.Item onClick={() => {}}>TODO: {t("settings.theme.label")}</List.Item>
+                <List.Item
+                    extra={themeLabel}
+                    onClick={themeSettings}
+                >
+                    {t("settings.theme.label")}
+                </List.Item>
             </List>
 
             {/**

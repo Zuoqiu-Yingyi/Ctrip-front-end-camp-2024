@@ -39,14 +39,17 @@ export function changeLocale(locale: TLocale | string) {
 
             // REF: https://mobile.ant.design/zh/guide/i18n/
             setDefaultConfig({ locale: antd_en_US });
+            document.documentElement.lang = "en";
             break;
         case "zh-Hans":
             i18n.changeLanguage("zh-Hans");
             setDefaultConfig({ locale: antd_zh_CN });
+            document.documentElement.lang = "zh-Hans";
             break;
         case "zh-Hant":
             i18n.changeLanguage("zh-Hant");
             setDefaultConfig({ locale: antd_zh_HK });
+            document.documentElement.lang = "zh-Hant";
             break;
         default:
             changeLocale(mapLocale());

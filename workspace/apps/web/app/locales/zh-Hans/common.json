@@ -130,6 +130,14 @@
         }
     },
     "signup": "注册",
+    "theme": {
+        "dark": {
+            "label": "深色"
+        },
+        "light": {
+            "label": "浅色"
+        }
+    },
     "title": "标题",
     "update-time": "更新时间",
     "user": "用户",

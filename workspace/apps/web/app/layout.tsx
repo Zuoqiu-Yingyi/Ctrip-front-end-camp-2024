@@ -14,13 +14,13 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-import "./globals.css";
 
 import { AntdRegistry } from "@ant-design/nextjs-registry";
 
-import StoreProvider from "./contexts/client";
+import ClientProvider from "@/contexts/client";
 
 import manifest from "~/public/manifest.json";
+import "./globals.css";
 
 import type {
     //
@@ -81,7 +81,7 @@ export const viewport = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
     // REF: https://nextjs.org/docs/app/building-your-application/rendering/composition-patterns#using-context-providers
     return (
-        <html lang="en">
+        <html>
             <head>
                 <link
                     rel="shortcut icon"
@@ -94,9 +94,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 />
             </head>
             <body>
-                <StoreProvider>
+                <ClientProvider>
                     <AntdRegistry>{children}</AntdRegistry>
-                </StoreProvider>
+                </ClientProvider>
             </body>
         </html>
     );

@@ -16,12 +16,21 @@
  */
 
 import { create } from "zustand";
-import { persist } from "zustand/middleware";
+import {
+    //
+    persist,
+    type StorageValue,
+} from "zustand/middleware";
 
 import { AccessorRole } from "@repo/server/src/utils/role";
 import { trpc } from "@/utils/trpc";
 import { Locale } from "@/utils/locale";
 import { changeLocale } from "@/utils/l10n";
+import {
+    //
+    Theme,
+    changeTheme,
+} from "@/utils/theme";
 
 export interface IUserBase {
     loggedIn: boolean;
@@ -50,13 +59,22 @@ export interface ILocaleState {
     setLocale: (locale: Locale) => void;
 }
 
+export interface IThemeState {
+    theme: Theme;
+    setTheme: (theme: Theme) => void;
+}
+
 export interface ILineState {
     line: boolean;
     online: () => void;
     offline: () => void;
 }
 
-export interface IStates extends IUserState, ILocaleState, ILineState {}
+export interface IStates //
+    extends IUserState,
+        ILocaleState,
+        IThemeState,
+        ILineState {}
 
 // REF: https://www.npmjs.com/package/zustand#typescript-usage
 export const useStore = create<IStates>()(
@@ -74,6 +92,12 @@ export const useStore = create<IStates>()(
                     set({ locale });
                 },
 
+                theme: Theme.auto,
+                setTheme: (theme) => {
+                    changeTheme(theme);
+                    set({ theme });
+                },
+
                 line: true,
                 online: () => {
                     console.debug("online");
@@ -87,20 +111,31 @@ export const useStore = create<IStates>()(
         {
             name: "tdiary-store",
             storage: {
+                /**
+                 * 从 localStorage 中加载数据
+                 */
                 async getItem(name) {
                     const item = localStorage.getItem(name);
                     try {
-                        const store = item ? JSON.parse(item) : null;
+                        const store = item ? (JSON.parse(item) as StorageValue<IStates>) : null;
                         // console.debug(store);
+                        if (!store) return null;
 
                         try {
+                            changeLocale(store.state.locale ?? Locale.auto);
+                            changeTheme(store.state.theme ?? Theme.auto);
+
                             const response = await trpc.account.info.query();
 
                             switch (response.code) {
                                 case 0:
                                     store.state.user = {
                                         loggedIn: true,
-                                        ...response.data!.account,
+                                        id: response.data!.account.id,
+                                        role: response.data!.account.role,
+                                        name: response.data!.account.name,
+                                        avatar: response.data!.profile?.avatar ?? null,
+                                        createdAt: response.data!.account.createdAt,
                                     };
                                     break;
                                 default:
@@ -134,7 +169,11 @@ export const useStore = create<IStates>()(
     ),
 );
 
-const { online, offline } = useStore.getState();
+const {
+    //
+    online,
+    offline,
+} = useStore.getState();
 
 globalThis.addEventListener?.("online", online);
 globalThis.addEventListener?.("offline", offline);
