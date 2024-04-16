@@ -17,7 +17,24 @@
             }
         },
         "delete-account": {
+            "actions": {
+                "confirm1": {
+                    "content": "After deleting the account, all data in the account will be deleted and cannot be recovered!",
+                    "title": "Confirm to delete account [{{name}}] ?"
+                },
+                "confirm2": {
+                    "content": "The username will be reset after deleting the account!"
+                }
+            },
             "description": "After deletion, all data will be deleted and cannot be recovered!",
+            "prompt": {
+                "password-incorrect": {
+                    "content": "Current user password is wrong"
+                },
+                "success": {
+                    "content": "Account deleted successfully"
+                }
+            },
             "text": "Delete Account"
         },
         "extra": "Please select what you want to do",
@@ -53,8 +70,8 @@
         "card": "travel cards"
     },
     "audit": "audit",
-    "auto": "automatic",
-    "avatar": "profile avatar",
+    "auto": "Automatic",
+    "avatar": "Avatar",
     "cancel": "Cancel",
     "confirm": "Confirm",
     "confirmed": "confirmed",
@@ -81,6 +98,9 @@
                     "message": "The passwords entered twice are inconsistent"
                 }
             }
+        },
+        "current-account": {
+            "label": "Current Account"
         },
         "new-password": {
             "label": "New Password",

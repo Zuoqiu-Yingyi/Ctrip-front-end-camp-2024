@@ -46,6 +46,7 @@ import {
 } from "@/utils/message";
 import { Locale } from "@/utils/locale";
 import { Theme } from "@/utils/theme";
+import DeleteAccountPopup from "./DeleteAccountPopup";
 
 export default function InfoPage(): JSX.Element {
     const { t } = useTranslation();
@@ -60,25 +61,40 @@ export default function InfoPage(): JSX.Element {
         setTheme,
     } = useStore.getState();
 
-    const language_labels = new Map<Locale, string>([
-        [Locale.auto, t("auto")],
-        [Locale.zh_Hans, "简体中文 (zh-Hans)"],
-        [Locale.zh_Hant, "繁體中文 (zh-Hant)"],
-        [Locale.en, "English (en)"],
-    ]);
+    const language_labels = {
+        get [Locale.auto]() {
+            return t("auto");
+        },
+        get [Locale.zh_Hans]() {
+            return "简体中文 (zh-Hans)";
+        },
+        get [Locale.zh_Hant]() {
+            return "繁體中文 (zh-Hant)";
+        },
+        get [Locale.en]() {
+            return "English (en)";
+        },
+    } as const;
 
-    const theme_labels = new Map<Theme, string>([
-        [Theme.auto, t("auto")],
-        [Theme.light, t("theme.light.label")],
-        [Theme.dark, t("theme.dark.label")],
-    ]);
+    const theme_labels = {
+        get [Theme.auto]() {
+            return t("auto");
+        },
+        get [Theme.light]() {
+            return t("theme.light.label");
+        },
+        get [Theme.dark]() {
+            return t("theme.dark.label");
+        },
+    } as const;
 
-    const [languageLabel, setLanguageLabel] = useState(language_labels.get(locale)!);
-    const [themeLabel, setThemeLabel] = useState(theme_labels.get(theme)!);
+    const [languageLabel, setLanguageLabel] = useState(language_labels[locale]);
+    const [themeLabel, setThemeLabel] = useState(theme_labels[theme]);
 
     const [loginPopupVisible, setLoginPopupVisible] = useState(false);
     const [accountActionSheetVisible, setAccountActionSheetVisible] = useState(false);
     const [changePasswordPopupVisible, setChangePasswordPopupVisible] = useState(false);
+    const [deleteAccountPopupVisible, setDeleteAccountPopupVisible] = useState(false);
 
     // REF: https://mobile.ant.design/zh/components/action-sheet#action
     const account_actions: Action[] = [
@@ -86,7 +102,6 @@ export default function InfoPage(): JSX.Element {
             key: "change-password",
             text: t("actions.change-password.text"),
             onClick: () => {
-                // TODO: 修改密码
                 setChangePasswordPopupVisible(true);
                 setAccountActionSheetVisible(false);
             },
@@ -116,7 +131,8 @@ export default function InfoPage(): JSX.Element {
             text: t("actions.delete-account.text"),
             description: t("actions.delete-account.description"),
             onClick: () => {
-                // TODO: 删除账户
+                setDeleteAccountPopupVisible(true);
+                setAccountActionSheetVisible(false);
             },
             bold: true,
             danger: true,
@@ -131,7 +147,7 @@ export default function InfoPage(): JSX.Element {
         const value = (await Picker.prompt({
             columns: [
                 Object.values(Locale).map((locale) => {
-                    return { label: language_labels.get(locale)!, value: locale, key: locale };
+                    return { label: language_labels[locale], value: locale, key: locale };
                 }),
             ],
             confirmText: t("confirm"),
@@ -142,7 +158,8 @@ export default function InfoPage(): JSX.Element {
         const _locale = value?.at(0);
         if (_locale) {
             setLocale(_locale);
-            setLanguageLabel(language_labels.get(_locale)!);
+            setLanguageLabel(language_labels[_locale]);
+            setThemeLabel(theme_labels[theme]);
         }
     }
 
@@ -153,7 +170,7 @@ export default function InfoPage(): JSX.Element {
         const value = (await Picker.prompt({
             columns: [
                 Object.values(Theme).map((theme) => {
-                    return { label: theme_labels.get(theme)!, value: theme, key: theme };
+                    return { label: theme_labels[theme], value: theme, key: theme };
                 }),
             ],
             confirmText: t("confirm"),
@@ -164,7 +181,7 @@ export default function InfoPage(): JSX.Element {
         const _theme = value?.at(0);
         if (_theme) {
             setTheme(_theme);
-            setThemeLabel(theme_labels.get(_theme)!);
+            setThemeLabel(theme_labels[_theme]);
         }
     }
 
@@ -238,14 +255,24 @@ export default function InfoPage(): JSX.Element {
                 onClose={() => setLoginPopupVisible(false)}
             />
 
-            {/* 更改密码 弹出层 */}
             {user.loggedIn && (
-                <ChangePasswordPopup
-                    username={user.name}
-                    visible={changePasswordPopupVisible}
-                    onSuccess={clearUserData}
-                    onClose={() => setChangePasswordPopupVisible(false)}
-                />
+                <>
+                    {/* 更改密码 */}
+                    <ChangePasswordPopup
+                        accountName={user.name}
+                        visible={changePasswordPopupVisible}
+                        onSuccess={clearUserData}
+                        onClose={() => setChangePasswordPopupVisible(false)}
+                        />
+
+                    {/* 删除账户 */}
+                    <DeleteAccountPopup
+                        accountName={user.name}
+                        visible={deleteAccountPopupVisible}
+                        onSuccess={clearUserData}
+                        onClose={() => setDeleteAccountPopupVisible(false)}
+                    />
+                </>
             )}
         </>
     );

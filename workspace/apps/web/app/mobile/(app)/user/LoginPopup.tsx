@@ -49,6 +49,11 @@ import {
     signup,
 } from "@/utils/account";
 import { handleError } from "@/utils/message";
+import {
+    //
+    createPassphraseRules,
+    createUsernameRules,
+} from "./input-rules";
 
 /**
  * 选项卡键值
@@ -57,18 +62,6 @@ export enum TabKey {
     login = "login",
     signup = "signup",
 }
-
-/**
- * 用户名正则表达式
- * 支持大小写英文字母, 数字, 短横线与下划线
- */
-const USERNAME_PATTERN = /^[0-9a-zA-Z\-\_]+$/;
-
-/**
- * 用户口令正则表达式
- * 支持所有可视的 ASCII 字符
- */
-const PASSPHRASE_PATTERN = /^[\x21-\x7E]+$/;
 
 /**
  * 用户 登录/注册 弹出层
@@ -111,9 +104,9 @@ export function LoginPopup({
     async function onFinish(values: {
         //
         username: string;
-        password: string;
+        passphrase: string;
         keep?: boolean;
-        passwordVerify?: string;
+        passphraseVerify?: string;
     }) {
         // console.debug(values);
         setLoading(true);
@@ -124,7 +117,7 @@ export function LoginPopup({
                     const response = await login(
                         {
                             username: values.username,
-                            passphrase: values.password,
+                            passphrase: values.passphrase,
                             keep: values.keep,
                         },
                         trpc,
@@ -156,7 +149,7 @@ export function LoginPopup({
 
                 case TabKey.signup: {
                     /* 校验第二次输入的密码 */
-                    if (values.password !== values.passwordVerify) {
+                    if (values.passphrase !== values.passphraseVerify) {
                         throw new Error(t("input.confirm-password.rules.inconsistent.message"));
                     }
 
@@ -164,7 +157,7 @@ export function LoginPopup({
                     const response = await signup(
                         {
                             username: values.username,
-                            passphrase: values.password,
+                            passphrase: values.passphrase,
                         },
                         trpc,
                     );
@@ -197,11 +190,18 @@ export function LoginPopup({
         setLoading(false);
     }
 
+    const username_rules = createUsernameRules(t);
+    const passphrase_rules = createPassphraseRules(t);
+
     return (
         <Popup
             visible={visible}
             showCloseButton={true}
             closeOnSwipe={true}
+            bodyStyle={{
+                borderTopLeftRadius: "8px",
+                borderTopRightRadius: "8px",
+            }}
             onClose={onClose}
             onMaskClick={onClose}
         >
@@ -236,21 +236,8 @@ export function LoginPopup({
                 <Form.Item
                     label={t("username")}
                     name="username"
-                    rules={[
-                        {
-                            required: true,
-                            message: t("input.username.rules.required.message"),
-                        },
-                        {
-                            min: 2,
-                            max: 32,
-                            message: t("input.username.rules.length.message"),
-                        },
-                        {
-                            pattern: USERNAME_PATTERN,
-                            message: t("input.username.rules.pattern.message"),
-                        },
-                    ]}
+                    // @ts-ignore
+                    rules={username_rules}
                 >
                     <Input
                         ref={username}
@@ -259,17 +246,9 @@ export function LoginPopup({
                 </Form.Item>
                 <Form.Item
                     label={t("password")}
-                    name="password"
-                    rules={[
-                        {
-                            required: true,
-                            message: t("input.password.rules.required.message"),
-                        },
-                        {
-                            min: 8,
-                            message: t("input.password.rules.length.message"),
-                        },
-                    ]}
+                    name="passphrase"
+                    // @ts-ignore
+                    rules={passphrase_rules}
                     extra={
                         <div className="flex-none ml-8 cursor-pointer">
                             {passwordVisible ? ( //
@@ -295,17 +274,9 @@ export function LoginPopup({
                 {activeTabKey === TabKey.signup && (
                     <Form.Item
                         label={t("input.confirm-password.label")}
-                        name="passwordVerify"
-                        rules={[
-                            {
-                                required: true,
-                                message: t("input.password.rules.required.message"),
-                            },
-                            {
-                                min: 8,
-                                message: t("input.password.rules.length.message"),
-                            },
-                        ]}
+                        name="passphraseVerify"
+                        // @ts-ignore
+                        rules={passphrase_rules}
                         extra={
                             <div className="flex-none ml-8 cursor-pointer">
                                 {passwordVisible ? ( //

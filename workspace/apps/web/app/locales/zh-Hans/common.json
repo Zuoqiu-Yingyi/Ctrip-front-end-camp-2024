@@ -17,7 +17,27 @@
             }
         },
         "delete-account": {
+            "actions": {
+                "confirm1": {
+                    "content": "删除账户后将同时删除账户内所有数据且不可恢复！",
+                    "title": "确认删除账户 [{{name}}] ？"
+                },
+                "confirm2": {
+                    "content": "删除账户后用户名将会被重置！"
+                }
+            },
             "description": "删除后将同时删除所有数据且不可恢复！",
+            "prompt": {
+                "password-incorrect": {
+                    "content": "当前用户密码错误"
+                },
+                "success": {
+                    "content": "删除账户成功"
+                },
+                "username-incorrect": {
+                    "content": "用户名与当前用户不一致"
+                }
+            },
             "text": "删除账户"
         },
         "extra": "请选择你要进行操作",
@@ -81,6 +101,9 @@
                     "message": "两次输入的密码不一致"
                 }
             }
+        },
+        "current-account": {
+            "label": "当前账户"
         },
         "new-password": {
             "label": "新密码",

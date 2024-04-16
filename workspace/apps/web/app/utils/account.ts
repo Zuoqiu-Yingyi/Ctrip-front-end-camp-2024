@@ -136,3 +136,36 @@ export async function changePassword(
     });
     return response_change_password;
 }
+
+export interface IDeleteAccountOptions {
+    username: string;
+    passphrase: string; // 旧口令
+}
+
+/**
+ * 用户删除账户
+ */
+export async function closeAccount(
+    {
+        //
+        username,
+        passphrase,
+    }: IDeleteAccountOptions,
+    t: TRPC,
+) {
+    const key = await passphrase2key(username, passphrase, CONSTANTS.USER_KEY_SALT);
+
+    const response_challenge = await t.auth.challenge.query({
+        username: username,
+        role: "user",
+    });
+    const challenge = response_challenge.data.challenge;
+    const response = await challenge2response(String2ArrayBuffer(challenge), key);
+    const response_hex = ArrayBuffer2HexString(response);
+
+    const response_close = await t.account.close.mutate({
+        challenge,
+        response: response_hex,
+    });
+    return response_close;
+}

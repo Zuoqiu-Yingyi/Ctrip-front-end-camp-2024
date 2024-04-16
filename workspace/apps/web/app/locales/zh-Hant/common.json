@@ -17,7 +17,24 @@
             }
         },
         "delete-account": {
+            "actions": {
+                "confirm1": {
+                    "content": "刪除帳戶後將同時刪除帳戶內所有資料且無法恢復！",
+                    "title": "確認刪除帳號 [{{name}}] ？"
+                },
+                "confirm2": {
+                    "content": "刪除帳戶後用戶名將會被重置！"
+                }
+            },
             "description": "刪除後將同時刪除所有資料且無法恢復！",
+            "prompt": {
+                "password-incorrect": {
+                    "content": "目前使用者密碼錯誤"
+                },
+                "success": {
+                    "content": "刪除帳戶成功"
+                }
+            },
             "text": "刪除帳戶"
         },
         "extra": "請選擇你要進行操作",
@@ -81,6 +98,9 @@
                     "message": "兩次輸入的密碼不一致"
                 }
             }
+        },
+        "current-account": {
+            "label": "目前帳戶"
         },
         "new-password": {
             "label": "新密碼",

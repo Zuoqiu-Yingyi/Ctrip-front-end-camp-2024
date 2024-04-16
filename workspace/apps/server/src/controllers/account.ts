@@ -571,10 +571,18 @@ export const changePasswordMutation = procedure //
                         data: null,
                     };
 
+                // 用户名错误
+                case error instanceof UsernameIncorrectError:
+                    return {
+                        code: 20,
+                        message: error.message,
+                        data: null,
+                    };
+
                 // 原密码错误
                 case error instanceof OriginalPasswordIncorrectError:
                     return {
-                        code: 20,
+                        code: 30,
                         message: error.message,
                         data: null,
                     };
@@ -607,7 +615,12 @@ export const closeMutation = procedure //
             /* 校验挑战字符串是否有效 */
             const payload = verify<IChallengeJwtPayload>({ token: challenge }, true);
 
-            /* 获取原密码 */
+            /* 校验用户名是否一致 */
+            if (payload.data.username !== options.ctx.session.data.account.username) {
+                throw new UsernameIncorrectError();
+            }
+
+            /* 获取密码 */
             const user = await options.ctx.DB.user.findUniqueOrThrow({
                 where: {
                     name: payload.data.username,
@@ -625,7 +638,7 @@ export const closeMutation = procedure //
                 },
             });
 
-            /* 校验原密码是否正确 (通过挑战/应答) */
+            /* 校验密码是否正确 (通过挑战/应答) */
             if (
                 verifyChallengeResponse(
                     //
@@ -755,7 +768,7 @@ export const closeMutation = procedure //
                         data: null,
                     };
 
-                // 原密码错误
+                // 密码错误
                 case error instanceof PasswordIncorrectError:
                     return {
                         code: 30,
@@ -767,7 +780,7 @@ export const closeMutation = procedure //
                     options.ctx.S.log.error(error);
                     return {
                         code: -1,
-                        message: error,
+                        message: String(error),
                         data: null,
                     };
             }

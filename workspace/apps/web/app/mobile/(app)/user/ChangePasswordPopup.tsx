@@ -42,22 +42,23 @@ import {
 import { ClientContext } from "@/contexts/client";
 import { changePassword } from "@/utils/account";
 import { handleError } from "@/utils/message";
+import { createPassphraseRules } from "./input-rules";
 
 /**
  * 用户更改密码弹出层
- * @param username 当前用户的用户名
+ * @param accountName 当前用户的账户名
  * @param visible 是否显示弹出层
  * @param onSuccess 更改密码成功的回调函数
  * @param onClose 弹出层关闭回调函数
  */
 export function ChangePasswordPopup({
     //
-    username,
+    accountName,
     visible,
     onSuccess,
     onClose,
 }: {
-    username: string;
+    accountName: string;
     visible: boolean;
     onSuccess: () => any;
     onClose: () => any;
@@ -99,7 +100,7 @@ export function ChangePasswordPopup({
 
             const response = await changePassword(
                 {
-                    username,
+                    username: accountName,
                     oldPassphrase: values.oldPassphrase,
                     newPassphrase: values.newPassphrase1,
                 },
@@ -129,22 +130,17 @@ export function ChangePasswordPopup({
         setLoading(false);
     }
 
-    const passphrase_rules = [
-        {
-            required: true,
-            message: t("input.password.rules.required.message"),
-        },
-        {
-            min: 8,
-            message: t("input.password.rules.length.message"),
-        },
-    ];
+    const passphrase_rules = createPassphraseRules(t);
 
     return (
         <Popup
             visible={visible}
             showCloseButton={true}
             closeOnSwipe={true}
+            bodyStyle={{
+                borderTopLeftRadius: "8px",
+                borderTopRightRadius: "8px",
+            }}
             onClose={onClose}
             onMaskClick={onClose}
         >
@@ -167,6 +163,7 @@ export function ChangePasswordPopup({
                 <Form.Item
                     label={t("input.old-password.label")}
                     name="oldPassphrase"
+                    // @ts-ignore
                     rules={passphrase_rules}
                     extra={
                         <div className="flex-none ml-8 cursor-pointer">
@@ -189,6 +186,7 @@ export function ChangePasswordPopup({
                 <Form.Item
                     label={t("input.new-password.label")}
                     name="newPassphrase1"
+                    // @ts-ignore
                     rules={passphrase_rules}
                     extra={
                         <div className="flex-none ml-8 cursor-pointer">
@@ -210,6 +208,7 @@ export function ChangePasswordPopup({
                 <Form.Item
                     label={t("input.confirm-password.label")}
                     name="newPassphrase2"
+                    // @ts-ignore
                     rules={passphrase_rules}
                     extra={
                         <div className="flex-none ml-8 cursor-pointer">
