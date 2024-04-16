@@ -21,12 +21,14 @@ import {
     //
     useState,
     useContext,
+    useEffect,
 } from "react";
 import {
     //
     InfiniteScroll,
     Footer,
     DotLoading,
+    Collapse,
 } from "antd-mobile";
 import { useTranslation } from "react-i18next";
 
@@ -64,8 +66,10 @@ export function InfiniteScrollDirect({ hasMore }: { hasMore?: boolean }) {
 
 export function DraftList({
     //
+    searchInput,
     onCardClick,
 }: {
+    searchInput: string;
     onCardClick: (uid: string) => void;
 }): JSX.Element {
     const { trpc } = useContext(ClientContext);
@@ -77,11 +81,19 @@ export function DraftList({
     } = useStore.getState();
 
     const [data, setData] = useState<IDraft[]>([]);
-    const [hasMore, setHasMore] = useState(user.loggedIn);
+    const [hasMore, setHasMore] = useState(true);
     const [reload, setReload] = useState(true);
     const [cursor, setCursor] = useState<number>(0);
 
     const count = 16; // 一次动态加载数量
+
+    useEffect(() => {
+        if (searchInput) {
+            // TODO: 搜索功能
+        } else {
+            refresh();
+        }
+    }, [searchInput]);
 
     async function loadMore() {
         // console.debug("loadMore");
@@ -113,25 +125,30 @@ export function DraftList({
         }
     }
 
+    async function refresh() {
+        setReload(true);
+        setCursor(0);
+        await loadMore();
+    }
+
     return (
-        <PullRefresh
-            onRefresh={async () => {
-                // console.debug("onRefresh");
-                // 下拉刷新
-                setReload(true);
-                setCursor(0);
-                loadMore();
-            }}
-        >
-            <div className={styles.cards}>
+        <PullRefresh onRefresh={refresh}>
+            <Collapse>
                 {data.map((draft) => (
-                    <DraftCard
-                        key={draft.id}
-                        coverUid={draft.assets.at(0)!.asset_uid}
+                    <Collapse.Panel
+                        key={String(draft.id)}
                         title={draft.title}
-                        content={draft.content}
-                        onClick={onCardClick}
-                    />
+                    >
+                        <DraftCard
+                            key={draft.id}
+                            coverUid={draft.assets.at(0)!.asset_uid}
+                            title={draft.title}
+                            content={draft.content}
+                            creation={draft.creation_time}
+                            modification={draft.modification_time}
+                            onClick={onCardClick}
+                        />
+                    </Collapse.Panel>
                 ))}
                 <InfiniteScroll
                     loadMore={loadMore}
@@ -139,7 +156,7 @@ export function DraftList({
                 >
                     <InfiniteScrollDirect hasMore={hasMore} />
                 </InfiniteScroll>
-            </div>
+            </Collapse>
         </PullRefresh>
     );
 }

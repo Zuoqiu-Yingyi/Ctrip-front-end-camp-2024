@@ -65,17 +65,22 @@
         }
     },
     "admin-title": "後台審核系統",
+    "album": "相簿",
     "approved": "已通過",
     "aria": {
         "cancel-search": "取消搜尋",
         "card": "遊記卡片",
         "create": "創建",
+        "creation-time": "創建時間",
+        "modification-time": "編輯時間",
         "search": "搜尋"
     },
     "audit": "審核",
     "auto": "自動",
     "avatar": "使用者頭像",
+    "camera": "相機",
     "cancel": "取消",
+    "collapse": "收起",
     "confirm": "確認",
     "confirmed": "確認",
     "content": "內容",
@@ -85,10 +90,17 @@
     "details": "詳情",
     "draft": "草稿",
     "drawing-board": "畫板",
+    "edit": {
+        "draft": {
+            "publish": "發布",
+            "save": "儲存草稿"
+        }
+    },
     "empty": {
         "description": "暫無更多內容"
     },
     "error-tip": "用戶名或密碼錯誤！",
+    "expand": "展開",
     "graffiti": "塗鴉",
     "graffiti-tip": "可以隨手畫點日常生活吧！",
     "home": "首頁",
@@ -104,6 +116,14 @@
         },
         "current-account": {
             "label": "目前帳戶"
+        },
+        "draft": {
+            "content": {
+                "placeholder": "旅行日記的內容"
+            },
+            "title": {
+                "placeholder": "旅行日記的標題"
+            }
         },
         "new-password": {
             "label": "新密碼",
@@ -190,6 +210,7 @@
             "title": "目前用戶未登入"
         }
     },
+    "text": "文字",
     "theme": {
         "dark": {
             "label": "深色"

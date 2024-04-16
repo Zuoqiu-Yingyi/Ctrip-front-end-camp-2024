@@ -61,7 +61,7 @@ export function Draft() {
      */
     const { t } = useTranslation();
     const router = useRouter();
-    const { user } = useStore.getState();
+    const user = useStore((state) => state.user);
 
     const [searching, setSearching] = useState<boolean>(false);
     const [searchInput, setSearchInput] = useState<string>("");
@@ -105,7 +105,7 @@ export function Draft() {
                 {!searching && (
                     <AddSquareOutline
                         onClick={() => {
-                            router.push(PATHNAME.mobile.edit)
+                            router.push(PATHNAME.mobile.edit);
                         }}
                         aria-label={t("aria.create")}
                     />
@@ -135,7 +135,10 @@ export function Draft() {
 
             <MobileContent>
                 {user.loggedIn ? ( //
-                    <DraftList onCardClick={onCardClick} />
+                    <DraftList
+                        searchInput={searchInput}
+                        onCardClick={onCardClick}
+                    />
                 ) : (
                     <NotLoginError />
                 )}

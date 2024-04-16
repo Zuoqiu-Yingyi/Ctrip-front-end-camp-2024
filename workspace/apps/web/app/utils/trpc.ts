@@ -26,7 +26,7 @@ import type { TTrpcRouter } from "@repo/server/src/routers/trpc/router";
 
 type THttpBatchLinkContext = Parameters<typeof httpBatchLink>[0];
 
-const ctx: THttpBatchLinkContext = (() => {
+const context: THttpBatchLinkContext = (() => {
     switch (process.env.NODE_ENV) {
         case "development":
             const context = {
@@ -49,7 +49,7 @@ const ctx: THttpBatchLinkContext = (() => {
 })();
 
 export const trpc = createTRPCClient<TTrpcRouter>({
-    links: [httpBatchLink(ctx)],
+    links: [httpBatchLink(context)],
 });
 export type TRPC = typeof trpc;
 export default trpc;

@@ -16,55 +16,89 @@
  */
 
 "use client";
-import {
-    //
-    useRef,
-    useEffect,
-    useState,
-    useContext,
-} from "react";
-import Image from "next/image";
-import {
-    //
-    Avatar,
-    Button,
-    Modal,
-} from "antd-mobile";
+
 import { useTranslation } from "react-i18next";
+import {
+    //
+    Ellipsis,
+    Image,
+    List,
+    Space,
+    Tag,
+} from "antd-mobile";
+import {
+    AddCircleOutline,
+    //
+    EditFill,
+    EditSOutline,
+} from "antd-mobile-icons";
 
 import styles from "./page.module.scss";
-import { assetsLoader } from "@/utils/image";
+import { uid2path } from "@/utils/image";
+import { TTimestamp_ISO_8601 } from "@/types/response";
+import { timestampFormat } from "@/utils/time";
 
 export function DraftCard({
     //
     coverUid,
     title,
     content,
+    creation,
+    modification,
     onClick,
 }: {
     coverUid: string;
     title: string;
     content: string;
+    creation: TTimestamp_ISO_8601;
+    modification: TTimestamp_ISO_8601;
     onClick: (uid: string) => void;
 }) {
     const { t } = useTranslation();
 
     return (
-        <div className={styles.draft_card}>
-            <div className={styles.image_container}>
+        <List.Item
+            prefix={
                 <Image
-                    src={coverUid}
-                    loader={assetsLoader}
+                    src={uid2path(coverUid)}
                     alt={t("cover")}
-                    className={styles.image}
-                    fill={true}
+                    width="16vw"
+                    className={styles.cover}
+                    fit="contain"
                 />
-            </div>
-            <div className={styles.card_text_container}>
-                <h4 className={styles.card_title}>{title}</h4>
-                <p className={styles.card_content}>{content}</p>
-            </div>
-        </div>
+            }
+            arrow={<EditSOutline />}
+            title={title}
+            description={
+                <Space>
+                    <Tag
+                        color="default"
+                        fill="outline"
+                        aria-label={t("aria.creation-time")}
+                    >
+                        <AddCircleOutline />
+                        &thinsp;
+                        {timestampFormat(creation)}
+                    </Tag>
+                    <Tag
+                        color="primary"
+                        fill="outline"
+                        aria-label={t("aria.modification-time")}
+                    >
+                        <EditFill />
+                        &thinsp;
+                        {timestampFormat(modification)}
+                    </Tag>
+                </Space>
+            }
+        >
+            <Ellipsis
+                direction="end"
+                expandText={t("expand")}
+                collapseText={t("collapse")}
+                content={content}
+            />
+        </List.Item>
     );
 }
 export default DraftCard;

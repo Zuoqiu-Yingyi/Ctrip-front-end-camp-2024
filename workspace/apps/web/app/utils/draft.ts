@@ -17,23 +17,22 @@
 
 import trpc from "./trpc";
 import { handleResponse } from "./help";
+import { IDraft } from "@/types/response";
 
 export async function uploadDraft(draft: any, t = trpc) {
-    const response = await t.client.draft.create.mutate(draft);
-
-    console.log(response);
+    const response = await t.draft.create.mutate(draft);
+    // console.debug(response);
 
     if (handleResponse(response).state === "fail") {
         throw Error("Error");
     }
 
-    return response.data!.draft.id;
+    return (response.data!.draft as unknown as IDraft).id;
 }
 
 export async function uploadSubmit(draftId: number, t = trpc) {
-    const response = await t.client.review.submit.mutate({ draft_id: draftId });
-
-    console.log(response);
+    const response = await t.review.submit.mutate({ draft_id: draftId });
+    // console.debug(response);
 
     if (handleResponse(response).state === "fail") {
         throw Error("Error");

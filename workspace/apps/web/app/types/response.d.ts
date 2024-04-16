@@ -77,7 +77,7 @@ export interface INote {
  */
 export interface IDraft extends INote {
     id: number;
-    modification_time: TTimestamp_ISO_8601;
+    creation_time: TTimestamp_ISO_8601;
     author_id: number;
 }
 

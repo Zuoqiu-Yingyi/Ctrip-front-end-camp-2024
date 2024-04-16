@@ -95,8 +95,8 @@ importers:
         version: 9.0.2
     devDependencies:
       '@dotenvx/dotenvx':
-        specifier: ^0.27.2
-        version: 0.27.2
+        specifier: ^0.33.1
+        version: 0.33.1
       '@repo/utils':
         specifier: workspace:*
         version: link:../../packages/utils
@@ -2107,8 +2107,8 @@ packages:
       kuler: 2.0.0
     dev: true
 
-  /@dotenvx/dotenvx@0.27.2:
-    resolution: {integrity: sha512-5GnLopFQVB/K3L3mm6qmyHDDeBi5/RJLGNQr8rIgMLl3ZP8UeOLYxkZ2GnI/dzGU9JL9eGs1nfQ1MhGl+Vdlsw==}
+  /@dotenvx/dotenvx@0.33.1:
+    resolution: {integrity: sha512-cre8wkj7XYL0whPnWuN4w/nKQTrjlcrKMUg6A/mhQoqe5UQj+ZUtIJXDYgfKgIFTsvjmjgjwgl2J77I+PUgIlQ==}
     hasBin: true
     dependencies:
       '@inquirer/confirm': 2.0.17

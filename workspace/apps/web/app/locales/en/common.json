@@ -65,17 +65,22 @@
         }
     },
     "admin-title": "Background audit system",
+    "album": "Album",
     "approved": "passed",
     "aria": {
         "cancel-search": "Cancel search",
         "card": "travel cards",
         "create": "Create",
+        "creation-time": "creation time",
+        "modification-time": "modification time",
         "search": "Search"
     },
     "audit": "audit",
     "auto": "Automatic",
     "avatar": "Avatar",
+    "camera": "Camera",
     "cancel": "Cancel",
+    "collapse": "Collapse",
     "confirm": "Confirm",
     "confirmed": "confirmed",
     "content": "content",
@@ -85,10 +90,17 @@
     "details": "details",
     "draft": "Draft",
     "drawing-board": "drawing board",
+    "edit": {
+        "draft": {
+            "publish": "Publish",
+            "save": "Save Draft"
+        }
+    },
     "empty": {
         "description": "No more content yet"
     },
     "error-tip": "User name or password error!",
+    "expand": "Expand",
     "graffiti": "graffiti",
     "graffiti-tip": "You can paint some daily life!",
     "home": "Home",
@@ -104,6 +116,14 @@
         },
         "current-account": {
             "label": "Current Account"
+        },
+        "draft": {
+            "content": {
+                "placeholder": "Content of travel diary"
+            },
+            "title": {
+                "placeholder": "Title of travel diary"
+            }
         },
         "new-password": {
             "label": "New Password",
@@ -190,6 +210,7 @@
             "title": "The current user is not logged in"
         }
     },
+    "text": "Text",
     "theme": {
         "dark": {
             "label": "Dark"

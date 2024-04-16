@@ -15,17 +15,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { origin } from "./env";
+import { TTimestamp_ISO_8601 } from "@/types/response";
+import dayjs from "dayjs";
 
-export async function upload<R = any>(
-    //
-    formData: FormData,
-) {
-    const response = await fetch(`${origin}/assets/upload`, {
-        method: "POST",
-        body: formData,
-        credentials: "include",
-    });
-
-    return response.json() as R;
+export function timestampFormat(timestamp: TTimestamp_ISO_8601): string {
+    return dayjs(timestamp).format("YYYY-MM-DD HH:mm");
 }
