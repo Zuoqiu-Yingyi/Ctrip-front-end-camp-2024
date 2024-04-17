@@ -95,8 +95,8 @@ importers:
         version: 9.0.2
     devDependencies:
       '@dotenvx/dotenvx':
-        specifier: ^0.33.1
-        version: 0.33.1
+        specifier: ^0.34.0
+        version: 0.34.0
       '@repo/utils':
         specifier: workspace:*
         version: link:../../packages/utils
@@ -2107,8 +2107,8 @@ packages:
       kuler: 2.0.0
     dev: true
 
-  /@dotenvx/dotenvx@0.33.1:
-    resolution: {integrity: sha512-cre8wkj7XYL0whPnWuN4w/nKQTrjlcrKMUg6A/mhQoqe5UQj+ZUtIJXDYgfKgIFTsvjmjgjwgl2J77I+PUgIlQ==}
+  /@dotenvx/dotenvx@0.34.0:
+    resolution: {integrity: sha512-0PiQUTGicI9M+pl9/GJpmzwa6E/MU0SI+K8JLTlplPIfeRv471Nd8qPBdBujCBH4kPt5maXvV5hCtdq+gV0pJw==}
     hasBin: true
     dependencies:
       '@inquirer/confirm': 2.0.17
@@ -9097,7 +9097,7 @@ packages:
     resolution: {integrity: sha512-/5CMN3T0R4XTj4DcGaexo+roZSdSFW/0AOOTROrjxzCG1wrWXEsGbRKevjlIL+ZDE4sZlJr5ED4YW0yqmkK+eA==}
     dependencies:
       hosted-git-info: 2.8.9
-      resolve: 1.22.8
+      resolve: 1.22.2
       semver: 5.7.2
       validate-npm-package-license: 3.0.4
     dev: true

@@ -47,6 +47,7 @@ erDiagram
   String content
   DateTime creation_time
   DateTime modification_time
+  Int status "nullable"
   Int author_id FK
   Int coordinate_id FK "nullable"
   Boolean deleted
@@ -231,6 +232,13 @@ erDiagram
   - `content`: 草稿内容 | Draft content
   - `creation_time`: 草稿创建时间 | Draft creation time
   - `modification_time`: 草稿修改时间 | Draft modification time
+  - `status`
+    > 发布状态 | Post status
+    > - `NULL`: 未发布 (默认) | Unpublished (default)
+    > - `0`: 待审核 | Pending
+    > - `1`: 已通过 | Passed
+    > - `2`: 未通过 | Failed
+    > - `3`: 已取消 | Canceled
   - `author_id`: 作者 ID | Author ID
   - `coordinate_id`: 位置 ID | Coordinate ID
   - `deleted`: 是否已逻辑删除 | Whether it has been logically deleted

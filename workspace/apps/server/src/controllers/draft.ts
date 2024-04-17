@@ -39,8 +39,11 @@ const DRAFT_SELECT: Prisma.DraftSelect = {
     id: true,
     title: true,
     content: true,
+
     creation_time: true,
     modification_time: true,
+
+    status: true,
     author_id: true,
 
     coordinate: {

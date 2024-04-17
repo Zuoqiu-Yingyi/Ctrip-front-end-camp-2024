@@ -1,5 +1,9 @@
 # 更改日志 | Change log
 
+## 2024-04-18
+
+- 数据库草稿表添加字段 `status` | Add field `status` to the database draft table
+
 ## 2024-04-17
 
 - 完善草稿列表页面 | Improve draft list page
