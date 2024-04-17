@@ -15,10 +15,29 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+import { useStore } from "@/contexts/store";
+
 export enum Theme {
     auto = "auto",
     light = "light",
     dark = "dark",
+}
+
+export type TThemeMode = "light" | "dark";
+
+/**
+ * 获取主题模式
+ *
+ * REF: https://developer.mozilla.org/en-US/docs/Web/API/MediaQueryListEvent/matches
+ */
+export function getThemeMode(): TThemeMode {
+    if ("matchMedia" in globalThis) {
+        return window.matchMedia("(prefers-color-scheme: light)").matches //
+            ? Theme.light
+            : Theme.dark;
+    } else {
+        return Theme.light;
+    }
 }
 
 /**
@@ -29,42 +48,31 @@ var auto: boolean = true;
 /**
  * 设置主题模式
  */
-export function setTheme(theme: Theme.light | Theme.dark) {
-    switch (theme) {
-        default:
-        case Theme.light:
-            // REF: https://mobile.ant.design/zh/guide/dark-mode
-            document.documentElement.setAttribute("data-prefers-color-scheme", "light");
-            break;
-        case Theme.dark:
-            // REF: https://mobile.ant.design/zh/guide/dark-mode
-            document.documentElement.setAttribute("data-prefers-color-scheme", "dark");
-            break;
-    }
+export function setThemeMode(mode: TThemeMode) {
+    // REF: https://mobile.ant.design/zh/guide/dark-mode
+    document.documentElement.setAttribute("data-prefers-color-scheme", mode);
 }
 
 /**
  * 更改主题模式
  * @param theme 主题模式
  */
-export function changeTheme(theme: Theme) {
+export function changeTheme(theme: Theme): TThemeMode {
     switch (theme) {
         case Theme.light:
-        case Theme.dark:
+        case Theme.dark: {
             auto = false;
-            setTheme(theme);
-            break;
+            setThemeMode(theme);
+            return theme;
+        }
 
         case Theme.auto:
-        default:
+        default: {
             auto = true;
-            setTheme(
-                // REF: https://developer.mozilla.org/en-US/docs/Web/API/MediaQueryListEvent/matches
-                window.matchMedia("(prefers-color-scheme: light)").matches //
-                    ? Theme.light
-                    : Theme.dark,
-            );
-            break;
+            const mode = getThemeMode();
+            setThemeMode(mode);
+            return mode;
+        }
     }
 }
 
@@ -74,9 +82,12 @@ if ("matchMedia" in globalThis) {
      */
     // REF: https://developer.mozilla.org/en-US/docs/Web/API/MediaQueryListEvent/matches
     globalThis.matchMedia("(prefers-color-scheme: light)").addEventListener("change", (e) => {
-        console.debug(e.matches);
+        // console.debug(e.matches);
+
         if (auto) {
-            setTheme(e.matches ? Theme.light : Theme.dark);
+            const mode = e.matches ? Theme.light : Theme.dark;
+            setThemeMode(mode);
+            useStore((state) => state.setMode)(mode);
         }
     });
 }

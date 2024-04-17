@@ -81,6 +81,7 @@
             "preview": "预览草稿",
             "review-status": "查看发布状态"
         },
+        "menu": "菜单",
         "modification-time": "编辑时间",
         "search": "搜索"
     },
@@ -176,9 +177,11 @@
     "keep-login": "保持登录状态",
     "label-brush-radius": "粗细",
     "labels": {
+        "create": "新建",
         "edit": "编辑",
         "preview": "预览",
-        "review-status": "发布状态"
+        "review-status": "发布状态",
+        "search": "搜索"
     },
     "loading": "加载中",
     "login": "登录",

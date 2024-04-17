@@ -27,6 +27,7 @@ import { useTranslation } from "react-i18next";
 import {
     //
     NavBar,
+    Popover,
     SearchBar,
     Space,
 } from "antd-mobile";
@@ -34,6 +35,7 @@ import {
     //
     AddSquareOutline,
     CloseCircleOutline,
+    MoreOutline,
     SearchOutline,
 } from "antd-mobile-icons";
 
@@ -61,7 +63,11 @@ export function Draft() {
      */
     const { t } = useTranslation();
     const router = useRouter();
-    const user = useStore((state) => state.user);
+    const {
+        //
+        user,
+        mode,
+    } = useStore.getState();
 
     const [searching, setSearching] = useState<boolean>(false);
     const [searchInput, setSearchInput] = useState<string>("");
@@ -82,25 +88,34 @@ export function Draft() {
     const nav_bar_right = (
         <div style={{ fontSize: 24 }}>
             <Space style={{ "--gap": "16px" }}>
-                {searching && (
+                {searching ? (
                     <CloseCircleOutline
                         onClick={onSearchBarCancel}
                         aria-label={t("aria.cancel-search")}
                     />
-                )}
-                {!searching && (
-                    <SearchOutline
-                        onClick={onSearchButtonClick}
-                        aria-label={t("aria.search")}
-                    />
-                )}
-                {!searching && (
-                    <AddSquareOutline
-                        onClick={() => {
-                            router.push(PATHNAME.mobile.edit);
-                        }}
-                        aria-label={t("aria.create")}
-                    />
+                ) : (
+                    // REF: https://mobile.ant.design/zh/components/popover
+                    <Popover.Menu
+                        actions={[
+                            {
+                                icon: <SearchOutline />,
+                                text: t("labels.search"),
+                                onClick: onSearchButtonClick,
+                            },
+                            {
+                                icon: <AddSquareOutline />,
+                                text: t("labels.create"),
+                                onClick: () => {
+                                    router.push(PATHNAME.mobile.edit);
+                                },
+                            },
+                        ]}
+                        mode={mode}
+                        trigger="click"
+                        placement="bottom-end"
+                    >
+                        <MoreOutline aria-label={t("aria.menu")} />
+                    </Popover.Menu>
                 )}
             </Space>
         </div>

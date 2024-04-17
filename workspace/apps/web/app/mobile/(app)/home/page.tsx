@@ -22,11 +22,13 @@ import { useTranslation } from "react-i18next";
 import {
     //
     NavBar,
+    Popover,
     SearchBar,
     Space,
 } from "antd-mobile";
 import {
     CloseCircleOutline,
+    MoreOutline,
     //
     SearchOutline,
 } from "antd-mobile-icons";
@@ -37,9 +39,11 @@ import {
     MobileContent,
 } from "@/mobile/components/MobileLayout";
 import PublishList from "./PublishList";
+import { useStore } from "@/contexts/store";
 
 export default function HomePage() {
     const { t } = useTranslation();
+    const { mode } = useStore.getState();
 
     const [searching, setSearching] = useState<boolean>(false);
     const [searchInput, setSearchInput] = useState<string>("");
@@ -66,10 +70,21 @@ export default function HomePage() {
                         aria-label={t("aria.cancel-search")}
                     />
                 ) : (
-                    <SearchOutline
-                        onClick={onSearchButtonClick}
-                        aria-label={t("aria.search")}
-                    />
+                    // REF: https://mobile.ant.design/zh/components/popover
+                    <Popover.Menu
+                        actions={[
+                            {
+                                icon: <SearchOutline />,
+                                text: t("labels.search"),
+                                onClick: onSearchButtonClick,
+                            },
+                        ]}
+                        mode={mode}
+                        trigger="click"
+                        placement="bottom-end"
+                    >
+                        <MoreOutline aria-label={t("aria.menu")} />
+                    </Popover.Menu>
                 )}
             </Space>
         </div>

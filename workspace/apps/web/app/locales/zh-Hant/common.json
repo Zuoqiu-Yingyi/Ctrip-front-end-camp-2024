@@ -78,6 +78,7 @@
             "preview": "預覽草稿",
             "review-status": "查看發布狀態"
         },
+        "menu": "選單",
         "modification-time": "編輯時間",
         "search": "搜尋"
     },
@@ -172,9 +173,11 @@
     "keep-login": "保持登入狀態",
     "label-brush-radius": "粗細",
     "labels": {
+        "create": "新建",
         "edit": "編輯",
         "preview": "預覽",
-        "review-status": "發布狀態"
+        "review-status": "發布狀態",
+        "search": "搜尋"
     },
     "loading": "載入中",
     "login": "登錄",
