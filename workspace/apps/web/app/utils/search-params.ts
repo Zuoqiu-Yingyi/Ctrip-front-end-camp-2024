@@ -15,15 +15,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-export const PATHNAME = {
-    _: "/",
-    mobile: {
-        _: "/mobile/",
-        home: "/mobile/home/",
-        draft: "/mobile/draft/",
-        user: "/mobile/user/",
-
-        detail: "/mobile/detail/",
-        edit: "/mobile/edit/",
-    } as const,
-} as const;
+export enum DetailType {
+    DRAFT = "draft",
+    REVIEW = "review",
+    PUBLISH = "publish",
+}

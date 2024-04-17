@@ -16,6 +16,7 @@
  */
 
 import type trpc from "@/utils/trpc";
+import type { ReviewStatus } from "@repo/server/src/types/review";
 
 export type TPublishPagingQueryResponse = Awaited<ReturnType<typeof trpc.publish.paging.query>>;
 export type TPublish = NonNullable<TPublishPagingQueryResponse["data"]>["publishs"][0];
@@ -29,16 +30,6 @@ export type TTimestamp_ISO_8601 = string;
  * Cuid 格式的 UID
  */
 export type TCuid = string;
-
-/**
- * 审批状态
- */
-export enum ReviewStatus {
-    padding = 0,
-    passed = 1,
-    failed = 2,
-    canceled = 3,
-}
 
 /**
  * 资源文件
@@ -78,7 +69,11 @@ export interface INote {
 export interface IDraft extends INote {
     id: number;
     creation_time: TTimestamp_ISO_8601;
+    status: ReviewStatus | null;
     author_id: number;
+    publish?: {
+        uid: TCuid;
+    };
 }
 
 /**

@@ -72,6 +72,12 @@
         "card": "遊記卡片",
         "create": "創建",
         "creation-time": "創建時間",
+        "draft": {
+            "delete": "刪除草稿",
+            "edit": "編輯草稿",
+            "preview": "預覽草稿",
+            "review-status": "查看發布狀態"
+        },
         "modification-time": "編輯時間",
         "search": "搜尋"
     },
@@ -165,6 +171,11 @@
     "item-user": "用戶",
     "keep-login": "保持登入狀態",
     "label-brush-radius": "粗細",
+    "labels": {
+        "edit": "編輯",
+        "preview": "預覽",
+        "review-status": "發布狀態"
+    },
     "loading": "載入中",
     "login": "登錄",
     "login-signup": "登入 / 註冊",
@@ -187,6 +198,13 @@
     "reject-reason": "拒絕理由",
     "rejected": "已拒絕",
     "remember": "記住我",
+    "review-status": {
+        "canceled": "已取消",
+        "failed": "未通過",
+        "padding": "待審核",
+        "passed": "已通過",
+        "unpublished": "未發布"
+    },
     "search": {
         "draft": {
             "placeholder": "請輸入待搜尋的關鍵字"

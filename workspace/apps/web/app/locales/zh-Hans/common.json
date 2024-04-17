@@ -75,6 +75,12 @@
         "card": "游记卡片",
         "create": "创建",
         "creation-time": "创建时间",
+        "draft": {
+            "delete": "删除草稿",
+            "edit": "编辑草稿",
+            "preview": "预览草稿",
+            "review-status": "查看发布状态"
+        },
         "modification-time": "编辑时间",
         "search": "搜索"
     },
@@ -169,6 +175,11 @@
     "item-user": "用户",
     "keep-login": "保持登录状态",
     "label-brush-radius": "粗细",
+    "labels": {
+        "edit": "编辑",
+        "preview": "预览",
+        "review-status": "发布状态"
+    },
     "loading": "加载中",
     "login": "登录",
     "login-signup": "登录 / 注册",
@@ -191,6 +202,13 @@
     "reject-reason": "拒绝理由",
     "rejected": "已拒绝",
     "remember": "记住我",
+    "review-status": {
+        "canceled": "已取消",
+        "failed": "未通过",
+        "padding": "待审核",
+        "passed": "已通过",
+        "unpublished": "未发布"
+    },
     "search": {
         "draft": {
             "placeholder": "请输入待搜索的关键字"

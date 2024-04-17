@@ -18,7 +18,6 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { useTranslation } from "react-i18next";
 import {
     //
@@ -37,12 +36,11 @@ import {
     MobileHeader,
     MobileContent,
 } from "@/mobile/components/MobileLayout";
-import InfiniteScrollContent from "./PublishList";
+import PublishList from "./PublishList";
 
 export default function HomePage() {
     const { t } = useTranslation();
 
-    const router = useRouter();
     const [searching, setSearching] = useState<boolean>(false);
     const [searchInput, setSearchInput] = useState<string>("");
 
@@ -57,13 +55,6 @@ export default function HomePage() {
     function onSearchBarCancel() {
         setSearchInput("");
         setSearching(false);
-    }
-
-    /**
-     * 点击游记卡片
-     */
-    function onCardClick(uid: string) {
-        router.push(`/mobile/detail?uid=${uid}`);
     }
 
     const nav_bar_right = (
@@ -104,10 +95,7 @@ export default function HomePage() {
                 </NavBar>
             </MobileHeader>
             <MobileContent>
-                <InfiniteScrollContent
-                    searchInput={searchInput}
-                    onCardClick={onCardClick}
-                />
+                <PublishList searchInput={searchInput} />
             </MobileContent>
         </>
     );

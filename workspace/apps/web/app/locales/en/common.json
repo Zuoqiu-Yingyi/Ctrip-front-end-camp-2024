@@ -72,6 +72,12 @@
         "card": "travel cards",
         "create": "Create",
         "creation-time": "creation time",
+        "draft": {
+            "delete": "Delete draft",
+            "edit": "Edit draft",
+            "preview": "Preview draft",
+            "review-status": "View publishing status"
+        },
         "modification-time": "modification time",
         "search": "Search"
     },
@@ -165,6 +171,11 @@
     "item-user": "username",
     "keep-login": "Keep me logged in",
     "label-brush-radius": "thickness",
+    "labels": {
+        "edit": "Edit",
+        "preview": "Preview",
+        "review-status": "Post status"
+    },
     "loading": "Loading",
     "login": "Log in",
     "login-signup": "Log in / Sign up",
@@ -187,6 +198,13 @@
     "reject-reason": "reject reason",
     "rejected": "failed",
     "remember": "remember me",
+    "review-status": {
+        "canceled": "Cancelled",
+        "failed": "Not pass",
+        "padding": "Pending review",
+        "passed": "Passed",
+        "unpublished": "Unpublished"
+    },
     "search": {
         "draft": {
             "placeholder": "Please enter the keyword to be searched"

@@ -79,14 +79,6 @@ export function Draft() {
         setSearchInput(value);
     }
 
-    /**
-     * 点击游记卡片
-     */
-    function onCardClick(uid: string) {
-        // TODO: 跳转到卡片详情
-        // router.push(`/mobile/detail?uid=${uid}`);
-    }
-
     const nav_bar_right = (
         <div style={{ fontSize: 24 }}>
             <Space style={{ "--gap": "16px" }}>
@@ -135,10 +127,7 @@ export function Draft() {
 
             <MobileContent>
                 {user.loggedIn ? ( //
-                    <DraftList
-                        searchInput={searchInput}
-                        onCardClick={onCardClick}
-                    />
+                    <DraftList searchInput={searchInput} />
                 ) : (
                     <NotLoginError />
                 )}

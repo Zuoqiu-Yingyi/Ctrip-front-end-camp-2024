@@ -3,6 +3,7 @@
 ## 2024-04-18
 
 - 数据库草稿表添加字段 `status` | Add field `status` to the database draft table
+- 改进草稿列表页面 | Improve draft list page
 
 ## 2024-04-17
 

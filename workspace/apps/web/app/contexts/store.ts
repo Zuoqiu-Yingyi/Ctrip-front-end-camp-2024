@@ -160,6 +160,7 @@ export const useStore = create<IStates>()(
                                 case 403:
                                 default:
                                     store.state.user = { loggedIn: false };
+                                    store.state.drafts = [];
                                     break;
                             }
                         }

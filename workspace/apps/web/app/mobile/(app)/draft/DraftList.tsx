@@ -36,8 +36,9 @@ import { useStore } from "@/contexts/store";
 import { ClientContext } from "@/contexts/client";
 import PullRefresh from "@/mobile/components/PullRefresh";
 
-import styles from "./page.module.scss";
 import DraftCard from "./DraftCard";
+import DraftCardTitle from "./DraftCardTitle";
+
 import {
     //
     handleError,
@@ -67,10 +68,8 @@ export function InfiniteScrollDirect({ hasMore }: { hasMore?: boolean }) {
 export function DraftList({
     //
     searchInput,
-    onCardClick,
 }: {
     searchInput: string;
-    onCardClick: (uid: string) => void;
 }): JSX.Element {
     const { trpc } = useContext(ClientContext);
     const {
@@ -137,26 +136,32 @@ export function DraftList({
                 {data.map((draft) => (
                     <Collapse.Panel
                         key={String(draft.id)}
-                        title={draft.title}
+                        title={
+                            <DraftCardTitle
+                                title={draft.title}
+                                status={draft.status}
+                                published={!!draft.publish}
+                            />
+                        }
                     >
                         <DraftCard
                             key={draft.id}
+                            id={draft.id}
                             coverUid={draft.assets.at(0)!.asset_uid}
                             title={draft.title}
                             content={draft.content}
                             creation={draft.creation_time}
                             modification={draft.modification_time}
-                            onClick={onCardClick}
                         />
                     </Collapse.Panel>
                 ))}
-                <InfiniteScroll
-                    loadMore={loadMore}
-                    hasMore={hasMore}
-                >
-                    <InfiniteScrollDirect hasMore={hasMore} />
-                </InfiniteScroll>
             </Collapse>
+            <InfiniteScroll
+                loadMore={loadMore}
+                hasMore={hasMore}
+            >
+                <InfiniteScrollDirect hasMore={hasMore} />
+            </InfiniteScroll>
         </PullRefresh>
     );
 }
