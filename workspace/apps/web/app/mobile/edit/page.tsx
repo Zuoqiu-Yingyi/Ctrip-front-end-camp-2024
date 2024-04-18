@@ -37,6 +37,7 @@ import {
     Space,
     Button,
     SpinLoading,
+    Dialog,
 } from "antd-mobile";
 import {
     //
@@ -94,9 +95,42 @@ export default function EditPage(): JSX.Element {
      */
     async function onBack() {
         if (changed.current.size > 0) {
-            // TODO: 当前更改未保存, 需二次确认
+            // 当前更改未保存, 需二次确认
+            const confirm = await new Promise<boolean>((resolve) => {
+                // REF: https://mobile.ant.design/zh/components/dialog#dialogshow
+                const handler = Dialog.show({
+                    title: t("actions.go-back-without-saving.confirm.title"),
+                    content: t("actions.go-back-without-saving.confirm.content"),
+                    actions: [
+                        [
+                            {
+                                key: "cancel",
+                                text: t("cancel"),
+                                onClick: () => {
+                                    handler.close();
+                                    resolve(false);
+                                },
+                            },
+                            {
+                                key: "confirm",
+                                text: t("leave"),
+                                onClick: () => {
+                                    handler.close();
+                                    resolve(true);
+                                },
+                                bold: true,
+                                danger: true,
+                            },
+                        ],
+                    ],
+                });
+            });
+            if (confirm) {
+                router.back();
+            }
+        } else {
+            router.back();
         }
-        router.back();
     }
 
     /**

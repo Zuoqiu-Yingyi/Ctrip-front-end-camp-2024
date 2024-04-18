@@ -60,6 +60,11 @@
                     "success": "Draft created"
                 }
             },
+            "publish": {
+                "prompt": {
+                    "success": "Publication request submitted"
+                }
+            },
             "update": {
                 "prompt": {
                     "success": "Draft updated"
@@ -67,6 +72,11 @@
             }
         },
         "extra": "Please select what you want to do",
+        "go-back-without-saving": {
+            "confirm": {
+                "content": "The current draft is not saved and all changes will be lost if you leave."
+            }
+        },
         "login": {
             "prompt": {
                 "incorrect": {
@@ -102,6 +112,7 @@
     "album": "Album",
     "approved": "passed",
     "aria": {
+        "approval-time": "Review time",
         "cancel": "Cancel",
         "cancel-search": "Cancel search",
         "card": "travel cards",
@@ -126,6 +137,7 @@
         "modification-time": "modification time",
         "open": "Open",
         "search": "Search",
+        "submission-time": "Submission time",
         "take-photo": "Photograph"
     },
     "audit": "audit",
@@ -256,6 +268,7 @@
         "review-status": "Post status",
         "search": "Search"
     },
+    "leave": "Leave",
     "loading": "Loading",
     "login": "Log in",
     "login-signup": "Log in / Sign up",

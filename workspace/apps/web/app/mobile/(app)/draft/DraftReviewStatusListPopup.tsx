@@ -24,17 +24,33 @@ import {
 import { useTranslation } from "react-i18next";
 
 import {
-    ErrorBlock,
+    Ellipsis,
     //
+    ErrorBlock,
+    List,
     Popup,
     Skeleton,
-    Toast,
+    Space,
+    Tag,
 } from "antd-mobile";
+import {
+    //
+    EditFill,
+    EyeOutline,
+    UploadOutline,
+} from "antd-mobile-icons";
 
 import { ClientContext } from "@/contexts/client";
-import { handleError, handleResponse } from "@/utils/message";
+import {
+    //
+    handleError,
+    handleResponse,
+} from "@/utils/message";
 import { IReview } from "@/types/response";
+import { timestampFormat } from "@/utils/time";
+
 import styles from "./page.module.scss";
+import DraftStatusTag from "./DraftStatusTag";
 
 /**
  * 用户更改密码弹出层
@@ -72,7 +88,6 @@ export function DraftReviewStatusListPopup({
         setLoading(true);
 
         try {
-            // TODO: 获取审核列表
             const response = await trpc.review.submitted.query({ draft_id: id });
             handleResponse(response);
             const reviews: IReview[] = (response.data?.reviews as any[]) ?? [];
@@ -105,8 +120,59 @@ export function DraftReviewStatusListPopup({
                     />
                 </>
             ) : data.length > 0 ? (
-                // TODO: 渲染审核列表
-                <></>
+                <List className={styles.review_list}>
+                    {data.map((review) => {
+                        return (
+                            <List.Item
+                                title={
+                                    <Space>
+                                        <DraftStatusTag status={review.status} />
+                                        {review.approval_time && (
+                                            <Tag
+                                                color="primary"
+                                                fill="outline"
+                                                aria-label={t("aria.approval-time")}
+                                            >
+                                                <EyeOutline />
+                                                &thinsp;
+                                                {timestampFormat(review.approval_time)}
+                                            </Tag>
+                                        )}
+                                    </Space>
+                                }
+                                description={
+                                    <Space>
+                                        <Tag
+                                            color="default"
+                                            fill="outline"
+                                            aria-label={t("aria.submission-time")}
+                                        >
+                                            <UploadOutline />
+                                            &thinsp;
+                                            {timestampFormat(review.submission_time)}
+                                        </Tag>
+                                        <Tag
+                                            color="primary"
+                                            fill="outline"
+                                            aria-label={t("aria.modification-time")}
+                                        >
+                                            <EditFill />
+                                            &thinsp;
+                                            {timestampFormat(review.modification_time)}
+                                        </Tag>
+                                    </Space>
+                                }
+                            >
+                                <Ellipsis
+                                    direction="end"
+                                    expandText={t("expand")}
+                                    collapseText={t("collapse")}
+                                    content={review.content}
+                                />
+                            </List.Item>
+                        );
+                    })}
+                </List>
             ) : (
                 <ErrorBlock
                     image="/icons/empty.svg"

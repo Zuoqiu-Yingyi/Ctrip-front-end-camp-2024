@@ -183,7 +183,7 @@ export default function SubmitInfoProvider({ children }: { children: React.React
      * 更新草稿
      */
     async function uploadTravelNote(type: "draft" | "publish") {
-        console.debug(fileList.length);
+        // console.debug(fileList.length);
 
         if (title === "") {
             Toast.show({
@@ -276,9 +276,16 @@ export default function SubmitInfoProvider({ children }: { children: React.React
                 }
                 break;
 
-            case "publish":
-                await publishDraft(assets);
+            case "publish": {
+                const state = await publishDraft(assets);
+                if (state) {
+                    Toast.show({
+                        content: t("actions.draft.publish.prompt.success"),
+                        icon: "success",
+                    });
+                }
                 break;
+            }
         }
     }
 

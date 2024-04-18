@@ -60,6 +60,11 @@
                     "success": "草稿已建立"
                 }
             },
+            "publish": {
+                "prompt": {
+                    "success": "已提交發布申請"
+                }
+            },
             "update": {
                 "prompt": {
                     "success": "草稿已更新"
@@ -67,6 +72,11 @@
             }
         },
         "extra": "請選擇你要進行操作",
+        "go-back-without-saving": {
+            "confirm": {
+                "content": "目前草稿未儲存，離開後將遺失所有變更。"
+            }
+        },
         "login": {
             "prompt": {
                 "incorrect": {
@@ -102,6 +112,7 @@
     "album": "相簿",
     "approved": "已通過",
     "aria": {
+        "approval-time": "審閱時間",
         "cancel": "取消",
         "cancel-search": "取消搜尋",
         "card": "遊記卡片",
@@ -126,6 +137,7 @@
         "modification-time": "編輯時間",
         "open": "打開",
         "search": "搜尋",
+        "submission-time": "提交時間",
         "take-photo": "拍照"
     },
     "audit": "審核",
@@ -256,6 +268,7 @@
         "review-status": "發布狀態",
         "search": "搜尋"
     },
+    "leave": "離開",
     "loading": "載入中",
     "login": "登錄",
     "login-signup": "登入 / 註冊",

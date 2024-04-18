@@ -81,6 +81,7 @@ export interface IDraft extends INote {
  */
 export interface IReview extends INote {
     id: number;
+    submission_time: TTimestamp_ISO_8601;
     status: ReviewStatus;
     comment?: string;
     approval_time?: TTimestamp_ISO_8601;
