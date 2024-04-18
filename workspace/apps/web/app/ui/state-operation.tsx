@@ -20,25 +20,29 @@ import React, { useContext, useState } from "react";
 import { Flex, Typography, Button, Popconfirm, Spin, notification } from "antd";
 import { MessageContext } from "@/contexts/messageContext";
 import RejectModal from "@/ui/reject-modal";
-import { AuthContext } from "../contexts/authContext";
 import { useTranslation } from "react-i18next";
+import { AccessorRole } from "@repo/server/src/utils/role";
+import { useStore } from "@/contexts/adminStore";
 
 const { Title, Paragraph } = Typography;
 
 type NotificationType = "success" | "error";
 
-export default function StateOperation({ stateReceived, id, rejectReason }: { stateReceived: "success" | "fail" | "waiting"; id: number; rejectReason?: string }): JSX.Element {
+export default function StateOperation({ stateReceived, id, rejectReason, uid }: { stateReceived: "success" | "fail" | "waiting"; id: number; rejectReason?: string; uid?: string }): JSX.Element {
     const { operateReview, delTravelNote } = useContext(MessageContext);
 
-    const { user, userInfo } = useContext(AuthContext);
+    const {
+        //
+        user,
+    } = useStore.getState();
 
-    const { t, i18n } = useTranslation();
-
-    const [api] = notification.useNotification();
+    const { t } = useTranslation();
 
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     const [singleLoading, setSingleLoading] = useState(false);
+
+    const [delLoading, setDelLoading] = useState(false);
 
     let type: "secondary" | "success" | "warning" | "danger" = "secondary";
 
@@ -60,11 +64,32 @@ export default function StateOperation({ stateReceived, id, rejectReason }: { st
         text = t("pending");
     }
 
-    const openNotification = (type: NotificationType) => {
-        api[type]({
-            placement: "bottomLeft",
-            message: type === "success" ? "审核成功" : "审核失败",
-        });
+    const openReviewNotification = (type: NotificationType) => {
+        if (type === "success") {
+            notification.success({
+                message: t("aduit-status.success"),
+                placement: "bottomLeft",
+            });
+        } else {
+            notification.error({
+                message: t("aduit-status.fail"),
+                placement: "bottomLeft",
+            });
+        }
+    };
+
+    const openDelNotification = (type: NotificationType) => {
+        if (type === "success") {
+            notification.success({
+                message: t("del-status.success"),
+                placement: "bottomLeft",
+            });
+        } else {
+            notification.error({
+                message: t("del-status.fail"),
+                placement: "bottomLeft",
+            });
+        }
     };
 
     const handleOk = async (reason: string) => {
@@ -73,9 +98,9 @@ export default function StateOperation({ stateReceived, id, rejectReason }: { st
         setSingleLoading(true);
         try {
             await operateReview(id, "reject", reason);
-            openNotification("success");
+            openReviewNotification("success");
         } catch (error) {
-            openNotification("error");
+            openReviewNotification("error");
         }
         setSingleLoading(false);
     };
@@ -89,18 +114,26 @@ export default function StateOperation({ stateReceived, id, rejectReason }: { st
             vertical
             style={{ width: 130, justifyContent: "space-around", alignItems: "center", marginLeft: 20 }}
         >
-            {userInfo.current?.accessRole === 1 && (
+            {user.role === AccessorRole.Administrator && stateReceived === "success" && (
                 <Popconfirm
                     title={t("delete")}
                     description={t("delete-tip")}
-                    onCancel={() => {
-                        delTravelNote();
+                    onConfirm={async () => {
+                        setDelLoading(true);
+                        try {
+                            await delTravelNote(id, uid);
+                            openDelNotification("success");
+                        } catch (error) {
+                            openDelNotification("error");
+                        }
+                        setDelLoading(false);
                     }}
                     okText={t("confirmed")}
                     cancelText={t("cancel")}
                 >
                     <Button
                         danger
+                        loading={delLoading}
                         size="small"
                         style={{ marginLeft: 90 }}
                     >
@@ -126,9 +159,9 @@ export default function StateOperation({ stateReceived, id, rejectReason }: { st
                             setSingleLoading(true);
                             try {
                                 await operateReview(id, "pass");
-                                openNotification("success");
+                                openReviewNotification("success");
                             } catch (error) {
-                                openNotification("error");
+                                openReviewNotification("error");
                             }
                             setSingleLoading(false);
                         }}

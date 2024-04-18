@@ -18,12 +18,43 @@
 "use client";
 import { Flex } from "antd";
 import CardWrapper from "@/ui/number-card";
+import { Line } from '@ant-design/charts';
+import dayjs from "dayjs";
+import Title from "antd/es/typography/Title";
+import { useTranslation } from "react-i18next";
 
 export default function OverviewPage() {
+
+  const { t } = useTranslation();
+
+  var dateTime=new Date();
+
+  dateTime = new Date(dateTime.setDate(dateTime.getDate()-5));
+
+  const data = Array.from({length:5}, (_, index) => ({
+    date: dayjs(new Date(dateTime.setDate(dateTime.getDate()+1))).format("MM-DD"),
+    value: index
+  }))
+  
+  const config = {
+    data,
+    height: 400,
+    xField: 'date',
+    yField: 'value',
+  };
+
+
     return (
         <Flex>
             <CardWrapper />
-            <div className="flex-1"></div>
+            <div className="flex flex-1 flex-col justify-end items-center">
+            <Title
+                level={4}
+            >
+                {t("recent-submission-number")}
+            </Title>
+              <Line {...config} />
+            </div>
         </Flex>
     );
 }

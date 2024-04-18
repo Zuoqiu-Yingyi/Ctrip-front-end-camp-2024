@@ -223,5 +223,20 @@
     "update-time": "更新時間",
     "user": "使用者",
     "username": "使用者名稱",
-    "visitor": "遊客"
+    "visitor": "遊客",
+    "total": "縂數",
+    "recent-submission-number": "近日提交人數",
+    "aduit-status": {
+        "success": "審核成功",
+        "fail": "審核失敗"
+    },
+    "time": {
+        "commit-time": "提交時間",
+        "change-time": "更改時間",
+        "review-time": "審核時間"
+    },
+    "del-status": {
+        "success": "刪除成功",
+        "fail": "刪除失敗"
+    }
 }

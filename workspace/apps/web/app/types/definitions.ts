@@ -37,6 +37,7 @@ export type TravelNote = {
     modificationTime: string;
     approvalTime: string;
     comment?: string;
+    publishUId?: string
 };
 
 export type TimeMessage = {

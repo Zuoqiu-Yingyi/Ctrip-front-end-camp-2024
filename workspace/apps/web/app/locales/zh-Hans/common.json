@@ -227,5 +227,20 @@
     "update-time": "更新时间",
     "user": "用户",
     "username": "用户名",
-    "visitor": "游客"
+    "visitor": "游客",
+    "total": "总数",
+    "recent-submission-number": "近日提交人数",
+    "aduit-status": {
+        "success": "审核成功",
+        "fail": "审核失败"
+    },
+    "time": {
+        "commit-time": "提交时间",
+        "change-time": "更改时间",
+        "review-time": "审核时间"
+    },
+    "del-status": {
+        "success": "删除成功",
+        "fail": "删除失败"
+    }
 }

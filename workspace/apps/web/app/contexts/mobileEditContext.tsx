@@ -19,6 +19,7 @@ import {
     //
     MutableRefObject,
     createContext,
+    useContext,
     useRef,
     useState,
 } from "react";
@@ -37,6 +38,7 @@ import {
     uploadSubmit,
 } from "@/utils/draft";
 import { trpc } from "@/utils/trpc";
+import { ClientContext } from "./client";
 
 export const SubmitInfoContext = createContext<{
     id: number | null;
@@ -44,7 +46,7 @@ export const SubmitInfoContext = createContext<{
     mainContent: string;
     fileList: ImageUploadItem[];
     coordinate?: GeolocationCoordinates;
-    user: MutableRefObject<typeof trpc>;
+    // user: MutableRefObject<typeof trpc>;
     saved: boolean;
 
     setId: (id: number | null) => void;
@@ -80,12 +82,16 @@ export default function SubmitInfoProvider({ children }: { children: React.React
 
     const uploadImages = useRef<Map<string, Blob>>(new Map());
 
-    const user = useRef(trpc);
+    // const user = useRef(trpc);
+
+    const { trpc } = useContext(ClientContext);
 
     const delImages = useRef<Set<string>>(new Set());
 
     async function submitNewItem() {
         const formData = new FormData();
+
+        console.debug(uploadImages.current);
 
         for (let item of uploadImages.current.values()) {
             formData.append("file[]", item);
@@ -93,9 +99,7 @@ export default function SubmitInfoProvider({ children }: { children: React.React
 
         const assetsUpload = await upload(formData);
 
-        // if (handleResponse(assetsUpload).state === "fail") {
-        //     throw Error("Error");;
-        // }
+        console.debug(assetsUpload.data);
 
         const draft = {
             title: title,
@@ -103,8 +107,8 @@ export default function SubmitInfoProvider({ children }: { children: React.React
             coordinate: coordinate,
             assets: assetsUpload.data.successes.map((success: { uid: string }) => success.uid),
         };
-        const draftId = await uploadDraft(draft, user.current);
-        await uploadSubmit(draftId, user.current);
+        const draftId = await uploadDraft(draft, trpc);
+        await uploadSubmit(draftId, trpc);
     }
 
     async function submitNewDraft() {
@@ -122,7 +126,7 @@ export default function SubmitInfoProvider({ children }: { children: React.React
             coordinate: coordinate,
             assets: assetsUpload.data.successes.map((success: { uid: string }) => success.uid),
         };
-        await uploadDraft(draft, user.current);
+        await uploadDraft(draft, trpc);
     }
 
     async function uploadTravelNote(type: "draft" | "submit") {
@@ -195,7 +199,9 @@ export default function SubmitInfoProvider({ children }: { children: React.React
     }
 
     function addPicture(canvas: HTMLCanvasElement) {
+
         drawNum.current += 1;
+
         const drawIndex = drawNum.current;
 
         setFileList([
@@ -214,7 +220,7 @@ export default function SubmitInfoProvider({ children }: { children: React.React
                     useWebWorker: true,
                 }).then(function (compressedFile) {
                     if (!delImages.current.has(`picture-${drawIndex}`)) {
-                        uploadImages.current.set(`draw-${drawIndex}`, compressedFile);
+                        uploadImages.current.set(`picture-${drawIndex}`, compressedFile);
                     } else {
                         delImages.current.delete(`picture-${drawIndex}`);
                     }
@@ -224,7 +230,9 @@ export default function SubmitInfoProvider({ children }: { children: React.React
     }
 
     function addDraw(draw: CanvasDraw | null) {
+
         drawNum.current += 1;
+
         const drawIndex = drawNum.current;
 
         setFileList([
@@ -310,7 +318,6 @@ export default function SubmitInfoProvider({ children }: { children: React.React
     return (
         <SubmitInfoContext.Provider
             value={{
-                user,
                 saved,
 
                 id,

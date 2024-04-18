@@ -23,6 +23,7 @@ import { MessageContext } from "@/contexts/messageContext";
 import TimeList from "./time-demo";
 import { CheckboxChangeEvent } from "antd/es/checkbox";
 import { useTranslation } from "react-i18next";
+import { uid2path } from "@/utils/image";
 
 const { Title } = Typography;
 
@@ -57,12 +58,12 @@ export function ExamineListItem({ item, loading }: { item: TravelNote; loading: 
 
     const { addCheckSet, subCheckSet } = useContext(MessageContext);
 
-    const { t, i18n } = useTranslation();
+    const { t } = useTranslation();
 
     return (
         <List.Item
             key={item.id}
-            actions={!loading ? TimeList(item.state, item.submissionTime, item.modificationTime, item.approvalTime) : undefined}
+            actions={!loading ? TimeList(item.state, item.submissionTime, item.modificationTime, item.approvalTime, t) : undefined}
             extra={
                 !loading ? (
                     <Flex>
@@ -70,7 +71,7 @@ export function ExamineListItem({ item, loading }: { item: TravelNote; loading: 
                             width={200}
                             height={150}
                             alt="logo"
-                            src={`/assets/${item.image}`}
+                            src={uid2path(item.image)}
                             placeholder={<Spin />}
                         />
 
@@ -78,6 +79,7 @@ export function ExamineListItem({ item, loading }: { item: TravelNote; loading: 
                             stateReceived={item.state}
                             id={item.id}
                             rejectReason={item.comment}
+                            uid={item.publishUId}
                         />
                     </Flex>
                 ) : undefined

@@ -27,7 +27,7 @@ import { useTranslation } from "react-i18next";
 const { Title, Text } = Typography;
 
 export default function EditAlbumTab(): JSX.Element {
-    const { t, i18n } = useTranslation();
+    const { t } = useTranslation();
 
     const maxCount = 3;
 

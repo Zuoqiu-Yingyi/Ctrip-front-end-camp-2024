@@ -173,7 +173,7 @@
     "overview": "overview",
     "pass": "pass",
     "password": "password",
-    "pending": "to be audited",
+    "pending": "waiting",
     "profile": "User Info",
     "prompt-prefix": "please enter the ",
     "publish-time": "Publication Time",
@@ -223,5 +223,20 @@
     "update-time": "Update time",
     "user": "User",
     "username": "username",
-    "visitor": "Visitor"
+    "visitor": "Visitor",
+    "total": "total",
+    "recent-submission-number": "Number of recent submissions",
+    "aduit-status": {
+        "success": "audit successfully",
+        "fail": "audit failed"
+    },
+    "time": {
+        "commit-time": "commit time",
+        "change-time": "change time",
+        "review-time": "review time"
+    },
+    "del-status": {
+        "success": "delete successfully",
+        "fail": "delete failed"
+    }
 }

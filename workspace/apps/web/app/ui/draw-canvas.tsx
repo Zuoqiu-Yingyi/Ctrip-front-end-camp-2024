@@ -38,7 +38,7 @@ const defaultProps = {
 };
 
 export default function DrawPanel({ back }: { back: () => void }): JSX.Element {
-    const { t, i18n } = useTranslation();
+    const { t } = useTranslation();
 
     const { addDraw } = useContext(SubmitInfoContext);
 
