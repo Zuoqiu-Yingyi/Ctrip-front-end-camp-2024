@@ -1,16 +1,16 @@
 /**
  * Copyright (C) 2024 Zuoqiu Yingyi
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
  * published by the Free Software Foundation, either version 3 of the
  * License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Affero General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
@@ -23,11 +23,11 @@ export async function blob2dataURL(blob: Blob): Promise<string> {
         // REF: https://developer.mozilla.org/zh-CN/docs/Web/API/FileReader
         const reader = new FileReader();
 
-        reader.addEventListener("load", e => resolve(reader.result as string), {
+        reader.addEventListener("load", (e) => resolve(reader.result as string), {
             once: true,
             passive: true,
         });
-        reader.addEventListener("error", e => reject(e), {
+        reader.addEventListener("error", (e) => reject(e), {
             once: true,
             passive: true,
         });
