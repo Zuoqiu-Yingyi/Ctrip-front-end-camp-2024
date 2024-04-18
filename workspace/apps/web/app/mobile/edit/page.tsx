@@ -58,14 +58,13 @@ import {
 
 export default function EditPage(): JSX.Element {
     const { t } = useTranslation();
-    const { trpc } = useContext(ClientContext);
     const router = useRouter();
     const searchParams = useSearchParams();
 
     const {
         //
         id,
-        saved,
+        changed,
         setId,
         queryDraft,
         uploadTravelNote,
@@ -96,7 +95,7 @@ export default function EditPage(): JSX.Element {
      * 返回上一页
      */
     async function onBack() {
-        if (!saved) {
+        if (changed.current.size > 0) {
             // TODO: 当前更改未保存, 需二次确认
         }
         router.back();
@@ -116,7 +115,7 @@ export default function EditPage(): JSX.Element {
      */
     async function publishDraft() {
         setOnPress(true);
-        await uploadTravelNote("submit");
+        await uploadTravelNote("publish");
         setOnPress(false);
     }
 

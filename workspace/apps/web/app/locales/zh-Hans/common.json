@@ -49,6 +49,18 @@
                 }
             }
         },
+        "draft": {
+            "create": {
+                "prompt": {
+                    "success": "草稿已创建"
+                }
+            },
+            "update": {
+                "prompt": {
+                    "success": "草稿已更新"
+                }
+            }
+        },
         "extra": "请选择你要进行操作",
         "login": {
             "prompt": {
@@ -143,11 +155,37 @@
             "label": "当前账户"
         },
         "draft": {
+            "assets": {
+                "rules": {
+                    "length": {
+                        "message": "旅行日记相册中照片数量不能超过 {{maxCount}} 张"
+                    },
+                    "required": {
+                        "message": "旅行日记相册中照片数量不能少于 1 张"
+                    },
+                    "un-uploaded": {
+                        "message": "相册中部分照片上传失败，请稍后重试"
+                    }
+                }
+            },
             "content": {
-                "placeholder": "旅行日记的内容"
+                "placeholder": "旅行日记的内容",
+                "rules": {
+                    "required": {
+                        "message": "旅行日记内容不能为空"
+                    }
+                }
             },
             "title": {
-                "placeholder": "旅行日记的标题"
+                "placeholder": "旅行日记的标题",
+                "rules": {
+                    "length": {
+                        "message": "旅行日记标题不能超过 32 个字符"
+                    },
+                    "required": {
+                        "message": "旅行日记标题不能为空"
+                    }
+                }
             }
         },
         "new-password": {
@@ -181,8 +219,7 @@
                 "required": {
                     "message": "用户名不能为空"
                 }
-            },
-            "rules[0]": "用户名不能为空"
+            }
         }
     },
     "item-content": "内容",

@@ -46,6 +46,18 @@
                 }
             }
         },
+        "draft": {
+            "create": {
+                "prompt": {
+                    "success": "草稿已建立"
+                }
+            },
+            "update": {
+                "prompt": {
+                    "success": "草稿已更新"
+                }
+            }
+        },
         "extra": "請選擇你要進行操作",
         "login": {
             "prompt": {
@@ -140,11 +152,37 @@
             "label": "目前帳戶"
         },
         "draft": {
+            "assets": {
+                "rules": {
+                    "length": {
+                        "message": "旅行日記相簿中照片數量不能超過 {{maxCount}} 張"
+                    },
+                    "required": {
+                        "message": "旅行日記相簿中照片數量不能少於 1 張"
+                    },
+                    "un-uploaded": {
+                        "message": "相簿中部分照片上傳失敗，請稍後重試"
+                    }
+                }
+            },
             "content": {
-                "placeholder": "旅行日記的內容"
+                "placeholder": "旅行日記的內容",
+                "rules": {
+                    "required": {
+                        "message": "旅行日記內容不能為空"
+                    }
+                }
             },
             "title": {
-                "placeholder": "旅行日記的標題"
+                "placeholder": "旅行日記的標題",
+                "rules": {
+                    "length": {
+                        "message": "旅行日記標題不能超過 32 個字符"
+                    },
+                    "required": {
+                        "message": "旅行日記標題不能為空"
+                    }
+                }
             }
         },
         "new-password": {

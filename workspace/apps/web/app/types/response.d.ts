@@ -59,7 +59,7 @@ export interface INote {
     title: string;
     content: string;
     assets: IAsset[];
-    coordinate?: ICoordinate;
+    coordinate: ICoordinate | null;
     modification_time: TTimestamp_ISO_8601;
 }
 

@@ -41,18 +41,21 @@ import {
 } from "@ant-design/icons";
 
 import DrawPanel from "./draw-canvas";
-import { SubmitInfoContext } from "@/contexts/mobileEditContext";
+import {
+    //
+    SubmitInfoContext,
+    type IImageUploadItem,
+} from "@/contexts/mobileEditContext";
 
 export default function EditAlbumTab(): JSX.Element {
     const { t } = useTranslation();
-
-    const maxCount = 9;
 
     const [popupVisible, setPopupVisible] = useState(false);
 
     const {
         //
         fileList,
+        fileListMaxCount,
         setFileList,
         addImage,
         delImage,
@@ -68,18 +71,16 @@ export default function EditAlbumTab(): JSX.Element {
             <ImageUploader
                 columns={3}
                 value={fileList}
-                onChange={setFileList}
-                upload={async (file) => {
-                    return addImage(file);
+                multiple={true}
+                maxCount={fileListMaxCount}
+                upload={addImage}
+                onDelete={delImage}
+                onChange={(items) => {
+                    setFileList(items as IImageUploadItem[]);
                 }}
-                onDelete={(item: ImageUploadItem) => {
-                    delImage(item);
-                }}
-                multiple
-                maxCount={maxCount}
-                showUpload={fileList.length < maxCount}
+                // showUpload={fileList.length < fileListMaxCount}
                 onCountExceed={(exceed) => {
-                    Toast.show(`最多选择 ${maxCount} 张图片，你多选了 ${exceed} 张`);
+                    Toast.show(`最多选择 ${fileListMaxCount} 张图片，你多选了 ${exceed} 张`);
                 }}
             />
 

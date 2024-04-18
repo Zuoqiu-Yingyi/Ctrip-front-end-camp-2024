@@ -1,5 +1,9 @@
 # 更改日志 | Change log
 
+## 2024-04-19
+
+- 草稿编辑器支持更新草稿 | Draft editor supports updating drafts
+
 ## 2024-04-18
 
 - 数据库草稿表添加字段 `status` | Add field `status` to the database draft table

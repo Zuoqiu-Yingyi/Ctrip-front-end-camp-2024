@@ -20,7 +20,7 @@ import { procedure } from ".";
 import { privatePermissionMiddleware } from "./../middlewares/permission";
 import {
     //
-    DIARY,
+    DIARY_CREATE,
     DIARY_UPDATE,
 } from "./../types/diary";
 import { ID } from "./../types";
@@ -77,7 +77,7 @@ const DRAFT_SELECT: Prisma.DraftSelect = {
  * 创建草稿
  */
 export const createMutation = draftProcedure //
-    .input(DIARY)
+    .input(DIARY_CREATE)
     .mutation(async (options) => {
         try {
             const author_id = options.ctx.session.data.account.id;
@@ -92,15 +92,13 @@ export const createMutation = draftProcedure //
                             assets: {},
                         },
                     },
-                    assets:
-                        (options.input.assets && {
-                            // REF: https://www.prisma.io/docs/orm/prisma-client/queries/relation-queries#connect-multiple-records
-                            create: options.input.assets.map((uid, index) => ({
-                                index,
-                                asset_uid: uid,
-                            })),
-                        }) ||
-                        undefined,
+                    assets: {
+                        // REF: https://www.prisma.io/docs/orm/prisma-client/queries/relation-queries#connect-multiple-records
+                        create: options.input.assets.map((uid, index) => ({
+                            index,
+                            asset_uid: uid,
+                        })),
+                    },
                     coordinate:
                         (options.input.coordinate && {
                             create: {

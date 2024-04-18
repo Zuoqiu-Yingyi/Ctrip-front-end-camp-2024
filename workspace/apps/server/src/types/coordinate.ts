@@ -75,18 +75,20 @@ export const COORDINATE_SPEED = z //
     .number({ description: "Speed" })
     .nullable();
 
-export const COORDINATE = z.object(
-    {
-        latitude: COORDINATE_LATITUDE,
-        longitude: COORDINATE_LONGITUDE,
-        accuracy: COORDINATE_ACCURACY,
-        altitude: COORDINATE_ALTITUDE,
-        altitude_accuracy: COORDINATE_ALTITUDE_ACCURACY,
-        heading: COORDINATE_HEADING,
-        speed: COORDINATE_SPEED,
-    },
-    { description: "Coordinate information" },
-);
+export const COORDINATE = z
+    .object(
+        {
+            latitude: COORDINATE_LATITUDE,
+            longitude: COORDINATE_LONGITUDE,
+            accuracy: COORDINATE_ACCURACY,
+            altitude: COORDINATE_ALTITUDE,
+            altitude_accuracy: COORDINATE_ALTITUDE_ACCURACY,
+            heading: COORDINATE_HEADING,
+            speed: COORDINATE_SPEED,
+        },
+        { description: "Coordinate information" },
+    )
+    .nullable();
 
 export const COORDINATE_UPDATE = z.object(
     {

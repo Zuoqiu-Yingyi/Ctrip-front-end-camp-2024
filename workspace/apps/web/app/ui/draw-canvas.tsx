@@ -23,8 +23,6 @@ import { Typography, ColorPicker, Button } from "antd";
 import { SubmitInfoContext } from "@/contexts/mobileEditContext";
 import { useTranslation } from "react-i18next";
 
-const { Title } = Typography;
-
 const defaultProps = {
     loadTimeOffset: 5,
     lazyRadius: 0,
@@ -38,7 +36,7 @@ const defaultProps = {
 };
 
 export default function DrawPanel({ back }: { back: () => void }): JSX.Element {
-    const { t, i18n } = useTranslation();
+    const { t } = useTranslation();
 
     const { addDraw } = useContext(SubmitInfoContext);
 
@@ -72,9 +70,11 @@ export default function DrawPanel({ back }: { back: () => void }): JSX.Element {
                     <Button
                         type="primary"
                         icon={<CheckOutlined />}
-                        onClick={() => {
-                            addDraw(canvasRef.current);
-                            canvasRef.current?.clear();
+                        onClick={async () => {
+                            if (canvasRef.current) {
+                                await addDraw(canvasRef.current);
+                                canvasRef.current.clear();
+                            }
                             back();
                         }}
                     >

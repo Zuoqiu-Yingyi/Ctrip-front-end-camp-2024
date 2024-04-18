@@ -69,7 +69,7 @@ export function DraftCard({
      * 点击卡片
      */
     function onClickCard() {
-        editDraft();
+        // editDraft();
     }
 
     /**
@@ -147,7 +147,7 @@ export function DraftCard({
                         fit="contain"
                     />
                 }
-                arrow={<EditSOutline />}
+                // arrow={<EditSOutline />}
                 title={
                     <span
                         style={{

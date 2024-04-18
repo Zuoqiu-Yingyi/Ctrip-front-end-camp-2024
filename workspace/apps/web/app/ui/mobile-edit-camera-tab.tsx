@@ -55,8 +55,8 @@ export default function EditCameraTab(): JSX.Element {
     const { mode } = useStore.getState();
     const {
         //
-        addPicture,
-        addFileList,
+        addPhoto,
+        addFiles,
     } = useContext(SubmitInfoContext);
 
     const cameraVideoRef = useRef<HTMLVideoElement>(null);
@@ -99,9 +99,9 @@ export default function EditCameraTab(): JSX.Element {
         const input = cameraInputRef.current;
         if (input) {
             input.capture = capture;
-            input.onchange = () => {
+            input.onchange = async () => {
                 if (input.files) {
-                    addFileList(input.files);
+                    await addFiles(input.files);
                 }
             };
             input.click();
@@ -242,7 +242,7 @@ export default function EditCameraTab(): JSX.Element {
                         icon={<CheckOutline style={bottom_icon_style} />}
                         onClick={() => {
                             if (cameraReviewRef.current) {
-                                addPicture(cameraReviewRef.current);
+                                addPhoto(cameraReviewRef.current);
                             }
                             setOnVideo(true);
                         }}

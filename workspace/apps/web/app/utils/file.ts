@@ -15,6 +15,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+import parser from "parse-data-url";
+
 /**
  * Convert a Blob to a data URL.
  */
@@ -34,4 +36,36 @@ export async function blob2dataURL(blob: Blob): Promise<string> {
         // REF: https://developer.mozilla.org/zh-CN/docs/Web/API/FileReader/readAsDataURL
         reader.readAsDataURL(blob);
     });
+}
+
+/**
+ * Convert a data URL to a Blob.
+ */
+export function dataURL2blob(dataURL: string): Blob | null {
+    const result = parser(dataURL);
+    if (result) {
+        return new Blob([result.toBuffer()], { type: result.contentType });
+    }
+    return null;
+}
+
+/**
+ * Convert a canvas to a Blob.
+ */
+export async function canvas2blob(
+    //
+    canvas: HTMLCanvasElement,
+    type = "image/webp",
+    quality = 1,
+): Promise<Blob | null> {
+    // REF: https://developer.mozilla.org/zh-CN/docs/Web/API/HTMLCanvasElement/toBlob
+    const blob = await new Promise<Blob | null>((resolve) =>
+        canvas.toBlob(
+            //
+            resolve,
+            type,
+            quality,
+        ),
+    );
+    return blob;
 }

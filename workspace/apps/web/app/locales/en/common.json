@@ -46,6 +46,18 @@
                 }
             }
         },
+        "draft": {
+            "create": {
+                "prompt": {
+                    "success": "Draft created"
+                }
+            },
+            "update": {
+                "prompt": {
+                    "success": "Draft updated"
+                }
+            }
+        },
         "extra": "Please select what you want to do",
         "login": {
             "prompt": {
@@ -140,11 +152,37 @@
             "label": "Current Account"
         },
         "draft": {
+            "assets": {
+                "rules": {
+                    "length": {
+                        "message": "The number of photos in the travel diary album cannot exceed {{maxCount}}"
+                    },
+                    "required": {
+                        "message": "The number of photos in the travel diary album cannot be less than 1"
+                    },
+                    "un-uploaded": {
+                        "message": "Some photos in the album failed to upload, please try again later."
+                    }
+                }
+            },
             "content": {
-                "placeholder": "Content of travel diary"
+                "placeholder": "Content of travel diary",
+                "rules": {
+                    "required": {
+                        "message": "Travel diary content cannot be empty"
+                    }
+                }
             },
             "title": {
-                "placeholder": "Title of travel diary"
+                "placeholder": "Title of travel diary",
+                "rules": {
+                    "length": {
+                        "message": "Travel diary title cannot exceed 32 characters"
+                    },
+                    "required": {
+                        "message": "Travel diary title cannot be empty"
+                    }
+                }
             }
         },
         "new-password": {

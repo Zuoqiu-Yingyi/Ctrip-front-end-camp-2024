@@ -67,7 +67,13 @@ const titleTemplates: string[] = ["** 出发！", "*** *天*夜 人均 **", "** 
 export default function EditTextTab(): JSX.Element {
     const { t } = useTranslation();
 
-    const { title, mainContent, resetMainContent, resetTitle } = useContext(SubmitInfoContext);
+    const {
+        //
+        title,
+        content,
+        updateTitle,
+        updateContent,
+    } = useContext(SubmitInfoContext);
 
     const [visible, setVisible] = useState(false);
 
@@ -81,9 +87,12 @@ export default function EditTextTab(): JSX.Element {
                 placeholder={t("input.draft.title.placeholder")}
                 value={title}
                 onChange={(val) => {
-                    resetTitle(val);
+                    updateTitle(val);
                 }}
-                style={{ padding: "16px" }}
+                style={{
+                    padding: "0.5em 1em",
+                    boxSizing: "border-box",
+                }}
             />
 
             <Space
@@ -104,7 +113,7 @@ export default function EditTextTab(): JSX.Element {
                             paddingInline: 8,
                         }}
                         onClick={() => {
-                            resetTitle(item);
+                            updateTitle(item);
                         }}
                     >
                         {item}
@@ -115,19 +124,25 @@ export default function EditTextTab(): JSX.Element {
             <Divider
                 style={{
                     borderStyle: "dashed",
+                    margin: 0,
                 }}
             />
 
             <TextArea
+                value={content}
                 placeholder={t("input.draft.content.placeholder")}
-                value={mainContent}
-                onChange={(val) => {
-                    resetMainContent(val);
+                autoSize={true}
+                showCount={true}
+                style={{
+                    padding: "1em",
+                    boxSizing: "border-box",
                 }}
-                rows={13}
-                style={{ padding: "15px" }}
+                onChange={(val) => {
+                    updateContent(val);
+                }}
             />
 
+            {/* TODO: 改进控件栏 */}
             <FloatButton.Group
                 shape="square"
                 style={{ top: "180px", height: "0px" }}
@@ -143,9 +158,10 @@ export default function EditTextTab(): JSX.Element {
                     icon={<RedoOutline />}
                     description="清空"
                     onClick={() => {
-                        resetMainContent("");
+                        updateContent("");
                     }}
                 />
+                {/* TODO: 增加更新当前定位按钮 */}
             </FloatButton.Group>
 
             <Modal
@@ -177,7 +193,7 @@ export default function EditTextTab(): JSX.Element {
                         text: "插入",
                         primary: true,
                         onClick: () => {
-                            resetMainContent(insertedText.current);
+                            updateContent(insertedText.current);
                             setVisible(false);
                         },
                     },
