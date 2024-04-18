@@ -33,16 +33,20 @@ import {
     Popover,
 } from "antd-mobile";
 import {
+    DeleteOutline,
+    EnvironmentOutline,
     //
     FileOutline,
+    LocationFill,
     MoreOutline,
     RedoOutline,
 } from "antd-mobile-icons";
+
 import { SubmitInfoContext } from "@/contexts/mobileEditContext";
 
-// import "./mobile-edit-text-tab.module.scss";
-import styles from "./mobile-edit-text-tab.module.scss";
+import styles from "./EditTextTab.module.scss";
 import { useStore } from "@/contexts/store";
+import CoordinateInfoPopup from "./CoordinateInfoPopup";
 
 const contentTemplates: string[] = [
     `费用：
@@ -85,11 +89,15 @@ export default function EditTextTab(): JSX.Element {
         //
         title,
         content,
+        coordinate,
         updateTitle,
         updateContent,
+        updateCoordinate,
+        deleteCoordinate,
     } = useContext(SubmitInfoContext);
 
     const [templateModalVisible, setTemplateModalVisible] = useState(false);
+    const [coordinateInfoPopupVisible, setCoordinateInfoPopupVisible] = useState(false);
 
     const insertedText = useRef<string>(contentTemplates[0] as string);
 
@@ -146,6 +154,29 @@ export default function EditTextTab(): JSX.Element {
                                 text: t("actions.draft.content.template.text"),
                                 onClick: () => {
                                     setTemplateModalVisible(true);
+                                },
+                            },
+                            {
+                                icon: <LocationFill />,
+                                text: t("actions.draft.coordinate.update.text"),
+                                onClick: async () => {
+                                    await updateCoordinate();
+                                },
+                            },
+                            {
+                                icon: <EnvironmentOutline />,
+                                text: t("actions.draft.coordinate.view.text"),
+                                disabled: !coordinate,
+                                onClick: async () => {
+                                    setCoordinateInfoPopupVisible(true);
+                                },
+                            },
+                            {
+                                icon: <DeleteOutline />,
+                                text: t("actions.draft.coordinate.delete.text"),
+                                disabled: !coordinate,
+                                onClick: () => {
+                                    deleteCoordinate();
                                 },
                             },
                         ]}
@@ -208,6 +239,12 @@ export default function EditTextTab(): JSX.Element {
                 onClose={() => {
                     setTemplateModalVisible(false);
                 }}
+            />
+
+            <CoordinateInfoPopup
+                coordinate={coordinate}
+                visible={coordinateInfoPopupVisible}
+                onClose={() => setCoordinateInfoPopupVisible(false)}
             />
         </div>
     );

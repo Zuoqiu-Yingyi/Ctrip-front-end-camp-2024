@@ -47,7 +47,7 @@ import {
 } from "antd-mobile-icons";
 
 import { SubmitInfoContext } from "@/contexts/mobileEditContext";
-import EditTab from "@/ui/mobile-edit-tab";
+import EditTab from "./EditTabs";
 import {
     //
     MobileContent,
@@ -65,6 +65,7 @@ export default function EditPage(): JSX.Element {
         id,
         changed,
         setId,
+        init,
         queryDraft,
         uploadTravelNote,
     } = useContext(SubmitInfoContext);
@@ -90,10 +91,17 @@ export default function EditPage(): JSX.Element {
         }
     }, [searchParams, id]);
 
+    useEffect(() => {
+        return () => {
+            init();
+        };
+    }, []);
+
     /**
      * 返回上一页
      */
     async function onBack() {
+        console.debug(...changed.current.values());
         if (changed.current.size > 0) {
             // 当前更改未保存, 需二次确认
             const confirm = await new Promise<boolean>((resolve) => {

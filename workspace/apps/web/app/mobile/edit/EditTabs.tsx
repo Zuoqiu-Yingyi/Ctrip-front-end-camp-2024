@@ -15,11 +15,11 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import EditTextTab from "./mobile-edit-text-tab";
-import EditCameraTab from "./mobile-edit-camera-tab";
-import EditAlbumTab from "./mobile-edit-album-tab";
+import EditTextTab from "./EditTextTab";
+import EditCameraTab from "./EditCameraTab";
+import EditAlbumTab from "./EditAlbumTab";
 
-export default function EditTab({ tabKey }: { tabKey: "text" | "album" | "camera" }): JSX.Element {
+export default function EditTabs({ tabKey }: { tabKey: "text" | "album" | "camera" }): JSX.Element {
     switch (tabKey) {
         default:
         case "text":

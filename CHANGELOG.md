@@ -5,6 +5,7 @@
 - 草稿编辑器支持更新草稿 | Draft editor supports updating drafts
 - 优化草稿编辑器文本编辑页面 | Optimize the text editing page of the draft editor
 - 添加审核状态列表 | Add audit status list
+- 添加位置信息显示功能 | Add location information display feature
 
 ## 2024-04-18
 

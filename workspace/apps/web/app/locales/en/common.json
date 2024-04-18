@@ -55,6 +55,23 @@
                     "text": "Content template"
                 }
             },
+            "coordinate": {
+                "delete": {
+                    "prompt": {
+                        "success": "Positioning information deleted successfully"
+                    },
+                    "text": "Delete location information"
+                },
+                "update": {
+                    "prompt": {
+                        "fail": "Failed to update positioning information",
+                        "success": "Positioning information updated successfully"
+                    }
+                },
+                "view": {
+                    "text": "View location information"
+                }
+            },
             "create": {
                 "prompt": {
                     "success": "Draft created"
@@ -261,6 +278,16 @@
             "front": "Front camera",
             "rear": "Rear camera",
             "system": "System camera"
+        },
+        "coordinate": {
+            "accuracy": "Location accuracy",
+            "altitude": "Altitude",
+            "altitude_accuracy": "Altitude accuracy",
+            "heading": "Direction of movement",
+            "latitude": "Latitude",
+            "longitude": "Longitude",
+            "speed": "Movement speed",
+            "title": "location information"
         },
         "create": "Create",
         "edit": "Edit",

@@ -55,6 +55,23 @@
                     "text": "內容模板"
                 }
             },
+            "coordinate": {
+                "delete": {
+                    "prompt": {
+                        "success": "刪除定位訊息成功"
+                    },
+                    "text": "刪除定位訊息"
+                },
+                "update": {
+                    "prompt": {
+                        "fail": "更新定位資訊失敗",
+                        "success": "更新定位資訊成功"
+                    }
+                },
+                "view": {
+                    "text": "查看定位訊息"
+                }
+            },
             "create": {
                 "prompt": {
                     "success": "草稿已建立"
@@ -261,6 +278,16 @@
             "front": "前置鏡頭",
             "rear": "後置鏡頭",
             "system": "系統相機"
+        },
+        "coordinate": {
+            "accuracy": "位置精確度",
+            "altitude": "海拔高度",
+            "altitude_accuracy": "海拔精確度",
+            "heading": "運動方向",
+            "latitude": "維度",
+            "longitude": "經度",
+            "speed": "運動速度",
+            "title": "位置資訊"
         },
         "create": "新建",
         "edit": "編輯",

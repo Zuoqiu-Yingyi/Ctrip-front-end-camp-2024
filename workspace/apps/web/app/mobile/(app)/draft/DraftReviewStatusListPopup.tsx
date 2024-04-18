@@ -53,10 +53,8 @@ import styles from "./page.module.scss";
 import DraftStatusTag from "./DraftStatusTag";
 
 /**
- * 用户更改密码弹出层
- * @param accountName 当前用户的账户名
+ * 审核列表弹出层
  * @param visible 是否显示弹出层
- * @param onSuccess 更改密码成功的回调函数
  * @param onClose 弹出层关闭回调函数
  */
 export function DraftReviewStatusListPopup({
@@ -120,7 +118,10 @@ export function DraftReviewStatusListPopup({
                     />
                 </>
             ) : data.length > 0 ? (
-                <List className={styles.review_list}>
+                <List
+                    className={styles.review_list}
+                    header={t("labels.review-status")}
+                >
                     {data.map((review) => {
                         return (
                             <List.Item
