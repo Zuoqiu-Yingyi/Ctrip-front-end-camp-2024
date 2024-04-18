@@ -28,25 +28,30 @@ import {
     Swiper,
     TextArea,
     Divider,
-    Tag,
-    Space,
     Input,
+    List,
+    Popover,
 } from "antd-mobile";
 import {
     //
     FileOutline,
+    MoreOutline,
     RedoOutline,
 } from "antd-mobile-icons";
-import { FloatButton } from "antd";
 import { SubmitInfoContext } from "@/contexts/mobileEditContext";
+
+// import "./mobile-edit-text-tab.module.scss";
+import styles from "./mobile-edit-text-tab.module.scss";
+import { useStore } from "@/contexts/store";
 
 const contentTemplates: string[] = [
     `费用：
-路线: Day1…
-     Day2…
-           
+路线: 
+    Day 1：…
+    Day 2：…
 住宿：
 吃饭：`,
+
     `出发前带什么：
 需要提前预约的：
 行程：（景点，路程/交通方式，吃饭，住宿，网红景点打卡位置）
@@ -55,6 +60,7 @@ const contentTemplates: string[] = [
 交通：
 行程：（具体景点，吃饭）
 避雷点：`,
+
     `人均消费：
 行程（具体景点，去了哪些店，消费了什么，什么值得买，什么不建议）
 吃饭：
@@ -62,10 +68,18 @@ const contentTemplates: string[] = [
 交通：`,
 ];
 
-const titleTemplates: string[] = ["** 出发！", "*** *天*夜 人均 **", "** 去哪玩？", "** 旅游攻略", "** 超全避雷攻略"];
+const titleTemplates: string[] = [
+    //
+    "** 出发！",
+    "** *天*夜 人均 **",
+    "** 去哪玩？",
+    "** 旅游攻略",
+    "** 超全避雷攻略",
+];
 
 export default function EditTextTab(): JSX.Element {
     const { t } = useTranslation();
+    const { mode } = useStore.getState();
 
     const {
         //
@@ -75,100 +89,94 @@ export default function EditTextTab(): JSX.Element {
         updateContent,
     } = useContext(SubmitInfoContext);
 
-    const [visible, setVisible] = useState(false);
+    const [templateModalVisible, setTemplateModalVisible] = useState(false);
 
     const insertedText = useRef<string>(contentTemplates[0] as string);
 
     // const rows = Math.floor((screen.height - 42 - 45 - 56 - 32 - 19 - 30) / 25.5);
 
     return (
-        <div style={{ flex: 1 }}>
-            <Input
-                placeholder={t("input.draft.title.placeholder")}
-                value={title}
-                onChange={(val) => {
-                    updateTitle(val);
-                }}
-                style={{
-                    padding: "0.5em 1em",
-                    boxSizing: "border-box",
-                }}
-            />
-
-            <Space
-                className="px-2"
-                style={{
-                    overflowX: "auto",
-                    width: "100%",
-                }}
-            >
-                {titleTemplates.map((item, index) => (
-                    <Tag
-                        key={`tag_${index}`}
-                        round
-                        style={{
-                            fontSize: 13,
-                            marginInline: 5,
-                            paddingBlock: 4,
-                            paddingInline: 8,
-                        }}
-                        onClick={() => {
-                            updateTitle(item);
-                        }}
+        <div className={styles.layout}>
+            <List.Item
+                className={styles.title}
+                arrow={
+                    <Popover.Menu
+                        actions={titleTemplates.map((item) => ({
+                            text: item,
+                            onClick: () => {
+                                updateTitle(item);
+                            },
+                        }))}
+                        mode={mode}
+                        trigger="click"
+                        placement="bottom-end"
                     >
-                        {item}
-                    </Tag>
-                ))}
-            </Space>
+                        <FileOutline
+                            className={styles.title_template}
+                            aria-label={t("aria.draft.title.template")}
+                        />
+                    </Popover.Menu>
+                }
+            >
+                <Input
+                    placeholder={t("input.draft.title.placeholder")}
+                    value={title}
+                    onChange={(val) => {
+                        updateTitle(val);
+                    }}
+                />
+            </List.Item>
 
-            <Divider
-                style={{
-                    borderStyle: "dashed",
-                    margin: 0,
-                }}
-            />
+            <Divider className={styles.divider} />
+
+            <List.Item
+                className={styles.toolbar}
+                arrow={
+                    <Popover.Menu
+                        actions={[
+                            {
+                                icon: <RedoOutline />,
+                                text: t("actions.draft.content.clear.text"),
+                                onClick: () => {
+                                    updateContent("");
+                                },
+                            },
+                            {
+                                icon: <FileOutline />,
+                                text: t("actions.draft.content.template.text"),
+                                onClick: () => {
+                                    setTemplateModalVisible(true);
+                                },
+                            },
+                        ]}
+                        mode={mode}
+                        trigger="click"
+                        placement="bottom-end"
+                    >
+                        <MoreOutline
+                            className={styles.toolbar_menu}
+                            aria-label={t("aria.draft.toolbar.menu")}
+                        />
+                    </Popover.Menu>
+                }
+            ></List.Item>
 
             <TextArea
+                className={styles.content}
                 value={content}
                 placeholder={t("input.draft.content.placeholder")}
-                autoSize={true}
+                // autoSize={true}
                 showCount={true}
-                style={{
-                    padding: "1em",
-                    boxSizing: "border-box",
-                }}
                 onChange={(val) => {
                     updateContent(val);
                 }}
             />
 
-            {/* TODO: 改进控件栏 */}
-            <FloatButton.Group
-                shape="square"
-                style={{ top: "180px", height: "0px" }}
-            >
-                <FloatButton
-                    icon={<FileOutline />}
-                    description="大纲"
-                    onClick={() => {
-                        setVisible(true);
-                    }}
-                />
-                <FloatButton
-                    icon={<RedoOutline />}
-                    description="清空"
-                    onClick={() => {
-                        updateContent("");
-                    }}
-                />
-                {/* TODO: 增加更新当前定位按钮 */}
-            </FloatButton.Group>
-
             <Modal
                 closeOnMaskClick={true}
-                title="大纲"
+                title={t("actions.draft.content.template.text")}
                 showCloseButton={true}
-                visible={visible}
+                visible={templateModalVisible}
                 content={
                     <Swiper
                         onIndexChange={(index: number) => {
@@ -178,9 +186,8 @@ export default function EditTextTab(): JSX.Element {
                         {contentTemplates.map((value, index) => (
                             <Swiper.Item key={`text_${index}`}>
                                 <TextArea
-                                    placeholder="请输入内容"
                                     value={value}
-                                    rows={10}
+                                    autoSize
                                     readOnly
                                 />
                             </Swiper.Item>
@@ -190,16 +197,16 @@ export default function EditTextTab(): JSX.Element {
                 actions={[
                     {
                         key: "insert",
-                        text: "插入",
+                        text: t("actions.template.apply.text"),
                         primary: true,
                         onClick: () => {
                             updateContent(insertedText.current);
-                            setVisible(false);
+                            setTemplateModalVisible(false);
                         },
                     },
                 ]}
                 onClose={() => {
-                    setVisible(false);
+                    setTemplateModalVisible(false);
                 }}
             />
         </div>

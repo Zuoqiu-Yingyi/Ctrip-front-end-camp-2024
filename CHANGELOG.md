@@ -3,6 +3,7 @@
 ## 2024-04-19
 
 - 草稿编辑器支持更新草稿 | Draft editor supports updating drafts
+- 优化草稿编辑器文本编辑页面 | Optimize the text editing page of the draft editor
 
 ## 2024-04-18
 

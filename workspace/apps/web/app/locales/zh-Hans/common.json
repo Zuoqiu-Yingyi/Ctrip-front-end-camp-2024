@@ -50,6 +50,14 @@
             }
         },
         "draft": {
+            "content": {
+                "clear": {
+                    "text": "清空内容"
+                },
+                "template": {
+                    "text": "内容模板"
+                }
+            },
             "create": {
                 "prompt": {
                     "success": "草稿已创建"
@@ -86,6 +94,11 @@
                     "content": "用户注册成功"
                 }
             }
+        },
+        "template": {
+            "apply": {
+                "text": "应用模板"
+            }
         }
     },
     "admin-title": "后台审核系统",
@@ -104,7 +117,13 @@
             "delete": "删除草稿",
             "edit": "编辑草稿",
             "preview": "预览草稿",
-            "review-status": "查看发布状态"
+            "review-status": "查看发布状态",
+            "title": {
+                "template": "草稿标题模板"
+            },
+            "toolbar": {
+                "menu": "控件栏菜单"
+            }
         },
         "menu": "菜单",
         "modification-time": "编辑时间",

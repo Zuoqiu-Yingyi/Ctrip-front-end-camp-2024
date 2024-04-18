@@ -185,51 +185,44 @@ export default function EditCameraTab(): JSX.Element {
                     />
 
                     {/* 菜单按钮 */}
-                    <Popover.Menu
-                        actions={[]}
-                        mode={mode}
-                        trigger="click"
-                        placement="top-end"
-                    >
-                        <FloatButton
-                            style={{
-                                ...bottom_style,
-                                right: "16vw",
-                            }}
-                            icon={<MoreOutline style={bottom_icon_style} />}
-                            aria-label={t("aria.menu")}
-                            onClick={() => {
-                                ActionSheet.show({
-                                    actions: [
-                                        {
-                                            key: "rear",
-                                            text: (
-                                                <>
-                                                    <PictureOutline />
-                                                    &ensp;
-                                                    {t("labels.cameras.rear")}
-                                                </>
-                                            ),
-                                            description: t("labels.cameras.system"),
-                                            onClick: () => callSystemCamera("environment"),
-                                        },
-                                        {
-                                            key: "front",
-                                            text: (
-                                                <>
-                                                    <UserCircleOutline />
-                                                    &ensp;
-                                                    {t("labels.cameras.front")}
-                                                </>
-                                            ),
-                                            description: t("labels.cameras.system"),
-                                            onClick: () => callSystemCamera("user"),
-                                        },
-                                    ],
-                                });
-                            }}
-                        />
-                    </Popover.Menu>
+                    <FloatButton
+                        style={{
+                            ...bottom_style,
+                            right: "16vw",
+                        }}
+                        icon={<MoreOutline style={bottom_icon_style} />}
+                        aria-label={t("aria.menu")}
+                        onClick={() => {
+                            ActionSheet.show({
+                                actions: [
+                                    {
+                                        key: "rear",
+                                        text: (
+                                            <>
+                                                <PictureOutline />
+                                                &ensp;
+                                                {t("labels.cameras.rear")}
+                                            </>
+                                        ),
+                                        description: t("labels.cameras.system"),
+                                        onClick: () => callSystemCamera("environment"),
+                                    },
+                                    {
+                                        key: "front",
+                                        text: (
+                                            <>
+                                                <UserCircleOutline />
+                                                &ensp;
+                                                {t("labels.cameras.front")}
+                                            </>
+                                        ),
+                                        description: t("labels.cameras.system"),
+                                        onClick: () => callSystemCamera("user"),
+                                    },
+                                ],
+                            });
+                        }}
+                    />
                 </>
             ) : (
                 <>

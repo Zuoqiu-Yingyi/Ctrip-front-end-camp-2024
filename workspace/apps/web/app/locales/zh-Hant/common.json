@@ -47,6 +47,14 @@
             }
         },
         "draft": {
+            "content": {
+                "clear": {
+                    "text": "清空內容"
+                },
+                "template": {
+                    "text": "內容模板"
+                }
+            },
             "create": {
                 "prompt": {
                     "success": "草稿已建立"
@@ -83,6 +91,11 @@
                     "content": "用戶註冊成功"
                 }
             }
+        },
+        "template": {
+            "apply": {
+                "text": "應用程式模板"
+            }
         }
     },
     "admin-title": "後台審核系統",
@@ -101,7 +114,13 @@
             "delete": "刪除草稿",
             "edit": "編輯草稿",
             "preview": "預覽草稿",
-            "review-status": "查看發布狀態"
+            "review-status": "查看發布狀態",
+            "title": {
+                "template": "草稿標題模板"
+            },
+            "toolbar": {
+                "menu": "控制項列選單"
+            }
         },
         "menu": "選單",
         "modification-time": "編輯時間",

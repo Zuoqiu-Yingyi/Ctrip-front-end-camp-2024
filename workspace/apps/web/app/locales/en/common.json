@@ -47,6 +47,14 @@
             }
         },
         "draft": {
+            "content": {
+                "clear": {
+                    "text": "Clear content"
+                },
+                "template": {
+                    "text": "Content template"
+                }
+            },
             "create": {
                 "prompt": {
                     "success": "Draft created"
@@ -83,6 +91,11 @@
                     "content": "User registration successful"
                 }
             }
+        },
+        "template": {
+            "apply": {
+                "text": "Apply template"
+            }
         }
     },
     "admin-title": "Background audit system",
@@ -101,7 +114,13 @@
             "delete": "Delete draft",
             "edit": "Edit draft",
             "preview": "Preview draft",
-            "review-status": "View publishing status"
+            "review-status": "View publishing status",
+            "title": {
+                "template": "Draft title template"
+            },
+            "toolbar": {
+                "menu": "Control bar menu"
+            }
         },
         "menu": "Menu",
         "modification-time": "modification time",
