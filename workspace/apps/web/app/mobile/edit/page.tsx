@@ -92,11 +92,32 @@ export default function EditPage(): JSX.Element {
         }
     }, [searchParams, id]);
 
+    /**
+     * 返回上一页
+     */
     async function onBack() {
         if (!saved) {
             // TODO: 当前更改未保存, 需二次确认
         }
         router.back();
+    }
+
+    /**
+     * 保存草稿
+     */
+    async function saveDraft() {
+        setOnPress(true);
+        await uploadTravelNote("draft");
+        setOnPress(false);
+    }
+
+    /**
+     * 发布草稿
+     */
+    async function publishDraft() {
+        setOnPress(true);
+        await uploadTravelNote("submit");
+        setOnPress(false);
     }
 
     return (
@@ -113,15 +134,7 @@ export default function EditPage(): JSX.Element {
                                 shape="rounded"
                                 fill="outline"
                                 disabled={onPress}
-                                style={{
-                                    marginLeft: "auto",
-                                    width: 90,
-                                }}
-                                onClick={async () => {
-                                    setOnPress(true);
-                                    await uploadTravelNote("draft");
-                                    setOnPress(false);
-                                }}
+                                onClick={saveDraft}
                             >
                                 {t("edit.draft.save")}
                             </Button>
@@ -131,15 +144,7 @@ export default function EditPage(): JSX.Element {
                                 shape="rounded"
                                 color="primary"
                                 disabled={onPress}
-                                style={{
-                                    marginLeft: "auto",
-                                    width: 60,
-                                }}
-                                onClick={async () => {
-                                    setOnPress(true);
-                                    await uploadTravelNote("submit");
-                                    setOnPress(false);
-                                }}
+                                onClick={publishDraft}
                             >
                                 {t("edit.draft.publish")}
                             </Button>

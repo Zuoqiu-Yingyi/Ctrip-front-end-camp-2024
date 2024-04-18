@@ -29,19 +29,17 @@ import {
     Layout,
     FloatButton,
 } from "antd";
-import { Popover } from "antd-mobile";
+import { ActionSheet, Popover } from "antd-mobile";
 import {
     //
     CameraOutline,
     CheckOutline,
-    CloseOutline,
     DeleteOutline,
-    EyeInvisibleOutline,
-    EyeOutline,
     MoreOutline,
     PictureOutline,
+    PlayOutline,
+    StopOutline,
     UserCircleOutline,
-    UserOutline,
 } from "antd-mobile-icons";
 import {
     //
@@ -153,7 +151,7 @@ export default function EditCameraTab(): JSX.Element {
                         ...bottom_style,
                         left: "16vw",
                     }}
-                    icon={<CloseOutline style={bottom_icon_style} />}
+                    icon={<StopOutline style={bottom_icon_style} />}
                     onClick={() => {
                         switchViewfinder(false);
                     }}
@@ -165,7 +163,7 @@ export default function EditCameraTab(): JSX.Element {
                         ...bottom_style,
                         left: "16vw",
                     }}
-                    icon={<EyeOutline style={bottom_icon_style} />}
+                    icon={<PlayOutline style={bottom_icon_style} />}
                     onClick={() => {
                         switchViewfinder(true);
                     }}
@@ -188,18 +186,7 @@ export default function EditCameraTab(): JSX.Element {
 
                     {/* 菜单按钮 */}
                     <Popover.Menu
-                        actions={[
-                            {
-                                icon: <PictureOutline />,
-                                text: t("labels.cameras.rear"),
-                                onClick: () => callSystemCamera("environment"),
-                            },
-                            {
-                                icon: <UserCircleOutline />,
-                                text: t("labels.cameras.front"),
-                                onClick: () => callSystemCamera("user"),
-                            },
-                        ]}
+                        actions={[]}
                         mode={mode}
                         trigger="click"
                         placement="top-end"
@@ -211,6 +198,36 @@ export default function EditCameraTab(): JSX.Element {
                             }}
                             icon={<MoreOutline style={bottom_icon_style} />}
                             aria-label={t("aria.menu")}
+                            onClick={() => {
+                                ActionSheet.show({
+                                    actions: [
+                                        {
+                                            key: "rear",
+                                            text: (
+                                                <>
+                                                    <PictureOutline />
+                                                    &ensp;
+                                                    {t("labels.cameras.rear")}
+                                                </>
+                                            ),
+                                            description: t("labels.cameras.system"),
+                                            onClick: () => callSystemCamera("environment"),
+                                        },
+                                        {
+                                            key: "front",
+                                            text: (
+                                                <>
+                                                    <UserCircleOutline />
+                                                    &ensp;
+                                                    {t("labels.cameras.front")}
+                                                </>
+                                            ),
+                                            description: t("labels.cameras.system"),
+                                            onClick: () => callSystemCamera("user"),
+                                        },
+                                    ],
+                                });
+                            }}
                         />
                     </Popover.Menu>
                 </>

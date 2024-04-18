@@ -93,6 +93,8 @@ export function closeCamera(cameraVideoRef: React.RefObject<HTMLVideoElement>) {
         tracks.forEach((track) => {
             track.stop();
         });
+
+        video.srcObject = null;
     }
 }
 

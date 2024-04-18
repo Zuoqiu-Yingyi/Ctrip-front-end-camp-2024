@@ -7,6 +7,7 @@
 - 改进标题栏菜单 | Improve title bar menu
 - 添加草稿搜索与删除功能 | Add draft search and delete feature
 - 添加调用系统相机功能 | Add call system camera feature
+- 改进草稿编辑器的相机页面 | Improve the camera page of the draft editor
 
 ## 2024-04-17
 

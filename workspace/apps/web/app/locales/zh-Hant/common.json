@@ -115,7 +115,7 @@
     "edit": {
         "draft": {
             "publish": "發布",
-            "save": "儲存草稿"
+            "save": "儲存"
         }
     },
     "empty": {
@@ -189,8 +189,9 @@
     "label-brush-radius": "粗細",
     "labels": {
         "cameras": {
-            "front": "系統相機-前攝",
-            "rear": "系統相機-後攝"
+            "front": "前置鏡頭",
+            "rear": "後置鏡頭",
+            "system": "系統相機"
         },
         "create": "新建",
         "edit": "編輯",

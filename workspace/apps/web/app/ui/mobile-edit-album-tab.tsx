@@ -15,19 +15,36 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { Button, Flex, Typography } from "antd";
-import { HighlightFilled, UpOutlined } from "@ant-design/icons";
-import { ImageUploader, Toast, Popup, ImageUploadItem, Divider } from "antd-mobile";
-import DrawPanel from "./draw-canvas";
-import { useContext, useState } from "react";
-import React from "react";
-import { SubmitInfoContext } from "@/contexts/mobileEditContext";
+import {
+    //
+    useContext,
+    useState,
+} from "react";
 import { useTranslation } from "react-i18next";
+import {
+    //
+    Button,
+    Flex,
+    Typography,
+} from "antd";
+import {
+    //
+    ImageUploader,
+    Toast,
+    Popup,
+    ImageUploadItem,
+    Divider,
+} from "antd-mobile";
+import {
+    //
+    HighlightFilled,
+} from "@ant-design/icons";
 
-const { Title, Text } = Typography;
+import DrawPanel from "./draw-canvas";
+import { SubmitInfoContext } from "@/contexts/mobileEditContext";
 
 export default function EditAlbumTab(): JSX.Element {
-    const { t, i18n } = useTranslation();
+    const { t } = useTranslation();
 
     const maxCount = 9;
 
@@ -85,15 +102,15 @@ export default function EditAlbumTab(): JSX.Element {
                     <Flex vertical={true}>
                         <Flex align="center">
                             <HighlightFilled className="mr-2" />
-                            <Title
+                            <Typography.Title
                                 level={5}
                                 className="m-0"
                             >
                                 {t("graffiti")}
-                            </Title>
+                            </Typography.Title>
                         </Flex>
 
-                        <Text>{t("graffiti-tip")}</Text>
+                        <Typography.Text>{t("graffiti-tip")}</Typography.Text>
                     </Flex>
                 </Flex>
             </Button>

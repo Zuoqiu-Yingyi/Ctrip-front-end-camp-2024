@@ -115,7 +115,7 @@
     "edit": {
         "draft": {
             "publish": "Publish",
-            "save": "Save Draft"
+            "save": "Save"
         }
     },
     "empty": {
@@ -189,8 +189,9 @@
     "label-brush-radius": "thickness",
     "labels": {
         "cameras": {
-            "front": "System camera - Front",
-            "rear": "System camera - Rear"
+            "front": "Front camera",
+            "rear": "Rear camera",
+            "system": "System camera"
         },
         "create": "Create",
         "edit": "Edit",
