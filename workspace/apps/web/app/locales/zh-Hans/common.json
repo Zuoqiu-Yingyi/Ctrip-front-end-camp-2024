@@ -40,6 +40,35 @@
             },
             "text": "删除账户"
         },
+        "delete-draft": {
+            "actions": {
+                "confirm1": {
+                    "content": "确认删除草稿 [{{title}}] ?",
+                    "content1": "删除后将同步删除该篇草稿对应的已发布版本与资源文件。",
+                    "title": "删除草稿"
+                }
+            }
+        },
+        "draft": {
+            "content": {
+                "clear": {
+                    "text": "清空内容"
+                },
+                "template": {
+                    "text": "内容模板"
+                }
+            },
+            "create": {
+                "prompt": {
+                    "success": "草稿已创建"
+                }
+            },
+            "update": {
+                "prompt": {
+                    "success": "草稿已更新"
+                }
+            }
+        },
         "extra": "请选择你要进行操作",
         "login": {
             "prompt": {
@@ -65,18 +94,42 @@
                     "content": "用户注册成功"
                 }
             }
+        },
+        "template": {
+            "apply": {
+                "text": "应用模板"
+            }
         }
     },
     "admin-title": "后台审核系统",
     "album": "相册",
     "approved": "已通过",
     "aria": {
+        "cancel": "取消",
         "cancel-search": "取消搜索",
         "card": "游记卡片",
+        "close": "关闭",
+        "confirm": "确认",
         "create": "创建",
         "creation-time": "创建时间",
+        "delete": "删除",
+        "draft": {
+            "delete": "删除草稿",
+            "edit": "编辑草稿",
+            "preview": "预览草稿",
+            "review-status": "查看发布状态",
+            "title": {
+                "template": "草稿标题模板"
+            },
+            "toolbar": {
+                "menu": "控件栏菜单"
+            }
+        },
+        "menu": "菜单",
         "modification-time": "编辑时间",
-        "search": "搜索"
+        "open": "打开",
+        "search": "搜索",
+        "take-photo": "拍照"
     },
     "audit": "审核",
     "auto": "自动",
@@ -96,7 +149,7 @@
     "edit": {
         "draft": {
             "publish": "发布",
-            "save": "保存草稿"
+            "save": "保存"
         }
     },
     "empty": {
@@ -121,11 +174,37 @@
             "label": "当前账户"
         },
         "draft": {
+            "assets": {
+                "rules": {
+                    "length": {
+                        "message": "旅行日记相册中照片数量不能超过 {{maxCount}} 张"
+                    },
+                    "required": {
+                        "message": "旅行日记相册中照片数量不能少于 1 张"
+                    },
+                    "un-uploaded": {
+                        "message": "相册中部分照片上传失败，请稍后重试"
+                    }
+                }
+            },
             "content": {
-                "placeholder": "旅行日记的内容"
+                "placeholder": "旅行日记的内容",
+                "rules": {
+                    "required": {
+                        "message": "旅行日记内容不能为空"
+                    }
+                }
             },
             "title": {
-                "placeholder": "旅行日记的标题"
+                "placeholder": "旅行日记的标题",
+                "rules": {
+                    "length": {
+                        "message": "旅行日记标题不能超过 32 个字符"
+                    },
+                    "required": {
+                        "message": "旅行日记标题不能为空"
+                    }
+                }
             }
         },
         "new-password": {
@@ -159,8 +238,7 @@
                 "required": {
                     "message": "用户名不能为空"
                 }
-            },
-            "rules[0]": "用户名不能为空"
+            }
         }
     },
     "item-content": "内容",
@@ -169,6 +247,18 @@
     "item-user": "用户",
     "keep-login": "保持登录状态",
     "label-brush-radius": "粗细",
+    "labels": {
+        "cameras": {
+            "front": "前置摄像头",
+            "rear": "后置摄像头",
+            "system": "系统相机"
+        },
+        "create": "新建",
+        "edit": "编辑",
+        "preview": "预览",
+        "review-status": "发布状态",
+        "search": "搜索"
+    },
     "loading": "加载中",
     "login": "登录",
     "login-signup": "登录 / 注册",
@@ -191,6 +281,13 @@
     "reject-reason": "拒绝理由",
     "rejected": "已拒绝",
     "remember": "记住我",
+    "review-status": {
+        "canceled": "已取消",
+        "failed": "未通过",
+        "padding": "待审核",
+        "passed": "已通过",
+        "unpublished": "未发布"
+    },
     "search": {
         "draft": {
             "placeholder": "请输入待搜索的关键字"
@@ -209,6 +306,9 @@
     },
     "signup": "注册",
     "status": {
+        "draft-not-publish": {
+            "description": "当前草稿未发布"
+        },
         "not-login": {
             "description": "前往账户页面",
             "title": "当前用户未登录"

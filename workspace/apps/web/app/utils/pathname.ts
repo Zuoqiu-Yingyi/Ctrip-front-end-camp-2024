@@ -23,6 +23,7 @@ export const PATHNAME = {
         draft: "/mobile/draft/",
         user: "/mobile/user/",
 
+        detail: "/mobile/detail/",
         edit: "/mobile/edit/",
     } as const,
 } as const;

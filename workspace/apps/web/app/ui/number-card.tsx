@@ -74,10 +74,10 @@ export default function CardWrapper(): JSX.Element {
 
             await Promise.all(
                 ["success" as TravelNote["state"], "fail" as TravelNote["state"], "waiting" as TravelNote["state"]].map((state) =>
-                    getReviewCount(state, user.current).then((vaule) => {
-                        temp[state] = vaule as number;
+                    getReviewCount(state, user.current).then((value) => {
+                        temp[state] = value as number;
 
-                        temp.total += vaule as number;
+                        temp.total += value as number;
                     }),
                 ),
             );

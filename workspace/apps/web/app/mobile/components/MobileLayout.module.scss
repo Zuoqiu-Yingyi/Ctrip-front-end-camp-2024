@@ -23,7 +23,7 @@
     .header {
         flex: 0;
         width: 100%;
-        border-bottom: solid 1px var(--adm-color-border);
+        border-bottom: 1px solid var(--adm-color-border);
     }
 
     .content {
@@ -36,21 +36,6 @@
     .footer {
         flex: 0;
         width: 100%;
-        border-top: solid 1px var(--adm-color-border);
+        border-top: 1px solid var(--adm-color-border);
     }
-}
-
-.add_button {
-    position: fixed;
-    left: calc(50% - 10px); // 水平居中
-    bottom: 10px; // 距离底部10px
-    bottom: 5px; // 距离底部5px
-    //   transform: translateX(-50%); // 通过负的左偏移实现水平居中
-    width: 40px; // 宽度
-    height: 40px; // 高度
-    border-radius: 50%; // 圆角
-    background-color: #007bff; // 背景色
-    color: #fff; // 文字颜色
-    display: flex; // 设置flex布局以实现垂直居中
-    justify-content: center; // 水平居中
 }

@@ -141,6 +141,13 @@ model Draft {
   creation_time     DateTime       @default(now())
   /// 草稿修改时间 | Draft modification time
   modification_time DateTime       @default(now())
+  /// 发布状态 | Post status
+  /// - `NULL`: 未发布 (默认) | Unpublished (default)
+  /// - `0`: 待审核 | Pending
+  /// - `1`: 已通过 | Passed
+  /// - `2`: 未通过 | Failed
+  /// - `3`: 已取消 | Canceled
+  status            Int?
   /// 作者 ID | Author ID
   author_id         Int
   /// 位置 ID | Coordinate ID

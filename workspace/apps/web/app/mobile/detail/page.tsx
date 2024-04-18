@@ -48,6 +48,14 @@ import {
 import styles from "./page.module.scss";
 import { ClientContext } from "@/contexts/client";
 import { assetsLoader, uid2path } from "@/utils/image";
+import { DetailType } from "@/utils/search-params";
+
+import type {
+    //
+    IDraft,
+    IPublish,
+    IReview,
+} from "@/types/response";
 
 // REF: https://nextjs.org/docs/messages/missing-suspense-with-csr-bailout
 export function Detail() {
@@ -58,13 +66,17 @@ export function Detail() {
 
     const [loading, setLoading] = useState<boolean>(true);
     const [loaded, setLoaded] = useState<boolean>(false);
-    const [data, setData] = useState<any>(null);
-    const uid = searchParams.get("uid");
+    const [data, setData] = useState<IPublish | undefined>();
+    // const [data, setData] = useState<IDraft | IReview | IPublish | undefined>();
 
     // TODO: 若为草稿, 查看审批列表
     // TODO: 若为草稿, 查看已发布的内容
 
     useEffect(() => {
+        const id = parseInt(searchParams.get("id")!); // 草稿/审核
+        const uid = searchParams.get("uid"); // 发布内容
+        const detail_type = searchParams.get("type") as DetailType | null; // 类型
+
         if (uid) {
             (async () => {
                 try {
@@ -74,7 +86,7 @@ export function Detail() {
                     if (response.code !== 0) {
                         throw new Error(response.message);
                     }
-                    const publishs = response.data?.publishs || [];
+                    const publishs = (response.data?.publishs as unknown as IPublish[]) || [];
                     if (publishs.length > 0) {
                         setData(publishs.at(0));
                         setLoading(false);
@@ -93,8 +105,21 @@ export function Detail() {
                     setLoaded(false);
                 }
             })();
+        } else if (id) {
+            switch (detail_type) {
+                default:
+                case DetailType.DRAFT:
+                    // TODO: 加载草稿内容
+                    break;
+                case DetailType.REVIEW:
+                    // TODO: 加载审核内容
+                    break;
+                case DetailType.PUBLISH:
+                    // TODO: 参数错误
+                    break;
+            }
         }
-    }, []);
+    }, [searchParams]);
 
     function onNavBarBack() {
         router.back();
@@ -115,14 +140,14 @@ export function Detail() {
                     left={
                         loaded ? (
                             <Avatar
-                                src={uid2path(data.publisher.profile.avatar)}
+                                src={data?.publisher.profile.avatar ? uid2path(data.publisher.profile.avatar) : ""}
                                 alt={t("avatar")}
                                 style={{ "--size": "32px", "--border-radius": "50%" }}
                             />
                         ) : undefined
                     }
                 >
-                    {loaded ? <span aria-label={t("username")}>{data.publisher.name}</span> : <Skeleton.Title animated={loading} />}
+                    {loaded ? <span aria-label={t("username")}>{data?.publisher.name}</span> : <Skeleton.Title animated={loading} />}
                 </NavBar>
             </div>
             {loaded ? (
@@ -130,7 +155,7 @@ export function Detail() {
                     <div className={styles.swiper_container}>
                         {/* REF: https://mobile.ant.design/zh/components/swiper/ */}
                         <Swiper className={styles.swiper}>
-                            {data.assets.map((asset: { asset_uid: string }) => (
+                            {data?.assets.map((asset: { asset_uid: string }) => (
                                 <Swiper.Item>
                                     <Image
                                         src={asset.asset_uid}
@@ -146,15 +171,15 @@ export function Detail() {
                         className={styles.card_title}
                         aria-label={t("title")}
                     >
-                        {data.title}
+                        {data?.title}
                     </h2>
-                    <p aria-label={t("content")}>{data.content}</p>
+                    <p aria-label={t("content")}>{data?.content}</p>
                     <div className={styles.card_time}>
                         <p>
-                            {t("publish-time")}: {data.publication_time}
+                            {t("publish-time")}: {data?.publication_time}
                         </p>
                         <p>
-                            {t("update-time")}: {data.modification_time}
+                            {t("update-time")}: {data?.modification_time}
                         </p>
                     </div>
                 </>

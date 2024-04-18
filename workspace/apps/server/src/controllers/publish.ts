@@ -353,6 +353,9 @@ export const deleteMutation = procedure //
                             // draft_id: null,
                             // REF: https://www.prisma.io/docs/orm/prisma-client/queries/relation-queries#disconnect-a-related-record
                             draft: {
+                                update: {
+                                    status: null,
+                                },
                                 disconnect: true,
                             },
                         },

@@ -27,6 +27,7 @@ import { useTranslation } from "react-i18next";
 import {
     //
     NavBar,
+    Popover,
     SearchBar,
     Space,
 } from "antd-mobile";
@@ -34,6 +35,7 @@ import {
     //
     AddSquareOutline,
     CloseCircleOutline,
+    MoreOutline,
     SearchOutline,
 } from "antd-mobile-icons";
 
@@ -45,7 +47,6 @@ import {
     MobileContent,
 } from "@/mobile/components/MobileLayout";
 import DraftList from "./DraftList";
-import NotLoginError from "@/mobile/components/NotLoginError";
 import { PATHNAME } from "@/utils/pathname";
 
 /**
@@ -61,7 +62,7 @@ export function Draft() {
      */
     const { t } = useTranslation();
     const router = useRouter();
-    const user = useStore((state) => state.user);
+    const { mode } = useStore.getState();
 
     const [searching, setSearching] = useState<boolean>(false);
     const [searchInput, setSearchInput] = useState<string>("");
@@ -79,36 +80,37 @@ export function Draft() {
         setSearchInput(value);
     }
 
-    /**
-     * 点击游记卡片
-     */
-    function onCardClick(uid: string) {
-        // TODO: 跳转到卡片详情
-        // router.push(`/mobile/detail?uid=${uid}`);
-    }
-
     const nav_bar_right = (
         <div style={{ fontSize: 24 }}>
             <Space style={{ "--gap": "16px" }}>
-                {searching && (
+                {searching ? (
                     <CloseCircleOutline
                         onClick={onSearchBarCancel}
                         aria-label={t("aria.cancel-search")}
                     />
-                )}
-                {!searching && (
-                    <SearchOutline
-                        onClick={onSearchButtonClick}
-                        aria-label={t("aria.search")}
-                    />
-                )}
-                {!searching && (
-                    <AddSquareOutline
-                        onClick={() => {
-                            router.push(PATHNAME.mobile.edit);
-                        }}
-                        aria-label={t("aria.create")}
-                    />
+                ) : (
+                    // REF: https://mobile.ant.design/zh/components/popover
+                    <Popover.Menu
+                        actions={[
+                            {
+                                icon: <SearchOutline />,
+                                text: t("labels.search"),
+                                onClick: onSearchButtonClick,
+                            },
+                            {
+                                icon: <AddSquareOutline />,
+                                text: t("labels.create"),
+                                onClick: () => {
+                                    router.push(PATHNAME.mobile.edit);
+                                },
+                            },
+                        ]}
+                        mode={mode}
+                        trigger="click"
+                        placement="bottom-end"
+                    >
+                        <MoreOutline aria-label={t("aria.menu")} />
+                    </Popover.Menu>
                 )}
             </Space>
         </div>
@@ -134,14 +136,7 @@ export function Draft() {
             </MobileHeader>
 
             <MobileContent>
-                {user.loggedIn ? ( //
-                    <DraftList
-                        searchInput={searchInput}
-                        onCardClick={onCardClick}
-                    />
-                ) : (
-                    <NotLoginError />
-                )}
+                <DraftList searchInput={searchInput} />
             </MobileContent>
         </>
     );

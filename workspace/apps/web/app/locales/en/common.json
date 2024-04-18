@@ -37,6 +37,35 @@
             },
             "text": "Delete Account"
         },
+        "delete-draft": {
+            "actions": {
+                "confirm1": {
+                    "content": "Confirm to delete draft [{{title}}] ?",
+                    "content1": "After deletion, the published version and resource files corresponding to the draft will be deleted simultaneously.",
+                    "title": "Delete draft"
+                }
+            }
+        },
+        "draft": {
+            "content": {
+                "clear": {
+                    "text": "Clear content"
+                },
+                "template": {
+                    "text": "Content template"
+                }
+            },
+            "create": {
+                "prompt": {
+                    "success": "Draft created"
+                }
+            },
+            "update": {
+                "prompt": {
+                    "success": "Draft updated"
+                }
+            }
+        },
         "extra": "Please select what you want to do",
         "login": {
             "prompt": {
@@ -62,18 +91,42 @@
                     "content": "User registration successful"
                 }
             }
+        },
+        "template": {
+            "apply": {
+                "text": "Apply template"
+            }
         }
     },
     "admin-title": "Background audit system",
     "album": "Album",
     "approved": "passed",
     "aria": {
+        "cancel": "Cancel",
         "cancel-search": "Cancel search",
         "card": "travel cards",
+        "close": "Close",
+        "confirm": "Confirm",
         "create": "Create",
         "creation-time": "creation time",
+        "delete": "Delete",
+        "draft": {
+            "delete": "Delete draft",
+            "edit": "Edit draft",
+            "preview": "Preview draft",
+            "review-status": "View publishing status",
+            "title": {
+                "template": "Draft title template"
+            },
+            "toolbar": {
+                "menu": "Control bar menu"
+            }
+        },
+        "menu": "Menu",
         "modification-time": "modification time",
-        "search": "Search"
+        "open": "Open",
+        "search": "Search",
+        "take-photo": "Photograph"
     },
     "audit": "audit",
     "auto": "Automatic",
@@ -93,7 +146,7 @@
     "edit": {
         "draft": {
             "publish": "Publish",
-            "save": "Save Draft"
+            "save": "Save"
         }
     },
     "empty": {
@@ -118,11 +171,37 @@
             "label": "Current Account"
         },
         "draft": {
+            "assets": {
+                "rules": {
+                    "length": {
+                        "message": "The number of photos in the travel diary album cannot exceed {{maxCount}}"
+                    },
+                    "required": {
+                        "message": "The number of photos in the travel diary album cannot be less than 1"
+                    },
+                    "un-uploaded": {
+                        "message": "Some photos in the album failed to upload, please try again later."
+                    }
+                }
+            },
             "content": {
-                "placeholder": "Content of travel diary"
+                "placeholder": "Content of travel diary",
+                "rules": {
+                    "required": {
+                        "message": "Travel diary content cannot be empty"
+                    }
+                }
             },
             "title": {
-                "placeholder": "Title of travel diary"
+                "placeholder": "Title of travel diary",
+                "rules": {
+                    "length": {
+                        "message": "Travel diary title cannot exceed 32 characters"
+                    },
+                    "required": {
+                        "message": "Travel diary title cannot be empty"
+                    }
+                }
             }
         },
         "new-password": {
@@ -165,6 +244,18 @@
     "item-user": "username",
     "keep-login": "Keep me logged in",
     "label-brush-radius": "thickness",
+    "labels": {
+        "cameras": {
+            "front": "Front camera",
+            "rear": "Rear camera",
+            "system": "System camera"
+        },
+        "create": "Create",
+        "edit": "Edit",
+        "preview": "Preview",
+        "review-status": "Post status",
+        "search": "Search"
+    },
     "loading": "Loading",
     "login": "Log in",
     "login-signup": "Log in / Sign up",
@@ -187,6 +278,13 @@
     "reject-reason": "reject reason",
     "rejected": "failed",
     "remember": "remember me",
+    "review-status": {
+        "canceled": "Cancelled",
+        "failed": "Not pass",
+        "padding": "Pending review",
+        "passed": "Passed",
+        "unpublished": "Unpublished"
+    },
     "search": {
         "draft": {
             "placeholder": "Please enter the keyword to be searched"
@@ -205,6 +303,9 @@
     },
     "signup": "Register",
     "status": {
+        "draft-not-publish": {
+            "description": "The current draft is not published"
+        },
         "not-login": {
             "description": "Go to account page",
             "title": "The current user is not logged in"

@@ -78,15 +78,12 @@ const InfiniteScrollDirect = ({ hasMore }: { hasMore?: boolean }) => {
 
 /**
  * @param searchInput The search input value.
- * @param onCardClick Function to handle clicking on the card.
  */
 export function PublishList({
     //
     searchInput,
-    onCardClick,
 }: {
     searchInput: string;
-    onCardClick: (uid: string) => void;
 }): JSX.Element {
     const { t } = useTranslation();
     const { trpc } = useContext(ClientContext);
@@ -188,7 +185,6 @@ export function PublishList({
                         username={publish.publisher.name}
                         cardRefs={cardRefs}
                         handleSetGridRowEnd={handleSetGridRowEnd}
-                        onClick={onCardClick}
                     />
                 ))}
                 <InfiniteScroll

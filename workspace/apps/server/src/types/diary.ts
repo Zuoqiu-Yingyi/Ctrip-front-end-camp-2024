@@ -25,29 +25,32 @@ import {
 import { COORDINATE } from "./coordinate";
 
 /**
- * 日记标题
+ * 旅游日记标题
  */
 export const DIARY_TITLE = z //
     .string({ description: "Diary title" })
+    .min(1)
     .max(32);
 
 /**
- * 日记内容
+ * 旅游日记内容
  */
 export const DIARY_CONTENT = z //
-    .string({ description: "Diary content" });
+    .string({ description: "Diary content" })
+    .min(1);
 
 /**
- * 日记资源文件引用列表
+ * 旅游日记资源文件引用列表
  */
 export const DIARY_ASSETS = z //
-    .array(CUID, { description: "Diary assets IDs" });
+    .array(CUID, { description: "Diary assets IDs" })
+    .min(1);
 
-export const DIARY = z //
+export const DIARY_CREATE = z //
     .object({
-        title: DIARY_TITLE.optional(),
-        content: DIARY_CONTENT.optional(),
-        assets: DIARY_ASSETS.optional(),
+        title: DIARY_TITLE,
+        content: DIARY_CONTENT,
+        assets: DIARY_ASSETS,
         coordinate: COORDINATE.optional(),
     });
 

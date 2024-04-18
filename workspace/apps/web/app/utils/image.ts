@@ -16,6 +16,7 @@
  */
 
 import type { ImageLoader } from "next/image";
+import imageCompression, { type Options } from "browser-image-compression";
 
 import { origin } from "./env";
 export const DEFAULT_AVATAR_PATH = "/static/avatar.png";
@@ -47,3 +48,16 @@ export const avatarLoader: ImageLoader = function ({
 }) {
     return /^[0-9a-z]{24}$/.test(src) ? `/assets/${src}` : DEFAULT_AVATAR_PATH;
 };
+
+/**
+ * 图片优化
+ */
+export async function imageOptimizer(
+    file: File,
+    options: Options = {
+        maxSizeMB: 1,
+        maxWidthOrHeight: 1440,
+    },
+): Promise<File> {
+    return imageCompression(file, options);
+}

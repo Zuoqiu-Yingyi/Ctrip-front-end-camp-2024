@@ -46,8 +46,6 @@ import {
 } from "antd-mobile-icons";
 
 import { SubmitInfoContext } from "@/contexts/mobileEditContext";
-import { ClientContext } from "@/contexts/client";
-
 import EditTab from "@/ui/mobile-edit-tab";
 import {
     //
@@ -58,33 +56,65 @@ import {
 
 export default function EditPage(): JSX.Element {
     const { t } = useTranslation();
-    const { trpc } = useContext(ClientContext);
     const router = useRouter();
     const searchParams = useSearchParams();
 
-    const [tab, setTab] = useState<"text" | "album" | "camera">("text");
-    const [onPress, setOnPress] = useState(false);
     const {
         //
-        saved,
+        id,
+        changed,
         setId,
+        queryDraft,
         uploadTravelNote,
     } = useContext(SubmitInfoContext);
 
+    const [tab, setTab] = useState<"text" | "album" | "camera">("text");
+    const [onPress, setOnPress] = useState(false);
+
     useEffect(() => {
-        const id = searchParams.get("id");
-        if (id) {
-            setId(parseInt(id));
+        // console.debug(searchParams.toString());
+
+        const id_ = searchParams.get("id");
+        if (id_) {
+            const id__ = parseInt(id_);
+            // console.debug(id__, id);
+
+            if (id__ === id) {
+                queryDraft(id__);
+            } else {
+                setId(id__);
+            }
         } else {
             setId(null);
         }
-    }, [searchParams]);
+    }, [searchParams, id]);
 
+    /**
+     * 返回上一页
+     */
     async function onBack() {
-        if (!saved) {
+        if (changed.current.size > 0) {
             // TODO: 当前更改未保存, 需二次确认
         }
         router.back();
+    }
+
+    /**
+     * 保存草稿
+     */
+    async function saveDraft() {
+        setOnPress(true);
+        await uploadTravelNote("draft");
+        setOnPress(false);
+    }
+
+    /**
+     * 发布草稿
+     */
+    async function publishDraft() {
+        setOnPress(true);
+        await uploadTravelNote("publish");
+        setOnPress(false);
     }
 
     return (
@@ -101,15 +131,7 @@ export default function EditPage(): JSX.Element {
                                 shape="rounded"
                                 fill="outline"
                                 disabled={onPress}
-                                style={{
-                                    marginLeft: "auto",
-                                    width: 90,
-                                }}
-                                onClick={async () => {
-                                    setOnPress(true);
-                                    await uploadTravelNote("draft");
-                                    setOnPress(false);
-                                }}
+                                onClick={saveDraft}
                             >
                                 {t("edit.draft.save")}
                             </Button>
@@ -119,15 +141,7 @@ export default function EditPage(): JSX.Element {
                                 shape="rounded"
                                 color="primary"
                                 disabled={onPress}
-                                style={{
-                                    marginLeft: "auto",
-                                    width: 60,
-                                }}
-                                onClick={async () => {
-                                    setOnPress(true);
-                                    await uploadTravelNote("submit");
-                                    setOnPress(false);
-                                }}
+                                onClick={publishDraft}
                             >
                                 {t("edit.draft.publish")}
                             </Button>

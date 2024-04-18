@@ -1,5 +1,19 @@
 # 更改日志 | Change log
 
+## 2024-04-19
+
+- 草稿编辑器支持更新草稿 | Draft editor supports updating drafts
+- 优化草稿编辑器文本编辑页面 | Optimize the text editing page of the draft editor
+
+## 2024-04-18
+
+- 数据库草稿表添加字段 `status` | Add field `status` to the database draft table
+- 改进草稿列表页面 | Improve draft list page
+- 改进标题栏菜单 | Improve title bar menu
+- 添加草稿搜索与删除功能 | Add draft search and delete feature
+- 添加调用系统相机功能 | Add call system camera feature
+- 改进草稿编辑器的相机页面 | Improve the camera page of the draft editor
+
 ## 2024-04-17
 
 - 完善草稿列表页面 | Improve draft list page
