@@ -6,6 +6,7 @@
 - 改进草稿列表页面 | Improve draft list page
 - 改进标题栏菜单 | Improve title bar menu
 - 添加草稿搜索与删除功能 | Add draft search and delete feature
+- 添加调用系统相机功能 | Add call system camera feature
 
 ## 2024-04-17
 

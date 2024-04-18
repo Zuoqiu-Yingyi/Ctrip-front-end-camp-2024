@@ -62,23 +62,35 @@ export default function EditPage(): JSX.Element {
     const router = useRouter();
     const searchParams = useSearchParams();
 
-    const [tab, setTab] = useState<"text" | "album" | "camera">("text");
-    const [onPress, setOnPress] = useState(false);
     const {
         //
+        id,
         saved,
         setId,
+        queryDraft,
         uploadTravelNote,
     } = useContext(SubmitInfoContext);
 
+    const [tab, setTab] = useState<"text" | "album" | "camera">("text");
+    const [onPress, setOnPress] = useState(false);
+
     useEffect(() => {
-        const id = searchParams.get("id");
-        if (id) {
-            setId(parseInt(id));
+        // console.debug(searchParams.toString());
+
+        const id_ = searchParams.get("id");
+        if (id_) {
+            const id__ = parseInt(id_);
+            // console.debug(id__, id);
+
+            if (id__ === id) {
+                queryDraft(id__);
+            } else {
+                setId(id__);
+            }
         } else {
             setId(null);
         }
-    }, [searchParams]);
+    }, [searchParams, id]);
 
     async function onBack() {
         if (!saved) {

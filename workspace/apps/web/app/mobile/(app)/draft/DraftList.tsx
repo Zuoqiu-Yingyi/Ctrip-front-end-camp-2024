@@ -39,13 +39,14 @@ import PullRefresh from "@/mobile/components/PullRefresh";
 
 import DraftCard from "./DraftCard";
 import DraftCardTitle from "./DraftCardTitle";
+import DraftReviewStatusListPopup from "./DraftReviewStatusListPopup";
 
 import {
     //
     handleError,
     handleResponse,
 } from "@/utils/message";
-import type { IDraft } from "@/types/response";
+import { type IDraft } from "@/types/response";
 
 export function InfiniteScrollDirect({ hasMore }: { hasMore?: boolean }) {
     const { t } = useTranslation();
@@ -80,6 +81,9 @@ export function DraftList({
         drafts,
         setDrafts,
     } = useStore.getState();
+
+    const [reviewStatusListPopupVisible, setReviewStatusListPopupVisible] = useState(false);
+    const [reviewStatusDraftId, setReviewStatusDraftId] = useState(0);
 
     const [data, setData] = useState<IDraft[]>([]);
     const [hasMore, setHasMore] = useState(true);
@@ -201,6 +205,14 @@ export function DraftList({
         }
     }
 
+    /**
+     * 获取发布状态
+     */
+    async function checkDraftReviewStatus(id: number) {
+        setReviewStatusDraftId(id);
+        setReviewStatusListPopupVisible(true);
+    }
+
     return (
         <PullRefresh onRefresh={refresh}>
             <Collapse>
@@ -224,6 +236,7 @@ export function DraftList({
                             creation={draft.creation_time}
                             modification={draft.modification_time}
                             onDelete={deleteDraft}
+                            onCheckReviewStatus={checkDraftReviewStatus}
                         />
                     </Collapse.Panel>
                 ))}
@@ -234,6 +247,12 @@ export function DraftList({
             >
                 <InfiniteScrollDirect hasMore={hasMore} />
             </InfiniteScroll>
+
+            <DraftReviewStatusListPopup
+                id={reviewStatusDraftId}
+                visible={reviewStatusListPopupVisible}
+                onClose={() => setReviewStatusListPopupVisible(false)}
+            />
         </PullRefresh>
     );
 }

@@ -51,6 +51,7 @@ export function DraftCard({
     creation,
     modification,
     onDelete,
+    onCheckReviewStatus,
 }: {
     id: number;
     coverUid: string;
@@ -59,6 +60,7 @@ export function DraftCard({
     creation: TTimestamp_ISO_8601;
     modification: TTimestamp_ISO_8601;
     onDelete: (id: number, title: string) => any;
+    onCheckReviewStatus: (id: number) => any;
 }) {
     const { t } = useTranslation();
     const router = useRouter();
@@ -93,7 +95,7 @@ export function DraftCard({
      * 查看发布状态
      */
     async function checkPublishStatus() {
-        // TODO: 查看发布状态
+        onCheckReviewStatus(id);
     }
 
     /**

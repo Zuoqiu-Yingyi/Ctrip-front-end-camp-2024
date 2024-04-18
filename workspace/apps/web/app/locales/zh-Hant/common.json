@@ -77,10 +77,14 @@
     "album": "相簿",
     "approved": "已通過",
     "aria": {
+        "cancel": "取消",
         "cancel-search": "取消搜尋",
         "card": "遊記卡片",
+        "close": "關閉",
+        "confirm": "確認",
         "create": "創建",
         "creation-time": "創建時間",
+        "delete": "刪除",
         "draft": {
             "delete": "刪除草稿",
             "edit": "編輯草稿",
@@ -89,7 +93,9 @@
         },
         "menu": "選單",
         "modification-time": "編輯時間",
-        "search": "搜尋"
+        "open": "打開",
+        "search": "搜尋",
+        "take-photo": "拍照"
     },
     "audit": "審核",
     "auto": "自動",
@@ -182,6 +188,10 @@
     "keep-login": "保持登入狀態",
     "label-brush-radius": "粗細",
     "labels": {
+        "cameras": {
+            "front": "系統相機-前攝",
+            "rear": "系統相機-後攝"
+        },
         "create": "新建",
         "edit": "編輯",
         "preview": "預覽",
@@ -235,6 +245,9 @@
     },
     "signup": "註冊",
     "status": {
+        "draft-not-publish": {
+            "description": "目前草稿未發布"
+        },
         "not-login": {
             "description": "前往帳戶頁面",
             "title": "目前用戶未登入"

@@ -46,10 +46,10 @@ export interface ICoordinate {
     latitude: number;
     longitude: number;
     accuracy: number;
-    altitude?: number;
-    altitude_accuracy?: number;
-    heading?: number;
-    speed?: number;
+    altitude: number | null;
+    altitude_accuracy: number | null;
+    heading: number | null;
+    speed: number | null;
 }
 
 /**

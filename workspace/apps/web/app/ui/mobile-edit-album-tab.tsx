@@ -17,7 +17,7 @@
 
 import { Button, Flex, Typography } from "antd";
 import { HighlightFilled, UpOutlined } from "@ant-design/icons";
-import { ImageUploader, Toast, Popup, ImageUploadItem } from "antd-mobile";
+import { ImageUploader, Toast, Popup, ImageUploadItem, Divider } from "antd-mobile";
 import DrawPanel from "./draw-canvas";
 import { useContext, useState } from "react";
 import React from "react";
@@ -29,11 +29,17 @@ const { Title, Text } = Typography;
 export default function EditAlbumTab(): JSX.Element {
     const { t, i18n } = useTranslation();
 
-    const maxCount = 3;
+    const maxCount = 9;
 
     const [popupVisible, setPopupVisible] = useState(false);
 
-    const { fileList, setFileList, addImage, delImage } = useContext(SubmitInfoContext);
+    const {
+        //
+        fileList,
+        setFileList,
+        addImage,
+        delImage,
+    } = useContext(SubmitInfoContext);
 
     return (
         <Flex
@@ -46,19 +52,21 @@ export default function EditAlbumTab(): JSX.Element {
                 columns={3}
                 value={fileList}
                 onChange={setFileList}
-                upload={(file) => {
+                upload={async (file) => {
                     return addImage(file);
                 }}
                 onDelete={(item: ImageUploadItem) => {
                     delImage(item);
                 }}
                 multiple
-                maxCount={3}
+                maxCount={maxCount}
                 showUpload={fileList.length < maxCount}
                 onCountExceed={(exceed) => {
                     Toast.show(`最多选择 ${maxCount} 张图片，你多选了 ${exceed} 张`);
                 }}
             />
+
+            <Divider />
 
             <Button
                 type="dashed"
@@ -87,7 +95,6 @@ export default function EditAlbumTab(): JSX.Element {
 
                         <Text>{t("graffiti-tip")}</Text>
                     </Flex>
-                    <UpOutlined />
                 </Flex>
             </Button>
 

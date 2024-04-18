@@ -20,11 +20,15 @@ import EditCameraTab from "./mobile-edit-camera-tab";
 import EditAlbumTab from "./mobile-edit-album-tab";
 
 export default function EditTab({ tabKey }: { tabKey: "text" | "album" | "camera" }): JSX.Element {
-    if (tabKey === "text") {
-        return <EditTextTab />;
-    } else if (tabKey === "album") {
-        return <EditAlbumTab />;
-    } else {
-        return <EditCameraTab />;
+    switch (tabKey) {
+        default:
+        case "text":
+            return <EditTextTab />;
+
+        case "album":
+            return <EditAlbumTab />;
+
+        case "camera":
+            return <EditCameraTab />;
     }
 }

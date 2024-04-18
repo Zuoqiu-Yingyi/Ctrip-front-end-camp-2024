@@ -27,7 +27,6 @@ import {
     Toast,
     ImageUploadItem,
 } from "antd-mobile";
-import imageCompression from "browser-image-compression";
 import CanvasDraw from "react-canvas-draw";
 
 import { upload } from "@/utils/assets";
@@ -37,6 +36,17 @@ import {
     uploadSubmit,
 } from "@/utils/draft";
 import { trpc } from "@/utils/trpc";
+import { handleError } from "@/utils/message";
+import { IDraft } from "@/types/response";
+import { imageOptimizer, uid2path } from "@/utils/image";
+import { blob2dataURL } from "@/utils/file";
+
+export enum DraftField {
+    title,
+    content,
+    coordinate,
+    assets,
+}
 
 export const SubmitInfoContext = createContext<{
     id: number | null;
@@ -44,21 +54,28 @@ export const SubmitInfoContext = createContext<{
     mainContent: string;
     fileList: ImageUploadItem[];
     coordinate?: GeolocationCoordinates;
+    assets: string[];
     user: MutableRefObject<typeof trpc>;
     saved: boolean;
 
+    queryDraft: (id: number) => any;
+
     setId: (id: number | null) => void;
+    setAssets: (assets: string[]) => void;
     setSaved: (saved: boolean) => void;
+    setFileList: (items: ImageUploadItem[]) => void;
 
     resetTitle: Function;
     resetMainContent: Function;
     // setFileList: (items: ImageUploadItem[]) => void;
-    setFileList: (items: ImageUploadItem[]) => void;
-    addImage: Function;
-    delImage: Function;
     uploadTravelNote: Function;
-    addDraw: Function;
-    addPicture: Function;
+
+    addImage: (file: File) => ImageUploadItem;
+    delImage: (item: ImageUploadItem) => boolean;
+    addDraw: (draw: CanvasDraw | null) => void;
+    addPicture: (canvas: HTMLCanvasElement) => void;
+    addFileList: (files: FileList) => void;
+
     updateCoordinate: Function;
     deleteCoordinate: Function;
 }>(undefined as any);
@@ -67,16 +84,15 @@ export default function SubmitInfoProvider({ children }: { children: React.React
     const drawNum = useRef(0);
 
     const [id, setId] = useState<number | null>(null);
-
     const [title, setTitle] = useState("");
-
     const [mainContent, setMainContent] = useState("");
+    const [coordinate, setCoordinate] = useState<GeolocationCoordinates | undefined>();
+    const [assets, setAssets] = useState<string[]>([]);
 
     const [saved, setSaved] = useState(true);
+    const changed = useRef(new Set<DraftField>());
 
     const [fileList, setFileList] = useState<ImageUploadItem[]>([]);
-
-    const [coordinate, setCoordinate] = useState<GeolocationCoordinates | undefined>();
 
     const uploadImages = useRef<Map<string, Blob>>(new Map());
 
@@ -152,6 +168,7 @@ export default function SubmitInfoProvider({ children }: { children: React.React
             });
         } else {
             try {
+                // TODO: 重构以区分创建与更新
                 if (type === "draft") {
                     await submitNewDraft();
                 } else {
@@ -183,6 +200,7 @@ export default function SubmitInfoProvider({ children }: { children: React.React
             );
         });
         if (position) {
+            changed.current.add(DraftField.coordinate);
             setCoordinate(position.coords);
             return position.coords;
         } else {
@@ -191,7 +209,19 @@ export default function SubmitInfoProvider({ children }: { children: React.React
     }
 
     function deleteCoordinate() {
+        changed.current.add(DraftField.coordinate);
         setCoordinate(undefined);
+    }
+
+    function addFileList(files: FileList) {
+        const images: ImageUploadItem[] = [];
+        for (let i = 0; i < files.length; i++) {
+            const file = files.item(i);
+            if (file) {
+                images.push(addImage(file));
+            }
+        }
+        setFileList([...fileList, ...images]);
     }
 
     function addPicture(canvas: HTMLCanvasElement) {
@@ -206,19 +236,14 @@ export default function SubmitInfoProvider({ children }: { children: React.React
             },
         ]);
 
-        canvas.toBlob((blob: Blob | null) => {
+        canvas.toBlob(async (blob: Blob | null) => {
             if (blob !== null) {
-                imageCompression(new File([blob], "temp.png"), {
-                    maxSizeMB: 0.6,
-                    maxWidthOrHeight: 1080,
-                    useWebWorker: true,
-                }).then(function (compressedFile) {
-                    if (!delImages.current.has(`picture-${drawIndex}`)) {
-                        uploadImages.current.set(`draw-${drawIndex}`, compressedFile);
-                    } else {
-                        delImages.current.delete(`picture-${drawIndex}`);
-                    }
-                });
+                const compressedFile = await imageOptimizer(new File([blob], "temp.png"));
+                if (!delImages.current.has(`picture-${drawIndex}`)) {
+                    uploadImages.current.set(`draw-${drawIndex}`, compressedFile);
+                } else {
+                    delImages.current.delete(`picture-${drawIndex}`);
+                }
             }
         });
     }
@@ -237,27 +262,18 @@ export default function SubmitInfoProvider({ children }: { children: React.React
         ]);
 
         // @ts-ignore
-        draw?.canvasContainer.children[1].toBlob((file: File) => {
-            imageCompression(file, {
-                maxSizeMB: 0.6,
-                maxWidthOrHeight: 1080,
-                useWebWorker: true,
-            }).then(function (compressedFile) {
-                if (!delImages.current.has(`draw-${drawIndex}`)) {
-                    uploadImages.current.set(`draw-${drawIndex}`, compressedFile);
-                } else {
-                    delImages.current.delete(`draw-${drawIndex}`);
-                }
-            });
+        draw?.canvasContainer.children[1].toBlob(async (file: File) => {
+            const compressedFile = await imageOptimizer(file);
+            if (!delImages.current.has(`draw-${drawIndex}`)) {
+                uploadImages.current.set(`draw-${drawIndex}`, compressedFile);
+            } else {
+                delImages.current.delete(`draw-${drawIndex}`);
+            }
         });
     }
 
-    function addImage(file: File) {
-        imageCompression(file, {
-            maxSizeMB: 0.6,
-            maxWidthOrHeight: 1080,
-            useWebWorker: true,
-        }).then(function (compressedFile) {
+    function addImage(file: File): ImageUploadItem {
+        imageOptimizer(file).then(function (compressedFile) {
             if (!delImages.current.has(file.name)) {
                 uploadImages.current.set(file.name, compressedFile);
             } else {
@@ -271,9 +287,13 @@ export default function SubmitInfoProvider({ children }: { children: React.React
         };
     }
 
+    /**
+     * 删除图片
+     */
     function delImage(item: ImageUploadItem) {
         if (uploadImages.current.has(item.key as string)) {
             uploadImages.current.delete(item.key as string);
+            URL.revokeObjectURL(item.url);
         } else {
             delImages.current.add(item.key as string);
         }
@@ -291,6 +311,7 @@ export default function SubmitInfoProvider({ children }: { children: React.React
      * @beta
      */
     function resetTitle(newTitle: string) {
+        changed.current.add(DraftField.title);
         setTitle(newTitle);
     }
 
@@ -304,7 +325,46 @@ export default function SubmitInfoProvider({ children }: { children: React.React
      * @beta
      */
     function resetMainContent(newMainContent: string) {
+        changed.current.add(DraftField.content);
         setMainContent(newMainContent);
+    }
+
+    /**
+     * 查询草稿内容
+     */
+    async function queryDraft(id_: number) {
+        try {
+            const response = await user.current.draft.list.query({ ids: [id_] });
+            handleError(response);
+            const drafts: IDraft[] = (response.data?.drafts as any[]) ?? [];
+            if (drafts.length > 0) {
+                const draft = drafts[0];
+                setTitle(draft.title);
+                setMainContent(draft.content);
+                setCoordinate(
+                    draft.coordinate
+                        ? {
+                              latitude: draft.coordinate.latitude,
+                              longitude: draft.coordinate.longitude,
+                              accuracy: draft.coordinate.accuracy,
+                              altitude: draft.coordinate.altitude,
+                              altitudeAccuracy: draft.coordinate.altitude_accuracy,
+                              heading: draft.coordinate.heading,
+                              speed: draft.coordinate.speed,
+                          }
+                        : undefined,
+                );
+                setFileList(
+                    draft.assets.map((asset) => {
+                        return {
+                            key: `asset-${asset.index}`,
+                            url: uid2path(asset.asset_uid),
+                            extra: asset,
+                        };
+                    }),
+                );
+            }
+        } catch (error) {}
     }
 
     return (
@@ -317,19 +377,27 @@ export default function SubmitInfoProvider({ children }: { children: React.React
                 title,
                 mainContent,
                 coordinate,
+                assets,
+
                 fileList,
 
+                queryDraft,
+
                 setId,
+                setAssets,
                 setSaved,
+                setFileList,
 
                 addPicture,
                 uploadTravelNote,
-                setFileList,
                 resetTitle,
                 resetMainContent,
+
                 addImage,
                 delImage,
                 addDraw,
+                addFileList,
+
                 updateCoordinate,
                 deleteCoordinate,
             }}

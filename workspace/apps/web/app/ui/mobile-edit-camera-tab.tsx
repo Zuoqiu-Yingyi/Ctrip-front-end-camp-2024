@@ -15,65 +15,236 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { Layout, FloatButton } from "antd";
-import { CameraOutline, CheckOutline, CloseOutline } from "antd-mobile-icons";
-import { useContext, useEffect, useRef, useState } from "react";
-import { openCamera, getPicture, closeCamera } from "@/utils/camera";
+import {
+    //
+    CSSProperties,
+    useContext,
+    useEffect,
+    useRef,
+    useState,
+} from "react";
+import { useTranslation } from "react-i18next";
+import {
+    //
+    Layout,
+    FloatButton,
+} from "antd";
+import { Popover } from "antd-mobile";
+import {
+    //
+    CameraOutline,
+    CheckOutline,
+    CloseOutline,
+    DeleteOutline,
+    EyeInvisibleOutline,
+    EyeOutline,
+    MoreOutline,
+    PictureOutline,
+    UserCircleOutline,
+    UserOutline,
+} from "antd-mobile-icons";
+import {
+    //
+    openCamera,
+    getPicture,
+    closeCamera,
+} from "@/utils/camera";
 import { SubmitInfoContext } from "@/contexts/mobileEditContext";
+import { useStore } from "@/contexts/store";
 
 export default function EditCameraTab(): JSX.Element {
-    const { addPicture } = useContext(SubmitInfoContext);
+    const { t } = useTranslation();
+    const { mode } = useStore.getState();
+    const {
+        //
+        addPicture,
+        addFileList,
+    } = useContext(SubmitInfoContext);
 
     const cameraVideoRef = useRef<HTMLVideoElement>(null);
-
-    const cameraCanvasRef = useRef<HTMLCanvasElement>(null);
+    const cameraReviewRef = useRef<HTMLCanvasElement>(null);
+    const cameraInputRef = useRef<HTMLInputElement>(null);
 
     const [onVideo, setOnVideo] = useState<boolean>(true);
+    const [viewfinderOpened, setViewfinderOpened] = useState<boolean>(false);
 
     useEffect(() => {
-        openCamera(cameraVideoRef, cameraCanvasRef);
+        switchViewfinder(true);
+
+        return () => {
+            switchViewfinder(false);
+        };
     }, []);
 
-    function takePicture() {
-        getPicture(cameraVideoRef, cameraCanvasRef);
+    function switchViewfinder(open: boolean) {
+        if (open) {
+            openCamera(cameraVideoRef, cameraReviewRef);
+            setViewfinderOpened(true);
+        } else {
+            closeCamera(cameraVideoRef);
+            setViewfinderOpened(false);
+        }
+    }
+
+    /**
+     * 拍摄照片
+     */
+    function photograph() {
+        getPicture(cameraVideoRef, cameraReviewRef);
         setOnVideo(false);
     }
 
+    /**
+     * 调用系统相机
+     */
+    function callSystemCamera(capture: "user" | "environment") {
+        const input = cameraInputRef.current;
+        if (input) {
+            input.capture = capture;
+            input.onchange = () => {
+                if (input.files) {
+                    addFileList(input.files);
+                }
+            };
+            input.click();
+        }
+    }
+
+    const bottom_style: CSSProperties = {
+        bottom: "64px",
+        height: "16vw",
+        width: "16vw",
+    }; // 按钮样式
+    const bottom_icon_style: CSSProperties = {
+        height: "7vw",
+        width: "7vw",
+        marginLeft: "-1vw",
+    }; // 按钮图标样式
+
     return (
         <Layout style={{ flex: 1 }}>
+            <input
+                ref={cameraInputRef}
+                type="file"
+                accept="image/*"
+                style={{
+                    display: "none",
+                }}
+            />
             <video
-                id="cameraVideo"
                 ref={cameraVideoRef}
-                // width="100%"
-                style={{ display: onVideo ? "block" : "none" }}
+                style={{
+                    display: onVideo ? "block" : "none",
+                }}
             />
             <canvas
-                id="cameraCanvas"
-                ref={cameraCanvasRef}
-                style={{ border: "1px solid black", display: !onVideo ? "block" : "none" }}
+                ref={cameraReviewRef}
+                style={{
+                    margin: "0.5em",
+                    border: "1px solid var(--adm-color-text)",
+                    display: !onVideo ? "block" : "none",
+                }}
             />
-            {onVideo ? (
+
+            {/* 开启/关闭 取景器 */}
+            {viewfinderOpened ? (
                 <FloatButton
-                    icon={<CameraOutline style={{ height: "30px", width: "30px", marginLeft: "-6" }} />}
-                    style={{ right: "42%", bottom: "60px", height: "60px", width: "60px" }}
-                    onClick={takePicture}
+                    style={{
+                        ...bottom_style,
+                        left: "16vw",
+                    }}
+                    icon={<CloseOutline style={bottom_icon_style} />}
+                    onClick={() => {
+                        switchViewfinder(false);
+                    }}
+                    aria-label={t("aria.close")}
                 />
             ) : (
+                <FloatButton
+                    style={{
+                        ...bottom_style,
+                        left: "16vw",
+                    }}
+                    icon={<EyeOutline style={bottom_icon_style} />}
+                    onClick={() => {
+                        switchViewfinder(true);
+                    }}
+                    aria-label={t("aria.open")}
+                />
+            )}
+
+            {onVideo ? (
                 <>
+                    {/* 拍摄按钮 */}
                     <FloatButton
-                        icon={<CheckOutline style={{ height: "30px", width: "30px", marginLeft: "-6" }} />}
-                        style={{ right: "42%", bottom: "60px", height: "60px", width: "60px" }}
-                        onClick={() => {
-                            addPicture(cameraCanvasRef.current);
-                            closeCamera(cameraVideoRef);
+                        style={{
+                            ...bottom_style,
+                            right: "42vw",
                         }}
+                        icon={<CameraOutline style={bottom_icon_style} />}
+                        onClick={photograph}
+                        aria-label={t("aria.take-photo")}
                     />
+
+                    {/* 菜单按钮 */}
+                    <Popover.Menu
+                        actions={[
+                            {
+                                icon: <PictureOutline />,
+                                text: t("labels.cameras.rear"),
+                                onClick: () => callSystemCamera("environment"),
+                            },
+                            {
+                                icon: <UserCircleOutline />,
+                                text: t("labels.cameras.front"),
+                                onClick: () => callSystemCamera("user"),
+                            },
+                        ]}
+                        mode={mode}
+                        trigger="click"
+                        placement="top-end"
+                    >
+                        <FloatButton
+                            style={{
+                                ...bottom_style,
+                                right: "16vw",
+                            }}
+                            icon={<MoreOutline style={bottom_icon_style} />}
+                            aria-label={t("aria.menu")}
+                        />
+                    </Popover.Menu>
+                </>
+            ) : (
+                <>
+                    {/* 确认按钮 */}
                     <FloatButton
-                        icon={<CloseOutline style={{ height: "30px", width: "30px", marginLeft: "-6" }} />}
-                        style={{ right: "25%", bottom: "60px", height: "60px", width: "60px" }}
+                        style={{
+                            ...bottom_style,
+                            right: "42vw",
+                        }}
+                        icon={<CheckOutline style={bottom_icon_style} />}
+                        onClick={() => {
+                            if (cameraReviewRef.current) {
+                                addPicture(cameraReviewRef.current);
+                            }
+                            setOnVideo(true);
+                        }}
+                        aria-label={t("aria.confirm")}
+                    />
+
+                    {/* 取消按钮 */}
+                    <FloatButton
+                        style={{
+                            right: "16vw",
+                            bottom: "64px",
+                            height: "16vw",
+                            width: "16vw",
+                        }}
+                        icon={<DeleteOutline style={bottom_icon_style} />}
                         onClick={() => {
                             setOnVideo(true);
                         }}
+                        aria-label={t("aria.cancel")}
                     />
                 </>
             )}

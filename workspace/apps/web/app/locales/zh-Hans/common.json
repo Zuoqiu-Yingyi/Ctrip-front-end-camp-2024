@@ -80,10 +80,14 @@
     "album": "相册",
     "approved": "已通过",
     "aria": {
+        "cancel": "取消",
         "cancel-search": "取消搜索",
         "card": "游记卡片",
+        "close": "关闭",
+        "confirm": "确认",
         "create": "创建",
         "creation-time": "创建时间",
+        "delete": "删除",
         "draft": {
             "delete": "删除草稿",
             "edit": "编辑草稿",
@@ -92,7 +96,9 @@
         },
         "menu": "菜单",
         "modification-time": "编辑时间",
-        "search": "搜索"
+        "open": "打开",
+        "search": "搜索",
+        "take-photo": "拍照"
     },
     "audit": "审核",
     "auto": "自动",
@@ -186,6 +192,10 @@
     "keep-login": "保持登录状态",
     "label-brush-radius": "粗细",
     "labels": {
+        "cameras": {
+            "front": "系统相机-前摄",
+            "rear": "系统相机-后摄"
+        },
         "create": "新建",
         "edit": "编辑",
         "preview": "预览",
@@ -239,6 +249,9 @@
     },
     "signup": "注册",
     "status": {
+        "draft-not-publish": {
+            "description": "当前草稿未发布"
+        },
         "not-login": {
             "description": "前往账户页面",
             "title": "当前用户未登录"

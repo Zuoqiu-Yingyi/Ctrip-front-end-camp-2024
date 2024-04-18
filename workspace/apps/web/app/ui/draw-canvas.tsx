@@ -46,7 +46,7 @@ export default function DrawPanel({ back }: { back: () => void }): JSX.Element {
 
     const [brushColor, setBrushColor] = useState("#000000");
 
-    const [brushRadius, setBrushRadius] = useState(2);
+    const [brushRadius, setBrushRadius] = useState(1);
 
     const props = {
         ...defaultProps,
@@ -81,6 +81,9 @@ export default function DrawPanel({ back }: { back: () => void }): JSX.Element {
                         {t("confirmed")}
                     </Button>
                 }
+                style={{
+                    borderBottom: "1px solid var(--adm-color-border)",
+                }}
             >
                 {t("drawing-board")}
             </NavBar>
@@ -90,15 +93,12 @@ export default function DrawPanel({ back }: { back: () => void }): JSX.Element {
                 justify="around"
                 style={{
                     width: "100%",
+                    paddingTop: "2px",
+                    borderTop: "1px solid var(--adm-color-border)",
                 }}
             >
                 <Space align="center">
-                    <Title
-                        level={5}
-                        style={{ margin: 0 }}
-                    >
-                        {t("label-brush-radius") + ": "}
-                    </Title>
+                    <span style={{ fontSize: "125%" }}>{t("label-brush-radius") + ": "}</span>
                     <Slider
                         min={1}
                         max={20}
