@@ -20,7 +20,6 @@
 import { useRouter } from "next/navigation";
 import { useTranslation } from "react-i18next";
 import {
-    Divider,
     //
     Ellipsis,
     Image,
@@ -30,18 +29,15 @@ import {
     Tag,
 } from "antd-mobile";
 import {
-    AddCircleOutline,
-    DeleteOutline,
     //
+    AddCircleOutline,
     EditFill,
     EditSOutline,
-    EyeOutline,
-    MessageOutline,
 } from "antd-mobile-icons";
 
 import styles from "./page.module.scss";
 import { uid2path } from "@/utils/image";
-import { TTimestamp_ISO_8601 } from "@/types/response";
+import { type TTimestamp_ISO_8601 } from "@/types/response";
 import { timestampFormat } from "@/utils/time";
 import { PATHNAME } from "@/utils/pathname";
 import { DetailType } from "@/utils/search-params";
@@ -54,6 +50,7 @@ export function DraftCard({
     content,
     creation,
     modification,
+    onDelete,
 }: {
     id: number;
     coverUid: string;
@@ -61,6 +58,7 @@ export function DraftCard({
     content: string;
     creation: TTimestamp_ISO_8601;
     modification: TTimestamp_ISO_8601;
+    onDelete: (id: number, title: string) => any;
 }) {
     const { t } = useTranslation();
     const router = useRouter();
@@ -69,7 +67,7 @@ export function DraftCard({
      * 点击卡片
      */
     function onClickCard() {
-        // TODO: 点击卡片
+        editDraft();
     }
 
     /**
@@ -102,7 +100,7 @@ export function DraftCard({
      * 删除草稿
      */
     async function deleteDraft() {
-        // TODO: 删除草稿
+        onDelete(id, title);
     }
 
     return (
@@ -112,52 +110,28 @@ export function DraftCard({
                 {
                     key: "delete",
                     color: "danger",
-                    text: (
-                        <>
-                            <DeleteOutline aria-label={t("aria.draft.delete")} />
-                            &thinsp;
-                            {t("delete")}
-                        </>
-                    ),
+                    text: t("delete"),
                     onClick: deleteDraft,
-                },
-                {
-                    key: "review",
-                    color: "light",
-                    text: (
-                        <>
-                            <MessageOutline aria-label={t("aria.draft.review-status")} />
-                            &thinsp;
-                            {t("labels.review-status")}
-                        </>
-                    ),
-                    onClick: checkPublishStatus,
                 },
             ]}
             rightActions={[
                 {
                     key: "edit",
                     color: "light",
-                    text: (
-                        <>
-                            <EditSOutline aria-label={t("aria.draft.edit")} />
-                            &thinsp;
-                            {t("labels.edit")}
-                        </>
-                    ),
+                    text: t("labels.edit"),
                     onClick: editDraft,
                 },
                 {
                     key: "preview",
                     color: "weak",
-                    text: (
-                        <>
-                            <EyeOutline aria-label={t("aria.draft.preview")} />
-                            &thinsp;
-                            {t("labels.preview")}
-                        </>
-                    ),
+                    text: t("labels.preview"),
                     onClick: previewDraft,
+                },
+                {
+                    key: "review",
+                    color: "primary",
+                    text: t("labels.review-status"),
+                    onClick: checkPublishStatus,
                 },
             ]}
         >

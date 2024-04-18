@@ -29,6 +29,7 @@ import {
     Footer,
     DotLoading,
     Collapse,
+    Dialog,
 } from "antd-mobile";
 import { useTranslation } from "react-i18next";
 
@@ -71,6 +72,7 @@ export function DraftList({
 }: {
     searchInput: string;
 }): JSX.Element {
+    const { t } = useTranslation();
     const { trpc } = useContext(ClientContext);
     const {
         //
@@ -87,13 +89,22 @@ export function DraftList({
     const count = 16; // 一次动态加载数量
 
     useEffect(() => {
+        // console.debug(searchInput);
+
         if (searchInput) {
-            // TODO: 搜索功能
+            /* 搜索功能 */
+            setHasMore(false);
+            const keyword = searchInput.trim().toLocaleLowerCase();
+            setData(drafts.filter((draft) => draft.title.toLocaleLowerCase().includes(keyword)));
         } else {
-            refresh();
+            setCursor(0);
+            setHasMore(true);
         }
     }, [searchInput]);
 
+    /**
+     * 加载更多草稿
+     */
     async function loadMore() {
         // console.debug("loadMore");
         setHasMore(false);
@@ -124,10 +135,70 @@ export function DraftList({
         }
     }
 
+    /**
+     * 重新加载草稿列表
+     */
     async function refresh() {
+        // console.debug("refresh");
+
         setReload(true);
         setCursor(0);
         await loadMore();
+    }
+
+    /**
+     * 删除草稿
+     */
+    async function deleteDraft(id: number, title: string) {
+        try {
+            /* 二次确认 */
+            const confirm1 = await new Promise<boolean>((resolve) => {
+                // REF: https://mobile.ant.design/zh/components/dialog#dialogshow
+                const handler = Dialog.show({
+                    title: t("actions.delete-draft.actions.confirm1.title"),
+                    content: (
+                        <>
+                            {t("actions.delete-draft.actions.confirm1.content", { title })}
+                            <br />
+                            {t("actions.delete-draft.actions.confirm1.content1", { title })}
+                        </>
+                    ),
+                    actions: [
+                        [
+                            {
+                                key: "cancel",
+                                text: t("cancel"),
+                                onClick: () => {
+                                    handler.close();
+                                    resolve(false);
+                                },
+                            },
+                            {
+                                key: "delete",
+                                text: t("delete"),
+                                onClick: () => {
+                                    handler.close();
+                                    resolve(true);
+                                },
+                                bold: true,
+                                danger: true,
+                            },
+                        ],
+                    ],
+                });
+            });
+            if (!confirm1) {
+                return;
+            }
+
+            const response = await trpc.draft.delete.mutate({ ids: [id] });
+            handleResponse(response);
+            const _drafts: IDraft[] = (response.data?.drafts as any[]) || [];
+            const ids = _drafts.map((draft) => draft.id);
+            setDrafts(drafts.filter((draft) => !(draft.id in ids)));
+        } catch (error) {
+            handleError(error);
+        }
     }
 
     return (
@@ -152,6 +223,7 @@ export function DraftList({
                             content={draft.content}
                             creation={draft.creation_time}
                             modification={draft.modification_time}
+                            onDelete={deleteDraft}
                         />
                     </Collapse.Panel>
                 ))}

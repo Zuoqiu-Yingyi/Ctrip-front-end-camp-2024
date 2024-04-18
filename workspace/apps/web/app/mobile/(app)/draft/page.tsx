@@ -47,7 +47,6 @@ import {
     MobileContent,
 } from "@/mobile/components/MobileLayout";
 import DraftList from "./DraftList";
-import NotLoginError from "@/mobile/components/NotLoginError";
 import { PATHNAME } from "@/utils/pathname";
 
 /**
@@ -63,11 +62,7 @@ export function Draft() {
      */
     const { t } = useTranslation();
     const router = useRouter();
-    const {
-        //
-        user,
-        mode,
-    } = useStore.getState();
+    const { mode } = useStore.getState();
 
     const [searching, setSearching] = useState<boolean>(false);
     const [searchInput, setSearchInput] = useState<string>("");
@@ -141,11 +136,7 @@ export function Draft() {
             </MobileHeader>
 
             <MobileContent>
-                {user.loggedIn ? ( //
-                    <DraftList searchInput={searchInput} />
-                ) : (
-                    <NotLoginError />
-                )}
+                <DraftList searchInput={searchInput} />
             </MobileContent>
         </>
     );

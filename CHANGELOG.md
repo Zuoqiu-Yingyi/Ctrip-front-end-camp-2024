@@ -5,6 +5,7 @@
 - 数据库草稿表添加字段 `status` | Add field `status` to the database draft table
 - 改进草稿列表页面 | Improve draft list page
 - 改进标题栏菜单 | Improve title bar menu
+- 添加草稿搜索与删除功能 | Add draft search and delete feature
 
 ## 2024-04-17
 

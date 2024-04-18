@@ -37,6 +37,15 @@
             },
             "text": "Delete Account"
         },
+        "delete-draft": {
+            "actions": {
+                "confirm1": {
+                    "content": "Confirm to delete draft [{{title}}] ?",
+                    "content1": "After deletion, the published version and resource files corresponding to the draft will be deleted simultaneously.",
+                    "title": "Delete draft"
+                }
+            }
+        },
         "extra": "Please select what you want to do",
         "login": {
             "prompt": {

@@ -37,6 +37,15 @@
             },
             "text": "刪除帳戶"
         },
+        "delete-draft": {
+            "actions": {
+                "confirm1": {
+                    "content": "確認刪除草稿 [{{title}}] ？",
+                    "content1": "刪除後將同步刪除該篇草稿對應的已發佈版本與資源檔案。",
+                    "title": "刪除草稿"
+                }
+            }
+        },
         "extra": "請選擇你要進行操作",
         "login": {
             "prompt": {
