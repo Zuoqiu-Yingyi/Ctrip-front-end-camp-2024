@@ -220,6 +220,8 @@ export function Detail() {
         if (data) {
             if ("publisher" in data) {
                 return data.publisher.profile.avatar ? uid2path(data.publisher.profile.avatar) : "";
+            } else if ("submitter" in data) {
+                return data.submitter.profile.avatar ? uid2path(data.submitter.profile.avatar) : "";
             } else {
                 return user.avatar ? uid2path(user.avatar) : "";
             }
@@ -231,6 +233,8 @@ export function Detail() {
         if (data) {
             if ("publisher" in data) {
                 return data.publisher.name;
+            } else if ("submitter" in data) {
+                return data.submitter.name;
             } else {
                 return user.name ?? "";
             }
@@ -245,6 +249,14 @@ export function Detail() {
         return [];
     })();
 
+    const hyperlink = globalThis.location?.href;
+    const title_link = data?.title && hyperlink ? `${data?.title}\n${hyperlink}` : hyperlink;
+    const share_data = {
+        title: data?.title,
+        text: data?.content,
+        url: hyperlink,
+    };
+
     return (
         <>
             <MobileHeader>
@@ -257,15 +269,11 @@ export function Detail() {
                                     {
                                         icon: <SendOutline />,
                                         text: t("labels.share-to"),
-                                        disabled: !navigator.canShare(),
+                                        disabled: !globalThis.navigator.canShare?.(share_data),
                                         onClick: async () => {
                                             // REF: https://developer.mozilla.org/zh-CN/docs/Web/API/Navigator/share
-                                            if (navigator.canShare()) {
-                                                await navigator.share({
-                                                    title: data?.title,
-                                                    text: data?.content,
-                                                    url: location.href,
-                                                });
+                                            if (globalThis.navigator?.canShare?.(share_data)) {
+                                                await globalThis.navigator.share(share_data);
                                                 Toast.show({
                                                     icon: "success",
                                                     content: t("actions.share.to-other.prompt.content"),
@@ -276,8 +284,9 @@ export function Detail() {
                                     {
                                         icon: <LinkOutline />,
                                         text: t("labels.copy-link"),
+                                        disabled: !hyperlink,
                                         onClick: async () => {
-                                            await copyText(location.href);
+                                            await copyText(hyperlink);
                                             Toast.show({
                                                 icon: "success",
                                                 content: t("actions.share.copy-link.prompt.content"),
@@ -287,9 +296,9 @@ export function Detail() {
                                     {
                                         icon: <GlobalOutline />,
                                         text: t("labels.copy-title-link"),
-                                        disabled: !data?.title,
+                                        disabled: !title_link,
                                         onClick: async () => {
-                                            await copyText(`${data?.title}\n${location.href}`);
+                                            await copyText(title_link);
                                             Toast.show({
                                                 icon: "success",
                                                 content: t("actions.share.copy-title-link.prompt.content"),
@@ -365,15 +374,15 @@ export function Detail() {
                                 className={styles.card_content}
                                 aria-label={t("content")}
                             >
-                                {data?.content.split(/[\n]{2,}/).map((paragraph) => {
+                                {data?.content.split(/[\n]{2,}/).map((paragraph, index) => {
                                     return (
-                                        <p>
-                                            {paragraph.split(/[\n]+/).map((line) => {
+                                        <p key={index}>
+                                            {paragraph.split(/[\n]+/).map((line, index) => {
                                                 return (
-                                                    <>
+                                                    <span key={index}>
                                                         {line}
                                                         <br />
-                                                    </>
+                                                    </span>
                                                 );
                                             })}
                                         </p>

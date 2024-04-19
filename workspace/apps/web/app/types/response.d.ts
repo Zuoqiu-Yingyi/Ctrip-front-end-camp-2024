@@ -53,6 +53,16 @@ export interface ICoordinate {
 }
 
 /**
+ * 用户
+ */
+export interface IUser {
+    name: string;
+    profile: {
+        avatar: TCuid | null;
+    };
+}
+
+/**
  * 游记
  */
 export interface INote {
@@ -87,6 +97,7 @@ export interface IReview extends INote {
     approval_time?: TTimestamp_ISO_8601;
     submitter_id: number;
     draft_id: number;
+    submitter: IUser;
 }
 
 /**
@@ -96,10 +107,5 @@ export interface IPublish extends INote {
     uid: TCuid;
     publication_time: TTimestamp_ISO_8601;
     draft_id: number;
-    publisher: {
-        name: string;
-        profile: {
-            avatar: TCuid | null;
-        };
-    };
+    publisher: IUser;
 }

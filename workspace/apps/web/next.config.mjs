@@ -1,5 +1,10 @@
 // @ts-check
 import withPWAInit from "@ducanh2912/next-pwa";
+import {
+    //
+    PHASE_DEVELOPMENT_SERVER,
+    PHASE_PRODUCTION_BUILD,
+} from "next/constants.js";
 
 // REF: https://ducanh-next-pwa.vercel.app/docs/next-pwa/getting-started
 export const withPWA = withPWAInit({
@@ -23,5 +28,23 @@ export const nextConfig = {
     },
 };
 
-export default nextConfig;
+/**
+ * @type {import("next").NextConfig}
+ */
+const nextConfigFunction = async (/** @type {string} */ phase) => {
+    console.debug(phase);
+
+    // REF: https://ducanh-next-pwa.vercel.app/docs/next-pwa/getting-started
+    switch (phase) {
+        case PHASE_PRODUCTION_BUILD:
+            return withPWA(nextConfig);
+
+        case PHASE_DEVELOPMENT_SERVER:
+        default:
+            return nextConfig;
+    }
+};
+
+// export default nextConfig;
 // export default withPWA(nextConfig);
+export default nextConfigFunction;

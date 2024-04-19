@@ -85,6 +85,16 @@ const REVIEW_SELECT: Prisma.ReviewSelect = {
     submitter_id: true,
     draft_id: true,
 
+    submitter: {
+        select: {
+            name: true,
+            profile: {
+                select: {
+                    avatar: true,
+                },
+            },
+        },
+    },
     coordinate: {
         select: {
             latitude: true,
