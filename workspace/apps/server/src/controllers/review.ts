@@ -26,9 +26,9 @@ import {
 } from "./../middlewares/permission";
 import { ID } from "./../types";
 import { ReviewStatus } from "./../types/review";
+import { assets } from "./../utils/store";
 
 import type { Prisma } from "~/prisma/client";
-import { assets } from "@/utils/store";
 
 /**
  * 未找到草稿

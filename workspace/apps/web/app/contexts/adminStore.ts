@@ -17,13 +17,11 @@
 
 import { create } from "zustand";
 import {
-    createJSONStorage,
     //
+    createJSONStorage,
     persist,
     type StorageValue,
 } from "zustand/middleware";
-import { AccessorRole } from "@repo/server/src/utils/role";
-import { trpc } from "@/utils/trpc";
 import { Locale } from "@/utils/locale";
 import { changeLocale } from "@/utils/l10n";
 import { IUserState, ILocaleState } from "./store";

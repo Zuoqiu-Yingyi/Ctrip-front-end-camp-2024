@@ -16,6 +16,7 @@
  */
 
 "use client";
+
 import AuthContextProvider from "@/contexts/authContext";
 import "@/utils/i18n";
 

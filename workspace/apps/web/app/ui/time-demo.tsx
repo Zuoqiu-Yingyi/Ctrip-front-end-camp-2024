@@ -19,7 +19,7 @@ import { Space } from "antd";
 import { FileTextOutlined, FileSyncOutlined, FileDoneOutlined } from "@ant-design/icons";
 import { TimeMessage } from "@/types/definitions";
 import dayjs from "dayjs";
-import { TFunction } from "i18next/typescript/t";
+import { type TFunction } from "i18next/typescript/t";
 
 export default function TimeList(state: "success" | "fail" | "waiting", submissionTime: string, modificationTime: string, approvalTime: string, t: TFunction<"translation", undefined>): JSX.Element[] {
     let timeBar = [
