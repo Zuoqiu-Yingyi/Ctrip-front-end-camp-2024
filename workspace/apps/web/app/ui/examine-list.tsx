@@ -16,7 +16,7 @@
  */
 
 import React, { useState, useContext } from "react";
-import { List, Flex, Image, Skeleton, Modal, Button, Typography, Checkbox, Spin } from "antd";
+import { List, Flex, Image, Skeleton, Modal, Button, Typography, Checkbox, Spin, Carousel } from "antd";
 import { TravelNote } from "@/types/definitions";
 import StateOperation from "./state-operation";
 import { MessageContext } from "@/contexts/messageContext";
@@ -25,7 +25,7 @@ import { CheckboxChangeEvent } from "antd/es/checkbox";
 import { useTranslation } from "react-i18next";
 import { uid2path } from "@/utils/image";
 
-const { Title } = Typography;
+const { Link } = Typography;
 
 export default function ExamineList({ data, loading }: { data: TravelNote[]; loading: boolean }): JSX.Element {
     const { togglePage, totalDataNumber, pageState } = useContext(MessageContext);
@@ -58,6 +58,10 @@ export function ExamineListItem({ item, loading }: { item: TravelNote; loading: 
 
     const { addCheckSet, subCheckSet } = useContext(MessageContext);
 
+    const [openIframe, setOpenIframe] = useState(false);
+
+    const [modalLoading, setModalLoading] = useState(true);
+
     const { t } = useTranslation();
 
     return (
@@ -67,13 +71,23 @@ export function ExamineListItem({ item, loading }: { item: TravelNote; loading: 
             extra={
                 !loading ? (
                     <Flex>
-                        <Image
-                            width={200}
-                            height={150}
-                            alt="logo"
-                            src={uid2path(item.image)}
-                            placeholder={<Spin />}
-                        />
+                        <Carousel
+                            style={{
+                                width: 200,
+                                height: 150,
+                            }}
+                        >
+                            {item.image.map((value, index) => (
+                                <Image
+                                    key={`image_${index}`}
+                                    width={200}
+                                    height={150}
+                                    alt="logo"
+                                    src={uid2path(value)}
+                                    placeholder={<Spin />}
+                                />
+                            ))}
+                        </Carousel>
 
                         <StateOperation
                             stateReceived={item.state}
@@ -115,12 +129,14 @@ export function ExamineListItem({ item, loading }: { item: TravelNote; loading: 
                         </Flex>
                     }
                     title={
-                        <Title
-                            level={5}
-                            style={{ marginTop: 5 }}
+                        <Link
+                            href="#"
+                            onClick={() => {
+                                setOpenIframe(true);
+                            }}
                         >
                             {item.title}
-                        </Title>
+                        </Link>
                     }
                     style={{ marginBlockEnd: 5 }}
                 />
@@ -147,6 +163,36 @@ export function ExamineListItem({ item, loading }: { item: TravelNote; loading: 
                     {item.content}
                 </Modal>
             </Skeleton>
+            <Modal
+                title="预览"
+                open={openIframe}
+                onCancel={() => {
+                    setOpenIframe(false);
+                }}
+                footer={[]}
+            >
+
+                {modalLoading && (
+                    <div
+                        style={{
+                            height: 300,
+                        }}
+                        className="flex items-center justify-center"
+                    >
+                        <Spin />
+                    </div>
+                )}
+
+                <iframe
+                    className={"border-0 " + (modalLoading ? "hidden" : "block")}
+                    src={item.href}
+                    width="100%"
+                    height="300"
+                    onLoad={() => {
+                        setModalLoading(false);
+                    }}
+                />
+            </Modal>
         </List.Item>
     );
 }
