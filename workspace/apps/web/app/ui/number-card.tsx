@@ -28,7 +28,7 @@ const { Title } = Typography;
 
 export default function CardWrapper(): JSX.Element {
     const { trpc } = useContext(ClientContext);
-    
+
     const { t } = useTranslation();
 
     const CARD_MESSAGES: CardMessage[] = [
@@ -69,7 +69,7 @@ export default function CardWrapper(): JSX.Element {
         total: 0,
     });
 
-    async function upadteNumbers() {
+    async function updateNumbers() {
         let temp = {
             success: 0,
             fail: 0,
@@ -79,10 +79,10 @@ export default function CardWrapper(): JSX.Element {
 
         await Promise.all(
             ["success" as TravelNote["state"], "fail" as TravelNote["state"], "waiting" as TravelNote["state"]].map((state) =>
-                getReviewCount(state, trpc).then((vaule) => {
-                    temp[state] = vaule as number;
+                getReviewCount(state, trpc).then((value) => {
+                    temp[state] = value as number;
 
-                    temp.total += vaule as number;
+                    temp.total += value as number;
                 }),
             ),
         );
@@ -95,13 +95,13 @@ export default function CardWrapper(): JSX.Element {
     }
 
     useEffect(() => {
-        upadteNumbers();
+        updateNumbers();
 
         const timer = setInterval(() => {
-            // await upadteNumbers();
+            // await updateNumbers();
 
             (async () => {
-                await upadteNumbers();
+                await updateNumbers();
                 // let temp = {
                 //     success: 0,
                 //     fail: 0,
@@ -111,10 +111,10 @@ export default function CardWrapper(): JSX.Element {
 
                 // await Promise.all(
                 //     ["success" as TravelNote["state"], "fail" as TravelNote["state"], "waiting" as TravelNote["state"]].map((state) =>
-                //         getReviewCount(state, trpc).then((vaule) => {
-                //             temp[state] = vaule as number;
+                //         getReviewCount(state, trpc).then((value) => {
+                //             temp[state] = value as number;
 
-                //             temp.total += vaule as number;
+                //             temp.total += value as number;
                 //         }),
                 //     ),
                 // );

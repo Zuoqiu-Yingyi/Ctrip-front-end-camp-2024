@@ -15,25 +15,51 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { Button, Flex, Typography } from "antd";
-import { HighlightFilled, UpOutlined } from "@ant-design/icons";
-import { ImageUploader, Toast, Popup, ImageUploadItem } from "antd-mobile";
-import DrawPanel from "./draw-canvas";
-import { useContext, useState } from "react";
-import React from "react";
-import { SubmitInfoContext } from "@/contexts/mobileEditContext";
+import {
+    //
+    useContext,
+    useState,
+} from "react";
 import { useTranslation } from "react-i18next";
+import {
+    //
+    Button,
+    Flex,
+    Typography,
+} from "antd";
+import {
+    //
+    ImageUploader,
+    Toast,
+    Popup,
+    ImageUploadItem,
+    Divider,
+} from "antd-mobile";
+import {
+    //
+    HighlightFilled,
+} from "@ant-design/icons";
 
-const { Title, Text } = Typography;
+import DrawPanel from "./DrawPanel";
+import {
+    //
+    SubmitInfoContext,
+    type IImageUploadItem,
+} from "@/contexts/mobileEditContext";
 
 export default function EditAlbumTab(): JSX.Element {
     const { t } = useTranslation();
 
-    const maxCount = 3;
-
     const [popupVisible, setPopupVisible] = useState(false);
 
-    const { fileList, setFileList, addImage, delImage } = useContext(SubmitInfoContext);
+    const {
+        //
+        fileList,
+        fileListMaxCount,
+        setFileList,
+        addImage,
+        delImage,
+    } = useContext(SubmitInfoContext);
 
     return (
         <Flex
@@ -45,20 +71,20 @@ export default function EditAlbumTab(): JSX.Element {
             <ImageUploader
                 columns={3}
                 value={fileList}
-                onChange={setFileList}
-                upload={(file) => {
-                    return addImage(file);
+                multiple={true}
+                maxCount={fileListMaxCount}
+                upload={addImage}
+                onDelete={delImage}
+                onChange={(items) => {
+                    setFileList(items as IImageUploadItem[]);
                 }}
-                onDelete={(item: ImageUploadItem) => {
-                    delImage(item);
-                }}
-                multiple
-                maxCount={3}
-                showUpload={fileList.length < maxCount}
+                // showUpload={fileList.length < fileListMaxCount}
                 onCountExceed={(exceed) => {
-                    Toast.show(`最多选择 ${maxCount} 张图片，你多选了 ${exceed} 张`);
+                    Toast.show(`最多选择 ${fileListMaxCount} 张图片，你多选了 ${exceed} 张`);
                 }}
             />
+
+            <Divider />
 
             <Button
                 type="dashed"
@@ -77,17 +103,16 @@ export default function EditAlbumTab(): JSX.Element {
                     <Flex vertical={true}>
                         <Flex align="center">
                             <HighlightFilled className="mr-2" />
-                            <Title
+                            <Typography.Title
                                 level={5}
                                 className="m-0"
                             >
                                 {t("graffiti")}
-                            </Title>
+                            </Typography.Title>
                         </Flex>
 
-                        <Text>{t("graffiti-tip")}</Text>
+                        <Typography.Text>{t("graffiti-tip")}</Typography.Text>
                     </Flex>
-                    <UpOutlined />
                 </Flex>
             </Button>
 

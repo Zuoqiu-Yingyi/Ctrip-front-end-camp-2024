@@ -27,9 +27,11 @@ import { trpc } from "@/utils/trpc";
 import { Locale } from "@/utils/locale";
 import { changeLocale } from "@/utils/l10n";
 import {
+    TThemeMode,
     //
     Theme,
     changeTheme,
+    getThemeMode,
 } from "@/utils/theme";
 import { IDraft } from "@/types/response";
 
@@ -61,7 +63,9 @@ export interface ILocaleState {
 }
 
 export interface IThemeState {
+    mode: TThemeMode;
     theme: Theme;
+    setMode: (mode: TThemeMode) => any;
     setTheme: (theme: Theme) => any;
 }
 
@@ -99,10 +103,14 @@ export const useStore = create<IStates>()(
                     set({ locale });
                 },
 
+                mode: getThemeMode(),
                 theme: Theme.auto,
+                setMode: (mode) => {
+                    set({ mode });
+                },
                 setTheme: (theme) => {
-                    changeTheme(theme);
-                    set({ theme });
+                    const mode = changeTheme(theme);
+                    set({ theme, mode });
                 },
 
                 line: true,
@@ -134,8 +142,12 @@ export const useStore = create<IStates>()(
                         if (!store) return null;
 
                         try {
+                            // 恢复语言设置
                             changeLocale(store.state.locale ?? Locale.auto);
-                            changeTheme(store.state.theme ?? Theme.auto);
+
+                            // 恢复主题设置
+                            const mode = changeTheme(store.state.theme ?? Theme.auto);
+                            store.state.mode = mode;
 
                             const response = await trpc.account.info.query();
 
@@ -160,6 +172,7 @@ export const useStore = create<IStates>()(
                                 case 403:
                                 default:
                                     store.state.user = { loggedIn: false };
+                                    store.state.drafts = [];
                                     break;
                             }
                         }

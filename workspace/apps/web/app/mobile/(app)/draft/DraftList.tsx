@@ -29,6 +29,7 @@ import {
     Footer,
     DotLoading,
     Collapse,
+    Dialog,
 } from "antd-mobile";
 import { useTranslation } from "react-i18next";
 
@@ -36,14 +37,16 @@ import { useStore } from "@/contexts/store";
 import { ClientContext } from "@/contexts/client";
 import PullRefresh from "@/mobile/components/PullRefresh";
 
-import styles from "./page.module.scss";
 import DraftCard from "./DraftCard";
+import DraftCardTitle from "./DraftCardTitle";
+import DraftReviewStatusListPopup from "./DraftReviewStatusListPopup";
+
 import {
     //
     handleError,
     handleResponse,
 } from "@/utils/message";
-import type { IDraft } from "@/types/response";
+import { type IDraft } from "@/types/response";
 
 export function InfiniteScrollDirect({ hasMore }: { hasMore?: boolean }) {
     const { t } = useTranslation();
@@ -67,11 +70,10 @@ export function InfiniteScrollDirect({ hasMore }: { hasMore?: boolean }) {
 export function DraftList({
     //
     searchInput,
-    onCardClick,
 }: {
     searchInput: string;
-    onCardClick: (uid: string) => void;
 }): JSX.Element {
+    const { t } = useTranslation();
     const { trpc } = useContext(ClientContext);
     const {
         //
@@ -79,6 +81,9 @@ export function DraftList({
         drafts,
         setDrafts,
     } = useStore.getState();
+
+    const [reviewStatusListPopupVisible, setReviewStatusListPopupVisible] = useState(false);
+    const [reviewStatusDraftId, setReviewStatusDraftId] = useState(0);
 
     const [data, setData] = useState<IDraft[]>([]);
     const [hasMore, setHasMore] = useState(true);
@@ -88,13 +93,22 @@ export function DraftList({
     const count = 16; // 一次动态加载数量
 
     useEffect(() => {
+        // console.debug(searchInput);
+
         if (searchInput) {
-            // TODO: 搜索功能
+            /* 搜索功能 */
+            setHasMore(false);
+            const keyword = searchInput.trim().toLocaleLowerCase();
+            setData(drafts.filter((draft) => draft.title.toLocaleLowerCase().includes(keyword)));
         } else {
-            refresh();
+            setCursor(0);
+            setHasMore(true);
         }
     }, [searchInput]);
 
+    /**
+     * 加载更多草稿
+     */
     async function loadMore() {
         // console.debug("loadMore");
         setHasMore(false);
@@ -125,10 +139,78 @@ export function DraftList({
         }
     }
 
+    /**
+     * 重新加载草稿列表
+     */
     async function refresh() {
+        // console.debug("refresh");
+
         setReload(true);
         setCursor(0);
         await loadMore();
+    }
+
+    /**
+     * 删除草稿
+     */
+    async function deleteDraft(id: number, title: string) {
+        try {
+            /* 二次确认 */
+            const confirm1 = await new Promise<boolean>((resolve) => {
+                // REF: https://mobile.ant.design/zh/components/dialog#dialogshow
+                const handler = Dialog.show({
+                    title: t("actions.delete-draft.actions.confirm1.title"),
+                    content: (
+                        <>
+                            {t("actions.delete-draft.actions.confirm1.content", { title })}
+                            <br />
+                            {t("actions.delete-draft.actions.confirm1.content1", { title })}
+                        </>
+                    ),
+                    actions: [
+                        [
+                            {
+                                key: "cancel",
+                                text: t("cancel"),
+                                onClick: () => {
+                                    handler.close();
+                                    resolve(false);
+                                },
+                            },
+                            {
+                                key: "delete",
+                                text: t("delete"),
+                                onClick: () => {
+                                    handler.close();
+                                    resolve(true);
+                                },
+                                bold: true,
+                                danger: true,
+                            },
+                        ],
+                    ],
+                });
+            });
+            if (!confirm1) {
+                return;
+            }
+
+            const response = await trpc.draft.delete.mutate({ ids: [id] });
+            handleResponse(response);
+            const _drafts: IDraft[] = (response.data?.drafts as any[]) || [];
+            const ids = _drafts.map((draft) => draft.id);
+            setDrafts(drafts.filter((draft) => !(draft.id in ids)));
+        } catch (error) {
+            handleError(error);
+        }
+    }
+
+    /**
+     * 获取发布状态
+     */
+    async function checkDraftReviewStatus(id: number) {
+        setReviewStatusDraftId(id);
+        setReviewStatusListPopupVisible(true);
     }
 
     return (
@@ -137,26 +219,40 @@ export function DraftList({
                 {data.map((draft) => (
                     <Collapse.Panel
                         key={String(draft.id)}
-                        title={draft.title}
+                        title={
+                            <DraftCardTitle
+                                title={draft.title}
+                                status={draft.status}
+                                published={!!draft.publish}
+                            />
+                        }
                     >
                         <DraftCard
                             key={draft.id}
+                            id={draft.id}
                             coverUid={draft.assets.at(0)!.asset_uid}
                             title={draft.title}
                             content={draft.content}
                             creation={draft.creation_time}
                             modification={draft.modification_time}
-                            onClick={onCardClick}
+                            onDelete={deleteDraft}
+                            onCheckReviewStatus={checkDraftReviewStatus}
                         />
                     </Collapse.Panel>
                 ))}
-                <InfiniteScroll
-                    loadMore={loadMore}
-                    hasMore={hasMore}
-                >
-                    <InfiniteScrollDirect hasMore={hasMore} />
-                </InfiniteScroll>
             </Collapse>
+            <InfiniteScroll
+                loadMore={loadMore}
+                hasMore={hasMore}
+            >
+                <InfiniteScrollDirect hasMore={hasMore} />
+            </InfiniteScroll>
+
+            <DraftReviewStatusListPopup
+                id={reviewStatusDraftId}
+                visible={reviewStatusListPopupVisible}
+                onClose={() => setReviewStatusListPopupVisible(false)}
+            />
         </PullRefresh>
     );
 }

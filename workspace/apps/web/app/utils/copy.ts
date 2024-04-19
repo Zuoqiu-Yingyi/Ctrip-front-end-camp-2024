@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2024 wu
+ * Copyright (C) 2024 Zuoqiu Yingyi
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -15,16 +15,18 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import EditTextTab from "./mobile-edit-text-tab";
-import EditCameraTab from "./mobile-edit-camera-tab";
-import EditAlbumTab from "./mobile-edit-album-tab";
+import copy from "copy-to-clipboard";
 
-export default function EditTab({ tabKey }: { tabKey: "text" | "album" | "camera" }): JSX.Element {
-    if (tabKey === "text") {
-        return <EditTextTab />;
-    } else if (tabKey === "album") {
-        return <EditAlbumTab />;
+export async function copyText(text: string) {
+    // navigator clipboard api needs a secure context (https | localhost | loopback)
+    if (globalThis.isSecureContext && globalThis.navigator.clipboard) {
+        // navigator clipboard api method'
+        try {
+            return globalThis.navigator.clipboard.writeText(text);
+        } catch (error) {
+            return copy(text);
+        }
     } else {
-        return <EditCameraTab />;
+        return copy(text);
     }
 }

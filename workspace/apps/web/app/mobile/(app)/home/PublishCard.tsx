@@ -23,6 +23,8 @@ import {
     useEffect,
     useState,
 } from "react";
+import { useRouter } from "next/navigation";
+
 import { useTranslation } from "react-i18next";
 import Image from "next/image";
 import { Avatar } from "antd-mobile";
@@ -33,6 +35,7 @@ import {
     uid2path,
     assetsLoader,
 } from "@/utils/image";
+import { PATHNAME } from "@/utils/pathname";
 
 /**
  * Functional component for rendering card content.
@@ -47,7 +50,6 @@ import {
  * @param username The username associated with the card.
  * @param cardRefs Refs for tracking the height of each card.
  * @param handleSetGridRowEnd Function to handle setting the grid row end for the card.
- * @param onClick Function to handle clicking on the card.
  */
 
 export function PublishCard({
@@ -59,7 +61,6 @@ export function PublishCard({
     username,
     cardRefs,
     handleSetGridRowEnd,
-    onClick,
 }: {
     uid: string;
     coverUid: string | null;
@@ -68,9 +69,10 @@ export function PublishCard({
     username: string;
     cardRefs: React.MutableRefObject<HTMLDivElement[]>;
     handleSetGridRowEnd: (index: number) => void;
-    onClick: (uid: string) => void;
 }): JSX.Element {
     const { t } = useTranslation();
+    const router = useRouter();
+
     const contentRef = useRef<HTMLDivElement>(null);
     const [height, setHeight] = useState<number | null>(null);
 
@@ -105,10 +107,19 @@ export function PublishCard({
         }
     }, [handleSetGridRowEnd, height]);
 
+    /**
+     * 点击卡片
+     */
+    function onClickCard(uid: string) {
+        const searchParams = new URLSearchParams();
+        searchParams.set("uid", uid);
+        router.push(`${PATHNAME.mobile.draft}?${searchParams.toString()}`);
+    }
+
     return (
         <div
             ref={contentRef}
-            onClick={() => onClick(uid)}
+            onClick={() => onClickCard(uid)}
             className={styles.card}
             style={{ gridRowEnd: height ? `span ${Math.ceil(height)}` : "auto" }}
             aria-label={t("aria.card")}

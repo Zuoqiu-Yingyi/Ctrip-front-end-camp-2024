@@ -230,14 +230,14 @@ export default function MessageContextProvider({ children }: { children: React.R
         );
     }
 
-    async function mendLoadedPages(changedTotlNum: number, state: TravelNote["state"]) {
+    async function mendLoadedPages(changedTotalNum: number, state: TravelNote["state"]) {
         console.log(loadedPages.current[state]);
 
         for (let key of loadedPages.current[state].keys()) {
             await Promise.all(
                 [0, 1, 2, 3, 4]
                     .map((index) => switchItemIndex(key, index, 5))
-                    .filter((switchIndex) => switchIndex < changedTotlNum)
+                    .filter((switchIndex) => switchIndex < changedTotalNum)
                     .map((switchIndex) => {
                         if (switchIndex >= allItems.current[state].length || JSON.stringify(allItems.current[state][switchIndex]) === "{}") {
                             return getReviews(switchIndex, 1, state, trpc).then((value) => {
@@ -269,18 +269,18 @@ export default function MessageContextProvider({ children }: { children: React.R
      *
      */
     async function operateSingleItem(id: number, state: TravelNote["state"]) {
-        let changedTotlNum = totalDataNumber[state] - 1;
+        let changedTotalNum = totalDataNumber[state] - 1;
 
         allItems.current[state] = allItems.current[state].filter((item) => item.id !== id);
 
         setTotalDataNumber({
             ...totalDataNumber,
-            [state]: changedTotlNum,
+            [state]: changedTotalNum,
         });
 
         setDisplayItems(allItems.current[state]);
 
-        mendLoadedPages(changedTotlNum, state);
+        mendLoadedPages(changedTotalNum, state);
     }
 
     async function operateBatchReview(operate: "pass" | "reject", rejectReason?: string) {
@@ -308,16 +308,16 @@ export default function MessageContextProvider({ children }: { children: React.R
      *
      */
     async function operateBatchItem(state: TravelNote["state"]) {
-        let changedTotlNum = totalDataNumber[state] - checkedNumber;
+        let changedTotalNum = totalDataNumber[state] - checkedNumber;
 
         allItems.current[state] = allItems.current[state].filter((item) => !checkedSet.current.has(item.id));
 
         setTotalDataNumber({
             ...totalDataNumber,
-            [state]: changedTotlNum,
+            [state]: changedTotalNum,
         });
 
-        mendLoadedPages(changedTotlNum, state);
+        mendLoadedPages(changedTotalNum, state);
 
         setDisplayItems(allItems.current[state]);
 

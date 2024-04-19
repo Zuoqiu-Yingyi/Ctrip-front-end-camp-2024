@@ -15,6 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+import { SafeArea } from "antd-mobile";
 import styles from "./MobileLayout.module.scss";
 
 export function MobileApp({
@@ -32,7 +33,12 @@ export function MobileHeader({
 }: {
     children: React.ReactNode;
 }): JSX.Element {
-    return <header className={styles.header}>{children}</header>;
+    return (
+        <header className={styles.header}>
+            <SafeArea position="top" />
+            {children}
+        </header>
+    );
 }
 
 export function MobileContent({
@@ -50,5 +56,10 @@ export function MobileFooter({
 }: {
     children: React.ReactNode;
 }): JSX.Element {
-    return <footer className={styles.footer}>{children}</footer>;
+    return (
+        <footer className={styles.footer}>
+            {children}
+            <SafeArea position="bottom" />
+        </footer>
+    );
 }

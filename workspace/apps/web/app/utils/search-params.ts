@@ -15,26 +15,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import trpc from "./trpc";
-import { handleResponse } from "./help";
-import { IDraft } from "@/types/response";
-
-export async function uploadDraft(draft: any, t = trpc) {
-    const response = await t.draft.create.mutate(draft);
-    // console.debug(response);
-
-    if (handleResponse(response).state === "fail") {
-        throw Error("Error");
-    }
-
-    return (response.data!.draft as unknown as IDraft).id;
-}
-
-export async function uploadSubmit(draftId: number, t = trpc) {
-    const response = await t.review.submit.mutate({ draft_id: draftId });
-    // console.debug(response);
-
-    if (handleResponse(response).state === "fail") {
-        throw Error("Error");
-    }
+export enum DetailType {
+    DRAFT = "draft",
+    REVIEW = "review",
+    PUBLISH = "publish",
 }

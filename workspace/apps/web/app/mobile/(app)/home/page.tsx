@@ -18,16 +18,17 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { useTranslation } from "react-i18next";
 import {
     //
     NavBar,
+    Popover,
     SearchBar,
     Space,
 } from "antd-mobile";
 import {
     CloseCircleOutline,
+    MoreOutline,
     //
     SearchOutline,
 } from "antd-mobile-icons";
@@ -37,12 +38,14 @@ import {
     MobileHeader,
     MobileContent,
 } from "@/mobile/components/MobileLayout";
-import InfiniteScrollContent from "./PublishList";
+import PublishList from "./PublishList";
+import { useStore } from "@/contexts/store";
+import TitleBarMenu from "@/mobile/components/TitleBarMenu";
 
 export default function HomePage() {
     const { t } = useTranslation();
+    const { mode } = useStore.getState();
 
-    const router = useRouter();
     const [searching, setSearching] = useState<boolean>(false);
     const [searchInput, setSearchInput] = useState<string>("");
 
@@ -59,29 +62,31 @@ export default function HomePage() {
         setSearching(false);
     }
 
-    /**
-     * 点击游记卡片
-     */
-    function onCardClick(uid: string) {
-        router.push(`/mobile/detail?uid=${uid}`);
-    }
-
     const nav_bar_right = (
-        <div style={{ fontSize: 24 }}>
-            <Space style={{ "--gap": "16px" }}>
-                {searching ? (
-                    <CloseCircleOutline
-                        onClick={onSearchBarCancel}
-                        aria-label={t("aria.cancel-search")}
-                    />
-                ) : (
-                    <SearchOutline
-                        onClick={onSearchButtonClick}
-                        aria-label={t("aria.search")}
-                    />
-                )}
-            </Space>
-        </div>
+        <TitleBarMenu>
+            {searching ? (
+                <CloseCircleOutline
+                    onClick={onSearchBarCancel}
+                    aria-label={t("aria.cancel-search")}
+                />
+            ) : (
+                // REF: https://mobile.ant.design/zh/components/popover
+                <Popover.Menu
+                    actions={[
+                        {
+                            icon: <SearchOutline />,
+                            text: t("labels.search"),
+                            onClick: onSearchButtonClick,
+                        },
+                    ]}
+                    mode={mode}
+                    trigger="click"
+                    placement="bottom-end"
+                >
+                    <MoreOutline aria-label={t("aria.menu")} />
+                </Popover.Menu>
+            )}
+        </TitleBarMenu>
     );
 
     return (
@@ -104,10 +109,7 @@ export default function HomePage() {
                 </NavBar>
             </MobileHeader>
             <MobileContent>
-                <InfiniteScrollContent
-                    searchInput={searchInput}
-                    onCardClick={onCardClick}
-                />
+                <PublishList searchInput={searchInput} />
             </MobileContent>
         </>
     );

@@ -132,6 +132,7 @@ export const submitMutation = procedure //
                     id: true,
                     title: true,
                     content: true,
+                    status: true,
                     author_id: true,
                     coordinate_id: true,
                     assets: {
@@ -264,6 +265,19 @@ export const submitMutation = procedure //
                 }
             })();
 
+            /* 更新草稿状态 */
+            if (draft.status !== ReviewStatus.Pending) {
+                await options.ctx.DB.draft.update({
+                    where: {
+                        id: draft.id,
+                        deleted: false,
+                    },
+                    data: {
+                        status: ReviewStatus.Pending,
+                    },
+                });
+            }
+
             /* 更新关联的资源文件访问权限 */
             if (review.assets.length > 0) {
                 await options.ctx.DB.asset.updateMany({
@@ -325,6 +339,8 @@ export const cancelMutation = procedure //
         try {
             const submitter_id = options.ctx.session.data.account.id;
             const { draft_id } = options.input;
+
+            /* 更新所有待审批项的状态为已取消 */
             const payload = await options.ctx.DB.review.updateMany({
                 where: {
                     submitter_id,
@@ -336,6 +352,20 @@ export const cancelMutation = procedure //
                     status: ReviewStatus.Canceled,
                 },
             });
+
+            /* 草稿状态更改为已取消 */
+            if (payload.count > 0) {
+                await options.ctx.DB.draft.update({
+                    where: {
+                        id: draft_id,
+                        deleted: false,
+                    },
+                    data: {
+                        status: ReviewStatus.Canceled,
+                    },
+                });
+            }
+
             return {
                 code: 0,
                 message: "",
@@ -676,6 +706,17 @@ export const approveMutation = procedure //
                     return undefined;
                 }
             })();
+
+            /* 更改草稿的状态 */
+            await options.ctx.DB.draft.update({
+                where: {
+                    id: review.draft_id,
+                    deleted: false,
+                },
+                data: {
+                    status: approved ? ReviewStatus.Approved : ReviewStatus.Rejected,
+                },
+            });
 
             /* 更新关联的资源文件访问权限 */
             if (review.assets.length > 0) {
