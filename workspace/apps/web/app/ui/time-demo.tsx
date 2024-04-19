@@ -22,7 +22,6 @@ import dayjs from "dayjs";
 import { TFunction } from "i18next/typescript/t";
 
 export default function TimeList(state: "success" | "fail" | "waiting", submissionTime: string, modificationTime: string, approvalTime: string, t: TFunction<"translation", undefined>): JSX.Element[] {
-    
     let timeBar = [
         <Space>
             <FileTextOutlined />

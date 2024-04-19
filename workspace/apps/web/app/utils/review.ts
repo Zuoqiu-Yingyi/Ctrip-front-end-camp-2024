@@ -66,7 +66,7 @@ export async function getReviews(index: number, itemNumber: number, state: Trave
             modificationTime: item.modification_time,
             approvalTime: item.approval_time ? item.approval_time : "",
             comment: item.comment ? item.comment : "",
-            publishUId: item.publish?.uid ? item.publish!.uid : ""
+            publishUId: item.publish?.uid ? item.publish!.uid : "",
         }));
     } else {
         throw Error("Error");

@@ -388,7 +388,7 @@
     "visitor": "遊客",
     "total": "縂數",
     "recent-submission-number": "近日提交人數",
-    "aduit-status": {
+    "audit-status": {
         "success": "審核成功",
         "fail": "審核失敗"
     },

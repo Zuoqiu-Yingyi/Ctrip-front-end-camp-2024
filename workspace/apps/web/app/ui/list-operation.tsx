@@ -26,7 +26,7 @@ const { Search } = Input;
 export default function ListOperationBar(): JSX.Element {
     const { t } = useTranslation();
 
-    const selectVaule = useRef("title");
+    const selectValue = useRef("title");
 
     const { setPageState, togglePageState, searchItem } = useContext(MessageContext);
 
@@ -64,16 +64,16 @@ export default function ListOperationBar(): JSX.Element {
                         style={{ width: 80 }}
                         options={[
                             { value: "title", label: t("item-title") },
-                            { value: "content", label: t("item-content") }
+                            { value: "content", label: t("item-content") },
                         ]}
-                        onSearch={(value) => selectVaule.current = value}
+                        onSearch={(value) => (selectValue.current = value)}
                     />
                 }
                 placeholder="input search loading default"
                 size="large"
                 style={{ width: "300px" }}
                 onSearch={(value) => {
-                    searchItem(selectVaule.current, value);
+                    searchItem(selectValue.current, value);
                 }}
             />
         </Flex>

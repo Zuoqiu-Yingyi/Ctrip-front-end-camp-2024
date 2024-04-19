@@ -389,7 +389,7 @@
     "visitor": "Visitor",
     "total": "total",
     "recent-submission-number": "Number of recent submissions",
-    "aduit-status": {
+    "audit-status": {
         "success": "audit successfully",
         "fail": "audit failed"
     },

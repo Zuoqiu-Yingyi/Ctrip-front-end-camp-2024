@@ -57,7 +57,6 @@ export const MessageContext = createContext<{
 });
 
 export default function MessageContextProvider({ children }: { children: React.ReactElement<any, any> }): JSX.Element {
-
     const { trpc } = useContext(ClientContext);
 
     const checkedSet = useRef<Set<number>>(new Set());

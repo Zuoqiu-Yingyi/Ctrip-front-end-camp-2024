@@ -400,7 +400,7 @@
     "visitor": "游客",
     "total": "总数",
     "recent-submission-number": "近日提交人数",
-    "aduit-status": {
+    "audit-status": {
         "success": "审核成功",
         "fail": "审核失败"
     },

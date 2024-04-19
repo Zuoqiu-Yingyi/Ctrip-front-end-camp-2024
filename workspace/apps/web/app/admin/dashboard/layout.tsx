@@ -99,10 +99,11 @@ export default function OverviewPage({ children }: { children: React.ReactNode }
         },
     ];
 
-    const [login, setLogin] = useState(false)
+    const [login, setLogin] = useState(false);
 
     if (user.loggedIn === false) {
-        trpc.account.info.query().then((response) => {
+        trpc.account.info.query().then(
+            (response) => {
                 switch (response.code) {
                     case 0:
                         updateUser({
@@ -115,11 +116,12 @@ export default function OverviewPage({ children }: { children: React.ReactNode }
                     default:
                         replace("/admin");
                         break;
-                }                
-
-        }, () => {
-            replace("/admin");
-        });
+                }
+            },
+            () => {
+                replace("/admin");
+            },
+        );
     } else if (!login) {
         setLogin(true);
     }

@@ -20,6 +20,5 @@ import AuthContextProvider from "@/contexts/authContext";
 import "@/utils/i18n";
 
 export default function OverviewPage({ children }: { children: React.ReactElement<any, any> }): JSX.Element {
-
     return <AuthContextProvider>{children}</AuthContextProvider>;
 }

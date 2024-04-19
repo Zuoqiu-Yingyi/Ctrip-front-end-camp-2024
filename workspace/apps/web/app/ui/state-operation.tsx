@@ -67,12 +67,12 @@ export default function StateOperation({ stateReceived, id, rejectReason, uid }:
     const openReviewNotification = (type: NotificationType) => {
         if (type === "success") {
             notification.success({
-                message: t("aduit-status.success"),
+                message: t("audit-status.success"),
                 placement: "bottomLeft",
             });
         } else {
             notification.error({
-                message: t("aduit-status.fail"),
+                message: t("audit-status.fail"),
                 placement: "bottomLeft",
             });
         }
