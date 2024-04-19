@@ -30,7 +30,7 @@ export type TravelNote = {
     href: string;
     title: string;
     content: string;
-    image: string;
+    image: string[];
     state: "success" | "fail" | "waiting";
     isChecked: boolean;
     submissionTime: string;

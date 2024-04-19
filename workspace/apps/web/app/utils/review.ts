@@ -56,10 +56,10 @@ export async function getReviews(index: number, itemNumber: number, state: Trave
     if (handledResponse.state === "success") {
         return response.data?.reviews.map((item) => ({
             id: item.id,
-            href: "",
+            href: `/mobile/detail/?id=${item.id}&type=review `,
             title: item.title,
             content: item.content,
-            image: item.assets[0].asset_uid,
+            image: item.assets.map((item) => (item.asset_uid)),
             isChecked: false,
             state: state,
             submissionTime: item.submission_time,
