@@ -31,7 +31,7 @@ const { Text } = Typography;
 type NotificationType = "success" | "error";
 
 export default function ContentPage(): JSX.Element {
-    const { t, i18n } = useTranslation();
+    const { t } = useTranslation();
 
     const { checkedNumber, displayItems, loading, firstPullData, operateBatchReview, onSearch } = useContext(MessageContext);
 
@@ -54,10 +54,17 @@ export default function ContentPage(): JSX.Element {
     }, []);
 
     const openNotification = (type: NotificationType) => {
-        api[type]({
-            placement: "bottomLeft",
-            message: type === "success" ? "审核成功" : "审核失败",
-        });
+        if (type === "success") {
+            notification.success({
+                message: t("audit-status.success"),
+                placement: "bottomLeft",
+            });
+        } else {
+            notification.error({
+                message: t("audit-status.fail"),
+                placement: "bottomLeft",
+            });
+        }
     };
 
     const handleOk = async (reason: string) => {

@@ -71,7 +71,7 @@ export async function login(
     }: ILoginOptions,
     t: TRPC,
 ) {
-    const key = await passphrase2key(username, passphrase, CONSTANTS.USER_KEY_SALT);
+    const key = await passphrase2key(username, passphrase, "salt");
 
     const response_challenge = await t.auth.challenge.query({
         username: username,

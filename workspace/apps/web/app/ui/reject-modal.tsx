@@ -21,7 +21,7 @@ import { useTranslation } from "react-i18next";
 const { TextArea } = Input;
 
 export default function RejectModal({ isModalOpen, handleOk, handleCancel }: { isModalOpen: boolean; handleOk: any; handleCancel: any }): JSX.Element {
-    const { t, i18n } = useTranslation();
+    const { t } = useTranslation();
 
     const [form] = Form.useForm();
 

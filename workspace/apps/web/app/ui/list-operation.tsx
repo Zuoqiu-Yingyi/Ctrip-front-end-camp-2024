@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import React, { useContext } from "react";
+import React, { useContext, useRef } from "react";
 import { Input, Flex, Radio, Select, RadioChangeEvent } from "antd";
 import { CheckCircleFilled, ExclamationCircleFilled, CloseCircleFilled } from "@ant-design/icons";
 import { MessageContext } from "@/contexts/messageContext";
@@ -24,7 +24,9 @@ import { useTranslation } from "react-i18next";
 const { Search } = Input;
 
 export default function ListOperationBar(): JSX.Element {
-    const { t, i18n } = useTranslation();
+    const { t } = useTranslation();
+
+    const selectValue = useRef("title");
 
     const { setPageState, togglePageState, searchItem } = useContext(MessageContext);
 
@@ -63,16 +65,15 @@ export default function ListOperationBar(): JSX.Element {
                         options={[
                             { value: "title", label: t("item-title") },
                             { value: "content", label: t("item-content") },
-                            { value: "userName", label: t("item-time") },
-                            { value: "time", label: t("item-user") },
                         ]}
+                        onSearch={(value) => (selectValue.current = value)}
                     />
                 }
                 placeholder="input search loading default"
                 size="large"
                 style={{ width: "300px" }}
                 onSearch={(value) => {
-                    searchItem("title", value);
+                    searchItem(selectValue.current, value);
                 }}
             />
         </Flex>
