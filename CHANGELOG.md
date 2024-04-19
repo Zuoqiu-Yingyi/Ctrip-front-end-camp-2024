@@ -13,6 +13,7 @@
 - 添加草稿跳转到已发布页面功能 | Added the feature to jump to a published page from a draft
 - 改进主页卡片流加载 | Improve the loading of the home page card flow
 - 修复发布申请无法正常提交的问题 | Fix the issue that the publishing application cannot be submitted normally
+- 修复资源文件请求缓存导致的权限变更不及时问题 | Fix the issue of delayed permission changes caused by resource file request caching
 
 ## 2024-04-18
 

@@ -265,11 +265,9 @@ export default function SubmitInfoProvider({ children }: { children: React.React
             case "publish": {
                 if (changed.current.size > 0) {
                     const id_ = await createOrUpdateDraft(assets);
-                    if (id_) {
-                        await publishDraft(assets, id_);
-                    }
+                    await publishDraft(assets, id_);
                 } else {
-                    await publishDraft(assets, id);
+                    await publishDraft(assets);
                 }
                 break;
             }

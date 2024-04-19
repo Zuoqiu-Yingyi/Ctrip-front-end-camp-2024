@@ -28,6 +28,7 @@ import { ID } from "./../types";
 import { ReviewStatus } from "./../types/review";
 
 import type { Prisma } from "~/prisma/client";
+import { assets } from "@/utils/store";
 
 /**
  * 未找到草稿
@@ -265,10 +266,11 @@ export const submitMutation = procedure //
 
             /* 更新关联的资源文件访问权限 */
             if (review.assets.length > 0) {
+                const asset_uids = review.assets.map((asset) => asset.asset_uid);
                 await options.ctx.DB.asset.updateMany({
                     where: {
                         uid: {
-                            in: review.assets.map((asset) => asset.asset_uid),
+                            in: asset_uids,
                         },
                         permission: {
                             lte: 0b0001, // 仅文件上传者可访问
@@ -278,6 +280,9 @@ export const submitMutation = procedure //
                     data: {
                         permission: 0b0111, // 管理员-审核者-上传者 可访问
                     },
+                });
+                asset_uids.forEach((uid) => {
+                    assets.delete(uid);
                 });
             }
 
@@ -705,10 +710,11 @@ export const approveMutation = procedure //
 
             /* 更新关联的资源文件访问权限 */
             if (review.assets.length > 0) {
+                const asset_uids = review.assets.map((asset) => asset.asset_uid);
                 await options.ctx.DB.asset.updateMany({
                     where: {
                         uid: {
-                            in: review.assets.map((asset) => asset.asset_uid),
+                            in: asset_uids,
                         },
                         permission: {
                             lte: 0b0111, // 管理员-审核者-上传者 可访问
@@ -718,6 +724,9 @@ export const approveMutation = procedure //
                     data: {
                         permission: 0b1111, // 公众-管理员-审核者-上传者 可访问
                     },
+                });
+                asset_uids.forEach((uid) => {
+                    assets.delete(uid);
                 });
             }
 
