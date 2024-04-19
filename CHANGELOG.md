@@ -8,6 +8,7 @@
 - 添加位置信息显示功能 | Add location information display feature
 - 完善详情页面 | Improve detail page
 - 修复审批项预览页面的问题 | Fix the issue of the preview page of the review item
+- 调整游记查询 API 响应数据格式 | Adjust the response data format of the travel notes query API
 
 ## 2024-04-18
 

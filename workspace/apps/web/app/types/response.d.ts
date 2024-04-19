@@ -63,6 +63,13 @@ export interface IUser {
 }
 
 /**
+ * 发布项
+ */
+export interface IPublishConnect {
+    uid: TCuid;
+}
+
+/**
  * 游记
  */
 export interface INote {
@@ -81,9 +88,7 @@ export interface IDraft extends INote {
     creation_time: TTimestamp_ISO_8601;
     status: ReviewStatus | null;
     author_id: number;
-    publish?: {
-        uid: TCuid;
-    };
+    publish?: IPublishConnect;
 }
 
 /**
@@ -98,6 +103,7 @@ export interface IReview extends INote {
     submitter_id: number;
     draft_id: number;
     submitter: IUser;
+    publish?: IPublishConnect;
 }
 
 /**

@@ -39,37 +39,6 @@ export class DraftNotFoundError extends Error {
 }
 
 /**
- * 草稿查询内容
- */
-const DRAFT_SELECT: Prisma.DraftSelect = {
-    id: true,
-    title: true,
-    content: true,
-    author_id: true,
-
-    coordinate: {
-        select: {
-            latitude: true,
-            longitude: true,
-            accuracy: true,
-            altitude: true,
-            altitude_accuracy: true,
-            heading: true,
-            speed: true,
-        },
-    },
-    assets: {
-        select: {
-            index: true,
-            asset_uid: true,
-        },
-        orderBy: {
-            index: "asc",
-        },
-    },
-};
-
-/**
  * 审批项查询内容
  */
 const REVIEW_SELECT: Prisma.ReviewSelect = {
@@ -85,16 +54,6 @@ const REVIEW_SELECT: Prisma.ReviewSelect = {
     submitter_id: true,
     draft_id: true,
 
-    submitter: {
-        select: {
-            name: true,
-            profile: {
-                select: {
-                    avatar: true,
-                },
-            },
-        },
-    },
     coordinate: {
         select: {
             latitude: true,
@@ -113,6 +72,22 @@ const REVIEW_SELECT: Prisma.ReviewSelect = {
         },
         orderBy: {
             index: "asc",
+        },
+    },
+
+    publish: {
+        select: {
+            uid: true,
+        },
+    },
+    submitter: {
+        select: {
+            name: true,
+            profile: {
+                select: {
+                    avatar: true,
+                },
+            },
         },
     },
 };

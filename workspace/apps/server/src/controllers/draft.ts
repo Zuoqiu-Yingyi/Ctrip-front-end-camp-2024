@@ -46,11 +46,6 @@ const DRAFT_SELECT: Prisma.DraftSelect = {
     status: true,
     author_id: true,
 
-    publish: {
-        select: {
-            uid: true,
-        },
-    },
     coordinate: {
         select: {
             latitude: true,
@@ -69,6 +64,12 @@ const DRAFT_SELECT: Prisma.DraftSelect = {
         },
         orderBy: {
             index: "asc",
+        },
+    },
+
+    publish: {
+        select: {
+            uid: true,
         },
     },
 };
