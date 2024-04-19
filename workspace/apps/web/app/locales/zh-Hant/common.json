@@ -112,6 +112,18 @@
             },
             "text": "登出登入"
         },
+        "share": {
+            "copy-link": {
+                "prompt": {
+                    "content": "超連結已複製到剪貼簿"
+                }
+            },
+            "to-other": {
+                "prompt": {
+                    "content": "已分享到其他應用"
+                }
+            }
+        },
         "signup": {
             "prompt": {
                 "success": {
@@ -154,6 +166,7 @@
         "modification-time": "編輯時間",
         "open": "打開",
         "search": "搜尋",
+        "share": "分享",
         "submission-time": "提交時間",
         "take-photo": "拍照"
     },
@@ -169,6 +182,11 @@
     "cover": "封面",
     "delete": "刪除",
     "delete-tip": "你確定刪除該項嗎？",
+    "detail": {
+        "errors": {
+            "invalid-params": "無效的參數"
+        }
+    },
     "details": "詳情",
     "draft": "草稿",
     "drawing-board": "畫板",
@@ -289,11 +307,13 @@
             "speed": "運動速度",
             "title": "位置資訊"
         },
+        "copy-title-link": "複製標題與超鏈接",
         "create": "新建",
         "edit": "編輯",
         "preview": "預覽",
         "review-status": "發布狀態",
-        "search": "搜尋"
+        "search": "搜尋",
+        "share-to": "分享到 ..."
     },
     "leave": "離開",
     "loading": "載入中",
@@ -305,6 +325,7 @@
     "pass": "通過",
     "password": "密碼",
     "pending": "待審核",
+    "photograph": "照片",
     "profile": "使用者資訊",
     "prompt-prefix": "請輸入",
     "publish-time": "發佈時間",

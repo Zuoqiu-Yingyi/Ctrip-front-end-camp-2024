@@ -117,6 +117,23 @@
             },
             "text": "注销登录"
         },
+        "share": {
+            "copy-link": {
+                "prompt": {
+                    "content": "超链接已复制到剪贴板"
+                }
+            },
+            "copy-title-link": {
+                "prompt": {
+                    "content": "标题与超链接已复制到剪贴板"
+                }
+            },
+            "to-other": {
+                "prompt": {
+                    "content": "已分享到其他应用"
+                }
+            }
+        },
         "signup": {
             "prompt": {
                 "success": {
@@ -158,7 +175,9 @@
         "menu": "菜单",
         "modification-time": "编辑时间",
         "open": "打开",
+        "publication-time": "发布时间",
         "search": "搜索",
+        "share": "分享",
         "submission-time": "提交时间",
         "take-photo": "拍照"
     },
@@ -174,6 +193,11 @@
     "cover": "封面",
     "delete": "删除",
     "delete-tip": "你确定删除该项吗？",
+    "detail": {
+        "errors": {
+            "invalid-params": "无效的参数"
+        }
+    },
     "details": "详情",
     "draft": "草稿",
     "drawing-board": "画板",
@@ -294,11 +318,14 @@
             "speed": "运动速度",
             "title": "位置信息"
         },
+        "copy-link": "复制超链接",
+        "copy-title-link": "复制标题与超链接",
         "create": "新建",
         "edit": "编辑",
         "preview": "预览",
         "review-status": "发布状态",
-        "search": "搜索"
+        "search": "搜索",
+        "share-to": "分享到 ..."
     },
     "leave": "离开",
     "loading": "加载中",
@@ -310,6 +337,7 @@
     "pass": "通过",
     "password": "密码",
     "pending": "待审核",
+    "photograph": "照片",
     "profile": "用户信息",
     "prompt-prefix": "请输入",
     "publish-time": "发布时间",

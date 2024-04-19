@@ -1,49 +1,32 @@
 /**
- * Copyright (C) 2024 lyt
- * 
+ * Copyright (C) 2024 Zuoqiu Yingyi
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
  * published by the Free Software Foundation, either version 3 of the
  * License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Affero General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-.swiper_container {
-    width: 100%;
-    padding: 0;
+import copy from "copy-to-clipboard";
 
-    .swiper {
-        width: 100%;
-        height: auto;
+export async function copyText(text: string) {
+    // navigator clipboard api needs a secure context (https | localhost | loopback)
+    if (globalThis.isSecureContext && globalThis.navigator.clipboard) {
+        // navigator clipboard api method'
+        try {
+            return globalThis.navigator.clipboard.writeText(text);
+        } catch (error) {
+            return copy(text);
+        }
+    } else {
+        return copy(text);
     }
-}
-
-.swiper_skeleton {
-    margin-top: 40px;
-    width: 100%;
-    height: 50vh;
-}
-
-.card_title {
-    margin: 0;
-    padding: 0.5em 0.75em 0;
-    box-sizing: border-box;
-}
-
-.card_content {
-    margin: 0;
-    padding: 0 1em;
-    box-sizing: border-box;
-}
-
-.card_footer {
-    font-size: 150%;
-    padding: 0.25em 0.5em 0.5em;
 }

@@ -112,6 +112,18 @@
             },
             "text": "Log out"
         },
+        "share": {
+            "copy-link": {
+                "prompt": {
+                    "content": "Hyperlink copied to clipboard"
+                }
+            },
+            "to-other": {
+                "prompt": {
+                    "content": "Shared to other apps"
+                }
+            }
+        },
         "signup": {
             "prompt": {
                 "success": {
@@ -153,7 +165,9 @@
         "menu": "Menu",
         "modification-time": "modification time",
         "open": "Open",
+        "publication-time": "Publish time",
         "search": "Search",
+        "share": "Share",
         "submission-time": "Submission time",
         "take-photo": "Photograph"
     },
@@ -169,6 +183,11 @@
     "cover": "Cover",
     "delete": "delete",
     "delete-tip": "Are you sure you want to delete this item?",
+    "detail": {
+        "errors": {
+            "invalid-params": "Invalid parameter"
+        }
+    },
     "details": "details",
     "draft": "Draft",
     "drawing-board": "drawing board",
@@ -289,11 +308,13 @@
             "speed": "Movement speed",
             "title": "location information"
         },
+        "copy-title-link": "Copy title and hyperlink",
         "create": "Create",
         "edit": "Edit",
         "preview": "Preview",
         "review-status": "Post status",
-        "search": "Search"
+        "search": "Search",
+        "share-to": "Share to ..."
     },
     "leave": "Leave",
     "loading": "Loading",
@@ -305,6 +326,7 @@
     "pass": "pass",
     "password": "password",
     "pending": "to be audited",
+    "photograph": "Photograph",
     "profile": "User Info",
     "prompt-prefix": "please enter the ",
     "publish-time": "Publication Time",

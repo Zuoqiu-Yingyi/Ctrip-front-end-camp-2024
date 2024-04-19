@@ -24,7 +24,7 @@ import {
     Space,
 } from "antd-mobile";
 
-import DraftStatusTag from "./DraftStatusTag";
+import DraftStatusTag from "@/mobile/components/DraftStatusTag";
 import type { ReviewStatus } from "@repo/server/src/types/review";
 
 export function DraftCardTitle({

@@ -50,7 +50,7 @@ import { IReview } from "@/types/response";
 import { timestampFormat } from "@/utils/time";
 
 import styles from "./page.module.scss";
-import DraftStatusTag from "./DraftStatusTag";
+import DraftStatusTag from "../../components/DraftStatusTag";
 
 /**
  * 审核列表弹出层
@@ -120,7 +120,7 @@ export function DraftReviewStatusListPopup({
             ) : data.length > 0 ? (
                 <List
                     className={styles.review_list}
-                    header={t("labels.review-status")}
+                    header={t("labels.coordinate.title")}
                 >
                     {data.map((review) => {
                         return (

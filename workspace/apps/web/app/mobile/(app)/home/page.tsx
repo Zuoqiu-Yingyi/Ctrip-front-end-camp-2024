@@ -40,6 +40,7 @@ import {
 } from "@/mobile/components/MobileLayout";
 import PublishList from "./PublishList";
 import { useStore } from "@/contexts/store";
+import TitleBarMenu from "@/mobile/components/TitleBarMenu";
 
 export default function HomePage() {
     const { t } = useTranslation();
@@ -62,32 +63,30 @@ export default function HomePage() {
     }
 
     const nav_bar_right = (
-        <div style={{ fontSize: 24 }}>
-            <Space style={{ "--gap": "16px" }}>
-                {searching ? (
-                    <CloseCircleOutline
-                        onClick={onSearchBarCancel}
-                        aria-label={t("aria.cancel-search")}
-                    />
-                ) : (
-                    // REF: https://mobile.ant.design/zh/components/popover
-                    <Popover.Menu
-                        actions={[
-                            {
-                                icon: <SearchOutline />,
-                                text: t("labels.search"),
-                                onClick: onSearchButtonClick,
-                            },
-                        ]}
-                        mode={mode}
-                        trigger="click"
-                        placement="bottom-end"
-                    >
-                        <MoreOutline aria-label={t("aria.menu")} />
-                    </Popover.Menu>
-                )}
-            </Space>
-        </div>
+        <TitleBarMenu>
+            {searching ? (
+                <CloseCircleOutline
+                    onClick={onSearchBarCancel}
+                    aria-label={t("aria.cancel-search")}
+                />
+            ) : (
+                // REF: https://mobile.ant.design/zh/components/popover
+                <Popover.Menu
+                    actions={[
+                        {
+                            icon: <SearchOutline />,
+                            text: t("labels.search"),
+                            onClick: onSearchButtonClick,
+                        },
+                    ]}
+                    mode={mode}
+                    trigger="click"
+                    placement="bottom-end"
+                >
+                    <MoreOutline aria-label={t("aria.menu")} />
+                </Popover.Menu>
+            )}
+        </TitleBarMenu>
     );
 
     return (
