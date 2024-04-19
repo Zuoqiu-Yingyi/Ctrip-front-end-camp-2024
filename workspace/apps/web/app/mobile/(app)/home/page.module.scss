@@ -15,14 +15,10 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-.image {
-    width: 100%;
-}
-
 .cards {
     display: grid;
     column-gap: 5px;
-    // padding: 10px;
+    padding: 0.5em;
     justify-items: center;
     grid-template-columns: repeat(2, minmax(180px, 1fr));
 
@@ -30,38 +26,26 @@
         grid-row-start: auto;
         grid-row-end: span 180;
         width: 100%;
-        // height: fit-content;
-        // padding: 5px;
         box-sizing: border-box;
+        // padding: 0 0.5em;
         // height: fit-content;
 
-        .card_title {
-            margin-top: 5px;
-            margin-bottom: 0;
+        .image {
             width: 100%;
-            height: 16px;
-            display: inline-block;
-            max-height: 1.2em; // 设置最大高度为一行文字的高度
-            text-overflow: ellipsis;
-            overflow: hidden; // 隐藏超出部分
-            vertical-align: top; // 保证与相邻元素的垂直对齐
+        }
+
+        .card_title {
+            margin: 2px 0 0;
         }
 
         .card_user {
             display: flex;
             align-items: center; // 垂直居中
-            height: 40px;
+            padding-top: 0.25em;
         }
 
         .card_username {
-            margin-left: 10px; // 可选：为了增加两个内容之间的间距
+            margin-left: 0.5em; // 可选：为了增加两个内容之间的间距
         }
     }
-}
-
-.img_container {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
 }

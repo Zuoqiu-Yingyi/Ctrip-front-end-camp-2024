@@ -130,7 +130,7 @@ export function DraftReviewStatusListPopup({
                                         <DraftStatusTag status={review.status} />
                                         {review.approval_time && (
                                             <Tag
-                                                color="primary"
+                                                color="default"
                                                 fill="outline"
                                                 aria-label={t("aria.approval-time")}
                                             >
@@ -168,7 +168,7 @@ export function DraftReviewStatusListPopup({
                                     direction="end"
                                     expandText={t("expand")}
                                     collapseText={t("collapse")}
-                                    content={review.content}
+                                    content={review.comment ?? ""}
                                 />
                             </List.Item>
                         );

@@ -9,6 +9,7 @@
 - 完善详情页面 | Improve detail page
 - 修复审批项预览页面的问题 | Fix the issue of the preview page of the review item
 - 调整游记查询 API 响应数据格式 | Adjust the response data format of the travel notes query API
+- 调整主页样式 | Adjust the style of the home page
 
 ## 2024-04-18
 

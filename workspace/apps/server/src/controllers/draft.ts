@@ -255,6 +255,9 @@ export const listQuery = draftProcedure //
                     deleted: false,
                 },
                 select: DRAFT_SELECT,
+                orderBy: {
+                    id: "desc",
+                },
             });
             return {
                 code: 0,

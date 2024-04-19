@@ -50,7 +50,7 @@ var auto: boolean = true;
  */
 export function setThemeMode(mode: TThemeMode) {
     // REF: https://mobile.ant.design/zh/guide/dark-mode
-    document.documentElement.setAttribute("data-prefers-color-scheme", mode);
+    globalThis.document.documentElement.setAttribute("data-prefers-color-scheme", mode);
 }
 
 /**

@@ -26,8 +26,13 @@ import {
 import { useRouter } from "next/navigation";
 
 import { useTranslation } from "react-i18next";
-import Image from "next/image";
-import { Avatar } from "antd-mobile";
+// import Image from "next/image";
+import {
+    //
+    Avatar,
+    Ellipsis,
+    Image,
+} from "antd-mobile";
 
 import styles from "./page.module.scss";
 import {
@@ -119,29 +124,26 @@ export function PublishCard({
     return (
         <div
             ref={contentRef}
-            onClick={() => onClickCard(uid)}
             className={styles.card}
             style={{ gridRowEnd: height ? `span ${Math.ceil(height)}` : "auto" }}
             aria-label={t("aria.card")}
+            onClick={() => onClickCard(uid)}
         >
             {coverUid && (
-                <div className={styles.img_container}>
-                    <Image
-                        src={coverUid}
-                        loader={assetsLoader}
-                        alt={t("cover")}
-                        className={styles.image}
-                        fill={true}
-                    />
-                </div>
+                <Image
+                    src={uid2path(coverUid)}
+                    alt={t("cover")}
+                    fit="contain"
+                    className={styles.image}
+                />
             )}
 
-            <h3
+            <Ellipsis
                 className={styles.card_title}
+                direction="end"
+                content={title}
                 aria-label={t("title")}
-            >
-                {title}
-            </h3>
+            />
             <div
                 className={styles.card_user}
                 aria-label={t("profile")}
@@ -151,12 +153,12 @@ export function PublishCard({
                     alt={t("avatar")}
                     style={{ "--size": "20px", "--border-radius": "50%" }}
                 />
-                <p
+                <span
                     className={styles.card_username}
                     aria-label={t("username")}
                 >
                     {username}
-                </p>
+                </span>
             </div>
         </div>
     );

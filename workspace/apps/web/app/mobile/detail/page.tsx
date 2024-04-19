@@ -142,7 +142,7 @@ export function Detail() {
 
     useEffect(() => {
         if (data) {
-            document.title = data.title;
+            globalThis.document.title = data.title;
         }
     }, [data]);
 

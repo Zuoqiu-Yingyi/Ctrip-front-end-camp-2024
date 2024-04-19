@@ -19,6 +19,7 @@
 
 import {
     //
+    Suspense,
     useContext,
     useEffect,
     useState,
@@ -55,7 +56,7 @@ import {
     MobileHeader,
 } from "@/mobile/components/MobileLayout";
 
-export default function EditPage(): JSX.Element {
+export function Edit(): JSX.Element {
     const { t } = useTranslation();
     const router = useRouter();
     const searchParams = useSearchParams();
@@ -235,3 +236,12 @@ export default function EditPage(): JSX.Element {
         </>
     );
 }
+
+export function EditPage() {
+    return (
+        <Suspense>
+            <Edit />
+        </Suspense>
+    );
+}
+export default EditPage;
