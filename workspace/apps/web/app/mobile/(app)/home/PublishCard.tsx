@@ -22,6 +22,7 @@ import {
     useRef,
     useEffect,
     useState,
+    useLayoutEffect,
 } from "react";
 import { useRouter } from "next/navigation";
 
@@ -35,11 +36,7 @@ import {
 } from "antd-mobile";
 
 import styles from "./page.module.scss";
-import {
-    //
-    uid2path,
-    assetsLoader,
-} from "@/utils/image";
+import { uid2path } from "@/utils/image";
 import { PATHNAME } from "@/utils/pathname";
 
 /**
@@ -64,53 +61,58 @@ export function PublishCard({
     title,
     avatar,
     username,
-    cardRefs,
-    handleSetGridRowEnd,
 }: {
     uid: string;
     coverUid: string | null;
     title: string;
     avatar: string | null;
     username: string;
-    cardRefs: React.MutableRefObject<HTMLDivElement[]>;
-    handleSetGridRowEnd: (index: number) => void;
 }): JSX.Element {
     const { t } = useTranslation();
     const router = useRouter();
 
-    const contentRef = useRef<HTMLDivElement>(null);
+    const cardRef = useRef<HTMLDivElement>(null);
     const [height, setHeight] = useState<number | null>(null);
 
-    useEffect(() => {
-        const calculateHeight = () => {
-            if (contentRef.current) {
-                const imageElement = contentRef.current.querySelector("img");
-                if (imageElement) {
-                    setHeight(imageElement.offsetHeight + 57);
+    function calculateHeight() {
+        if (cardRef.current) {
+            let card_height = 0;
+            for (let i = 0; i < cardRef.current.children.length; i++) {
+                const element = cardRef.current.children.item(i);
+
+                if (element instanceof HTMLElement) {
+                    card_height += element.offsetHeight;
                 }
             }
-        };
+            // console.debug("calculateHeight", card_height);
+            return card_height;
+        }
+    }
 
-        calculateHeight();
+    function updateHeight() {
+        const card_height = calculateHeight();
+        if (card_height) {
+            setHeight(card_height);
+        }
+    }
 
-        window.addEventListener("resize", calculateHeight);
+    useEffect(() => {
+        window.addEventListener("resize", updateHeight);
         return () => {
-            window.removeEventListener("resize", calculateHeight);
+            window.removeEventListener("resize", updateHeight);
         };
-    }, []);
+    }, [cardRef]);
 
     useEffect(() => {
-        if (contentRef.current && height !== null) {
-            cardRefs.current?.push(contentRef.current);
-        }
-    }, [cardRefs, height]);
+        const card_height = calculateHeight();
+        console.debug(height, card_height);
 
-    useEffect(() => {
-        const index = cardRefs.current?.findIndex((element) => element === contentRef.current);
-        if (index !== -1 && height !== null) {
-            handleSetGridRowEnd(index);
+        if (card_height && height !== card_height) {
+            setTimeout(() => {
+                setHeight(card_height);
+            }, 0);
         }
-    }, [handleSetGridRowEnd, height]);
+    }, [height]);
 
     /**
      * 点击卡片
@@ -123,7 +125,7 @@ export function PublishCard({
 
     return (
         <div
-            ref={contentRef}
+            ref={cardRef}
             className={styles.card}
             style={{ gridRowEnd: height ? `span ${Math.ceil(height)}` : "auto" }}
             aria-label={t("aria.card")}
@@ -131,10 +133,10 @@ export function PublishCard({
         >
             {coverUid && (
                 <Image
+                    className={styles.image}
                     src={uid2path(coverUid)}
                     alt={t("cover")}
                     fit="contain"
-                    className={styles.image}
                 />
             )}
 

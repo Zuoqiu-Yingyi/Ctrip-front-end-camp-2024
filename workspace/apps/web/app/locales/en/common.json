@@ -172,6 +172,10 @@
         "take-photo": "Photograph"
     },
     "audit": "audit",
+    "audit-status": {
+        "fail": "audit failed",
+        "success": "audit successfully"
+    },
     "auto": "Automatic",
     "avatar": "Avatar",
     "camera": "Camera",
@@ -181,6 +185,10 @@
     "confirmed": "confirmed",
     "content": "content",
     "cover": "Cover",
+    "del-status": {
+        "fail": "delete failed",
+        "success": "delete successfully"
+    },
     "delete": "delete",
     "delete-tip": "Are you sure you want to delete this item?",
     "detail": {
@@ -311,6 +319,7 @@
         "copy-title-link": "Copy title and hyperlink",
         "create": "Create",
         "edit": "Edit",
+        "go-to-publish": "Published page",
         "preview": "Preview",
         "review-status": "Post status",
         "search": "Search",
@@ -336,6 +345,7 @@
         "pulling": "Pull down to refresh",
         "refreshing": "Refreshing"
     },
+    "recent-submission-number": "Number of recent submissions",
     "reject": "reject",
     "reject-reason": "reject reason",
     "rejected": "failed",
@@ -382,24 +392,15 @@
             "label": "Light"
         }
     },
+    "time": {
+        "change-time": "change time",
+        "commit-time": "commit time",
+        "review-time": "review time"
+    },
     "title": "title",
+    "total": "total",
     "update-time": "Update time",
     "user": "User",
     "username": "username",
-    "visitor": "Visitor",
-    "total": "total",
-    "recent-submission-number": "Number of recent submissions",
-    "audit-status": {
-        "success": "audit successfully",
-        "fail": "audit failed"
-    },
-    "time": {
-        "commit-time": "commit time",
-        "change-time": "change time",
-        "review-time": "review time"
-    },
-    "del-status": {
-        "success": "delete successfully",
-        "fail": "delete failed"
-    }
+    "visitor": "Visitor"
 }

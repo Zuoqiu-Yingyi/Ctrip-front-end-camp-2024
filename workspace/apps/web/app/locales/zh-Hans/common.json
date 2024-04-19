@@ -182,6 +182,10 @@
         "take-photo": "拍照"
     },
     "audit": "审核",
+    "audit-status": {
+        "fail": "审核失败",
+        "success": "审核成功"
+    },
     "auto": "自动",
     "avatar": "用户头像",
     "camera": "相机",
@@ -191,6 +195,10 @@
     "confirmed": "确认",
     "content": "内容",
     "cover": "封面",
+    "del-status": {
+        "fail": "删除失败",
+        "success": "删除成功"
+    },
     "delete": "删除",
     "delete-tip": "你确定删除该项吗？",
     "detail": {
@@ -322,6 +330,7 @@
         "copy-title-link": "复制标题与超链接",
         "create": "新建",
         "edit": "编辑",
+        "go-to-publish": "已发布页面",
         "preview": "预览",
         "review-status": "发布状态",
         "search": "搜索",
@@ -347,6 +356,7 @@
         "pulling": "下拉刷新",
         "refreshing": "刷新中"
     },
+    "recent-submission-number": "近日提交人数",
     "reject": "拒绝",
     "reject-reason": "拒绝理由",
     "rejected": "已拒绝",
@@ -393,24 +403,15 @@
             "label": "浅色"
         }
     },
+    "time": {
+        "change-time": "更改时间",
+        "commit-time": "提交时间",
+        "review-time": "审核时间"
+    },
     "title": "标题",
+    "total": "总数",
     "update-time": "更新时间",
     "user": "用户",
     "username": "用户名",
-    "visitor": "游客",
-    "total": "总数",
-    "recent-submission-number": "近日提交人数",
-    "audit-status": {
-        "success": "审核成功",
-        "fail": "审核失败"
-    },
-    "time": {
-        "commit-time": "提交时间",
-        "change-time": "更改时间",
-        "review-time": "审核时间"
-    },
-    "del-status": {
-        "success": "删除成功",
-        "fail": "删除失败"
-    }
+    "visitor": "游客"
 }

@@ -17,17 +17,17 @@
 
 .cards {
     display: grid;
-    column-gap: 5px;
     padding: 0.5em;
     justify-items: center;
-    grid-template-columns: repeat(2, minmax(180px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(12em, 1fr));
+    grid-column-gap: 4px;
 
     .card {
         grid-row-start: auto;
-        grid-row-end: span 180;
         width: 100%;
         box-sizing: border-box;
-        // padding: 0 0.5em;
+        grid-row-end: span auto;
+        padding-bottom: 0.5em;
         // height: fit-content;
 
         .image {

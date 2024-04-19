@@ -10,6 +10,8 @@
 - 修复审批项预览页面的问题 | Fix the issue of the preview page of the review item
 - 调整游记查询 API 响应数据格式 | Adjust the response data format of the travel notes query API
 - 调整主页样式 | Adjust the style of the home page
+- 添加草稿跳转到已发布页面功能 | Added the feature to jump to a published page from a draft
+- 改进主页卡片流加载 | Improve the loading of the home page card flow
 
 ## 2024-04-18
 

@@ -88,20 +88,10 @@ export function PublishList({
     const { t } = useTranslation();
     const { trpc } = useContext(ClientContext);
 
-    const cardRefs = useRef<HTMLDivElement[]>([]);
     const [data, setData] = useState<IPublish[]>([]);
     const [hasMore, setHasMore] = useState(true);
     const [reload, setReload] = useState(true);
     const [cursor, setCursor] = useState<string | undefined>();
-
-    const handleSetGridRowEnd = (index: number) => {
-        const cardRef = cardRefs.current[index];
-        if (!cardRef) return;
-        const height = cardRef.offsetHeight;
-        if (cardRef && height) {
-            cardRef.style.gridRowEnd = `span ${Math.ceil(height)}`;
-        }
-    };
 
     useEffect(() => {
         if (searchInput) {
@@ -175,7 +165,7 @@ export function PublishList({
             }}
         >
             <div className={styles.cards}>
-                {data.map((publish) => (
+                {data.map((publish, index) => (
                     <CardContent
                         key={publish.uid}
                         uid={publish.uid}
@@ -183,8 +173,6 @@ export function PublishList({
                         title={publish.title}
                         avatar={publish.publisher.profile.avatar}
                         username={publish.publisher.name}
-                        cardRefs={cardRefs}
-                        handleSetGridRowEnd={handleSetGridRowEnd}
                     />
                 ))}
                 <InfiniteScroll

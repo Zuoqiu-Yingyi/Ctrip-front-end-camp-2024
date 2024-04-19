@@ -53,6 +53,7 @@ import {
     GlobalOutline,
     LinkOutline,
     SendOutline,
+    TravelOutline,
     UploadOutline,
 } from "antd-mobile-icons";
 
@@ -83,6 +84,7 @@ import { timestampFormat } from "@/utils/time";
 import DraftStatusTag from "@/mobile/components/DraftStatusTag";
 import TitleBarMenu from "@/mobile/components/TitleBarMenu";
 import { copyText } from "@/utils/copy";
+import { PATHNAME } from "@/utils/pathname";
 
 // REF: https://nextjs.org/docs/messages/missing-suspense-with-csr-bailout
 export function Detail() {
@@ -266,6 +268,22 @@ export function Detail() {
                         <TitleBarMenu>
                             <Popover.Menu
                                 actions={[
+                                    ...(detailType === DetailType.DRAFT
+                                        ? [
+                                              {
+                                                  icon: <TravelOutline />,
+                                                  text: t("labels.go-to-publish"),
+                                                  disabled: !(data && "publish" in data && data.publish),
+                                                  onClick: async () => {
+                                                      if (data && "publish" in data && data.publish) {
+                                                          const searchParams = new URLSearchParams();
+                                                          searchParams.set("uid", data.publish?.uid);
+                                                          router.push(`${PATHNAME.mobile.detail}?${searchParams.toString()}`);
+                                                      }
+                                                  },
+                                              },
+                                          ]
+                                        : []),
                                     {
                                         icon: <SendOutline />,
                                         text: t("labels.share-to"),
