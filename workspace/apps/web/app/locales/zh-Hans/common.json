@@ -58,9 +58,32 @@
                     "text": "内容模板"
                 }
             },
+            "coordinate": {
+                "delete": {
+                    "prompt": {
+                        "success": "删除定位信息成功"
+                    },
+                    "text": "删除定位信息"
+                },
+                "update": {
+                    "prompt": {
+                        "fail": "更新定位信息失败",
+                        "success": "更新定位信息成功"
+                    },
+                    "text": "更新定位信息"
+                },
+                "view": {
+                    "text": "查看定位信息"
+                }
+            },
             "create": {
                 "prompt": {
                     "success": "草稿已创建"
+                }
+            },
+            "publish": {
+                "prompt": {
+                    "success": "已提交发布申请"
                 }
             },
             "update": {
@@ -70,6 +93,12 @@
             }
         },
         "extra": "请选择你要进行操作",
+        "go-back-without-saving": {
+            "confirm": {
+                "content": "当前草稿未保存，离开后将丢失所有更改。",
+                "title": "确认离开"
+            }
+        },
         "login": {
             "prompt": {
                 "incorrect": {
@@ -88,6 +117,23 @@
             },
             "text": "注销登录"
         },
+        "share": {
+            "copy-link": {
+                "prompt": {
+                    "content": "超链接已复制到剪贴板"
+                }
+            },
+            "copy-title-link": {
+                "prompt": {
+                    "content": "标题与超链接已复制到剪贴板"
+                }
+            },
+            "to-other": {
+                "prompt": {
+                    "content": "已分享到其他应用"
+                }
+            }
+        },
         "signup": {
             "prompt": {
                 "success": {
@@ -105,6 +151,7 @@
     "album": "相册",
     "approved": "已通过",
     "aria": {
+        "approval-time": "审阅时间",
         "cancel": "取消",
         "cancel-search": "取消搜索",
         "card": "游记卡片",
@@ -128,7 +175,10 @@
         "menu": "菜单",
         "modification-time": "编辑时间",
         "open": "打开",
+        "publication-time": "发布时间",
         "search": "搜索",
+        "share": "分享",
+        "submission-time": "提交时间",
         "take-photo": "拍照"
     },
     "audit": "审核",
@@ -143,6 +193,11 @@
     "cover": "封面",
     "delete": "删除",
     "delete-tip": "你确定删除该项吗？",
+    "detail": {
+        "errors": {
+            "invalid-params": "无效的参数"
+        }
+    },
     "details": "详情",
     "draft": "草稿",
     "drawing-board": "画板",
@@ -253,12 +308,26 @@
             "rear": "后置摄像头",
             "system": "系统相机"
         },
+        "coordinate": {
+            "accuracy": "位置精确度",
+            "altitude": "海拔高度",
+            "altitude_accuracy": "海拔精确度",
+            "heading": "运动方向",
+            "latitude": "纬度",
+            "longitude": "经度",
+            "speed": "运动速度",
+            "title": "位置信息"
+        },
+        "copy-link": "复制超链接",
+        "copy-title-link": "复制标题与超链接",
         "create": "新建",
         "edit": "编辑",
         "preview": "预览",
         "review-status": "发布状态",
-        "search": "搜索"
+        "search": "搜索",
+        "share-to": "分享到 ..."
     },
+    "leave": "离开",
     "loading": "加载中",
     "login": "登录",
     "login-signup": "登录 / 注册",
@@ -268,6 +337,7 @@
     "pass": "通过",
     "password": "密码",
     "pending": "待审核",
+    "photograph": "照片",
     "profile": "用户信息",
     "prompt-prefix": "请输入",
     "publish-time": "发布时间",

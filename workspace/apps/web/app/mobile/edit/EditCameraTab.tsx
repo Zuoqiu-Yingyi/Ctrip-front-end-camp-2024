@@ -29,7 +29,7 @@ import {
     Layout,
     FloatButton,
 } from "antd";
-import { ActionSheet, Popover } from "antd-mobile";
+import { ActionSheet } from "antd-mobile";
 import {
     //
     CameraOutline,
@@ -48,11 +48,9 @@ import {
     closeCamera,
 } from "@/utils/camera";
 import { SubmitInfoContext } from "@/contexts/mobileEditContext";
-import { useStore } from "@/contexts/store";
 
 export default function EditCameraTab(): JSX.Element {
     const { t } = useTranslation();
-    const { mode } = useStore.getState();
     const {
         //
         addPhoto,

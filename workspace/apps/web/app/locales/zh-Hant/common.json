@@ -55,9 +55,31 @@
                     "text": "內容模板"
                 }
             },
+            "coordinate": {
+                "delete": {
+                    "prompt": {
+                        "success": "刪除定位訊息成功"
+                    },
+                    "text": "刪除定位訊息"
+                },
+                "update": {
+                    "prompt": {
+                        "fail": "更新定位資訊失敗",
+                        "success": "更新定位資訊成功"
+                    }
+                },
+                "view": {
+                    "text": "查看定位訊息"
+                }
+            },
             "create": {
                 "prompt": {
                     "success": "草稿已建立"
+                }
+            },
+            "publish": {
+                "prompt": {
+                    "success": "已提交發布申請"
                 }
             },
             "update": {
@@ -67,6 +89,11 @@
             }
         },
         "extra": "請選擇你要進行操作",
+        "go-back-without-saving": {
+            "confirm": {
+                "content": "目前草稿未儲存，離開後將遺失所有變更。"
+            }
+        },
         "login": {
             "prompt": {
                 "incorrect": {
@@ -85,6 +112,18 @@
             },
             "text": "登出登入"
         },
+        "share": {
+            "copy-link": {
+                "prompt": {
+                    "content": "超連結已複製到剪貼簿"
+                }
+            },
+            "to-other": {
+                "prompt": {
+                    "content": "已分享到其他應用"
+                }
+            }
+        },
         "signup": {
             "prompt": {
                 "success": {
@@ -102,6 +141,7 @@
     "album": "相簿",
     "approved": "已通過",
     "aria": {
+        "approval-time": "審閱時間",
         "cancel": "取消",
         "cancel-search": "取消搜尋",
         "card": "遊記卡片",
@@ -126,6 +166,8 @@
         "modification-time": "編輯時間",
         "open": "打開",
         "search": "搜尋",
+        "share": "分享",
+        "submission-time": "提交時間",
         "take-photo": "拍照"
     },
     "audit": "審核",
@@ -140,6 +182,11 @@
     "cover": "封面",
     "delete": "刪除",
     "delete-tip": "你確定刪除該項嗎？",
+    "detail": {
+        "errors": {
+            "invalid-params": "無效的參數"
+        }
+    },
     "details": "詳情",
     "draft": "草稿",
     "drawing-board": "畫板",
@@ -250,12 +297,25 @@
             "rear": "後置鏡頭",
             "system": "系統相機"
         },
+        "coordinate": {
+            "accuracy": "位置精確度",
+            "altitude": "海拔高度",
+            "altitude_accuracy": "海拔精確度",
+            "heading": "運動方向",
+            "latitude": "維度",
+            "longitude": "經度",
+            "speed": "運動速度",
+            "title": "位置資訊"
+        },
+        "copy-title-link": "複製標題與超鏈接",
         "create": "新建",
         "edit": "編輯",
         "preview": "預覽",
         "review-status": "發布狀態",
-        "search": "搜尋"
+        "search": "搜尋",
+        "share-to": "分享到 ..."
     },
+    "leave": "離開",
     "loading": "載入中",
     "login": "登錄",
     "login-signup": "登入 / 註冊",
@@ -265,6 +325,7 @@
     "pass": "通過",
     "password": "密碼",
     "pending": "待審核",
+    "photograph": "照片",
     "profile": "使用者資訊",
     "prompt-prefix": "請輸入",
     "publish-time": "發佈時間",

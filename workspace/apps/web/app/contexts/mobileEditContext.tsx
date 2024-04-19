@@ -102,6 +102,7 @@ export const SubmitInfoContext = createContext<{
     fileList: ImageUploadItem[];
     fileListMaxCount: number;
 
+    init: () => void;
     queryDraft: (id: number) => any;
 
     setId: (id: number | null) => void;
@@ -110,7 +111,7 @@ export const SubmitInfoContext = createContext<{
 
     updateTitle: (title: string) => void;
     updateContent: (content: string) => void;
-    uploadTravelNote: Function;
+    uploadTravelNote: (type: "draft" | "publish") => Promise<void>;
 
     addDraw: (draw: CanvasDraw) => Promise<void>;
     addPhoto: (canvas: HTMLCanvasElement) => Promise<void>;
@@ -119,8 +120,8 @@ export const SubmitInfoContext = createContext<{
     addImage: (file: File) => Promise<IImageUploadItem>;
     delImage: (item: ImageUploadItem) => boolean;
 
-    updateCoordinate: Function;
-    deleteCoordinate: Function;
+    updateCoordinate: () => Promise<ICoordinate | null>;
+    deleteCoordinate: () => void;
 }>(undefined as any);
 
 export default function SubmitInfoProvider({ children }: { children: React.ReactElement<any, any> }): JSX.Element {
@@ -183,7 +184,7 @@ export default function SubmitInfoProvider({ children }: { children: React.React
      * 更新草稿
      */
     async function uploadTravelNote(type: "draft" | "publish") {
-        console.debug(fileList.length);
+        // console.debug(fileList.length);
 
         if (title === "") {
             Toast.show({
@@ -276,9 +277,16 @@ export default function SubmitInfoProvider({ children }: { children: React.React
                 }
                 break;
 
-            case "publish":
-                await publishDraft(assets);
+            case "publish": {
+                const state = await publishDraft(assets);
+                if (state) {
+                    Toast.show({
+                        content: t("actions.draft.publish.prompt.success"),
+                        icon: "success",
+                    });
+                }
                 break;
+            }
         }
     }
 
@@ -342,7 +350,7 @@ export default function SubmitInfoProvider({ children }: { children: React.React
     /**
      * 更新坐标
      */
-    async function updateCoordinate() {
+    async function updateCoordinate(): Promise<ICoordinate | null> {
         const position = await new Promise<GeolocationPosition | null>((resolve) => {
             navigator.geolocation.getCurrentPosition(
                 //
@@ -365,13 +373,22 @@ export default function SubmitInfoProvider({ children }: { children: React.React
                 speed: position.coords.speed,
             } satisfies ICoordinate;
             if (dequal(coordinate, original?.coordinate)) {
-                changed.current.delete(DraftField.content);
+                changed.current.delete(DraftField.coordinate);
             } else {
-                changed.current.add(DraftField.content);
+                changed.current.add(DraftField.coordinate);
             }
             setCoordinate(coordinate);
+
+            Toast.show({
+                content: t("actions.draft.coordinate.update.prompt.success"),
+                icon: "success",
+            });
             return coordinate;
         } else {
+            Toast.show({
+                content: t("actions.draft.coordinate.update.prompt.fail"),
+                icon: "fail",
+            });
             return null;
         }
     }
@@ -381,10 +398,14 @@ export default function SubmitInfoProvider({ children }: { children: React.React
      */
     function deleteCoordinate() {
         if (dequal(null, original?.coordinate)) {
-            changed.current.delete(DraftField.content);
+            changed.current.delete(DraftField.coordinate);
         } else {
-            changed.current.add(DraftField.content);
+            changed.current.add(DraftField.coordinate);
         }
+        Toast.show({
+            content: t("actions.draft.coordinate.delete.prompt.success"),
+            icon: "success",
+        });
         setCoordinate(null);
     }
 
@@ -561,6 +582,19 @@ export default function SubmitInfoProvider({ children }: { children: React.React
         }
     }
 
+    /**
+     * 初始化
+     */
+    function init() {
+        setId(null);
+        setTitle("");
+        setContent("");
+        setCoordinate(null);
+        setFileList([]);
+        setOriginal(null);
+        changed.current.clear();
+    }
+
     return (
         <SubmitInfoContext.Provider
             value={{
@@ -576,6 +610,7 @@ export default function SubmitInfoProvider({ children }: { children: React.React
                 fileList,
                 fileListMaxCount,
 
+                init,
                 queryDraft,
 
                 setId,

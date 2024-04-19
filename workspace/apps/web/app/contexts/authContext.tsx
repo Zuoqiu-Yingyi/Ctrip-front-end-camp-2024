@@ -39,7 +39,7 @@ export const AuthContext = createContext<{
     userInfo: { current: null },
 });
 
-export function AuthContextProvider({ children }: { children: React.ReactElement }): JSX.Element {
+export function AuthContextProvider({ children }: { children: React.ReactElement<any, any> }): JSX.Element {
     const user = useRef(trpc);
     const userInfo = useRef<IUserInfo>(null);
 

@@ -15,13 +15,33 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import CanvasDraw from "react-canvas-draw";
-import { useContext, useRef, useState } from "react";
-import { Slider, Space, NavBar } from "antd-mobile";
-import { RollbackOutlined, CheckOutlined } from "@ant-design/icons";
-import { Typography, ColorPicker, Button } from "antd";
-import { SubmitInfoContext } from "@/contexts/mobileEditContext";
+import {
+    //
+
+    useContext,
+    useRef,
+    useState,
+} from "react";
 import { useTranslation } from "react-i18next";
+import CanvasDraw from "react-canvas-draw";
+import {
+    //
+    ColorPicker,
+    Button,
+} from "antd";
+import {
+    //
+    Slider,
+    Space,
+    NavBar,
+} from "antd-mobile";
+import {
+    //
+    RollbackOutlined,
+    CheckOutlined,
+} from "@ant-design/icons";
+
+import { SubmitInfoContext } from "@/contexts/mobileEditContext";
 
 const defaultProps = {
     loadTimeOffset: 5,

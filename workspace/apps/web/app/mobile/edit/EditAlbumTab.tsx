@@ -40,7 +40,7 @@ import {
     HighlightFilled,
 } from "@ant-design/icons";
 
-import DrawPanel from "./draw-canvas";
+import DrawPanel from "./DrawPanel";
 import {
     //
     SubmitInfoContext,
