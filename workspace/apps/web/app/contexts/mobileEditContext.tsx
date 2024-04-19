@@ -145,9 +145,13 @@ export default function SubmitInfoProvider({ children }: { children: React.React
      * 批量上传资源文件
      */
     async function uploadAssets(): Promise<IImageUploadItem[]> {
-        const formData = new FormData();
+        const fileList_ = fileList.filter((item) => item.extra.uploaded === false);
+        if (fileList_.length < 1) {
+            return fileList;
+        }
 
-        fileList.forEach((item) => {
+        const formData = new FormData();
+        fileList_.forEach((item) => {
             if (item.extra.uploaded === false) {
                 formData.append(item.key, item.extra.file);
             }
@@ -254,36 +258,18 @@ export default function SubmitInfoProvider({ children }: { children: React.React
             default:
             case "draft":
                 if (changed.current.size > 0) {
-                    const state = await createOrUpdateDraft(assets);
-                    switch (state) {
-                        case 0:
-                        default:
-                            break;
-
-                        case 1:
-                            Toast.show({
-                                content: t("actions.draft.create.prompt.success"),
-                                icon: "success",
-                            });
-                            break;
-
-                        case 2:
-                            Toast.show({
-                                content: t("actions.draft.update.prompt.success"),
-                                icon: "success",
-                            });
-                            break;
-                    }
+                    await createOrUpdateDraft(assets);
                 }
                 break;
 
             case "publish": {
-                const state = await publishDraft(assets);
-                if (state) {
-                    Toast.show({
-                        content: t("actions.draft.publish.prompt.success"),
-                        icon: "success",
-                    });
+                if (changed.current.size > 0) {
+                    const id_ = await createOrUpdateDraft(assets);
+                    if (id_) {
+                        await publishDraft(assets, id_);
+                    }
+                } else {
+                    await publishDraft(assets, id);
                 }
                 break;
             }
@@ -295,7 +281,8 @@ export default function SubmitInfoProvider({ children }: { children: React.React
      */
     async function createOrUpdateDraft(assets: TCuid[]): Promise<number> {
         try {
-            const response = id
+            const update = !!id;
+            const response = update
                 ? await client.current.draft.update.mutate({
                       id,
                       title: changed.current.has(DraftField.title) ? title : undefined,
@@ -318,7 +305,18 @@ export default function SubmitInfoProvider({ children }: { children: React.React
 
             changed.current.clear();
 
-            return id ? 2 : 1;
+            if (update) {
+                Toast.show({
+                    content: t("actions.draft.update.prompt.success"),
+                    icon: "success",
+                });
+            } else {
+                Toast.show({
+                    content: t("actions.draft.create.prompt.success"),
+                    icon: "success",
+                });
+            }
+            return draft.id;
         } catch (error) {
             handleError(error);
             return 0;
@@ -328,16 +326,16 @@ export default function SubmitInfoProvider({ children }: { children: React.React
     /**
      * 发布草稿
      */
-    async function publishDraft(assets: TCuid[]): Promise<boolean> {
-        if (changed.current.size > 0) {
-            const state = await createOrUpdateDraft(assets);
-            if (!state) return false;
-        }
-
-        if (id) {
+    async function publishDraft(assets: TCuid[], id_ = id): Promise<boolean> {
+        if (id_) {
             try {
-                const response = await client.current.review.submit.mutate({ draft_id: id });
+                const response = await client.current.review.submit.mutate({ draft_id: id_ });
                 handleResponse(response);
+
+                Toast.show({
+                    content: t("actions.draft.publish.prompt.success"),
+                    icon: "success",
+                });
                 return true;
             } catch (error) {
                 handleError(error);
