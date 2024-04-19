@@ -7,6 +7,7 @@
 - 添加审核状态列表 | Add audit status list
 - 添加位置信息显示功能 | Add location information display feature
 - 完善详情页面 | Improve detail page
+- 修复审批项预览页面的问题 | Fix the issue of the preview page of the review item
 
 ## 2024-04-18
 

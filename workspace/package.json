@@ -49,10 +49,10 @@
         "@jest/globals": "^29.7.0",
         "@trpc/client": "11.0.0-rc.334",
         "@trpc/server": "11.0.0-rc.334",
-        "@types/eslint": "^8.56.9",
+        "@types/eslint": "^8.56.10",
         "@types/node": "^20.12.7",
         "cspell": "^8.7.0",
-        "eslint": "^8.57.0",
+        "eslint": "^9.0.0",
         "jest": "^29.7.0",
         "prettier": "^3.2.5",
         "ts-jest": "^29.1.2",
@@ -60,6 +60,6 @@
         "tsconfig-paths": "^4.2.0",
         "turbo": "latest",
         "typescript": "^5.4.5",
-        "zod": "^3.22.4"
+        "zod": "^3.22.5"
     }
 }

@@ -113,7 +113,7 @@ export function PublishCard({
     function onClickCard(uid: string) {
         const searchParams = new URLSearchParams();
         searchParams.set("uid", uid);
-        router.push(`${PATHNAME.mobile.draft}?${searchParams.toString()}`);
+        router.push(`${PATHNAME.mobile.detail}?${searchParams.toString()}`);
     }
 
     return (
