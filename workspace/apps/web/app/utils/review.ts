@@ -59,7 +59,7 @@ export async function getReviews(index: number, itemNumber: number, state: Trave
             href: `/mobile/detail/?id=${item.id}&type=review `,
             title: item.title,
             content: item.content,
-            image: item.assets.map((item) => (item.asset_uid)),
+            image: item.assets.map((item) => item.asset_uid),
             isChecked: false,
             state: state,
             submissionTime: item.submission_time,

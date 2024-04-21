@@ -32,7 +32,7 @@ import {
     Toast,
     Picker,
     Mask,
-    Image
+    Image,
 } from "antd-mobile";
 import type { Action } from "antd-mobile/es/components/action-sheet";
 
@@ -43,6 +43,9 @@ import {
 } from "@/mobile/components/MobileLayout";
 import LoginPopup from "./LoginPopup";
 import ChangePasswordPopup from "./ChangePasswordPopup";
+import AvatarEditorPopup from "./AvatarEditorPopup";
+import DeleteAccountPopup from "./DeleteAccountPopup";
+
 import { ClientContext } from "@/contexts/client";
 import { useStore } from "@/contexts/store";
 import { uid2path } from "@/utils/image";
@@ -53,8 +56,7 @@ import {
 } from "@/utils/message";
 import { Locale } from "@/utils/locale";
 import { Theme } from "@/utils/theme";
-import AvaterEditor from "@/ui/AvaterEditor";
-import DeleteAccountPopup from "./DeleteAccountPopup";
+import { type TCuid } from "@/types/response";
 
 export default function InfoPage(): JSX.Element {
     const { t } = useTranslation();
@@ -103,6 +105,7 @@ export default function InfoPage(): JSX.Element {
     const [accountActionSheetVisible, setAccountActionSheetVisible] = useState(false);
     const [changePasswordPopupVisible, setChangePasswordPopupVisible] = useState(false);
     const [deleteAccountPopupVisible, setDeleteAccountPopupVisible] = useState(false);
+    const [avatarEditorPopupVisible, setAvatarEditorPopupVisible] = useState(false);
 
     // REF: https://mobile.ant.design/zh/components/action-sheet#action
     const account_actions: Action[] = [
@@ -194,6 +197,16 @@ export default function InfoPage(): JSX.Element {
     }
 
     /**
+     * 更新用户头像
+     */
+    function updateAvatar(avatar: TCuid | null) {
+        updateUser({
+            ...user,
+            avatar,
+        });
+    }
+
+    /**
      * 注销登录后清理用户数据
      */
     function clearUserData() {
@@ -206,7 +219,6 @@ export default function InfoPage(): JSX.Element {
                 <NavBar backArrow={false}>{t("me")}</NavBar>
             </MobileHeader>
             <MobileContent>
-                <AvaterEditor avatar={'https://images.unsplash.com/photo-1567945716310-4745a6b7844b?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1500&q=60'}/>        
                 {/* REF: https://mobile.ant.design/zh/components/list */}
                 <List>
                     <List.Item
@@ -218,7 +230,7 @@ export default function InfoPage(): JSX.Element {
                                     // console.debug(e);
                                     e.stopPropagation();
                                     if (user.loggedIn) {
-                                        // TODO: 更改用户头像
+                                        setAvatarEditorPopupVisible(true);
                                     }
                                 }}
                             />
@@ -283,6 +295,14 @@ export default function InfoPage(): JSX.Element {
                         visible={deleteAccountPopupVisible}
                         onSuccess={clearUserData}
                         onClose={() => setDeleteAccountPopupVisible(false)}
+                    />
+
+                    {/* 更改头像 */}
+                    <AvatarEditorPopup
+                        avatar={user.avatar}
+                        visible={avatarEditorPopupVisible}
+                        updateAvatar={updateAvatar}
+                        onClose={() => setAvatarEditorPopupVisible(false)}
                     />
                 </>
             )}

@@ -135,6 +135,16 @@
             "apply": {
                 "text": "Apply template"
             }
+        },
+        "update-avatar": {
+            "prompt": {
+                "success": {
+                    "content": "Change avatar successfully"
+                }
+            }
+        },
+        "upload-avatar": {
+            "text": "Upload avatar file"
         }
     },
     "admin-title": "Background audit system",

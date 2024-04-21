@@ -171,7 +171,6 @@ export function ExamineListItem({ item, loading }: { item: TravelNote; loading: 
                 }}
                 footer={[]}
             >
-
                 {modalLoading && (
                     <div
                         style={{

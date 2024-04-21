@@ -145,6 +145,16 @@
             "apply": {
                 "text": "应用模板"
             }
+        },
+        "update-avatar": {
+            "prompt": {
+                "success": {
+                    "content": "更换头像成功"
+                }
+            }
+        },
+        "upload-avatar": {
+            "text": "上传头像文件"
         }
     },
     "admin-title": "后台审核系统",

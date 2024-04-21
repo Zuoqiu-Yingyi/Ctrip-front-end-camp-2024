@@ -1,5 +1,9 @@
 # 更改日志 | Change log
 
+## 2024-04-21
+
+- 添加头像上传与调整功能 | Add avatar upload and adjustment feature
+
 ## 2024-04-19
 
 - 草稿编辑器支持更新草稿 | Draft editor supports updating drafts

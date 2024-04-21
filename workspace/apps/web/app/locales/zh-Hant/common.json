@@ -135,6 +135,16 @@
             "apply": {
                 "text": "應用程式模板"
             }
+        },
+        "update-avatar": {
+            "prompt": {
+                "success": {
+                    "content": "更換頭像成功"
+                }
+            }
+        },
+        "upload-avatar": {
+            "text": "上傳頭像文件"
         }
     },
     "admin-title": "後台審核系統",
