@@ -81,7 +81,7 @@ export const viewport = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
     // REF: https://nextjs.org/docs/app/building-your-application/rendering/composition-patterns#using-context-providers
     return (
-        <html>
+        <html lang="en">
             <head>
                 <link
                     rel="shortcut icon"

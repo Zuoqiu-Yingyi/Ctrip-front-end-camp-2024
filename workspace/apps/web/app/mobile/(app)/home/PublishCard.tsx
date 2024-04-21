@@ -22,17 +22,22 @@ import {
     useRef,
     useEffect,
     useState,
+    useLayoutEffect,
 } from "react";
-import { useTranslation } from "react-i18next";
-import Image from "next/image";
-import { Avatar } from "antd-mobile";
+import { useRouter } from "next/navigation";
 
-import styles from "./page.module.scss";
+import { useTranslation } from "react-i18next";
+// import Image from "next/image";
 import {
     //
-    uid2path,
-    assetsLoader,
-} from "@/utils/image";
+    Avatar,
+    Ellipsis,
+    Image,
+} from "antd-mobile";
+
+import styles from "./page.module.scss";
+import { uid2path } from "@/utils/image";
+import { PATHNAME } from "@/utils/pathname";
 
 /**
  * Functional component for rendering card content.
@@ -47,109 +52,118 @@ import {
  * @param username The username associated with the card.
  * @param cardRefs Refs for tracking the height of each card.
  * @param handleSetGridRowEnd Function to handle setting the grid row end for the card.
- * @param onClick Function to handle clicking on the card.
  */
 
-export function CardContent({
+export function PublishCard({
     //
     uid,
     coverUid,
     title,
     avatar,
     username,
-    cardRefs,
-    handleSetGridRowEnd,
-    onClick,
 }: {
     uid: string;
-    coverUid?: string;
+    coverUid: string | null;
     title: string;
-    avatar: string;
+    avatar: string | null;
     username: string;
-    cardRefs: React.MutableRefObject<HTMLDivElement[]>;
-    handleSetGridRowEnd: (index: number) => void;
-    onClick: (uid: string) => void;
 }): JSX.Element {
     const { t } = useTranslation();
-    const contentRef = useRef<HTMLDivElement>(null);
+    const router = useRouter();
+
+    const cardRef = useRef<HTMLDivElement>(null);
     const [height, setHeight] = useState<number | null>(null);
 
-    useEffect(() => {
-        const calculateHeight = () => {
-            if (contentRef.current) {
-                const imageElement = contentRef.current.querySelector("img");
-                if (imageElement) {
-                    setHeight(imageElement.offsetHeight + 57);
+    function calculateHeight() {
+        if (cardRef.current) {
+            let card_height = 0;
+            for (let i = 0; i < cardRef.current.children.length; i++) {
+                const element = cardRef.current.children.item(i);
+
+                if (element instanceof HTMLElement) {
+                    card_height += element.offsetHeight;
                 }
             }
-        };
+            // console.debug("calculateHeight", card_height);
+            return card_height;
+        }
+    }
 
-        calculateHeight();
+    function updateHeight() {
+        const card_height = calculateHeight();
+        if (card_height) {
+            setHeight(card_height);
+        }
+    }
 
-        window.addEventListener("resize", calculateHeight);
+    useEffect(() => {
+        window.addEventListener("resize", updateHeight);
         return () => {
-            window.removeEventListener("resize", calculateHeight);
+            window.removeEventListener("resize", updateHeight);
         };
-    }, []);
+    }, [cardRef]);
 
     useEffect(() => {
-        if (contentRef.current && height !== null) {
-            cardRefs.current?.push(contentRef.current);
-        }
-    }, [cardRefs, height]);
+        const card_height = calculateHeight();
+        console.debug(height, card_height);
 
-    useEffect(() => {
-        const index = cardRefs.current?.findIndex((element) => element === contentRef.current);
-        if (index !== -1 && height !== null) {
-            handleSetGridRowEnd(index);
+        if (card_height && height !== card_height) {
+            setTimeout(() => {
+                setHeight(card_height);
+            }, 0);
         }
-    }, [handleSetGridRowEnd, height]);
+    }, [height]);
+
+    /**
+     * 点击卡片
+     */
+    function onClickCard(uid: string) {
+        const searchParams = new URLSearchParams();
+        searchParams.set("uid", uid);
+        router.push(`${PATHNAME.mobile.detail}?${searchParams.toString()}`);
+    }
 
     return (
         <div
-            ref={contentRef}
-            onClick={() => onClick(uid)}
-            className={styles.card_container}
+            ref={cardRef}
+            className={styles.card}
             style={{ gridRowEnd: height ? `span ${Math.ceil(height)}` : "auto" }}
-            aria-role="button"
             aria-label={t("aria.card")}
+            onClick={() => onClickCard(uid)}
         >
             {coverUid && (
-                <div className={styles.img_container}>
-                    <Image
-                        src={coverUid}
-                        loader={assetsLoader}
-                        alt={t("cover")}
-                        className={styles.image}
-                        fill={true}
-                    />
-                </div>
+                <Image
+                    className={styles.image}
+                    src={uid2path(coverUid)}
+                    alt={t("cover")}
+                    fit="contain"
+                />
             )}
 
-            <h3
+            <Ellipsis
                 className={styles.card_title}
+                direction="end"
+                content={title}
                 aria-label={t("title")}
-            >
-                {title}
-            </h3>
+            />
             <div
                 className={styles.card_user}
                 aria-label={t("profile")}
             >
                 <Avatar
-                    src={uid2path(avatar)}
+                    src={avatar ? uid2path(avatar) : ""}
                     alt={t("avatar")}
                     style={{ "--size": "20px", "--border-radius": "50%" }}
                 />
-                <p
+                <span
                     className={styles.card_username}
                     aria-label={t("username")}
                 >
                     {username}
-                </p>
+                </span>
             </div>
         </div>
     );
 }
 
-export default CardContent;
+export default PublishCard;

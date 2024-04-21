@@ -36,6 +36,11 @@ import {
 } from "antd-mobile";
 import type { Action } from "antd-mobile/es/components/action-sheet";
 
+import {
+    //
+    MobileHeader,
+    MobileContent,
+} from "@/mobile/components/MobileLayout";
 import LoginPopup from "./LoginPopup";
 import ChangePasswordPopup from "./ChangePasswordPopup";
 import { ClientContext } from "@/contexts/client";
@@ -197,50 +202,52 @@ export default function InfoPage(): JSX.Element {
 
     return (
         <>
-            <NavBar backArrow={false}>{t("me")}</NavBar>   
-
-            <AvaterEditor avatar={'https://images.unsplash.com/photo-1567945716310-4745a6b7844b?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1500&q=60'}/>        
-
-            {/* REF: https://mobile.ant.design/zh/components/list */}
-            <List>
-                <List.Item
-                    prefix={
-                        <Avatar
-                            src={user.avatar ? uid2path(user.avatar) : ""}
-                            alt={t("avatar")}
-                            onClick={(e) => {
-                                // console.debug(e);
-                                e.stopPropagation();
-                                if (user.loggedIn) {
-                                    // TODO: 更改用户头像
-                                }
-                            }}
-                        />
-                    }
-                    extra={user.loggedIn ? undefined : t("login-signup")}
-                    onClick={() => {
-                        if (user.loggedIn) {
-                            setAccountActionSheetVisible(true);
-                        } else {
-                            setLoginPopupVisible(true);
+            <MobileHeader>
+                <NavBar backArrow={false}>{t("me")}</NavBar>
+            </MobileHeader>
+            <MobileContent>
+                <AvaterEditor avatar={'https://images.unsplash.com/photo-1567945716310-4745a6b7844b?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1500&q=60'}/>        
+                {/* REF: https://mobile.ant.design/zh/components/list */}
+                <List>
+                    <List.Item
+                        prefix={
+                            <Avatar
+                                src={user.avatar ? uid2path(user.avatar) : ""}
+                                alt={t("avatar")}
+                                onClick={(e) => {
+                                    // console.debug(e);
+                                    e.stopPropagation();
+                                    if (user.loggedIn) {
+                                        // TODO: 更改用户头像
+                                    }
+                                }}
+                            />
                         }
-                    }}
-                >
-                    {user.loggedIn ? user.name : t("visitor")}
-                </List.Item>
-                <List.Item
-                    extra={languageLabel}
-                    onClick={languageSettings}
-                >
-                    {t("settings.language.label")}
-                </List.Item>
-                <List.Item
-                    extra={themeLabel}
-                    onClick={themeSettings}
-                >
-                    {t("settings.theme.label")}
-                </List.Item>
-            </List>
+                        extra={user.loggedIn ? undefined : t("login-signup")}
+                        onClick={() => {
+                            if (user.loggedIn) {
+                                setAccountActionSheetVisible(true);
+                            } else {
+                                setLoginPopupVisible(true);
+                            }
+                        }}
+                    >
+                        {user.loggedIn ? user.name : t("visitor")}
+                    </List.Item>
+                    <List.Item
+                        extra={languageLabel}
+                        onClick={languageSettings}
+                    >
+                        {t("settings.language.label")}
+                    </List.Item>
+                    <List.Item
+                        extra={themeLabel}
+                        onClick={themeSettings}
+                    >
+                        {t("settings.theme.label")}
+                    </List.Item>
+                </List>
+            </MobileContent>
 
             {/**
              * 账户操作

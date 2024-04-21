@@ -1,40 +1,48 @@
-// Copyright 2024 wu
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     https://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+/**
+ * Copyright (C) 2024 wu
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
 import { CheckCircleFilled, ExclamationCircleFilled, CloseCircleFilled } from "@ant-design/icons";
 import React, { useContext, useState } from "react";
 import { Flex, Typography, Button, Popconfirm, Spin, notification } from "antd";
 import { MessageContext } from "@/contexts/messageContext";
 import RejectModal from "@/ui/reject-modal";
-import { AuthContext } from "../contexts/authContext";
 import { useTranslation } from "react-i18next";
+import { AccessorRole } from "@repo/server/src/utils/role";
+import { useStore } from "@/contexts/adminStore";
 
 const { Title, Paragraph } = Typography;
 
 type NotificationType = "success" | "error";
 
-export default function StateOperation({ stateReceived, id, rejectReason }: { stateReceived: "success" | "fail" | "waiting"; id: number; rejectReason?: string }): JSX.Element {
+export default function StateOperation({ stateReceived, id, rejectReason, uid }: { stateReceived: "success" | "fail" | "waiting"; id: number; rejectReason?: string; uid?: string }): JSX.Element {
     const { operateReview, delTravelNote } = useContext(MessageContext);
 
-    const { user, userInfo } = useContext(AuthContext);
+    const {
+        //
+        user,
+    } = useStore.getState();
 
-    const { t, i18n } = useTranslation();
-
-    const [api] = notification.useNotification();
+    const { t } = useTranslation();
 
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     const [singleLoading, setSingleLoading] = useState(false);
+
+    const [delLoading, setDelLoading] = useState(false);
 
     let type: "secondary" | "success" | "warning" | "danger" = "secondary";
 
@@ -56,11 +64,32 @@ export default function StateOperation({ stateReceived, id, rejectReason }: { st
         text = t("pending");
     }
 
-    const openNotification = (type: NotificationType) => {
-        api[type]({
-            placement: "bottomLeft",
-            message: type === "success" ? "审核成功" : "审核失败",
-        });
+    const openReviewNotification = (type: NotificationType) => {
+        if (type === "success") {
+            notification.success({
+                message: t("audit-status.success"),
+                placement: "bottomLeft",
+            });
+        } else {
+            notification.error({
+                message: t("audit-status.fail"),
+                placement: "bottomLeft",
+            });
+        }
+    };
+
+    const openDelNotification = (type: NotificationType) => {
+        if (type === "success") {
+            notification.success({
+                message: t("del-status.success"),
+                placement: "bottomLeft",
+            });
+        } else {
+            notification.error({
+                message: t("del-status.fail"),
+                placement: "bottomLeft",
+            });
+        }
     };
 
     const handleOk = async (reason: string) => {
@@ -69,9 +98,9 @@ export default function StateOperation({ stateReceived, id, rejectReason }: { st
         setSingleLoading(true);
         try {
             await operateReview(id, "reject", reason);
-            openNotification("success");
+            openReviewNotification("success");
         } catch (error) {
-            openNotification("error");
+            openReviewNotification("error");
         }
         setSingleLoading(false);
     };
@@ -85,18 +114,26 @@ export default function StateOperation({ stateReceived, id, rejectReason }: { st
             vertical
             style={{ width: 130, justifyContent: "space-around", alignItems: "center", marginLeft: 20 }}
         >
-            {userInfo.current?.accessRole === 1 && (
+            {user.role === AccessorRole.Administrator && stateReceived === "success" && (
                 <Popconfirm
                     title={t("delete")}
                     description={t("delete-tip")}
-                    onCancel={() => {
-                        delTravelNote();
+                    onConfirm={async () => {
+                        setDelLoading(true);
+                        try {
+                            await delTravelNote(id, uid);
+                            openDelNotification("success");
+                        } catch (error) {
+                            openDelNotification("error");
+                        }
+                        setDelLoading(false);
                     }}
                     okText={t("confirmed")}
                     cancelText={t("cancel")}
                 >
                     <Button
                         danger
+                        loading={delLoading}
                         size="small"
                         style={{ marginLeft: 90 }}
                     >
@@ -122,11 +159,11 @@ export default function StateOperation({ stateReceived, id, rejectReason }: { st
                             setSingleLoading(true);
                             try {
                                 await operateReview(id, "pass");
-                                openNotification('success');
+                                openReviewNotification("success");
                             } catch (error) {
-                                openNotification('error');                                
-                            }  
-                            setSingleLoading(false); 
+                                openReviewNotification("error");
+                            }
+                            setSingleLoading(false);
                         }}
                     >
                         {t("pass")}

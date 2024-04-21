@@ -27,10 +27,13 @@ import { trpc } from "@/utils/trpc";
 import { Locale } from "@/utils/locale";
 import { changeLocale } from "@/utils/l10n";
 import {
+    TThemeMode,
     //
     Theme,
     changeTheme,
+    getThemeMode,
 } from "@/utils/theme";
+import { IDraft } from "@/types/response";
 
 export interface IUserBase {
     loggedIn: boolean;
@@ -51,30 +54,38 @@ export type TUser = IUserLoggedIn | IUserNotLoggedIn;
 
 export interface IUserState {
     user: TUser;
-    updateUser: (user: TUser) => void;
+    updateUser: (user: TUser) => any;
 }
 
 export interface ILocaleState {
     locale: Locale;
-    setLocale: (locale: Locale) => void;
+    setLocale: (locale: Locale) => any;
 }
 
 export interface IThemeState {
+    mode: TThemeMode;
     theme: Theme;
-    setTheme: (theme: Theme) => void;
+    setMode: (mode: TThemeMode) => any;
+    setTheme: (theme: Theme) => any;
 }
 
 export interface ILineState {
     line: boolean;
-    online: () => void;
-    offline: () => void;
+    online: () => any;
+    offline: () => any;
+}
+
+export interface IDraftData {
+    drafts: IDraft[];
+    setDrafts: (drafts: IDraft[]) => any;
 }
 
 export interface IStates //
     extends IUserState,
         ILocaleState,
         IThemeState,
-        ILineState {}
+        ILineState,
+        IDraftData {}
 
 // REF: https://www.npmjs.com/package/zustand#typescript-usage
 export const useStore = create<IStates>()(
@@ -92,10 +103,14 @@ export const useStore = create<IStates>()(
                     set({ locale });
                 },
 
+                mode: getThemeMode(),
                 theme: Theme.auto,
+                setMode: (mode) => {
+                    set({ mode });
+                },
                 setTheme: (theme) => {
-                    changeTheme(theme);
-                    set({ theme });
+                    const mode = changeTheme(theme);
+                    set({ theme, mode });
                 },
 
                 line: true,
@@ -106,6 +121,11 @@ export const useStore = create<IStates>()(
                 offline: () => {
                     console.debug("offline");
                     set({ line: false });
+                },
+
+                drafts: [],
+                setDrafts: (drafts: IDraft[]) => {
+                    set({ drafts });
                 },
             }) satisfies IStates,
         {
@@ -122,8 +142,12 @@ export const useStore = create<IStates>()(
                         if (!store) return null;
 
                         try {
+                            // 恢复语言设置
                             changeLocale(store.state.locale ?? Locale.auto);
-                            changeTheme(store.state.theme ?? Theme.auto);
+
+                            // 恢复主题设置
+                            const mode = changeTheme(store.state.theme ?? Theme.auto);
+                            store.state.mode = mode;
 
                             const response = await trpc.account.info.query();
 
@@ -148,6 +172,7 @@ export const useStore = create<IStates>()(
                                 case 403:
                                 default:
                                     store.state.user = { loggedIn: false };
+                                    store.state.drafts = [];
                                     break;
                             }
                         }

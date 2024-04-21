@@ -22,16 +22,33 @@ import {
     Suspense,
     useState,
 } from "react";
+import { useRouter } from "next/navigation";
+import { useTranslation } from "react-i18next";
 import {
     //
-    useRouter,
-    useSearchParams,
-} from "next/navigation";
-import { NavBar } from "antd-mobile";
-import { useTranslation } from "react-i18next";
+    NavBar,
+    Popover,
+    SearchBar,
+    Space,
+} from "antd-mobile";
+import {
+    //
+    AddSquareOutline,
+    CloseCircleOutline,
+    MoreOutline,
+    SearchOutline,
+} from "antd-mobile-icons";
 
-import styles from "./page.module.scss";
-import UserContent from "./UserContent";
+import { useStore } from "@/contexts/store";
+
+import {
+    //
+    MobileHeader,
+    MobileContent,
+} from "@/mobile/components/MobileLayout";
+import DraftList from "./DraftList";
+import { PATHNAME } from "@/utils/pathname";
+import TitleBarMenu from "@/mobile/components/TitleBarMenu";
 
 /**
  * React component for the user profile page.
@@ -44,34 +61,82 @@ export function Draft() {
      * Configuration for the tabs in the tab bar.
      * Each tab includes a key, title, icon, and optional styling.
      */
-    const { t, i18n } = useTranslation();
+    const { t } = useTranslation();
     const router = useRouter();
-    const [searching, setSearching] = useState<boolean>(false);
-    const searchParams = useSearchParams();
-    const uid = searchParams.get("uid");
+    const { mode } = useStore.getState();
 
-    /**
-     * 点击游记卡片
-     */
-    function onCardClick(uid: string) {
-        router.push(`/mobile/detail?uid=${uid}`);
+    const [searching, setSearching] = useState<boolean>(false);
+    const [searchInput, setSearchInput] = useState<string>("");
+
+    function onSearchButtonClick() {
+        setSearching(true);
     }
 
-    const nav_bar_right = <div style={{ fontSize: 24 }}></div>;
+    function onSearchBarCancel() {
+        setSearchInput("");
+        setSearching(false);
+    }
+
+    function onSearchBarSearch(value: string) {
+        setSearchInput(value);
+    }
+
+    const nav_bar_right = (
+        <TitleBarMenu>
+            {searching ? (
+                <CloseCircleOutline
+                    onClick={onSearchBarCancel}
+                    aria-label={t("aria.cancel-search")}
+                />
+            ) : (
+                // REF: https://mobile.ant.design/zh/components/popover
+                <Popover.Menu
+                    actions={[
+                        {
+                            icon: <SearchOutline />,
+                            text: t("labels.search"),
+                            onClick: onSearchButtonClick,
+                        },
+                        {
+                            icon: <AddSquareOutline />,
+                            text: t("labels.create"),
+                            onClick: () => {
+                                router.push(PATHNAME.mobile.edit);
+                            },
+                        },
+                    ]}
+                    mode={mode}
+                    trigger="click"
+                    placement="bottom-end"
+                >
+                    <MoreOutline aria-label={t("aria.menu")} />
+                </Popover.Menu>
+            )}
+        </TitleBarMenu>
+    );
 
     return (
         <>
-            <div className={styles.navbar}>
+            <MobileHeader>
                 <NavBar
                     backArrow={false}
-                    right={!searching ? nav_bar_right : undefined}
+                    right={nav_bar_right}
                 >
-                    {t("draft")}
+                    {searching ? (
+                        <SearchBar
+                            placeholder={t("search.draft.placeholder")}
+                            onSearch={onSearchBarSearch}
+                            onCancel={onSearchBarCancel}
+                        />
+                    ) : (
+                        t("draft")
+                    )}
                 </NavBar>
-            </div>
-            <div className={styles.content}>
-                <UserContent onCardClick={onCardClick} />
-            </div>
+            </MobileHeader>
+
+            <MobileContent>
+                <DraftList searchInput={searchInput} />
+            </MobileContent>
         </>
     );
 }

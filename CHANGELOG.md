@@ -1,5 +1,33 @@
 # 更改日志 | Change log
 
+## 2024-04-19
+
+- 草稿编辑器支持更新草稿 | Draft editor supports updating drafts
+- 优化草稿编辑器文本编辑页面 | Optimize the text editing page of the draft editor
+- 添加审核状态列表 | Add audit status list
+- 添加位置信息显示功能 | Add location information display feature
+- 完善详情页面 | Improve detail page
+- 修复审批项预览页面的问题 | Fix the issue of the preview page of the review item
+- 调整游记查询 API 响应数据格式 | Adjust the response data format of the travel notes query API
+- 调整主页样式 | Adjust the style of the home page
+- 添加草稿跳转到已发布页面功能 | Added the feature to jump to a published page from a draft
+- 改进主页卡片流加载 | Improve the loading of the home page card flow
+- 修复发布申请无法正常提交的问题 | Fix the issue that the publishing application cannot be submitted normally
+- 修复资源文件请求缓存导致的权限变更不及时问题 | Fix the issue of delayed permission changes caused by resource file request caching
+
+## 2024-04-18
+
+- 数据库草稿表添加字段 `status` | Add field `status` to the database draft table
+- 改进草稿列表页面 | Improve draft list page
+- 改进标题栏菜单 | Improve title bar menu
+- 添加草稿搜索与删除功能 | Add draft search and delete feature
+- 添加调用系统相机功能 | Add call system camera feature
+- 改进草稿编辑器的相机页面 | Improve the camera page of the draft editor
+
+## 2024-04-17
+
+- 完善草稿列表页面 | Improve draft list page
+
 ## 2024-04-16
 
 - 实现移动端界面语言切换功能 | Implement mobile interface language switching feature

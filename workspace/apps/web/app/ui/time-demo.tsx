@@ -1,30 +1,35 @@
-// Copyright 2024 wu
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     https://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+/**
+ * Copyright (C) 2024 wu
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
 import { Space } from "antd";
 import { FileTextOutlined, FileSyncOutlined, FileDoneOutlined } from "@ant-design/icons";
 import { TimeMessage } from "@/types/definitions";
 import dayjs from "dayjs";
+import { type TFunction } from "i18next/typescript/t";
 
-export default function TimeList(state: "success" | "fail" | "waiting", submissionTime: string, modificationTime: string, approvalTime: string): JSX.Element[] {
+export default function TimeList(state: "success" | "fail" | "waiting", submissionTime: string, modificationTime: string, approvalTime: string, t: TFunction<"translation", undefined>): JSX.Element[] {
     let timeBar = [
         <Space>
             <FileTextOutlined />
-            {`提交时间:${dayjs(submissionTime).format("YYYY-MM-DD HH:mm")}`}
+            {`${t("time.commit-time")}: ${dayjs(submissionTime).format("YYYY-MM-DD HH:mm")}`}
         </Space>,
         <Space>
             <FileSyncOutlined />
-            {`更改时间:${dayjs(modificationTime).format("YYYY-MM-DD HH:mm")}`}
+            {`${t("time.change-time")}: ${dayjs(modificationTime).format("YYYY-MM-DD HH:mm")}`}
         </Space>,
     ];
 
@@ -32,7 +37,7 @@ export default function TimeList(state: "success" | "fail" | "waiting", submissi
         timeBar.push(
             <Space>
                 <FileDoneOutlined />
-                {`审核时间:${dayjs(approvalTime).format("YYYY-MM-DD HH:mm")}`}
+                {`${t("time.review-time")}: ${dayjs(approvalTime).format("YYYY-MM-DD HH:mm")}`}
             </Space>,
         );
     }

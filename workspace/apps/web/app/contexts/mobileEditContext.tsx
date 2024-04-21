@@ -1,275 +1,511 @@
-// Copyright 2024 wu
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     https://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+/**
+ * Copyright (C) 2024 wu
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
 import {
     //
     MutableRefObject,
     createContext,
+    useContext,
     useRef,
     useState,
 } from "react";
+import { useTranslation } from "react-i18next";
+
 import {
     //
     Toast,
     ImageUploadItem,
 } from "antd-mobile";
-import imageCompression from "browser-image-compression";
 import CanvasDraw from "react-canvas-draw";
+import { nanoid } from "nanoid";
+import { dequal } from "dequal";
 
 import { upload } from "@/utils/assets";
+import { type TRPC } from "@/utils/trpc";
 import {
     //
-    uploadDraft,
-    uploadSubmit,
-} from "@/utils/draft";
-import { trpc } from "@/utils/trpc";
+    handleError,
+    handleResponse,
+} from "@/utils/message";
+import {
+    //
+    type ICoordinate,
+    type TCuid,
+    type IDraft,
+} from "@/types/response";
+import {
+    //
+    imageOptimizer,
+    uid2path,
+} from "@/utils/image";
+import { ClientContext } from "./client";
+import {
+    //
+    canvas2blob,
+    blob2dataURL,
+    dataURL2blob,
+} from "@/utils/file";
+
+export enum DraftField {
+    title,
+    content,
+    coordinate,
+    assets,
+}
+
+export interface IImageUploadItemBaseExtra {
+    uploaded: boolean;
+}
+
+export interface IImageUploadItemUploadedExtra extends IImageUploadItemBaseExtra {
+    uploaded: true;
+    uid: TCuid;
+    index?: number;
+}
+
+export interface IImageUploadItemLocaleExtra extends IImageUploadItemBaseExtra {
+    uploaded: false;
+    file: Blob;
+}
+
+export type TImageUploadItemExtra = IImageUploadItemUploadedExtra | IImageUploadItemLocaleExtra;
+
+export interface IImageUploadItem extends ImageUploadItem {
+    key: string;
+    extra: TImageUploadItemExtra;
+}
 
 export const SubmitInfoContext = createContext<{
+    client: MutableRefObject<TRPC>;
+    changed: MutableRefObject<Set<DraftField>>;
+    original: IDraft | null;
+
+    id: number | null;
     title: string;
-    mainContent: string;
+    content: string;
+    coordinate: ICoordinate | null;
+
     fileList: ImageUploadItem[];
-    user: MutableRefObject<typeof trpc>;
-    resetTitle: Function;
-    resetMainContent: Function;
-    // setFileList: (items: ImageUploadItem[]) => void;
-    setFileList: (items: ImageUploadItem[]) => void;
-    addImage: Function;
-    delImage: Function;
-    uploadTravelNote: Function;
-    addDraw: Function;
-    addPicture: Function;
-}>({
-    title: "",
-    mainContent: "",
-    fileList: [],
-    resetTitle: () => {},
-    user: { current: trpc },
-    resetMainContent: () => {},
-    addImage: () => {},
-    setFileList: () => {},
-    delImage: () => {},
-    uploadTravelNote: () => {},
-    addDraw: () => {},
-    addPicture: () => {},
-});
+    fileListMaxCount: number;
+
+    init: () => void;
+    queryDraft: (id: number) => any;
+
+    setId: (id: number | null) => void;
+
+    setFileList: (items: IImageUploadItem[]) => void;
+
+    updateTitle: (title: string) => void;
+    updateContent: (content: string) => void;
+    uploadTravelNote: (type: "draft" | "publish") => Promise<void>;
+
+    addDraw: (draw: CanvasDraw) => Promise<void>;
+    addPhoto: (canvas: HTMLCanvasElement) => Promise<void>;
+    addFiles: (files: FileList) => Promise<void>;
+
+    addImage: (file: File) => Promise<IImageUploadItem>;
+    delImage: (item: ImageUploadItem) => boolean;
+
+    updateCoordinate: () => Promise<ICoordinate | null>;
+    deleteCoordinate: () => void;
+}>(undefined as any);
 
 export default function SubmitInfoProvider({ children }: { children: React.ReactElement<any, any> }): JSX.Element {
-    const drawNum = useRef(0);
+    const { t } = useTranslation();
+    const { trpc } = useContext(ClientContext);
 
+    const client = useRef(trpc);
+    const changed = useRef(new Set<DraftField>());
+
+    const [id, setId] = useState<number | null>(null);
     const [title, setTitle] = useState("");
+    const [content, setContent] = useState("");
+    const [coordinate, setCoordinate] = useState<ICoordinate | null>(null);
 
-    const [mainContent, setMainContent] = useState("");
+    const [fileList, setFileList] = useState<IImageUploadItem[]>([]);
+    const [original, setOriginal] = useState<IDraft | null>(null);
 
-    const [fileList, setFileList] = useState<ImageUploadItem[]>([]);
+    const fileListMaxCount = 9;
 
-    const uploadImages = useRef<Map<string, Blob>>(new Map());
-
-    const user = useRef(trpc);
-
-    const delImages = useRef<Set<string>>(new Set());
-
-    async function submitNewItem() {
-        const formData = new FormData();
-
-        for (let item of uploadImages.current.values()) {
-            formData.append("file[]", item);
+    /**
+     * 批量上传资源文件
+     */
+    async function uploadAssets(): Promise<IImageUploadItem[]> {
+        const fileList_ = fileList.filter((item) => item.extra.uploaded === false);
+        if (fileList_.length < 1) {
+            return fileList;
         }
 
-        const assetsUpload = await upload(formData);
-
-        // if (handleResponse(assetsUpload).state === "fail") {
-        //     throw Error("Error");;
-        // }
-
-        navigator.geolocation.getCurrentPosition(async (position) => {
-            const draft = {
-                title: title,
-                content: mainContent,
-                assets: assetsUpload.data.successes.map((success: { uid: string }) => success.uid),
-                coordinate: {
-                    latitude: position.coords.latitude,
-                    longitude: position.coords.longitude,
-                    accuracy: position.coords.accuracy,
-                    altitude: position.coords.altitude,
-                    altitude_accuracy: position.coords.altitudeAccuracy,
-                    heading: position.coords.heading,
-                    speed: position.coords.speed,
-                },
-            };
-
-            let draftId = await uploadDraft(draft, user.current);
-
-            await uploadSubmit(draftId, user.current);
-        });
-    }
-
-    async function submitNewDraft() {
         const formData = new FormData();
-
-        for (let item of uploadImages.current.values()) {
-            formData.append("file[]", item);
-        }
-
-        const assetsUpload = await upload(formData);
-
-        navigator.geolocation.getCurrentPosition(async (position) => {
-            const draft = {
-                title: title,
-                content: mainContent,
-                assets: assetsUpload.data.successes.map((success: { uid: string }) => success.uid),
-                coordinate: {
-                    latitude: position.coords.latitude,
-                    longitude: position.coords.longitude,
-                    accuracy: position.coords.accuracy,
-                    altitude: position.coords.altitude,
-                    altitude_accuracy: position.coords.altitudeAccuracy,
-                    heading: position.coords.heading,
-                    speed: position.coords.speed,
-                },
-            };
-
-            await uploadDraft(draft, user.current);
+        fileList_.forEach((item) => {
+            if (item.extra.uploaded === false) {
+                formData.append(item.key, item.extra.file);
+            }
         });
+
+        try {
+            const response = await upload(formData);
+            handleResponse(response);
+            const successes = response.data.successes;
+            const file_list = fileList.map<IImageUploadItem>((item) => {
+                const success = successes.find((success) => success.fieldname === item.key);
+                if (success) {
+                    return {
+                        key: `asset-${success.uid}`,
+                        url: uid2path(success.uid),
+                        extra: {
+                            uploaded: true,
+                            uid: success.uid,
+                        },
+                    };
+                } else {
+                    return item;
+                }
+            });
+            setFileList(file_list);
+            return file_list;
+        } catch (error) {
+            handleError(error);
+            return fileList;
+        }
     }
 
-    async function uploadTravelNote(type: "draft" | "submit") {
-        console.log(fileList.length);
-
-        console.log(uploadImages.current.size);
-
-        console.log(delImages.current.size);
+    /**
+     * 更新草稿
+     */
+    async function uploadTravelNote(type: "draft" | "publish") {
+        // console.debug(fileList.length);
 
         if (title === "") {
             Toast.show({
-                content: "标题不能为空",
+                content: t("input.draft.title.rules.required.message"),
                 icon: "fail",
             });
-        } else if (mainContent === "") {
-            Toast.show({
-                content: "内容不能为空",
-                icon: "fail",
-            });
-        } else if (fileList.length !== uploadImages.current.size || delImages.current.size !== 0 || fileList.length === 0) {
-            Toast.show({
-                content: "图片未准备好",
-                icon: "fail",
-            });
-        } else {
-            try {
-                if (type === "draft") {
-                    await submitNewDraft();
-                } else {
-                    await submitNewItem();
-                }
+            return;
+        }
 
-                Toast.show({
-                    content: "上传完成！",
-                    icon: "success",
-                });
-            } catch (error) {
-                Toast.show({
-                    content: "上传失败！",
-                    icon: "fail",
-                });
+        if (title.length > 32) {
+            Toast.show({
+                content: t("input.draft.title.rules.length.message"),
+                icon: "fail",
+            });
+            return;
+        }
+
+        if (content === "") {
+            Toast.show({
+                content: t("input.draft.content.rules.required.message"),
+                icon: "fail",
+            });
+            return;
+        }
+
+        if (fileList.length < 1) {
+            Toast.show({
+                content: t("input.draft.assets.rules.required.message"),
+                icon: "fail",
+            });
+            return;
+        }
+
+        if (fileList.length > fileListMaxCount) {
+            Toast.show({
+                content: t("input.draft.assets.rules.length.message", { maxCount: fileListMaxCount }),
+                icon: "fail",
+            });
+            return;
+        }
+
+        const file_list = await uploadAssets(); // 上传未上传的图片
+        const assets = file_list //
+            .filter((item) => item.extra.uploaded)
+            .map((item) => (item.extra as IImageUploadItemUploadedExtra).uid);
+
+        if (assets.length < file_list.length) {
+            Toast.show({
+                content: t("input.draft.assets.rules.un-uploaded.message"),
+                icon: "fail",
+            });
+            return;
+        }
+
+        if (
+            dequal(
+                assets,
+                original?.assets.map((asset) => asset.asset_uid),
+            )
+        ) {
+            changed.current.delete(DraftField.assets);
+        } else {
+            changed.current.add(DraftField.assets);
+        }
+
+        switch (type) {
+            default:
+            case "draft":
+                if (changed.current.size > 0) {
+                    await createOrUpdateDraft(assets);
+                }
+                break;
+
+            case "publish": {
+                if (changed.current.size > 0) {
+                    const id_ = await createOrUpdateDraft(assets);
+                    await publishDraft(assets, id_);
+                } else {
+                    await publishDraft(assets);
+                }
+                break;
             }
         }
     }
 
-    function addPicture(canvas: HTMLCanvasElement) {
-        drawNum.current += 1;
+    /**
+     * 创建或更新草稿
+     */
+    async function createOrUpdateDraft(assets: TCuid[]): Promise<number> {
+        try {
+            const update = !!id;
+            const response = update
+                ? await client.current.draft.update.mutate({
+                      id,
+                      title: changed.current.has(DraftField.title) ? title : undefined,
+                      content: changed.current.has(DraftField.content) ? content : undefined,
+                      coordinate: changed.current.has(DraftField.coordinate) ? coordinate : undefined,
+                      assets: changed.current.has(DraftField.assets) ? assets : undefined,
+                  })
+                : await client.current.draft.create.mutate({
+                      title,
+                      content,
+                      coordinate,
+                      assets,
+                  });
+            handleResponse(response);
 
-        let drawIndex = drawNum.current;
+            const draft: IDraft = response.data?.draft as any;
 
-        setFileList([
-            ...fileList,
-            {
-                key: `picture-${drawIndex}`,
-                url: canvas.toDataURL(),
-            },
-        ]);
+            setId(draft.id);
+            setOriginal(draft);
 
-        canvas.toBlob((blob: Blob | null) => {
-            if (blob !== null) {
-                imageCompression(new File([blob], "temp.png"), {
-                    maxSizeMB: 0.6,
-                    maxWidthOrHeight: 1080,
-                    useWebWorker: true,
-                }).then(function (compressedFile) {
-                    if (!delImages.current.has(`picture-${drawIndex}`)) {
-                        uploadImages.current.set(`draw-${drawIndex}`, compressedFile);
-                    } else {
-                        delImages.current.delete(`picture-${drawIndex}`);
-                    }
+            changed.current.clear();
+
+            if (update) {
+                Toast.show({
+                    content: t("actions.draft.update.prompt.success"),
+                    icon: "success",
+                });
+            } else {
+                Toast.show({
+                    content: t("actions.draft.create.prompt.success"),
+                    icon: "success",
                 });
             }
-        });
+            return draft.id;
+        } catch (error) {
+            handleError(error);
+            return 0;
+        }
     }
 
-    function addDraw(draw: CanvasDraw | null) {
-        drawNum.current += 1;
+    /**
+     * 发布草稿
+     */
+    async function publishDraft(assets: TCuid[], id_ = id): Promise<boolean> {
+        if (id_) {
+            try {
+                const response = await client.current.review.submit.mutate({ draft_id: id_ });
+                handleResponse(response);
 
-        let drawIndex = drawNum.current;
-
-        setFileList([
-            ...fileList,
-            {
-                key: `draw-${drawIndex}`,
-                url: draw?.getDataURL("image/png", null, "#FFFFFF"),
-            },
-        ]);
-
-        draw?.canvasContainer.children[1].toBlob((file: File) => {
-            imageCompression(file, {
-                maxSizeMB: 0.6,
-                maxWidthOrHeight: 1080,
-                useWebWorker: true,
-            }).then(function (compressedFile) {
-                if (!delImages.current.has(`draw-${drawIndex}`)) {
-                    uploadImages.current.set(`draw-${drawIndex}`, compressedFile);
-                } else {
-                    delImages.current.delete(`draw-${drawIndex}`);
-                }
-            });
-        });
-    }
-
-    function addImage(file: File) {
-        imageCompression(file, {
-            maxSizeMB: 0.6,
-            maxWidthOrHeight: 1080,
-            useWebWorker: true,
-        }).then(function (compressedFile) {
-            if (!delImages.current.has(file.name)) {
-                uploadImages.current.set(file.name, compressedFile);
-            } else {
-                delImages.current.delete(file.name);
+                Toast.show({
+                    content: t("actions.draft.publish.prompt.success"),
+                    icon: "success",
+                });
+                return true;
+            } catch (error) {
+                handleError(error);
+                return false;
             }
+        }
+        return false;
+    }
+
+    /**
+     * 更新坐标
+     */
+    async function updateCoordinate(): Promise<ICoordinate | null> {
+        const position = await new Promise<GeolocationPosition | null>((resolve) => {
+            navigator.geolocation.getCurrentPosition(
+                //
+                resolve,
+                () => resolve(null),
+                {
+                    timeout: 8_000,
+                },
+            );
         });
+        if (position) {
+            changed.current.add(DraftField.coordinate);
+            const coordinate = {
+                latitude: position.coords.latitude,
+                longitude: position.coords.longitude,
+                accuracy: position.coords.accuracy,
+                altitude: position.coords.altitude,
+                altitude_accuracy: position.coords.altitudeAccuracy,
+                heading: position.coords.heading,
+                speed: position.coords.speed,
+            } satisfies ICoordinate;
+            if (dequal(coordinate, original?.coordinate)) {
+                changed.current.delete(DraftField.coordinate);
+            } else {
+                changed.current.add(DraftField.coordinate);
+            }
+            setCoordinate(coordinate);
+
+            Toast.show({
+                content: t("actions.draft.coordinate.update.prompt.success"),
+                icon: "success",
+            });
+            return coordinate;
+        } else {
+            Toast.show({
+                content: t("actions.draft.coordinate.update.prompt.fail"),
+                icon: "fail",
+            });
+            return null;
+        }
+    }
+
+    /**
+     * 删除坐标
+     */
+    function deleteCoordinate() {
+        if (dequal(null, original?.coordinate)) {
+            changed.current.delete(DraftField.coordinate);
+        } else {
+            changed.current.add(DraftField.coordinate);
+        }
+        Toast.show({
+            content: t("actions.draft.coordinate.delete.prompt.success"),
+            icon: "success",
+        });
+        setCoordinate(null);
+    }
+
+    /**
+     * 添加画板的绘图
+     */
+    async function addDraw(draw: CanvasDraw) {
+        // console.debug(draw);
+
+        // @ts-ignore
+        const url = draw.getDataURL(
+            //
+            "image/png", // 图片格式
+            null, // 背景图片
+            "#FFFFFF", // 背景颜色
+        );
+        const blob = dataURL2blob(url);
+        if (blob) {
+            const key = `draw-${nanoid()}`;
+            const file = await imageOptimizer(new File([blob], `${key}.png`, { type: blob.type }));
+
+            setFileList([
+                ...fileList,
+                {
+                    key,
+                    url,
+                    extra: {
+                        uploaded: false,
+                        file,
+                    },
+                },
+            ]);
+        }
+    }
+
+    /**
+     * 添加系统相机拍摄的文件列表
+     */
+    async function addFiles(files: FileList) {
+        const images: IImageUploadItem[] = [];
+        for (let i = 0; i < files.length; i++) {
+            const file = files.item(i);
+            if (file) {
+                const item = await addImage(file);
+                images.push(item);
+            }
+        }
+        setFileList([...fileList, ...images]);
+    }
+
+    /**
+     * 添加拍摄的照片
+     */
+    async function addPhoto(canvas: HTMLCanvasElement) {
+        const key = `photo-${nanoid()}`;
+        const blob = await canvas2blob(canvas);
+
+        if (blob) {
+            const url = canvas.toDataURL("image/webp");
+            const file = await imageOptimizer(new File([blob], `${key}.webp`, { type: blob.type }));
+
+            setFileList([
+                ...fileList,
+                {
+                    key,
+                    url,
+                    extra: {
+                        uploaded: false,
+                        file,
+                    },
+                },
+            ]);
+        }
+    }
+
+    /**
+     * 相册组件添加图片
+     */
+    async function addImage(file: File): Promise<IImageUploadItem> {
+        const compressedFile = await imageOptimizer(file);
+        const key = `file-${nanoid()}`;
+        const url = await blob2dataURL(compressedFile);
 
         return {
-            key: file.name,
-            url: URL.createObjectURL(file),
+            key,
+            url,
+            extra: {
+                uploaded: false,
+                file: compressedFile,
+            },
         };
     }
 
-    function delImage(item: ImageUploadItem) {
-        if (uploadImages.current.has(item.key as string)) {
-            uploadImages.current.delete(item.key as string);
+    /**
+     * 相册组件删除图片
+     */
+    function delImage(item: ImageUploadItem): boolean {
+        const file_list = fileList.filter((file) => file.key !== item.key);
+        if (file_list.length < fileList.length) {
+            setFileList(file_list);
+            return true;
         } else {
-            delImages.current.add(item.key as string);
+            return false;
         }
-
-        return true;
     }
 
     /**
@@ -281,22 +517,117 @@ export default function SubmitInfoProvider({ children }: { children: React.React
      *
      * @beta
      */
-    function resetTitle(newTitle: string) {
+    function updateTitle(newTitle: string) {
+        if (dequal(newTitle, original?.title)) {
+            changed.current.delete(DraftField.title);
+        } else {
+            changed.current.add(DraftField.title);
+        }
         setTitle(newTitle);
     }
 
     /**
-     * 重置主要内容，并填入新主要内容
+     * 重置正文，并填入新主要内容
      *
      * @remarks
      *
-     * @param newTitle - 新主要内容
+     * @param newContent - 新正文
      *
      * @beta
      */
-    function resetMainContent(newMainContent: string) {
-        setMainContent(newMainContent);
+    function updateContent(newContent: string) {
+        if (dequal(newContent, original?.content)) {
+            changed.current.delete(DraftField.content);
+        } else {
+            changed.current.add(DraftField.content);
+        }
+        setContent(newContent);
     }
 
-    return <SubmitInfoContext.Provider value={{ addPicture, user, title, uploadTravelNote, mainContent, setFileList, resetTitle, fileList, resetMainContent, addImage, delImage, addDraw }}>{children}</SubmitInfoContext.Provider>;
+    /**
+     * 查询草稿内容
+     */
+    async function queryDraft(id_: number) {
+        try {
+            const response = await client.current.draft.list.query({ ids: [id_] });
+            handleResponse(response);
+            const drafts: IDraft[] = (response.data?.drafts as any[]) ?? [];
+            if (drafts.length > 0) {
+                const draft = drafts[0];
+                setOriginal(draft);
+
+                setTitle(draft.title);
+                setContent(draft.content);
+                setCoordinate(draft.coordinate);
+                setFileList(
+                    draft.assets.map((asset) => {
+                        return {
+                            key: `asset-${asset.asset_uid}`,
+                            url: uid2path(asset.asset_uid),
+                            extra: {
+                                uploaded: true,
+                                uid: asset.asset_uid,
+                                index: asset.index,
+                            },
+                        };
+                    }),
+                );
+            }
+        } catch (error) {
+            handleError(error);
+        }
+    }
+
+    /**
+     * 初始化
+     */
+    function init() {
+        setId(null);
+        setTitle("");
+        setContent("");
+        setCoordinate(null);
+        setFileList([]);
+        setOriginal(null);
+        changed.current.clear();
+    }
+
+    return (
+        <SubmitInfoContext.Provider
+            value={{
+                client,
+                changed,
+                original,
+
+                id,
+                title,
+                content,
+                coordinate,
+
+                fileList,
+                fileListMaxCount,
+
+                init,
+                queryDraft,
+
+                setId,
+                setFileList,
+
+                updateTitle,
+                updateContent,
+                uploadTravelNote,
+
+                addDraw,
+                addPhoto,
+                addFiles,
+
+                addImage,
+                delImage,
+
+                updateCoordinate,
+                deleteCoordinate,
+            }}
+        >
+            {children}
+        </SubmitInfoContext.Provider>
+    );
 }

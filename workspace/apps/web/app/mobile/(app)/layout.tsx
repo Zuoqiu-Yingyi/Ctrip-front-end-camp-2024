@@ -17,7 +17,11 @@
 
 "use client";
 
-import { useState } from "react";
+import {
+    //
+    useState,
+    useEffect,
+} from "react";
 import {
     //
     useRouter,
@@ -33,7 +37,8 @@ import {
     UserOutline,
 } from "antd-mobile-icons";
 
-import styles from "./layout.module.scss";
+import { MobileFooter } from "@/mobile/components/MobileLayout";
+import { PATHNAME } from "@/utils/pathname";
 
 export enum TabBarKey {
     home = "home", // 首页
@@ -47,26 +52,29 @@ export function AppLayout({
 }: {
     children: React.ReactNode;
 }): JSX.Element {
+    // REF: https://react.i18next.com/guides/quick-start#using-the-hook
+    const { t } = useTranslation();
+
     // REF: https://nextjs.org/docs/app/building-your-application/routing/linking-and-navigating#userouter-hook
     const router = useRouter();
     const pathname = usePathname();
-    const [activeKey, setActiveKey] = useState(
-        (() => {
-            // console.debug(pathname);
-            switch (true) {
-                default:
-                case pathname.endsWith(`/${TabBarKey.home}/`):
-                    return TabBarKey.home;
-                case pathname.endsWith(`/${TabBarKey.draft}/`):
-                    return TabBarKey.draft;
-                case pathname.endsWith(`/${TabBarKey.user}/`):
-                    return TabBarKey.user;
-            }
-        })(),
-    );
+    const [activeKey, setActiveKey] = useState(TabBarKey.home);
 
-    // REF: https://react.i18next.com/guides/quick-start#using-the-hook
-    const { t } = useTranslation();
+    useEffect(() => {
+        // console.debug(pathname);
+        switch (pathname) {
+            default:
+            case PATHNAME.mobile.home:
+                setActiveKey(TabBarKey.home);
+                break;
+            case PATHNAME.mobile.draft:
+                setActiveKey(TabBarKey.draft);
+                break;
+            case PATHNAME.mobile.user:
+                setActiveKey(TabBarKey.user);
+                break;
+        }
+    }, [pathname]);
 
     // REF: https://mobile.ant.design/zh/components/tab-bar
     const tabs = [
@@ -97,9 +105,13 @@ export function AppLayout({
         setActiveKey(key as TabBarKey);
         switch (key as TabBarKey) {
             case TabBarKey.home:
+                router.replace(PATHNAME.mobile.home);
+                break;
             case TabBarKey.draft:
+                router.replace(PATHNAME.mobile.draft);
+                break;
             case TabBarKey.user:
-                router.replace(`/mobile/${key}`);
+                router.replace(PATHNAME.mobile.user);
                 break;
 
             default:
@@ -110,7 +122,7 @@ export function AppLayout({
     return (
         <>
             {children}
-            <div className={styles.footer}>
+            <MobileFooter>
                 <TabBar
                     activeKey={activeKey}
                     onChange={onTabBarChange}
@@ -124,7 +136,7 @@ export function AppLayout({
                         />
                     ))}
                 </TabBar>
-            </div>
+            </MobileFooter>
         </>
     );
 }

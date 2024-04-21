@@ -37,7 +37,63 @@
             },
             "text": "刪除帳戶"
         },
+        "delete-draft": {
+            "actions": {
+                "confirm1": {
+                    "content": "確認刪除草稿 [{{title}}] ？",
+                    "content1": "刪除後將同步刪除該篇草稿對應的已發佈版本與資源檔案。",
+                    "title": "刪除草稿"
+                }
+            }
+        },
+        "draft": {
+            "content": {
+                "clear": {
+                    "text": "清空內容"
+                },
+                "template": {
+                    "text": "內容模板"
+                }
+            },
+            "coordinate": {
+                "delete": {
+                    "prompt": {
+                        "success": "刪除定位訊息成功"
+                    },
+                    "text": "刪除定位訊息"
+                },
+                "update": {
+                    "prompt": {
+                        "fail": "更新定位資訊失敗",
+                        "success": "更新定位資訊成功"
+                    }
+                },
+                "view": {
+                    "text": "查看定位訊息"
+                }
+            },
+            "create": {
+                "prompt": {
+                    "success": "草稿已建立"
+                }
+            },
+            "publish": {
+                "prompt": {
+                    "success": "已提交發布申請"
+                }
+            },
+            "update": {
+                "prompt": {
+                    "success": "草稿已更新"
+                }
+            }
+        },
         "extra": "請選擇你要進行操作",
+        "go-back-without-saving": {
+            "confirm": {
+                "content": "目前草稿未儲存，離開後將遺失所有變更。"
+            }
+        },
         "login": {
             "prompt": {
                 "incorrect": {
@@ -56,36 +112,103 @@
             },
             "text": "登出登入"
         },
+        "share": {
+            "copy-link": {
+                "prompt": {
+                    "content": "超連結已複製到剪貼簿"
+                }
+            },
+            "to-other": {
+                "prompt": {
+                    "content": "已分享到其他應用"
+                }
+            }
+        },
         "signup": {
             "prompt": {
                 "success": {
                     "content": "用戶註冊成功"
                 }
             }
+        },
+        "template": {
+            "apply": {
+                "text": "應用程式模板"
+            }
         }
     },
     "admin-title": "後台審核系統",
+    "album": "相簿",
     "approved": "已通過",
     "aria": {
-        "card": "遊記卡片"
+        "approval-time": "審閱時間",
+        "cancel": "取消",
+        "cancel-search": "取消搜尋",
+        "card": "遊記卡片",
+        "close": "關閉",
+        "confirm": "確認",
+        "create": "創建",
+        "creation-time": "創建時間",
+        "delete": "刪除",
+        "draft": {
+            "delete": "刪除草稿",
+            "edit": "編輯草稿",
+            "preview": "預覽草稿",
+            "review-status": "查看發布狀態",
+            "title": {
+                "template": "草稿標題模板"
+            },
+            "toolbar": {
+                "menu": "控制項列選單"
+            }
+        },
+        "menu": "選單",
+        "modification-time": "編輯時間",
+        "open": "打開",
+        "search": "搜尋",
+        "share": "分享",
+        "submission-time": "提交時間",
+        "take-photo": "拍照"
     },
     "audit": "審核",
+    "audit-status": {
+        "fail": "審核失敗",
+        "success": "審核成功"
+    },
     "auto": "自動",
     "avatar": "使用者頭像",
+    "camera": "相機",
     "cancel": "取消",
+    "collapse": "收起",
     "confirm": "確認",
     "confirmed": "確認",
     "content": "內容",
     "cover": "封面",
+    "del-status": {
+        "fail": "刪除失敗",
+        "success": "刪除成功"
+    },
     "delete": "刪除",
     "delete-tip": "你確定刪除該項嗎？",
+    "detail": {
+        "errors": {
+            "invalid-params": "無效的參數"
+        }
+    },
     "details": "詳情",
     "draft": "草稿",
     "drawing-board": "畫板",
+    "edit": {
+        "draft": {
+            "publish": "發布",
+            "save": "儲存"
+        }
+    },
     "empty": {
         "description": "暫無更多內容"
     },
     "error-tip": "用戶名或密碼錯誤！",
+    "expand": "展開",
     "graffiti": "塗鴉",
     "graffiti-tip": "可以隨手畫點日常生活吧！",
     "home": "首頁",
@@ -101,6 +224,40 @@
         },
         "current-account": {
             "label": "目前帳戶"
+        },
+        "draft": {
+            "assets": {
+                "rules": {
+                    "length": {
+                        "message": "旅行日記相簿中照片數量不能超過 {{maxCount}} 張"
+                    },
+                    "required": {
+                        "message": "旅行日記相簿中照片數量不能少於 1 張"
+                    },
+                    "un-uploaded": {
+                        "message": "相簿中部分照片上傳失敗，請稍後重試"
+                    }
+                }
+            },
+            "content": {
+                "placeholder": "旅行日記的內容",
+                "rules": {
+                    "required": {
+                        "message": "旅行日記內容不能為空"
+                    }
+                }
+            },
+            "title": {
+                "placeholder": "旅行日記的標題",
+                "rules": {
+                    "length": {
+                        "message": "旅行日記標題不能超過 32 個字符"
+                    },
+                    "required": {
+                        "message": "旅行日記標題不能為空"
+                    }
+                }
+            }
         },
         "new-password": {
             "label": "新密碼",
@@ -142,6 +299,32 @@
     "item-user": "用戶",
     "keep-login": "保持登入狀態",
     "label-brush-radius": "粗細",
+    "labels": {
+        "cameras": {
+            "front": "前置鏡頭",
+            "rear": "後置鏡頭",
+            "system": "系統相機"
+        },
+        "coordinate": {
+            "accuracy": "位置精確度",
+            "altitude": "海拔高度",
+            "altitude_accuracy": "海拔精確度",
+            "heading": "運動方向",
+            "latitude": "維度",
+            "longitude": "經度",
+            "speed": "運動速度",
+            "title": "位置資訊"
+        },
+        "copy-title-link": "複製標題與超鏈接",
+        "create": "新建",
+        "edit": "編輯",
+        "go-to-publish": "已發布頁面",
+        "preview": "預覽",
+        "review-status": "發布狀態",
+        "search": "搜尋",
+        "share-to": "分享到 ..."
+    },
+    "leave": "離開",
     "loading": "載入中",
     "login": "登錄",
     "login-signup": "登入 / 註冊",
@@ -151,15 +334,35 @@
     "pass": "通過",
     "password": "密碼",
     "pending": "待審核",
+    "photograph": "照片",
     "profile": "使用者資訊",
     "prompt-prefix": "請輸入",
     "publish-time": "發佈時間",
+    "pull-status": {
+        "canRelease": "釋放以刷新",
+        "complete": "重新整理完成",
+        "pulling": "下拉重新整理",
+        "refreshing": "重新整理中"
+    },
+    "recent-submission-number": "近日提交人數",
     "reject": "拒絕",
     "reject-reason": "拒絕理由",
     "rejected": "已拒絕",
     "remember": "記住我",
+    "review-status": {
+        "canceled": "已取消",
+        "failed": "未通過",
+        "padding": "待審核",
+        "passed": "已通過",
+        "unpublished": "未發布"
+    },
     "search": {
-        "placeholder": "搜尋使用者名稱或標題"
+        "draft": {
+            "placeholder": "請輸入待搜尋的關鍵字"
+        },
+        "publish": {
+            "placeholder": "搜尋使用者名稱或標題"
+        }
     },
     "settings": {
         "language": {
@@ -170,6 +373,16 @@
         }
     },
     "signup": "註冊",
+    "status": {
+        "draft-not-publish": {
+            "description": "目前草稿未發布"
+        },
+        "not-login": {
+            "description": "前往帳戶頁面",
+            "title": "目前用戶未登入"
+        }
+    },
+    "text": "文字",
     "theme": {
         "dark": {
             "label": "深色"
@@ -178,7 +391,13 @@
             "label": "淺色"
         }
     },
+    "time": {
+        "change-time": "更改時間",
+        "commit-time": "提交時間",
+        "review-time": "審核時間"
+    },
     "title": "標題",
+    "total": "縂數",
     "update-time": "更新時間",
     "user": "使用者",
     "username": "使用者名稱",

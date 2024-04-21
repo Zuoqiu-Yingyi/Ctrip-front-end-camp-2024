@@ -1,16 +1,19 @@
-// Copyright 2024 wu
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     https://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+/**
+ * Copyright (C) 2024 wu
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
 
 let streaming = false;
 let height = 0;
@@ -25,7 +28,7 @@ let height = 0;
  *
  * @beta
  */
-export function openCamera(cameraVideoRef: React.RefObject<HTMLVideoElement>, cameraCanvasRef: React.RefObject<HTMLCanvasElement>) {
+export function openCamera(cameraVideoRef: React.RefObject<HTMLVideoElement>, cameraReviewRef: React.RefObject<HTMLCanvasElement>) {
     const opt = {
         audio: false,
         video: true,
@@ -40,11 +43,11 @@ export function openCamera(cameraVideoRef: React.RefObject<HTMLVideoElement>, ca
             console.error(`An error occurred: ${err}`);
         });
 
-    let video = cameraVideoRef.current as HTMLVideoElement;
-    let canvas = cameraCanvasRef.current as HTMLCanvasElement;
-    let width = screen.width;
+    const video = cameraVideoRef.current;
+    const review = cameraReviewRef.current;
+    const width = screen.width;
 
-    if (video !== null) {
+    if (video && review) {
         video.addEventListener(
             "canplay",
             () => {
@@ -60,8 +63,8 @@ export function openCamera(cameraVideoRef: React.RefObject<HTMLVideoElement>, ca
 
                     video.setAttribute("width", `${width}`);
                     video.setAttribute("height", `${height}`);
-                    canvas.setAttribute("width", `${width}`);
-                    canvas.setAttribute("height", `${height}`);
+                    review.setAttribute("width", `${width}`);
+                    review.setAttribute("height", `${height}`);
                     streaming = true;
                 }
             },
@@ -81,16 +84,17 @@ export function openCamera(cameraVideoRef: React.RefObject<HTMLVideoElement>, ca
  * @beta
  */
 export function closeCamera(cameraVideoRef: React.RefObject<HTMLVideoElement>) {
-    const video = cameraVideoRef.current as HTMLVideoElement;
+    const video = cameraVideoRef.current;
+    const stream = video?.srcObject;
 
-    const stream = video.srcObject as MediaStream;
-
-    if ("getTracks" in stream) {
+    if (stream && "getTracks" in stream) {
         const tracks = stream.getTracks();
 
         tracks.forEach((track) => {
             track.stop();
         });
+
+        video.srcObject = null;
     }
 }
 
@@ -105,15 +109,14 @@ export function closeCamera(cameraVideoRef: React.RefObject<HTMLVideoElement>) {
  * @beta
  */
 export function displayVideo(cameraVideoRef: React.RefObject<HTMLVideoElement>, mediaStream: MediaStream) {
-    const video = cameraVideoRef.current as HTMLVideoElement;
+    const video = cameraVideoRef.current;
 
-    if ("srcObject" in video) {
+    if (video && "srcObject" in video) {
         video.srcObject = mediaStream;
+        video.addEventListener("loadedmetadata", () => {
+            video.play();
+        });
     }
-
-    video.onloadedmetadata = () => {
-        video.play();
-    };
 }
 
 /**
@@ -123,33 +126,31 @@ export function displayVideo(cameraVideoRef: React.RefObject<HTMLVideoElement>, 
  * This method is part of the {@link core-library#Statistics | Statistics subsystem}.
  *
  * @param cameraVideoRef - video标签的引用
- * @param cameraCanvasRef - canvas标签的引用
+ * @param cameraReviewRef - canvas标签的引用
  *
  * @returns 成功放回资源的base64URL，否则返回空字符串
  *
  * @beta
  */
-export function getPicture(cameraVideoRef: React.RefObject<HTMLVideoElement>, cameraCanvasRef: React.RefObject<HTMLCanvasElement>): string {
-    const video = cameraVideoRef.current as HTMLVideoElement;
+export function getPicture(cameraVideoRef: React.RefObject<HTMLVideoElement>, cameraReviewRef: React.RefObject<HTMLCanvasElement>): string {
+    const video = cameraVideoRef.current;
+    const review = cameraReviewRef.current;
 
-    const canvas = cameraCanvasRef.current;
-
-    if (canvas == null) {
+    if (!video || !review) {
         return "";
     }
 
-    // console.log(canvas.width);
-    console.log(video.videoWidth);
-    console.log(video.videoHeight);
+    // console.log(review.width);
+    // console.debug(video.videoWidth, video.videoHeight);
 
-    const context = canvas.getContext("2d");
+    const context = review.getContext("2d");
 
     let imgStr = "";
 
     if (context !== null) {
         context.drawImage(video, 0, 0, screen.width, height); // 把视频中的一帧在canvas画布里面绘制出来
 
-        imgStr = canvas.toDataURL(); // 将图片资源转成字符串
+        imgStr = review.toDataURL(); // 将图片资源转成字符串
 
         // closeCamera(cameraVideoRef); // 获取到图片之后可以自动关闭摄像头
     }

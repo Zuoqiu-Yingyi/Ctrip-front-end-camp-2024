@@ -26,6 +26,7 @@ import {
 } from "./../middlewares/permission";
 import { ID } from "./../types";
 import { ReviewStatus } from "./../types/review";
+import { assets } from "./../utils/store";
 
 import type { Prisma } from "~/prisma/client";
 
@@ -37,37 +38,6 @@ export class DraftNotFoundError extends Error {
         super(`Draft [${id}] not found`);
     }
 }
-
-/**
- * 草稿查询内容
- */
-const DRAFT_SELECT: Prisma.DraftSelect = {
-    id: true,
-    title: true,
-    content: true,
-    author_id: true,
-
-    coordinate: {
-        select: {
-            latitude: true,
-            longitude: true,
-            accuracy: true,
-            altitude: true,
-            altitude_accuracy: true,
-            heading: true,
-            speed: true,
-        },
-    },
-    assets: {
-        select: {
-            index: true,
-            asset_uid: true,
-        },
-        orderBy: {
-            index: "asc",
-        },
-    },
-};
 
 /**
  * 审批项查询内容
@@ -105,6 +75,22 @@ const REVIEW_SELECT: Prisma.ReviewSelect = {
             index: "asc",
         },
     },
+
+    publish: {
+        select: {
+            uid: true,
+        },
+    },
+    submitter: {
+        select: {
+            name: true,
+            profile: {
+                select: {
+                    avatar: true,
+                },
+            },
+        },
+    },
 };
 
 /**
@@ -132,6 +118,7 @@ export const submitMutation = procedure //
                     id: true,
                     title: true,
                     content: true,
+                    status: true,
                     author_id: true,
                     coordinate_id: true,
                     assets: {
@@ -264,12 +251,26 @@ export const submitMutation = procedure //
                 }
             })();
 
+            /* 更新草稿状态 */
+            if (draft.status !== ReviewStatus.Pending) {
+                await options.ctx.DB.draft.update({
+                    where: {
+                        id: draft.id,
+                        deleted: false,
+                    },
+                    data: {
+                        status: ReviewStatus.Pending,
+                    },
+                });
+            }
+
             /* 更新关联的资源文件访问权限 */
             if (review.assets.length > 0) {
+                const asset_uids = review.assets.map((asset) => asset.asset_uid);
                 await options.ctx.DB.asset.updateMany({
                     where: {
                         uid: {
-                            in: review.assets.map((asset) => asset.asset_uid),
+                            in: asset_uids,
                         },
                         permission: {
                             lte: 0b0001, // 仅文件上传者可访问
@@ -279,6 +280,9 @@ export const submitMutation = procedure //
                     data: {
                         permission: 0b0111, // 管理员-审核者-上传者 可访问
                     },
+                });
+                asset_uids.forEach((uid) => {
+                    assets.delete(uid);
                 });
             }
 
@@ -325,6 +329,8 @@ export const cancelMutation = procedure //
         try {
             const submitter_id = options.ctx.session.data.account.id;
             const { draft_id } = options.input;
+
+            /* 更新所有待审批项的状态为已取消 */
             const payload = await options.ctx.DB.review.updateMany({
                 where: {
                     submitter_id,
@@ -336,6 +342,20 @@ export const cancelMutation = procedure //
                     status: ReviewStatus.Canceled,
                 },
             });
+
+            /* 草稿状态更改为已取消 */
+            if (payload.count > 0) {
+                await options.ctx.DB.draft.update({
+                    where: {
+                        id: draft_id,
+                        deleted: false,
+                    },
+                    data: {
+                        status: ReviewStatus.Canceled,
+                    },
+                });
+            }
+
             return {
                 code: 0,
                 message: "",
@@ -677,12 +697,24 @@ export const approveMutation = procedure //
                 }
             })();
 
+            /* 更改草稿的状态 */
+            await options.ctx.DB.draft.update({
+                where: {
+                    id: review.draft_id,
+                    deleted: false,
+                },
+                data: {
+                    status: approved ? ReviewStatus.Approved : ReviewStatus.Rejected,
+                },
+            });
+
             /* 更新关联的资源文件访问权限 */
             if (review.assets.length > 0) {
+                const asset_uids = review.assets.map((asset) => asset.asset_uid);
                 await options.ctx.DB.asset.updateMany({
                     where: {
                         uid: {
-                            in: review.assets.map((asset) => asset.asset_uid),
+                            in: asset_uids,
                         },
                         permission: {
                             lte: 0b0111, // 管理员-审核者-上传者 可访问
@@ -692,6 +724,9 @@ export const approveMutation = procedure //
                     data: {
                         permission: 0b1111, // 公众-管理员-审核者-上传者 可访问
                     },
+                });
+                asset_uids.forEach((uid) => {
+                    assets.delete(uid);
                 });
             }
 

@@ -23,4 +23,4 @@ export const USER_KEY_SALT = process.env.NEXT_PUBLIC_USER_KEY_SALT || "salt";
 
 export default {
     USER_KEY_SALT,
-}
+};

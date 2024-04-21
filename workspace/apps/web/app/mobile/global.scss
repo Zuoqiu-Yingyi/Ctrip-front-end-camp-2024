@@ -16,10 +16,20 @@
  */
 
 // REF: https://mobile.ant.design/zh/guide/theming
+html,
+body {
+    overflow: hidden;
+}
+
 :root:root {
     --adm-color-primary: #22a59c;
 
     &.dark {
         --adm-color-primary: #a0d5d1;
     }
+}
+
+html,
+body {
+    overflow: hidden;
 }

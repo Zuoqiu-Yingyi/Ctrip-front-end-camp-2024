@@ -1,21 +1,24 @@
-// Copyright 2024 wu
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     https://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+/**
+ * Copyright (C) 2024 wu
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
 import { createContext, useContext, useRef, useState } from "react";
 import { TravelNote, ManageData, ManagePage, ManagePageNumber } from "../types/definitions";
-import { mockRemoteSearch } from "@/contexts/data";
 import { getReviewCount, operateSingleReview, getReviews } from "../utils/review";
-import { AuthContext } from "@/contexts/authContext";
+import { ClientContext } from "./client";
 
 export const MessageContext = createContext<{
     totalDataNumber: ManagePageNumber;
@@ -54,7 +57,7 @@ export const MessageContext = createContext<{
 });
 
 export default function MessageContextProvider({ children }: { children: React.ReactElement<any, any> }): JSX.Element {
-    const { user } = useContext(AuthContext);
+    const { trpc } = useContext(ClientContext);
 
     const checkedSet = useRef<Set<number>>(new Set());
 
@@ -96,7 +99,17 @@ export default function MessageContextProvider({ children }: { children: React.R
      *
      * @param state - 状态
      */
-    async function delTravelNote(id: string) {}
+    async function delTravelNote(id: number, uid: string) {
+        console.debug(uid);
+
+        console.debug("dddd");
+
+        const response_delete1 = await trpc.publish.delete.mutate({ uids: [uid] });
+
+        console.debug(response_delete1);
+
+        await operateSingleItem(id, "success");
+    }
 
     /**
      * 切换页面状态
@@ -129,16 +142,27 @@ export default function MessageContextProvider({ children }: { children: React.R
 
         searchNumber.current += 1;
 
-        let record = searchNumber.current;
+        let recordSearchNumber = searchNumber.current;
 
         let loadedSearchItems = allItems.current[pageState].filter((item) => item[field].includes(searchWord));
 
         changeDisplayItems(loadedSearchItems);
 
-        let allSearchItems = [...loadedSearchItems, ...(await mockRemoteSearch(3, pageState))];
+        // let allSearchItems = [...loadedSearchItems, ...(await mockRemoteSearch(3, pageState))];
 
-        if (record === searchNumber.current) {
-            changeDisplayItems(allSearchItems);
+        // let remoteSearchResult = await mockRemoteSearch(3, pageState);
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+
+        // let searchedResultSet = new Set(loadedSearchItems.map((value) => value.id));
+
+        // remoteSearchResult.forEach((item) => {
+        //     if (!searchedResultSet.has(item.id)) {
+        //         loadedSearchItems.push(item);
+        //     }
+        // })
+
+        if (recordSearchNumber === searchNumber.current) {
+            changeDisplayItems([...loadedSearchItems]);
 
             setOnSearch(false);
         }
@@ -205,17 +229,17 @@ export default function MessageContextProvider({ children }: { children: React.R
         );
     }
 
-    async function mendLoadedPages(changedTotlNum: number, state: TravelNote["state"]) {
+    async function mendLoadedPages(changedTotalNum: number, state: TravelNote["state"]) {
         console.log(loadedPages.current[state]);
 
         for (let key of loadedPages.current[state].keys()) {
             await Promise.all(
                 [0, 1, 2, 3, 4]
                     .map((index) => switchItemIndex(key, index, 5))
-                    .filter((switchIndex) => switchIndex < changedTotlNum)
+                    .filter((switchIndex) => switchIndex < changedTotalNum)
                     .map((switchIndex) => {
                         if (switchIndex >= allItems.current[state].length || JSON.stringify(allItems.current[state][switchIndex]) === "{}") {
-                            return getReviews(switchIndex, 1, state, user.current).then((value) => {
+                            return getReviews(switchIndex, 1, state, trpc).then((value) => {
                                 allItems.current[state][switchIndex] = value[0];
                             });
                         }
@@ -226,9 +250,9 @@ export default function MessageContextProvider({ children }: { children: React.R
 
     async function operateReview(id: number, operate: "pass" | "reject", rejectReason?: string) {
         if (operate === "pass") {
-            await operateSingleReview(id, operate, user.current);
+            await operateSingleReview(id, operate, trpc);
         } else {
-            await operateSingleReview(id, operate, user.current, rejectReason);
+            await operateSingleReview(id, operate, trpc, rejectReason);
         }
 
         await operateSingleItem(id, "waiting");
@@ -244,18 +268,18 @@ export default function MessageContextProvider({ children }: { children: React.R
      *
      */
     async function operateSingleItem(id: number, state: TravelNote["state"]) {
-        let changedTotlNum = totalDataNumber[state] - 1;
+        let changedTotalNum = totalDataNumber[state] - 1;
 
         allItems.current[state] = allItems.current[state].filter((item) => item.id !== id);
 
         setTotalDataNumber({
             ...totalDataNumber,
-            [state]: changedTotlNum,
+            [state]: changedTotalNum,
         });
 
         setDisplayItems(allItems.current[state]);
 
-        mendLoadedPages(changedTotlNum, state);
+        mendLoadedPages(changedTotalNum, state);
     }
 
     async function operateBatchReview(operate: "pass" | "reject", rejectReason?: string) {
@@ -264,9 +288,9 @@ export default function MessageContextProvider({ children }: { children: React.R
         await Promise.all(
             [...checkedSet.current].map((id) => {
                 if (operate === "pass") {
-                    return operateSingleReview(id, operate, user.current);
+                    return operateSingleReview(id, operate, trpc);
                 } else {
-                    return operateSingleReview(id, operate, user.current, rejectReason);
+                    return operateSingleReview(id, operate, trpc, rejectReason);
                 }
             }),
         );
@@ -283,16 +307,16 @@ export default function MessageContextProvider({ children }: { children: React.R
      *
      */
     async function operateBatchItem(state: TravelNote["state"]) {
-        let changedTotlNum = totalDataNumber[state] - checkedNumber;
+        let changedTotalNum = totalDataNumber[state] - checkedNumber;
 
         allItems.current[state] = allItems.current[state].filter((item) => !checkedSet.current.has(item.id));
 
         setTotalDataNumber({
             ...totalDataNumber,
-            [state]: changedTotlNum,
+            [state]: changedTotalNum,
         });
 
-        mendLoadedPages(changedTotlNum, state);
+        mendLoadedPages(changedTotalNum, state);
 
         setDisplayItems(allItems.current[state]);
 
@@ -311,14 +335,14 @@ export default function MessageContextProvider({ children }: { children: React.R
      */
     async function firstPullData(state: TravelNote["state"]) {
         // 获取待审核总数
-        let allWaitingCount = (await getReviewCount(state, user.current)) as number;
+        let allWaitingCount = (await getReviewCount(state, trpc)) as number;
 
         console.log(allWaitingCount);
 
         if (allWaitingCount > 0) {
             setLoading(true);
 
-            allItems.current[state] = await getReviews(0, 5, state, user.current);
+            allItems.current[state] = await getReviews(0, 5, state, trpc);
 
             console.log("loadedPages: ");
 
@@ -333,7 +357,7 @@ export default function MessageContextProvider({ children }: { children: React.R
             setLoading(false);
 
             for (let index = 0; index < Math.ceil(allWaitingCount / 5) - 1 && index < 1; index++) {
-                allItems.current[state].push(...(await getReviews((index + 1) * 5, 5, state, user.current)));
+                allItems.current[state].push(...(await getReviews((index + 1) * 5, 5, state, trpc)));
 
                 loadedPages.current[state].add(index + 2);
 
@@ -387,7 +411,7 @@ export default function MessageContextProvider({ children }: { children: React.R
                         .filter((switchIndex) => switchIndex < totalDataNumber[state])
                         .map((switchIndex) => {
                             if (switchIndex >= allItems.current[state].length || JSON.stringify(allItems.current[state][switchIndex]) === "{}") {
-                                return getReviews(switchIndex, 1, state, user.current).then((value) => {
+                                return getReviews(switchIndex, 1, state, trpc).then((value) => {
                                     allItems.current[state][switchIndex] = value[0];
                                 });
                             }
@@ -434,7 +458,7 @@ export default function MessageContextProvider({ children }: { children: React.R
     async function togglePage(page: number, pageSize: number, state: TravelNote["state"]) {
         await loadPage(page, pageSize, true, state);
 
-        changeDisplayItems(allItems.current[state]);       
+        changeDisplayItems(allItems.current[state]);
 
         if (page <= Math.floor((totalDataNumber[state] - 1) / pageSize)) {
             await loadPage(page + 1, pageSize, false, state);

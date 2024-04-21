@@ -1,26 +1,31 @@
-// Copyright 2024 wu
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     https://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+/**
+ * Copyright (C) 2024 wu
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
 import React, { useState, useContext } from "react";
-import { List, Flex, Image, Skeleton, Modal, Button, Typography, Checkbox, Spin } from "antd";
+import { List, Flex, Image, Skeleton, Modal, Button, Typography, Checkbox, Spin, Carousel } from "antd";
 import { TravelNote } from "@/types/definitions";
 import StateOperation from "./state-operation";
 import { MessageContext } from "@/contexts/messageContext";
 import TimeList from "./time-demo";
 import { CheckboxChangeEvent } from "antd/es/checkbox";
 import { useTranslation } from "react-i18next";
+import { uid2path } from "@/utils/image";
 
-const { Title } = Typography;
+const { Link } = Typography;
 
 export default function ExamineList({ data, loading }: { data: TravelNote[]; loading: boolean }): JSX.Element {
     const { togglePage, totalDataNumber, pageState } = useContext(MessageContext);
@@ -53,27 +58,42 @@ export function ExamineListItem({ item, loading }: { item: TravelNote; loading: 
 
     const { addCheckSet, subCheckSet } = useContext(MessageContext);
 
-    const { t, i18n } = useTranslation();
+    const [openIframe, setOpenIframe] = useState(false);
+
+    const [modalLoading, setModalLoading] = useState(true);
+
+    const { t } = useTranslation();
 
     return (
         <List.Item
             key={item.id}
-            actions={!loading ? TimeList(item.state, item.submissionTime, item.modificationTime, item.approvalTime) : undefined}
+            actions={!loading ? TimeList(item.state, item.submissionTime, item.modificationTime, item.approvalTime, t) : undefined}
             extra={
                 !loading ? (
                     <Flex>
-                        <Image
-                            width={200}
-                            height={150}
-                            alt="logo"
-                            src={`/assets/${item.image}`}
-                            placeholder={<Spin />}
-                        />
+                        <Carousel
+                            style={{
+                                width: 200,
+                                height: 150,
+                            }}
+                        >
+                            {item.image.map((value, index) => (
+                                <Image
+                                    key={`image_${index}`}
+                                    width={200}
+                                    height={150}
+                                    alt="logo"
+                                    src={uid2path(value)}
+                                    placeholder={<Spin />}
+                                />
+                            ))}
+                        </Carousel>
 
                         <StateOperation
                             stateReceived={item.state}
                             id={item.id}
                             rejectReason={item.comment}
+                            uid={item.publishUId}
                         />
                     </Flex>
                 ) : undefined
@@ -109,12 +129,14 @@ export function ExamineListItem({ item, loading }: { item: TravelNote; loading: 
                         </Flex>
                     }
                     title={
-                        <Title
-                            level={5}
-                            style={{ marginTop: 5 }}
+                        <Link
+                            href="#"
+                            onClick={() => {
+                                setOpenIframe(true);
+                            }}
                         >
                             {item.title}
-                        </Title>
+                        </Link>
                     }
                     style={{ marginBlockEnd: 5 }}
                 />
@@ -141,6 +163,36 @@ export function ExamineListItem({ item, loading }: { item: TravelNote; loading: 
                     {item.content}
                 </Modal>
             </Skeleton>
+            <Modal
+                title="预览"
+                open={openIframe}
+                onCancel={() => {
+                    setOpenIframe(false);
+                }}
+                footer={[]}
+            >
+
+                {modalLoading && (
+                    <div
+                        style={{
+                            height: 300,
+                        }}
+                        className="flex items-center justify-center"
+                    >
+                        <Spin />
+                    </div>
+                )}
+
+                <iframe
+                    className={"border-0 " + (modalLoading ? "hidden" : "block")}
+                    src={item.href}
+                    width="100%"
+                    height="300"
+                    onLoad={() => {
+                        setModalLoading(false);
+                    }}
+                />
+            </Modal>
         </List.Item>
     );
 }

@@ -20,9 +20,7 @@
 import "antd-mobile/es/global";
 
 import "./global.scss";
-
-import "@/utils/i18n";
-import AuthContextProvider from "@/contexts/authContext";
+import { MobileApp } from "./components/MobileLayout";
 
 // REF: https://www.npmjs.com/package/next-i18next#appwithtranslation
 export function MobileLayout({
@@ -31,8 +29,6 @@ export function MobileLayout({
 }: {
     children: React.ReactElement;
 }): JSX.Element {
-    return <AuthContextProvider>{children}</AuthContextProvider>;
+    return <MobileApp>{children}</MobileApp>;
 }
-
-// @ts-ignore
 export default MobileLayout;

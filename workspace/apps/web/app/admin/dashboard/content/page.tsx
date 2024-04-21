@@ -1,16 +1,20 @@
-// Copyright 2024 wu
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     https://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+/**
+ * Copyright (C) 2024 wu
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
 "use client";
 import React, { useEffect, useRef, useState } from "react";
 import { Flex, Divider, FloatButton, Button, Typography, Spin, notification } from "antd";
@@ -27,7 +31,7 @@ const { Text } = Typography;
 type NotificationType = "success" | "error";
 
 export default function ContentPage(): JSX.Element {
-    const { t, i18n } = useTranslation();
+    const { t } = useTranslation();
 
     const { checkedNumber, displayItems, loading, firstPullData, operateBatchReview, onSearch } = useContext(MessageContext);
 
@@ -47,35 +51,38 @@ export default function ContentPage(): JSX.Element {
                 await firstPullData("waiting");
             })();
         }
-    }, []);  
+    }, []);
 
     const openNotification = (type: NotificationType) => {
-        api[type]({
-            placement: "bottomLeft",
-            message: (type === "success"? "审核成功": "审核失败"),
-        });
+        if (type === "success") {
+            notification.success({
+                message: t("audit-status.success"),
+                placement: "bottomLeft",
+            });
+        } else {
+            notification.error({
+                message: t("audit-status.fail"),
+                placement: "bottomLeft",
+            });
+        }
     };
 
     const handleOk = async (reason: string) => {
-
-        setIsModalOpen(false);  
+        setIsModalOpen(false);
 
         setBatchLoading(true);
         try {
             await operateBatchReview("reject", reason);
-            openNotification('success');
+            openNotification("success");
         } catch (error) {
-            openNotification('error');                                
-        }  
-        setBatchLoading(false);   
-
+            openNotification("error");
+        }
+        setBatchLoading(false);
     };
 
     const handleCancel = () => {
         setIsModalOpen(false);
     };
-
-
 
     return (
         <>
@@ -95,11 +102,11 @@ export default function ContentPage(): JSX.Element {
                             setBatchLoading(true);
                             try {
                                 await operateBatchReview("pass");
-                                openNotification('success');
+                                openNotification("success");
                             } catch (error) {
-                                openNotification('error');                                
-                            }  
-                            setBatchLoading(false);                         
+                                openNotification("error");
+                            }
+                            setBatchLoading(false);
                         }}
                     >
                         <Text type="success">{t("pass")}</Text>

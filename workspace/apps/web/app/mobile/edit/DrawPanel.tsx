@@ -1,25 +1,47 @@
-// Copyright 2024 wu
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     https://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-import CanvasDraw from "react-canvas-draw";
-import { useContext, useRef, useState } from "react";
-import { Slider, Space, NavBar } from "antd-mobile";
-import { RollbackOutlined, CheckOutlined } from "@ant-design/icons";
-import { Typography, ColorPicker, Button } from "antd";
-import { SubmitInfoContext } from "@/contexts/mobileEditContext";
-import { useTranslation } from "react-i18next";
+/**
+ * Copyright (C) 2024 wu
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
 
-const { Title } = Typography;
+import {
+    //
+
+    useContext,
+    useRef,
+    useState,
+} from "react";
+import { useTranslation } from "react-i18next";
+import CanvasDraw from "react-canvas-draw";
+import {
+    //
+    ColorPicker,
+    Button,
+} from "antd";
+import {
+    //
+    Slider,
+    Space,
+    NavBar,
+} from "antd-mobile";
+import {
+    //
+    RollbackOutlined,
+    CheckOutlined,
+} from "@ant-design/icons";
+
+import { SubmitInfoContext } from "@/contexts/mobileEditContext";
 
 const defaultProps = {
     loadTimeOffset: 5,
@@ -34,7 +56,7 @@ const defaultProps = {
 };
 
 export default function DrawPanel({ back }: { back: () => void }): JSX.Element {
-    const { t, i18n } = useTranslation();
+    const { t } = useTranslation();
 
     const { addDraw } = useContext(SubmitInfoContext);
 
@@ -42,7 +64,7 @@ export default function DrawPanel({ back }: { back: () => void }): JSX.Element {
 
     const [brushColor, setBrushColor] = useState("#000000");
 
-    const [brushRadius, setBrushRadius] = useState(2);
+    const [brushRadius, setBrushRadius] = useState(1);
 
     const props = {
         ...defaultProps,
@@ -68,15 +90,20 @@ export default function DrawPanel({ back }: { back: () => void }): JSX.Element {
                     <Button
                         type="primary"
                         icon={<CheckOutlined />}
-                        onClick={() => {
-                            addDraw(canvasRef.current);
-                            canvasRef.current?.clear();
+                        onClick={async () => {
+                            if (canvasRef.current) {
+                                await addDraw(canvasRef.current);
+                                canvasRef.current.clear();
+                            }
                             back();
                         }}
                     >
                         {t("confirmed")}
                     </Button>
                 }
+                style={{
+                    borderBottom: "1px solid var(--adm-color-border)",
+                }}
             >
                 {t("drawing-board")}
             </NavBar>
@@ -86,15 +113,12 @@ export default function DrawPanel({ back }: { back: () => void }): JSX.Element {
                 justify="around"
                 style={{
                     width: "100%",
+                    paddingTop: "2px",
+                    borderTop: "1px solid var(--adm-color-border)",
                 }}
             >
                 <Space align="center">
-                    <Title
-                        level={5}
-                        style={{ margin: 0 }}
-                    >
-                        {t("label-brush-radius") + ": "}
-                    </Title>
+                    <span style={{ fontSize: "125%" }}>{t("label-brush-radius") + ": "}</span>
                     <Slider
                         min={1}
                         max={20}

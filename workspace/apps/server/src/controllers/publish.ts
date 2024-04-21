@@ -49,16 +49,6 @@ const PUBLISH_SELECT: Prisma.PublishSelect = {
 
     draft_id: true,
 
-    publisher: {
-        select: {
-            name: true,
-            profile: {
-                select: {
-                    avatar: true,
-                },
-            },
-        },
-    },
     coordinate: {
         select: {
             latitude: true,
@@ -77,6 +67,17 @@ const PUBLISH_SELECT: Prisma.PublishSelect = {
         },
         orderBy: {
             index: "asc",
+        },
+    },
+
+    publisher: {
+        select: {
+            name: true,
+            profile: {
+                select: {
+                    avatar: true,
+                },
+            },
         },
     },
 };
@@ -353,6 +354,9 @@ export const deleteMutation = procedure //
                             // draft_id: null,
                             // REF: https://www.prisma.io/docs/orm/prisma-client/queries/relation-queries#disconnect-a-related-record
                             draft: {
+                                update: {
+                                    status: null,
+                                },
                                 disconnect: true,
                             },
                         },
