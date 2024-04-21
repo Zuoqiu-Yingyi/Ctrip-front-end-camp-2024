@@ -31,6 +31,8 @@ import {
     ActionSheet,
     Toast,
     Picker,
+    Mask,
+    Image
 } from "antd-mobile";
 import type { Action } from "antd-mobile/es/components/action-sheet";
 
@@ -51,7 +53,7 @@ import {
 } from "@/utils/message";
 import { Locale } from "@/utils/locale";
 import { Theme } from "@/utils/theme";
-
+import AvaterEditor from "@/ui/AvaterEditor";
 import DeleteAccountPopup from "./DeleteAccountPopup";
 
 export default function InfoPage(): JSX.Element {
@@ -204,6 +206,7 @@ export default function InfoPage(): JSX.Element {
                 <NavBar backArrow={false}>{t("me")}</NavBar>
             </MobileHeader>
             <MobileContent>
+                <AvaterEditor avatar={'https://images.unsplash.com/photo-1567945716310-4745a6b7844b?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1500&q=60'}/>        
                 {/* REF: https://mobile.ant.design/zh/components/list */}
                 <List>
                     <List.Item
